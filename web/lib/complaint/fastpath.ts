@@ -65,6 +65,13 @@ function next(c: Complaint, lang: Lang, today: string): string {
   return P[lang].done(deadlines(today).zeroLiabilityBy);
 }
 
+const SHORT: Record<Lang, (n: number, digits: string) => string> = {
+  en: (n, d) => `I only heard ${n} digits: ${d}. A UTR has 12 digits. Please say it once more, slowly.`,
+  hi: (n, d) => `मुझे सिर्फ़ ${n} अंक सुनाई दिए: ${d}। UTR में 12 अंक होते हैं। कृपया एक बार फिर धीरे-धीरे बताइए।`,
+  te: (n, d) => `నాకు ${n} అంకెలు మాత్రమే వినిపించాయి: ${d}. UTR లో 12 అంకెలు ఉంటాయి. దయచేసి మళ్ళీ ఒకసారి నెమ్మదిగా చెప్పండి.`,
+  kn: (n, d) => `ನನಗೆ ${n} ಅಂಕಿಗಳು ಮಾತ್ರ ಕೇಳಿಸಿದವು: ${d}. UTR ನಲ್ಲಿ 12 ಅಂಕಿಗಳಿರುತ್ತವೆ. ದಯವಿಟ್ಟು ಮತ್ತೊಮ್ಮೆ ನಿಧಾನವಾಗಿ ಹೇಳಿ.`,
+};
+
 const SORRY: Record<Lang, string> = {
   en: "I'm sorry this happened. Let's report it right now, while the money can still be held.",
   hi: 'यह सुनकर दुख हुआ। चलिए अभी शिकायत करते हैं, जब तक पैसा रोका जा सकता है।',
@@ -94,6 +101,12 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
   if (c.pending && YES.test(t) && !NO.test(t) && t.length <= 40) {
     confirmField(c, c.pending);
     return `${P[lang].thanks} ${next(c, lang, today)}`;
+  }
+  // Digits were held but this turn brought no more: say what we have and ask again.
+  if (c.digitBuffer && !spokenToDigits(t) && !NO.test(t)) {
+    const have = c.digitBuffer;
+    c.digitBuffer = '';
+    return SHORT[lang](have.length, readbackText(have, c.lang as ReadbackLang));
   }
   // A spoken UTR while we still need one.
   if (!NO.test(t) && !c.fields.utr?.confirmed) {

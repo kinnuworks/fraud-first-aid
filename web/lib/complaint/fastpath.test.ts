@@ -99,3 +99,15 @@ describe('guardHandover', () => {
     expect(guardHandover(newComplaint('te', 'complaint'), 'I already paid')).toBeNull();
   });
 });
+
+describe('a UTR that stops short', () => {
+  it('reads back the digits it has and asks again when the next turn brings no more', () => {
+    const c = newComplaint('en');
+    expect(complaintShortcut(c, 'four zero two one seven seven eight eight nine nine')).toBe('<silent>');
+    const say = complaintShortcut(c, 'that is all');
+    expect(say).toContain('10');
+    expect(say).toContain('four zero two one');
+    expect(say).toContain('12');
+    expect(c.digitBuffer).toBe('');
+  });
+});
