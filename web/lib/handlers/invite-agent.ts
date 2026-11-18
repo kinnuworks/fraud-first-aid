@@ -38,6 +38,14 @@ export async function POST(request: NextRequest) {
     // Our own model route (complaint tools) once it has a public URL; until then Agora's
     // managed model runs the number-capture prototype prompt.
     const llmUrl = process.env.LLM_PUBLIC_URL;
+    // Without our model route the agent has no complaint tools: refuse in production rather than
+    // run a weaker agent quietly; in local development say so loudly.
+    if (!llmUrl) {
+      if (process.env.VERCEL_ENV === 'production') {
+        return NextResponse.json({ error: 'LLM_PUBLIC_URL is not set: the complaint tools are unavailable' }, { status: 500 });
+      }
+      console.warn('[invite-agent] LLM_PUBLIC_URL not set: using Agora managed model WITHOUT complaint tools (local development only)');
+    }
 
     // Validate required env vars on first request so misconfiguration surfaces
     // with a clear error message rather than a silent failure.

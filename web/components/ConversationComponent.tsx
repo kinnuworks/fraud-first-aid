@@ -229,7 +229,9 @@ export default function ConversationComponent({
               ai.unsubscribe();
               ai.destroy();
             }
-          } catch {}
+          } catch {
+            // teardown of a stale instance; nothing to recover
+          }
           return;
         }
 
@@ -300,7 +302,9 @@ export default function ConversationComponent({
           ai.unsubscribe();
           ai.destroy();
         }
-      } catch {}
+      } catch {
+        // unmount teardown; nothing to recover
+      }
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isReady, joinSuccess]);
