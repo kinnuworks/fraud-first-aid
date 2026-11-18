@@ -21,7 +21,12 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
     record_utr: tool({
       description: "Record the 12-digit UTR (transaction reference) from the caller's last words. Returns the read-back text to say, group by group.",
       inputSchema: z.object({}),
-      execute: async () => recordNumber(c, 'utr', lastUser),
+      execute: async () => {
+        // include digits held from earlier turns (UTR said in pieces)
+        const r = recordNumber(c, 'utr', `${c.digitBuffer ?? ''} ${lastUser}`);
+        if (r.ok) c.digitBuffer = '';
+        return r;
+      },
     }),
     record_payee: tool({
       description: "Record who the money went to (a UPI ID like name@bank, or a 10-digit mobile) from the caller's last words.",

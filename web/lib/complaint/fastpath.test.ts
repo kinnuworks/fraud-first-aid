@@ -52,3 +52,27 @@ describe('complaintShortcut', () => {
     expect(complaintShortcut(newComplaint('te', 'guard'), 'అవును')).toBeNull();
   });
 });
+
+describe('UTR said in pieces across turns', () => {
+  it('holds dictated digits silently until 12 arrive, then reads them all back', () => {
+    const c = newComplaint('te');
+    expect(complaintShortcut(c, 'UTR నంబర్ నాలుగు సున్నా రెండు ఒకటి')).toBe('<silent>');
+    expect(complaintShortcut(c, 'ఏడు ఏడు ఎనిమిది ఎనిమిది')).toBe('<silent>');
+    const say = complaintShortcut(c, 'తొమ్మిది తొమ్మిది ఒకటి సున్నా');
+    expect(c.fields.utr?.value).toBe('402177889910');
+    expect(say).toContain('ఇది సరైనదేనా?');
+    expect(c.digitBuffer).toBe('');
+  });
+  it('does not buffer an amount or a story', () => {
+    const c = newComplaint('te');
+    expect(complaintShortcut(c, 'ఇరవై ఐదు వేల రూపాయలు పోయాయి')).toBeNull();
+    expect(c.digitBuffer ?? '').toBe('');
+  });
+  it('starts over if the pieces add up to more than 12', () => {
+    const c = newComplaint('en');
+    complaintShortcut(c, 'four zero two one seven seven');
+    complaintShortcut(c, 'eight eight nine nine');
+    expect(complaintShortcut(c, 'one zero five five five')).toBe('<silent>');
+    expect(c.digitBuffer).toBe('10555');
+  });
+});

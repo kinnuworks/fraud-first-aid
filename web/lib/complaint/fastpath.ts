@@ -4,7 +4,7 @@
 // other languages) goes to the model.
 import { spokenToDigits, readbackText, type ReadbackLang } from '../entities/numbers';
 import { isUtr } from './fields';
-import { REQUIRED, recordNumber, confirmField, deadlines, type Complaint, type FieldName } from './session';
+import { REQUIRED, recordNumber, recordDigits, confirmField, deadlines, type Complaint, type FieldName } from './session';
 import { istToday } from './today';
 
 type Lang = 'te' | 'hi' | 'kn' | 'en';
@@ -33,6 +33,9 @@ const P: Record<Lang, { heard: string; isRight: string; thanks: string; rupees: 
   },
 };
 
+const SILENT = '<silent>';
+// Amounts and money words: digits here are not a UTR being dictated.
+const NOT_DICTATION = /thousand|hundred|lakh|crore|rupee|\brs\b|₹|हज़ार|हजार|सौ|लाख|रुपय|रुपए|వేల|వేలు|వంద|లక్ష|రూపాయ|ಸಾವಿರ|ನೂರು|ಲಕ್ಷ|ರೂಪಾಯ/i;
 const YES = /^(yes|yeah|yep|correct|right|that'?s right|ha+n?|haan ji|ji haan|sahi|sahi hai|हाँ|हां|जी|सही|ठीक|అవును|ఔను|సరే|సరిగ్గా|కరెక్ట్|ಹೌದು|ಸರಿ)/i;
 const NO = /\b(no|not|wrong|nahi)\b|नहीं|गलत|ग़लत|లేదు|కాదు|తప్పు|ಇಲ್ಲ|ತಪ್ಪು/i;
 
@@ -70,9 +73,26 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
     return `${P[lang].thanks} ${next(c, lang, today)}`;
   }
   // A spoken UTR while we still need one.
-  if (!NO.test(t) && isUtr(spokenToDigits(t)) && !c.fields.utr?.confirmed) {
-    recordNumber(c, 'utr', t);
-    return say(c, 'utr', lang);
+  if (!NO.test(t) && !c.fields.utr?.confirmed) {
+    const d = spokenToDigits(t);
+    if (isUtr(d)) {
+      c.digitBuffer = '';
+      recordNumber(c, 'utr', t);
+      return say(c, 'utr', lang);
+    }
+    // Callers pause between groups, so turn detection can split the UTR: hold dictated digits
+    // (not amounts) silently until 12 have arrived.
+    if (!c.fields.utr && d.length >= 2 && d.length < 12 && !NOT_DICTATION.test(t)) {
+      let buf = (c.digitBuffer ?? '') + d;
+      if (buf.length > 12) buf = d;
+      if (buf.length === 12) {
+        c.digitBuffer = '';
+        recordDigits(c, 'utr', buf);
+        return say(c, 'utr', lang);
+      }
+      c.digitBuffer = buf;
+      return SILENT;
+    }
   }
   return null;
 }

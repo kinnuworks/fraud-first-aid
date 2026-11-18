@@ -18,6 +18,8 @@ export type Complaint = {
   flags: Flag[];
   // The field most recently read back and waiting for the caller's yes or no.
   pending?: FieldName;
+  // Digits of a UTR said in pieces across turns, held until 12 arrive.
+  digitBuffer?: string;
   // How it happened: a one-line English summary for the operator, and the caller's own words.
   story?: { en: string; words: string };
   // What the payment screenshot showed (second source), if the caller added one.
@@ -52,6 +54,14 @@ export function recordNumber(c: Complaint, field: NumberField, spoken: string): 
   if (!rule.check(digits)) {
     return { ok: false, problem: `heard ${digits.length} digits, ${rule.label}` };
   }
+  c.fields[field] = { value: digits, confirmed: false };
+  c.pending = field;
+  return numberResult(c, digits);
+}
+
+// Record already-parsed digits (e.g. a UTR assembled from several turns).
+export function recordDigits(c: Complaint, field: NumberField, digits: string): Result {
+  if (!NUMBER_RULES[field].check(digits)) return { ok: false, problem: `${digits.length} digits` };
   c.fields[field] = { value: digits, confirmed: false };
   c.pending = field;
   return numberResult(c, digits);
