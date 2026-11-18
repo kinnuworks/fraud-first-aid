@@ -82,7 +82,7 @@ export function ComplaintCard({ session }: { session: string }) {
   useEffect(() => {
     let live = true;
     const tick = async () => {
-      const r = await fetch(`/api/complaint?session=${encodeURIComponent(session)}`);
+      const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}`);
       if (live && r.ok) setData(await r.json());
     };
     tick();

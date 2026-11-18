@@ -292,7 +292,7 @@ async function verifyChatCompletionsSseDone() {
 }
 
 async function verifyInviteAgentValidation() {
-  const { POST: inviteAgent } = await import('../app/api/invite-agent/route');
+  const { POST: inviteAgent } = await import('../lib/handlers/invite-agent');
   const request = new NextRequest('http://localhost:3000/api/invite-agent', {
     body: JSON.stringify({ channel_name: 'missing-requester' }),
     method: 'POST',
@@ -311,7 +311,7 @@ async function verifyInviteAgentValidation() {
 }
 
 async function verifyInviteAgentSuccess() {
-  const { POST: inviteAgent } = await import('../app/api/invite-agent/route');
+  const { POST: inviteAgent } = await import('../lib/handlers/invite-agent');
   const originalCreateSession = Agent.prototype.createSession;
   let capturedSessionConfig: {
     channel?: string;

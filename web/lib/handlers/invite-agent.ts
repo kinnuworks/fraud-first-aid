@@ -120,7 +120,7 @@ export async function POST(request: NextRequest) {
       .withLlm(
         llmUrl
           ? new OpenAI({
-              url: `${llmUrl}/api/chat/completions?session=${channel_name}`,
+              url: `${llmUrl}/api/call/chat/completions?session=${channel_name}`,
               apiKey: requireEnv('LLM_SHARED_SECRET'),
               model: 'custom',
               greetingMessage: preset.greeting,

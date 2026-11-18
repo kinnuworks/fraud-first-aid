@@ -92,7 +92,7 @@ export default function LandingPage() {
       //    can subscribe immediately. Agent invite is non-fatal.
       const [agentData, rtm] = await Promise.all([
         // 2a. Start the AI agent
-        fetch('/api/invite-agent', {
+        fetch('/api/call/invite-agent', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
