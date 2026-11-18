@@ -19,7 +19,14 @@ export const POST = createLlmRoute({
   system: (session) => complaintSystem(session),
   shortcut: (session, lastUser) => {
     const c = getComplaint(session);
-    return guardHandover(c, lastUser) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
+    const before = `${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length}`;
+    const out = guardHandover(c, lastUser) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
+    // Turn decisions for debugging, only with DEBUG_TURNS=1; never the caller's words.
+    if (process.env.DEBUG_TURNS === '1') {
+      const kind = out === null ? 'model' : out === '<silent>' ? 'silent' : 'fast';
+      console.log(`[turn] ${session.slice(-6)} ${before} -> ${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length} len${lastUser.length} ${kind} fields=${Object.keys(c.fields).join(',')}`);
+    }
+    return out;
   },
   onMarker: (session, id, detail, lastUser) => {
     addFlag(getComplaint(session), id, detail, lastUser);
