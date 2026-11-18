@@ -32,6 +32,11 @@ describe('spokenToDigits', () => {
     expect(spokenToDigits('98 चार पांच ೧೨ three')).toBe('98451' + '23');
   });
 
+  it('strips the Hindi danda and double danda that end Sarvam transcripts', () => {
+    expect(spokenToDigits('मेरा नंबर है नौ एक शून्य आठ।')).toBe('9108');
+    expect(spokenToDigits('पाँच॥')).toBe('5');
+  });
+
   it('returns an empty string when there is no number', () => {
     expect(spokenToDigits('mera paisa chala gaya')).toBe('');
   });

@@ -98,7 +98,8 @@ export default function LandingPage() {
           body: JSON.stringify({
             requester_id: responseData.uid,
             channel_name: responseData.channel,
-          } as ClientStartRequest),
+            lang: new URLSearchParams(window.location.search).get('lang') ?? 'hi',
+          } as ClientStartRequest & { lang: string }),
         })
           .then(async (res) => {
             if (!res.ok) {

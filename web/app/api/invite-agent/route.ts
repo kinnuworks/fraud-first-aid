@@ -3,13 +3,14 @@ import {
   AgoraClient,
   Agent,
   Area,
-  DeepgramSTT,
+  SarvamSTT,
+  MurfTTS,
   ExpiresIn,
-  MiniMaxTTS,
   OpenAI,
 } from 'agora-agents';
 import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { presetFor, prototypeInstructions } from '@/lib/agent-config';
 
 // System prompt that defines the agent's personality and behavior.
 // Swap this out to change what the agent talks about.
@@ -56,6 +57,7 @@ export async function POST(request: NextRequest) {
 
     const body: ClientStartRequest = await request.json();
     const { requester_id, channel_name } = body;
+    const preset = presetFor((body as unknown as { lang?: string }).lang);
 
     // Validate required env vars on first request so misconfiguration surfaces
     // with a clear error message rather than a silent failure.
@@ -83,8 +85,8 @@ export async function POST(request: NextRequest) {
     // Omit vendor API keys for supported models — AgentKit infers reseller presets on start (see Agora Console / billing).
     const agent = new Agent({
       client,
-      instructions: ADA_PROMPT,
-      greeting: GREETING,
+      instructions: prototypeInstructions(preset),
+      greeting: preset.greeting,
       failureMessage: 'Please wait a moment.',
       maxHistory: 50,
       // VAD controls how the agent detects the start and end of a user's turn.
@@ -122,10 +124,7 @@ export async function POST(request: NextRequest) {
       },
     })
       .withStt(
-        new DeepgramSTT({
-          model: 'nova-3',
-          language: 'en',
-        }),
+        new SarvamSTT({ apiKey: requireEnv('SARVAM_API_KEY'), language: preset.asrLanguage }),
         // BYOK: uncomment the following block and set NEXT_DEEPGRAM_API_KEY
         // new DeepgramSTT({
         //   apiKey: requireEnv('NEXT_DEEPGRAM_API_KEY'),
@@ -136,7 +135,7 @@ export async function POST(request: NextRequest) {
       .withLlm(
         new OpenAI({
           model: 'gpt-4o-mini',
-          greetingMessage: GREETING,
+          greetingMessage: preset.greeting,
           failureMessage: 'Please wait a moment.',
           maxHistory: 15,
           params: {
@@ -159,9 +158,12 @@ export async function POST(request: NextRequest) {
         // }),
       )
       .withTts(
-        new MiniMaxTTS({
-          model: 'speech_2_6_turbo',
-          voiceId: 'English_captivating_female1',
+        new MurfTTS({
+          key: requireEnv('MURF_API_KEY'),
+          voiceId: preset.voiceId,
+          locale: preset.locale,
+          model: 'FALCON',
+          sampleRate: 24000,
         }),
         // BYOK — ElevenLabs (set NEXT_ELEVENLABS_API_KEY; optional NEXT_ELEVENLABS_VOICE_ID)
         // new (await import('agora-agents')).ElevenLabsTTS({

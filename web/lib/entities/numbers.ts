@@ -89,7 +89,7 @@ function tokenDigits(tok: string): string | null {
 export function spokenToDigits(text: string): string {
   const tokens = text
     .toLowerCase()
-    .replace(/[-–—_.,;:!?()]/g, ' ')
+    .replace(/[-–—_.,;:!?()।॥]/g, ' ')
     .split(/\s+/)
     .filter(Boolean);
   const isNum = tokens.map((t) => tokenDigits(t) !== null && !AMBIGUOUS.has(t));
