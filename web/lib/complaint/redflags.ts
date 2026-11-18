@@ -14,6 +14,10 @@ const SCREEN = /any ?desk|team ?viewer|quick ?support|screen ?shar|एनीड�
 const ARREST = /digital arrest|\barrest|डिजिटल अरेस्ट|अरेस्ट|गिरफ्तार|అరెస్ట్|ಅರೆಸ್ಟ್|கைது|അറസ്റ്റ്/i;
 const KYC = /\bkyc\b|केवाईसी|కేవైసీ|ಕೆವೈಸಿ|கேஒய்சி|കെവൈസി/i;
 
+// Words that say the money has already gone: the caller is telling their story, not on a live
+// scam call, so the model should switch to the complaint instead of warning.
+const LOSS = /already|paid|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
+
 export type RedFlag = { scam: string; ask: string };
 
 export function detectRedFlag(text: string): RedFlag | null {
@@ -43,7 +47,7 @@ const WARNING: Record<ReadbackLang, string> = {
 
 // The fixed warning to speak now, or null to let the model answer.
 export function guardShortcut(c: Complaint, lastUser: string): string | null {
-  if (c.phase !== 'guard') return null;
+  if (c.phase !== 'guard' || LOSS.test(lastUser)) return null;
   const f = detectRedFlag(lastUser);
   if (!f || !addFlag(c, f.scam, f.ask, lastUser)) return null;
   return WARNING[c.lang];

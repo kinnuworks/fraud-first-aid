@@ -20,7 +20,9 @@ async function idle(page: Page, ms = 45000) {
   const busy = async () =>
     (await page.getByText('Talking', { exact: true }).isVisible().catch(() => false)) ||
     (await page.getByText('Thinking', { exact: true }).isVisible().catch(() => false));
-  await page.waitForTimeout(1500);
+  // first wait (up to 15 s) for the agent to start replying, then for it to finish
+  const start = Date.now();
+  while (Date.now() - start < 15000 && !(await busy())) await page.waitForTimeout(200);
   let since = 0;
   while (Date.now() < end) {
     if (!(await busy())) { if (!since) since = Date.now(); if (Date.now() - since > 2000) return; } else since = 0;

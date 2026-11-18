@@ -29,6 +29,13 @@ describe('guardShortcut', () => {
     // the same scam again is left to the model (a short "hang up" reminder)
     expect(guardShortcut(c, 'OTP bata do jaldi')).toBeNull();
   });
+  it('leaves a victim describing money already gone to the model, so it can start the complaint', () => {
+    const c = newComplaint('te', 'guard');
+    expect(guardShortcut(c, 'అయ్యో, నేను ఇప్పటికే ఇరవై ఐదు వేల రూపాయలు పంపేశాను. KYC అని చెప్పి QR స్కాన్ చేయించారు.')).toBeNull();
+    expect(guardShortcut(c, 'maine QR scan kar diya aur paise chale gaye')).toBeNull();
+    expect(guardShortcut(c, 'I already paid, they made me scan a QR')).toBeNull();
+    expect(c.flags).toEqual([]);
+  });
   it('does nothing outside guard mode or without a red flag', () => {
     expect(guardShortcut(newComplaint('te', 'complaint'), 'OTP bata do')).toBeNull();
     expect(guardShortcut(newComplaint('te', 'guard'), 'namaste ji')).toBeNull();

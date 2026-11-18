@@ -16,6 +16,8 @@ export type Complaint = {
   // guard: listening to a suspicious call on speaker; complaint: taking the report.
   phase: Phase;
   flags: Flag[];
+  // The field most recently read back and waiting for the caller's yes or no.
+  pending?: FieldName;
   // How it happened: a one-line English summary for the operator, and the caller's own words.
   story?: { en: string; words: string };
   // What the payment screenshot showed (second source), if the caller added one.
@@ -51,6 +53,7 @@ export function recordNumber(c: Complaint, field: NumberField, spoken: string): 
     return { ok: false, problem: `heard ${digits.length} digits, ${rule.label}` };
   }
   c.fields[field] = { value: digits, confirmed: false };
+  c.pending = field;
   return numberResult(c, digits);
 }
 
@@ -66,6 +69,7 @@ export function correctGroup(c: Complaint, field: NumberField, group: number, sp
   }
   groups[group - 1] = digits;
   c.fields[field] = { value: groups.join(''), confirmed: false };
+  c.pending = field;
   return numberResult(c, groups.join(''));
 }
 
@@ -73,6 +77,7 @@ export function confirmField(c: Complaint, field: FieldName): Result {
   const f = c.fields[field];
   if (!f) return { ok: false, problem: `${field} not recorded yet` };
   f.confirmed = true;
+  if (c.pending === field) c.pending = undefined;
   return { ok: true };
 }
 
@@ -81,6 +86,7 @@ export function recordUpi(c: Complaint, spoken: string): Result {
   const id = spokenUpiId(spoken);
   if (!id) return recordNumber(c, 'payee', spoken);
   c.fields.payee = { value: id, confirmed: false };
+  c.pending = 'payee';
   return { ok: true, value: id };
 }
 
@@ -88,6 +94,7 @@ export function recordAmount(c: Complaint, spoken: string): Result {
   const n = parseAmount(spoken);
   if (n === null || n <= 0) return { ok: false, problem: 'no amount heard; ask for it digit by digit' };
   c.fields.amount = { value: n, confirmed: false };
+  c.pending = 'amount';
   return { ok: true, value: n };
 }
 
@@ -95,6 +102,7 @@ export function recordText(c: Complaint, field: 'when' | 'victim_bank', value: s
   const v = value.trim();
   if (!v) return { ok: false, problem: 'empty' };
   c.fields[field] = { value: v, confirmed: false };
+  c.pending = field;
   return { ok: true, value: v };
 }
 
@@ -120,10 +128,12 @@ export function takeFromShot(c: Complaint, field: 'utr' | 'amount' | 'payee'): R
   if (v === undefined) return { ok: false, problem: `the screenshot has no ${field}` };
   if (field === 'utr') {
     c.fields.utr = { value: String(v), confirmed: false };
+    c.pending = 'utr';
     return numberResult(c, String(v));
   }
   if (field === 'amount') c.fields.amount = { value: Number(v), confirmed: false };
   else c.fields.payee = { value: String(v), confirmed: false };
+  c.pending = field;
   return { ok: true, value: v };
 }
 
