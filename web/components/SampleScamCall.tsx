@@ -2,7 +2,26 @@
 // Plays an illustration of a fake-KYC scam call into the call as if it came from the caller's
 // phone on speaker, so the guard can be shown without a second person. Labelled on screen.
 import { useState } from 'react';
-import { useRTCClient } from 'agora-rtc-react';
+import { useRTCClient, type IAgoraRTCClient } from 'agora-rtc-react';
+
+// Publishes an audio file into the call as the caller's audio (heard locally too) and resolves
+// when it has finished playing.
+export async function playClipIntoCall(client: IAgoraRTCClient, source: string): Promise<void> {
+  const AgoraRTC = (await import('agora-rtc-react')).default;
+  const track = await AgoraRTC.createBufferSourceAudioTrack({ source });
+  await new Promise<void>((resolve) => {
+    track.on('source-state-change', async (st: string) => {
+      if (st === 'stopped') {
+        await client.unpublish(track).catch(() => {});
+        track.close();
+        resolve();
+      }
+    });
+    track.startProcessAudioBuffer();
+    track.play();
+    client.publish(track).catch(() => resolve());
+  });
+}
 
 export function SampleScamCall() {
   const client = useRTCClient();
@@ -11,18 +30,8 @@ export function SampleScamCall() {
   async function play() {
     setState('playing');
     try {
-      const AgoraRTC = (await import('agora-rtc-react')).default;
-      const track = await AgoraRTC.createBufferSourceAudioTrack({ source: '/demo/sample-scam-call.wav' });
-      track.on('source-state-change', async (s: string) => {
-        if (s === 'stopped') {
-          await client.unpublish(track).catch(() => {});
-          track.close();
-          setState('done');
-        }
-      });
-      track.startProcessAudioBuffer();
-      track.play();
-      await client.publish(track);
+      await playClipIntoCall(client, '/demo/sample-scam-call.wav');
+      setState('done');
     } catch (e) {
       console.error('[sample-scam-call]', e);
       setState('error');

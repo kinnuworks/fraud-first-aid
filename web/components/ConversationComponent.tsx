@@ -44,7 +44,7 @@ import {
 } from './QuickstartPipelineMetrics';
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
-import { SampleScamCall } from './SampleScamCall';
+import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
 import type { ConversationComponentProps } from '@/types/conversation';
 
 // Cap the displayed issues list to avoid overwhelming the UI during a cascade of errors.
@@ -99,6 +99,11 @@ export default function ConversationComponent({
   onEndConversation,
 }: ConversationComponentProps) {
   const client = useRTCClient();
+  // ?demo=1: lets the recorded full-flow demo play labelled sample clips into the call.
+  useEffect(() => {
+    if (typeof window === 'undefined' || new URLSearchParams(window.location.search).get('demo') !== '1') return;
+    (window as unknown as { __utrPakkaPlay?: (u: string) => Promise<void> }).__utrPakkaPlay = (u) => playClipIntoCall(client, u);
+  }, [client]);
   const remoteUsers = useRemoteUsers();
   const [isEnabled, setIsEnabled] = useState(true);
   const [isAgentConnected, setIsAgentConnected] = useState(false);
