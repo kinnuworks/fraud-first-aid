@@ -96,3 +96,12 @@ describe('addFlag', () => {
     expect(c.flags).toEqual([{ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'OTP bata dijiye' }]);
   });
 });
+
+describe('tool set by phase', () => {
+  it('offers only start_complaint while on guard', () => {
+    startComplaint('g4', 'te', 'guard');
+    expect(Object.keys(complaintTools('g4', ''))).toEqual(['start_complaint']);
+    peekComplaint('g4')!.phase = 'complaint';
+    expect(Object.keys(complaintTools('g4', ''))).toContain('record_utr');
+  });
+});

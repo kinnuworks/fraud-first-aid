@@ -130,3 +130,28 @@ describe('inline markers', () => {
     expect(seen).toEqual([['m1', 'fake_kyc', 'asked for the OTP']]);
   });
 });
+
+describe('shortcut replies', () => {
+  it('streams the shortcut text without calling the model', async () => {
+    let called = false;
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: (() => {
+        called = true;
+        return { textStream: (async function* () { yield 'model'; })() };
+      }) as never,
+      shortcut: (_s, last) => (last.includes('OTP') ? 'Hang up now.' : null),
+    });
+    const ask = async (content: string) =>
+      (await (await route(req({ messages: [{ role: 'user', content }] }, 'Bearer s3cret'))).text())
+        .split('\n\n')
+        .filter((l) => l.startsWith('data: {'))
+        .map((l) => JSON.parse(l.slice(6)).choices[0].delta.content ?? '')
+        .join('');
+    expect(await ask('tell me the OTP')).toBe('Hang up now.');
+    expect(called).toBe(false);
+    expect(await ask('hello')).toBe('model');
+    expect(called).toBe(true);
+  });
+});

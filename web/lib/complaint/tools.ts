@@ -9,7 +9,7 @@ import { isIfsc } from './fields';
 
 export function complaintTools(session: string, lastUser: string): ToolSet {
   const c = getComplaint(session);
-  return {
+  const all: ToolSet = {
     start_complaint: tool({
       description: 'Switch from listening (guard) to taking the fraud report, when the user asks for help or says money has already gone.',
       inputSchema: z.object({}),
@@ -83,4 +83,6 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       }),
     }),
   };
+  // On guard the model only needs the hand-over; fewer tool schemas means a faster first word.
+  return c.phase === 'guard' ? { start_complaint: all.start_complaint } : all;
 }
