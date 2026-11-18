@@ -6,7 +6,7 @@ import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint } from '@/lib/complaint/store';
 import { addFlag } from '@/lib/complaint/session';
 import { guardShortcut } from '@/lib/complaint/redflags';
-import { complaintShortcut } from '@/lib/complaint/fastpath';
+import { complaintShortcut, guardHandover } from '@/lib/complaint/fastpath';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -19,7 +19,7 @@ export const POST = createLlmRoute({
   system: (session) => complaintSystem(session),
   shortcut: (session, lastUser) => {
     const c = getComplaint(session);
-    return guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
+    return guardHandover(c, lastUser) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
   },
   onMarker: (session, id, detail, lastUser) => {
     addFlag(getComplaint(session), id, detail, lastUser);

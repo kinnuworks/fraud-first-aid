@@ -16,7 +16,7 @@ const KYC = /\bkyc\b|केवाईसी|కేవైసీ|ಕೆವೈಸಿ
 
 // Words that say the money has already gone: the caller is telling their story, not on a live
 // scam call, so the model should switch to the complaint instead of warning.
-const LOSS = /already|paid|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
+export const LOSS = /already|paid|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
 
 export type RedFlag = { scam: string; ask: string };
 

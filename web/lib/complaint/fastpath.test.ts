@@ -76,3 +76,26 @@ describe('UTR said in pieces across turns', () => {
     expect(c.digitBuffer).toBe('10555');
   });
 });
+
+describe('guardHandover', () => {
+  it('switches to the complaint in code when money has gone, keeps the amount, and asks for the UTR', async () => {
+    const { guardHandover } = await import('./fastpath');
+    const c = newComplaint('te', 'guard');
+    const say = guardHandover(c, 'అయ్యో, నేను ఇప్పటికే ఇరవై ఐదు వేల రూపాయలు పంపేశాను. KYC అని చెప్పి QR స్కాన్ చేయించారు.');
+    expect(c.phase).toBe('complaint');
+    expect(c.fields.amount).toEqual({ value: 25000, confirmed: false });
+    expect(say).toContain('UTR');
+    expect(c.story?.words).toContain('QR');
+  });
+  it('switches other languages too, leaving the words to the model', async () => {
+    const { guardHandover } = await import('./fastpath');
+    const c = newComplaint('ta', 'guard');
+    expect(guardHandover(c, 'I already paid them')).toBeNull();
+    expect(c.phase).toBe('complaint');
+  });
+  it('does nothing without loss words or outside guard', async () => {
+    const { guardHandover } = await import('./fastpath');
+    expect(guardHandover(newComplaint('te', 'guard'), 'హలో సర్')).toBeNull();
+    expect(guardHandover(newComplaint('te', 'complaint'), 'I already paid')).toBeNull();
+  });
+});

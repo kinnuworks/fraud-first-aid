@@ -6,6 +6,8 @@ import { spokenToDigits, readbackText, type ReadbackLang } from '../entities/num
 import { isUtr } from './fields';
 import { REQUIRED, recordNumber, recordDigits, confirmField, deadlines, type Complaint, type FieldName } from './session';
 import { istToday } from './today';
+import { LOSS } from './redflags';
+import { parseAmount } from './fields';
 
 type Lang = 'te' | 'hi' | 'kn' | 'en';
 const FAST: Lang[] = ['te', 'hi', 'kn', 'en'];
@@ -61,6 +63,27 @@ function next(c: Complaint, lang: Lang, today: string): string {
   }
   c.pending = undefined;
   return P[lang].done(deadlines(today).zeroLiabilityBy);
+}
+
+const SORRY: Record<Lang, string> = {
+  en: "I'm sorry this happened. Let's report it right now, while the money can still be held.",
+  hi: 'यह सुनकर दुख हुआ। चलिए अभी शिकायत करते हैं, जब तक पैसा रोका जा सकता है।',
+  te: 'ఇలా జరిగినందుకు బాధగా ఉంది. డబ్బు ఇంకా ఆపగలిగే ఈ సమయంలోనే ఇప్పుడే ఫిర్యాదు చేద్దాం.',
+  kn: 'ಹೀಗಾಗಿದ್ದಕ್ಕೆ ವಿಷಾದವಿದೆ. ಹಣವನ್ನು ಇನ್ನೂ ತಡೆಯಬಹುದಾದ ಈ ಸಮಯದಲ್ಲೇ ದೂರು ನೀಡೋಣ.',
+};
+
+// On guard, "the money has already gone" switches to the complaint in code (the hand-off must not
+// depend on the model), keeps their words and any amount, and asks for the UTR.
+export function guardHandover(c: Complaint, lastUser: string): string | null {
+  if (c.phase !== 'guard' || !LOSS.test(lastUser)) return null;
+  c.phase = 'complaint';
+  c.story = { en: c.story?.en ?? 'Caller says money has already left their account.', words: lastUser.slice(0, 500) };
+  const amt = parseAmount(lastUser);
+  if (amt && amt >= 1) c.fields.amount = { value: amt, confirmed: false };
+  if (!FAST.includes(c.lang as Lang)) return null;
+  const lang = c.lang as Lang;
+  c.pending = undefined;
+  return `${SORRY[lang]} ${P[lang].ask.utr}`;
 }
 
 export function complaintShortcut(c: Complaint, lastUser: string, today = istToday()): string | null {
