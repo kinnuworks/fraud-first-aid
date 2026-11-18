@@ -111,6 +111,25 @@ describe('spokenToDigits', () => {
     expect(spokenToDigits('14 ಸಾವಿರ ಜನ')).toBe('14');
   });
 
+  it('reads Tamil and Malayalam digit words and numerals', () => {
+    expect(spokenToDigits('ஒன்பது எட்டு நான்கு ஐந்து பூஜ்ஜியம்')).toBe('98450');
+    expect(spokenToDigits('௯௮௪௫')).toBe('9845');
+    expect(spokenToDigits('ഒമ്പത് എട്ട് നാല് അഞ്ച് പൂജ്യം')).toBe('98450');
+    expect(spokenToDigits('൯൮൪൫')).toBe('9845');
+    // Sarvam writes nine with the chillu letter too (pairs probe, 19 Nov)
+    expect(spokenToDigits('ഏഴ് പൂജ്യം ഒന്ന് ഒൻപത്')).toBe('7019');
+  });
+
+  it('reads Bengali, Marathi, Gujarati and Punjabi digit words and numerals', () => {
+    expect(spokenToDigits('নয় আট চার পাঁচ শূন্য')).toBe('98450');
+    expect(spokenToDigits('৯৮৪৫')).toBe('9845');
+    expect(spokenToDigits('नऊ आठ चार पाच दोन')).toBe('98452');
+    expect(spokenToDigits('નવ આઠ ચાર પાંચ શૂન્ય')).toBe('98450');
+    expect(spokenToDigits('૯૮૪૫')).toBe('9845');
+    expect(spokenToDigits('ਨੌਂ ਅੱਠ ਚਾਰ ਪੰਜ ਸਿਫ਼ਰ')).toBe('98450');
+    expect(spokenToDigits('੯੮੪੫')).toBe('9845');
+  });
+
   it('returns an empty string when there is no number', () => {
     expect(spokenToDigits('mera paisa chala gaya')).toBe('');
   });
@@ -137,6 +156,14 @@ describe('readbackText', () => {
   });
   it('reads each digit in Telugu', () => {
     expect(readbackText('9845', 'te')).toBe('తొమ్మిది ఎనిమిది నాలుగు ఐదు');
+  });
+  it('reads each digit in Tamil, Malayalam, Bengali, Marathi, Gujarati and Punjabi', () => {
+    expect(readbackText('9845', 'ta')).toBe('ஒன்பது எட்டு நான்கு ஐந்து');
+    expect(readbackText('9845', 'ml')).toBe('ഒമ്പത് എട്ട് നാല് അഞ്ച്');
+    expect(readbackText('9845', 'bn')).toBe('নয় আট চার পাঁচ');
+    expect(readbackText('9845', 'mr')).toBe('नऊ आठ चार पाच');
+    expect(readbackText('9845', 'gu')).toBe('નવ આઠ ચાર પાંચ');
+    expect(readbackText('9845', 'pa')).toBe('ਨੌਂ ਅੱਠ ਚਾਰ ਪੰਜ');
   });
   it('separates groups with a pause marker', () => {
     expect(readbackText('402177889910', 'en')).toBe(

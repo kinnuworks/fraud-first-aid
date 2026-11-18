@@ -2,8 +2,8 @@
 import { getComplaint } from './store';
 import { missingFields } from './session';
 import { compareWithScreenshot } from './screenshot';
+import { LANG_NAME as LANG } from './pack';
 
-const LANG = { en: 'English', hi: 'Hindi', te: 'Telugu', kn: 'Kannada' } as const;
 
 export function complaintSystem(session: string, today = new Date().toISOString().slice(0, 10)): string {
   const c = getComplaint(session);

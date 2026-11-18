@@ -8,6 +8,12 @@ const LANGS = [
   ['te', 'తెలుగు'],
   ['hi', 'हिन्दी'],
   ['kn', 'ಕನ್ನಡ'],
+  ['ta', 'தமிழ்'],
+  ['ml', 'മലയാളം'],
+  ['bn', 'বাংলা'],
+  ['mr', 'मराठी'],
+  ['gu', 'ગુજરાતી'],
+  ['pa', 'ਪੰਜਾਬੀ'],
   ['en', 'English'],
 ] as const;
 
@@ -66,7 +72,7 @@ export function QuickstartPreCallCard({
         Lost money to a UPI scam? Tell me what happened.
       </h1>
       <p className="mt-[14px] text-sm font-medium leading-6 text-muted-foreground">
-        Speak Telugu, Hindi, Kannada or English. Keep your bank SMS open: it has the 12-digit UTR.
+        Speak your language: ten to choose from. Keep your bank SMS open: it has the 12-digit UTR.
       </p>
       <LanguageChips />
 

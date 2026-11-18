@@ -9,10 +9,18 @@ const SCRIPT: Record<ReadbackLang, (f: Record<string, string>) => string> = {
   en: (f) => `Hello, I want to report a UPI fraud. Amount: ${f.amount} rupees. Date and time: ${f.when}. UTR number: ${f.utr}. The money went to: ${f.payee}. My bank: ${f.bank}.`,
   hi: (f) => `नमस्ते, मुझे UPI धोखाधड़ी की शिकायत दर्ज करनी है। रकम: ${f.amount} रुपये। तारीख और समय: ${f.when}। UTR नंबर: ${f.utr}। पैसा यहाँ गया: ${f.payee}। मेरा बैंक: ${f.bank}।`,
   te: (f) => `నమస్కారం, నేను UPI మోసం గురించి ఫిర్యాదు చేయాలి. మొత్తం: ${f.amount} రూపాయలు. తేదీ, సమయం: ${f.when}. UTR నంబర్: ${f.utr}. డబ్బు వెళ్ళింది: ${f.payee}. నా బ్యాంక్: ${f.bank}.`,
+  ta: (f) => `வணக்கம், நான் ஒரு UPI மோசடி பற்றி புகார் செய்ய வேண்டும். தொகை: ${f.amount} ரூபாய். தேதி, நேரம்: ${f.when}. UTR எண்: ${f.utr}. பணம் சென்றது: ${f.payee}. என் வங்கி: ${f.bank}.`,
+  ml: (f) => `നമസ്കാരം, എനിക്ക് ഒരു UPI തട്ടിപ്പിനെക്കുറിച്ച് പരാതി നൽകണം. തുക: ${f.amount} രൂപ. തീയതി, സമയം: ${f.when}. UTR നമ്പർ: ${f.utr}. പണം പോയത്: ${f.payee}. എന്റെ ബാങ്ക്: ${f.bank}.`,
+  bn: (f) => `নমস্কার, আমি একটি UPI প্রতারণার অভিযোগ জানাতে চাই। পরিমাণ: ${f.amount} টাকা। তারিখ ও সময়: ${f.when}। UTR নম্বর: ${f.utr}। টাকা গেছে: ${f.payee}। আমার ব্যাংক: ${f.bank}।`,
+  mr: (f) => `नमस्कार, मला UPI फसवणुकीची तक्रार नोंदवायची आहे. रक्कम: ${f.amount} रुपये. तारीख आणि वेळ: ${f.when}. UTR क्रमांक: ${f.utr}. पैसे गेले: ${f.payee}. माझी बँक: ${f.bank}.`,
+  gu: (f) => `નમસ્તે, મારે UPI છેતરપિંડીની ફરિયાદ નોંધાવવી છે. રકમ: ${f.amount} રૂપિયા. તારીખ અને સમય: ${f.when}. UTR નંબર: ${f.utr}. પૈસા ગયા: ${f.payee}. મારી બેંક: ${f.bank}.`,
+  pa: (f) => `ਸਤ ਸ੍ਰੀ ਅਕਾਲ, ਮੈਂ UPI ਧੋਖਾਧੜੀ ਦੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਕਰਨੀ ਹੈ। ਰਕਮ: ${f.amount} ਰੁਪਏ। ਤਾਰੀਖ ਅਤੇ ਸਮਾਂ: ${f.when}। UTR ਨੰਬਰ: ${f.utr}। ਪੈਸੇ ਗਏ: ${f.payee}। ਮੇਰਾ ਬੈਂਕ: ${f.bank}।`,
   kn: (f) => `ನಮಸ್ಕಾರ, ನಾನು UPI ವಂಚನೆ ಬಗ್ಗೆ ದೂರು ನೀಡಬೇಕು. ಮೊತ್ತ: ${f.amount} ರೂಪಾಯಿ. ದಿನಾಂಕ, ಸಮಯ: ${f.when}. UTR ಸಂಖ್ಯೆ: ${f.utr}. ಹಣ ಹೋಗಿದ್ದು: ${f.payee}. ನನ್ನ ಬ್ಯಾಂಕ್: ${f.bank}.`,
 };
 
-const LANG_NAME: Record<ReadbackLang, string> = { en: 'English', hi: 'Hindi', te: 'Telugu', kn: 'Kannada' };
+export const LANG_NAME: Record<ReadbackLang, string> = {
+  en: 'English', hi: 'Hindi', te: 'Telugu', kn: 'Kannada', ta: 'Tamil', ml: 'Malayalam', bn: 'Bengali', mr: 'Marathi', gu: 'Gujarati', pa: 'Punjabi',
+};
 
 export type Pack =
   | { ok: false; missing: string[] }

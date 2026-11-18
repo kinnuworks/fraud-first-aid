@@ -3,12 +3,17 @@
 // digit words in English, Hindi, Kannada and Telugu, two-digit number words ("ninety eight",
 // अट्ठानवे, ತೊಂಬತ್ತೆಂಟು), "double"/"triple" and code-mixed utterances.
 
-export type ReadbackLang = 'en' | 'hi' | 'kn' | 'te';
+export const READBACK_LANGS = ['en', 'hi', 'kn', 'te', 'ta', 'ml', 'bn', 'mr', 'gu', 'pa'] as const;
+export type ReadbackLang = (typeof READBACK_LANGS)[number];
 
 const NUMERALS: Record<string, string> = {};
 '०१२३४५६७८९'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
 '೦೧೨೩೪೫೬೭೮೯'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
 '౦౧౨౩౪౫౬౭౮౯'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
+// Tamil, Malayalam, Bengali, Gujarati, Gurmukhi
+['௦௧௨௩௪௫௬௭௮௯', '൦൧൨൩൪൫൬൭൮൯', '০১২৩৪৫৬৭৮৯', '૦૧૨૩૪૫૬૭૮૯', '੦੧੨੩੪੫੬੭੮੯'].forEach((set) =>
+  [...set].forEach((c, i) => (NUMERALS[c] = String(i))),
+);
 
 // Devanagari spellings vary in transcripts: nukta (ड़/ड), chandrabindu (ँ/ं) and a final
 // वे/बे (अट्ठानवे/अट्ठानबे). Fold them so one table entry covers every variant.
@@ -169,6 +174,23 @@ mult(1e6, ['million']);
 // plurals like వేలు (thousands) alone are not a number.
 const LONE_SCALE = new Set(['వంద', 'వెయ్యి', 'ನೂರು', 'सौ'].map(fold));
 
+// Tamil, Malayalam, Bengali, Marathi, Gujarati, Punjabi digit words (0-9)
+const DIGIT_WORDS: string[][] = [
+  ['பூஜ்ஜியம்', 'பூஜ்யம்', 'சுழியம்', 'ஜீரோ', 'ஒன்று', 'இரண்டு', 'மூன்று', 'நான்கு', 'ஐந்து', 'ஆறு', 'ஏழு', 'எட்டு', 'ஒன்பது'],
+  ['പൂജ്യം', 'ഒന്ന്', 'രണ്ട്', 'മൂന്ന്', 'നാല്', 'അഞ്ച്', 'ആറ്', 'ഏഴ്', 'എട്ട്', 'ഒമ്പത്'],
+  ['শূন্য', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়'],
+  ['शून्य', 'एक', 'दोन', 'तीन', 'चार', 'पाच', 'सहा', 'सात', 'आठ', 'नऊ'],
+  ['શૂન્ય', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ'],
+  ['ਸਿਫ਼ਰ', 'ਇੱਕ', 'ਦੋ', 'ਤਿੰਨ', 'ਚਾਰ', 'ਪੰਜ', 'ਛੇ', 'ਸੱਤ', 'ਅੱਠ', 'ਨੌਂ'],
+];
+DIGIT_WORDS.forEach((ws) => {
+  // The Tamil row lists four words for zero before one..nine.
+  const zeros = ws.length - 9;
+  ws.forEach((w, i) => add(i < zeros ? 0 : i - zeros + 1, [w]));
+});
+
+add(9, ['ഒൻപത്']); // Malayalam nine, chillu spelling
+
 const REPEAT: Record<string, number> = {
   double: 2,
   triple: 3,
@@ -182,7 +204,7 @@ const REPEAT: Record<string, number> = {
 // They only count as digits when a neighbouring token is a number.
 const AMBIGUOUS = new Set(['do', 'no', 'o', 'oh', 'che', 'char', 'aat']);
 
-const ARTICLE_ONE = new Set(['एक', 'ek', 'ಒಂದು', 'ondu', 'one'].map(fold));
+const ARTICLE_ONE = new Set(['एक', 'ek', 'ಒಂದು', 'ondu', 'one', 'এক', 'એક', 'ਇੱਕ'].map(fold));
 
 function tokenDigits(tok: string): string | null {
   if (/^[0-9]+$/.test(tok)) return tok;
@@ -295,6 +317,12 @@ const SAY: Record<ReadbackLang, string[]> = {
   hi: ['शून्य', 'एक', 'दो', 'तीन', 'चार', 'पांच', 'छह', 'सात', 'आठ', 'नौ'],
   te: ['సున్నా', 'ఒకటి', 'రెండు', 'మూడు', 'నాలుగు', 'ఐదు', 'ఆరు', 'ఏడు', 'ఎనిమిది', 'తొమ్మిది'],
   kn: ['ಸೊನ್ನೆ', 'ಒಂದು', 'ಎರಡು', 'ಮೂರು', 'ನಾಲ್ಕು', 'ಐದು', 'ಆರು', 'ಏಳು', 'ಎಂಟು', 'ಒಂಬತ್ತು'],
+  ta: ['பூஜ்ஜியம்', 'ஒன்று', 'இரண்டு', 'மூன்று', 'நான்கு', 'ஐந்து', 'ஆறு', 'ஏழு', 'எட்டு', 'ஒன்பது'],
+  ml: ['പൂജ്യം', 'ഒന്ന്', 'രണ്ട്', 'മൂന്ന്', 'നാല്', 'അഞ്ച്', 'ആറ്', 'ഏഴ്', 'എട്ട്', 'ഒമ്പത്'],
+  bn: ['শূন্য', 'এক', 'দুই', 'তিন', 'চার', 'পাঁচ', 'ছয়', 'সাত', 'আট', 'নয়'],
+  mr: ['शून्य', 'एक', 'दोन', 'तीन', 'चार', 'पाच', 'सहा', 'सात', 'आठ', 'नऊ'],
+  gu: ['શૂન્ય', 'એક', 'બે', 'ત્રણ', 'ચાર', 'પાંચ', 'છ', 'સાત', 'આઠ', 'નવ'],
+  pa: ['ਸਿਫ਼ਰ', 'ਇੱਕ', 'ਦੋ', 'ਤਿੰਨ', 'ਚਾਰ', 'ਪੰਜ', 'ਛੇ', 'ਸੱਤ', 'ਅੱਠ', 'ਨੌਂ'],
 };
 
 export function readbackText(digits: string, lang: ReadbackLang): string {

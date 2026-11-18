@@ -2,7 +2,7 @@
 
 **Your UPI fraud complaint, spoken.**
 
-UTR Pakka is a voice agent for someone who has just lost money in a UPI scam. They talk in Telugu, Hindi, Kannada or English; it gets every number right (the 12-digit UTR, the amount, who was paid) and hands them a complaint ready for the 1930 helpline and their bank.
+UTR Pakka is a voice agent for someone who has just lost money in a UPI scam. They talk in any of ten languages (Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati, Punjabi or English); it gets every number right (the 12-digit UTR, the amount, who was paid) and hands them a complaint ready for the 1930 helpline and their bank.
 
 It runs on Agora's Conversational AI Engine because the job is a live conversation with a frightened person. Agora runs the real-time loop: speech-to-text in the caller's language, our model with its complaint tools, and a Murf Falcon voice that reads each number back. It also handles interruptions and turn-taking.
 
@@ -31,7 +31,7 @@ The links go to news reports of the parliamentary replies; we couldn't open the 
 
 ```
 caller ──voice──▶ Agora Conversational AI Engine
-                    ├─ Sarvam speech-to-text (te-IN / hi-IN / kn-IN / en-IN)
+                    ├─ Sarvam speech-to-text (10 languages: te, hi, kn, ta, ml, bn, mr, gu, pa, en)
                     ├─ our model route  ──tools──▶ complaint session (numbers parsed by code)
                     └─ Murf Falcon voice (reads each number back in groups of four)
 screen ◀── complaint card (polls the same session) ◀── payment screenshot check
@@ -39,7 +39,7 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 
 1. Talk. The caller picks a language; the page starts on Telugu. Agora starts an agent with Sarvam speech-to-text in that language and a Murf Falcon voice. Code: [`web/lib/handlers/invite-agent.ts`](web/lib/handlers/invite-agent.ts), [`web/lib/agent-config.ts`](web/lib/agent-config.ts).
 2. Capture. Agora sends each turn to our OpenAI-compatible model route. The model calls tools like `record_utr`, `record_amount`, `record_payee`; the tools read the numbers from the caller's own transcript, so the model never types a digit. Code: [`web/lib/llm-route.ts`](web/lib/llm-route.ts), [`web/lib/complaint/tools.ts`](web/lib/complaint/tools.ts).
-3. Numbers in four languages. Digits said one by one, in pairs ("ninety-eight"), with "double"/"triple", or as hundreds and thousands (నాలుగు వేల ఎనిమిది వందల తొంభై రెండు → 4892) become exact digits. Code and tests: [`web/lib/entities/numbers.ts`](web/lib/entities/numbers.ts).
+3. Numbers in ten languages. Digits said one by one, in pairs ("ninety-eight"), with "double"/"triple", or as hundreds and thousands (నాలుగు వేల ఎనిమిది వందల తొంభై రెండు → 4892) become exact digits. Code and tests: [`web/lib/entities/numbers.ts`](web/lib/entities/numbers.ts).
 4. Confirm. Every number is read back in groups of four in the caller's language. "The second group is wrong" re-asks only that group. Nothing counts until the caller says yes. Code: [`web/lib/complaint/session.ts`](web/lib/complaint/session.ts).
 5. Second source. The caller can add the payment screenshot. An AI model reads the UTR, amount, payee and time from it, and each field is compared with what they said; a mismatch is read back with the exact group that differs. Code: [`web/lib/complaint/screenshot.ts`](web/lib/complaint/screenshot.ts), [`web/lib/complaint/vision.ts`](web/lib/complaint/vision.ts).
 6. Act. The IFSC code is looked up on the public Razorpay IFSC API; the RBI 3- and 7-working-day deadlines are computed (Sundays and 2nd/4th Saturdays skipped); the pack is built: a script for the 1930 call in the caller's language, a dispute letter for the bank, and an English card for the 1930 operator. Code: [`web/lib/complaint/ifsc.ts`](web/lib/complaint/ifsc.ts), [`web/lib/complaint/deadline.ts`](web/lib/complaint/deadline.ts), [`web/lib/complaint/pack.ts`](web/lib/complaint/pack.ts).
@@ -51,7 +51,7 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 | Agora Conversational AI Engine (agora-agents SDK 2.14) | starts the voice agent per call, with Sarvam ASR, our model URL and Murf TTS | [`invite-agent.ts`](web/lib/handlers/invite-agent.ts) |
 | Custom LLM endpoint | Agora calls our OpenAI-compatible route, guarded by a shared secret, with the call's session id | [`llm-route.ts`](web/lib/llm-route.ts), [`route.ts`](web/app/api/call/%5B...path%5D/route.ts) |
 | Agora RTC + RTM | live audio, and transcripts on screen | [`ConversationComponent.tsx`](web/components/ConversationComponent.tsx) |
-| Murf Falcon TTS | the agent's voice per language (hi-IN-namrita, kn-IN-harshitha, en-IN-anisha speaking Telugu and English) | [`agent-config.ts`](web/lib/agent-config.ts) |
+| Murf Falcon TTS | the agent's voice per language: native voices for Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati and Punjabi, and en-IN-anisha speaking Telugu and English | [`agent-config.ts`](web/lib/agent-config.ts) |
 
 ## Check it yourself
 

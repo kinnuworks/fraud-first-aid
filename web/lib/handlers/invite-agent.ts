@@ -12,7 +12,7 @@ import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
 import { presetFor, prototypeInstructions } from '@/lib/agent-config';
 import { startComplaint } from '@/lib/complaint/store';
-import type { ReadbackLang } from '@/lib/entities/numbers';
+import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 
 // System prompt that defines the agent's personality and behavior.
 // Swap this out to change what the agent talks about.
@@ -32,7 +32,7 @@ export async function POST(request: NextRequest) {
     const { requester_id, channel_name } = body;
     const langArg = (body as unknown as { lang?: string }).lang;
     const preset = presetFor(langArg);
-    const lang: ReadbackLang = (['en', 'hi', 'te', 'kn'] as const).includes(langArg as ReadbackLang)
+    const lang: ReadbackLang = (READBACK_LANGS as readonly string[]).includes(langArg ?? '')
       ? (langArg as ReadbackLang)
       : 'en';
     // Our own model route (complaint tools) once it has a public URL; until then Agora's

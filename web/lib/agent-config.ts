@@ -1,6 +1,6 @@
 // Language presets for the voice agent: which Sarvam ASR language code and which Murf
 // Falcon voice to use. Voice IDs come from Murf's live voice list (GET /v1/speech/voices).
-export type LangCode = 'hi' | 'kn' | 'te' | 'en' | 'auto';
+export type LangCode = 'hi' | 'kn' | 'te' | 'en' | 'ta' | 'ml' | 'bn' | 'mr' | 'gu' | 'pa' | 'auto';
 
 export type LangPreset = {
   asrLanguage: string; // Sarvam code, or "unknown" for automatic detection
@@ -33,6 +33,42 @@ export const PRESETS: Record<LangCode, LangPreset> = {
     voiceId: 'en-IN-anisha',
     locale: 'en-IN',
     greeting: "Hello! I'm here to help. Tell me what happened.",
+  },
+  ta: {
+    asrLanguage: 'ta-IN',
+    voiceId: 'ta-IN-karthikeyan',
+    locale: 'ta-IN',
+    greeting: 'வணக்கம்! நான் உங்களுக்கு உதவ இங்கே இருக்கிறேன். என்ன நடந்தது என்று சொல்லுங்கள்.',
+  },
+  ml: {
+    asrLanguage: 'ml-IN',
+    voiceId: 'ml-IN-nimisha',
+    locale: 'ml-IN',
+    greeting: 'നമസ്കാരം! ഞാൻ നിങ്ങളെ സഹായിക്കാൻ ഇവിടെയുണ്ട്. എന്താണ് സംഭവിച്ചതെന്ന് പറയൂ.',
+  },
+  bn: {
+    asrLanguage: 'bn-IN',
+    voiceId: 'bn-IN-debarati',
+    locale: 'bn-IN',
+    greeting: 'নমস্কার! আমি আপনাকে সাহায্য করতে এখানে আছি। কী হয়েছে বলুন।',
+  },
+  mr: {
+    asrLanguage: 'mr-IN',
+    voiceId: 'mr-IN-prajakta',
+    locale: 'mr-IN',
+    greeting: 'नमस्कार! मी तुमची मदत करायला इथे आहे. काय झालं ते सांगा.',
+  },
+  gu: {
+    asrLanguage: 'gu-IN',
+    voiceId: 'gu-IN-diya',
+    locale: 'gu-IN',
+    greeting: 'નમસ્તે! હું તમારી મદદ કરવા અહીં છું. શું થયું તે કહો.',
+  },
+  pa: {
+    asrLanguage: 'pa-IN',
+    voiceId: 'pa-IN-harpreet',
+    locale: 'pa-IN',
+    greeting: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਇੱਥੇ ਹਾਂ। ਦੱਸੋ ਕੀ ਹੋਇਆ।',
   },
   auto: {
     asrLanguage: 'unknown',
