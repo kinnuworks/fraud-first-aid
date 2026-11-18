@@ -3,6 +3,7 @@
 import { readbackText, type ReadbackLang } from '../entities/numbers';
 import { missingFields, deadlines, type Complaint } from './session';
 import { scamById } from './scams';
+import { reminderIcs } from './reminder';
 
 const inr = (n: number) => n.toLocaleString('en-IN');
 
@@ -30,6 +31,7 @@ export type Pack =
       bankLetter: string;
       script1930: string;
       operatorCard: string;
+      reminders: string;
       minutesSinceDebit: number | null;
       deadlines: ReturnType<typeof deadlines>;
     };
@@ -75,5 +77,6 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     ...c.flags.map((f) => `Scam red flag heard live: ${scamById(f.scam)?.name ?? f.scam} (caller ${f.red_flag})`),
     ...(c.story ? [`What happened: ${c.story.en}`, `Caller's words: "${c.story.words}"`] : []),
   ].join('\n');
-  return { ok: true, bankLetter, script1930, operatorCard, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
+  const reminders = reminderIcs({ utr: f.utr.value, amount: f.amount.value, reportedOn: today, bank: f.victim_bank.value.split(',')[0] });
+  return { ok: true, bankLetter, script1930, operatorCard, reminders, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
 }

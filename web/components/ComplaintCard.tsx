@@ -8,7 +8,7 @@ import { scamById } from '@/lib/complaint/scams';
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
-  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
+  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
 export type ComplaintView = {
@@ -186,6 +186,14 @@ function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
       <Copyable title="1. Call 1930 now and read this out" text={pack.script1930} />
       <Copyable title={`2. Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
       <Copyable title="3. If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
+      <a
+        href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
+        download="utr-pakka-reminders.ics"
+        className="inline-block rounded border px-3 py-1.5 text-sm"
+        data-testid="reminders"
+      >
+        4. Add 2 reminders to my calendar (bank deadline and refund date)
+      </a>
     </div>
   );
 }
