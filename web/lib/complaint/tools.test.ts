@@ -34,6 +34,10 @@ describe('complaintSystem', () => {
     expect(p).toContain('2026-11-19');
     expect(p).toMatch(/never ask for an OTP, PIN, password/i);
     expect(p).toContain('Still needed: utr, amount, when, payee, victim_bank');
+    // Before the loss: a scam still in progress comes first.
+    expect(p).toMatch(/still on the line|still talking to/i);
+    expect(p).toMatch(/hang up/i);
+    expect(p).toMatch(/do not (scan|share)/i);
   });
 });
 
