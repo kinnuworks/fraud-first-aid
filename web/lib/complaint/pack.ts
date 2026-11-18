@@ -12,11 +12,27 @@ const SCRIPT: Record<ReadbackLang, (f: Record<string, string>) => string> = {
   kn: (f) => `ನಮಸ್ಕಾರ, ನಾನು UPI ವಂಚನೆ ಬಗ್ಗೆ ದೂರು ನೀಡಬೇಕು. ಮೊತ್ತ: ${f.amount} ರೂಪಾಯಿ. ದಿನಾಂಕ, ಸಮಯ: ${f.when}. UTR ಸಂಖ್ಯೆ: ${f.utr}. ಹಣ ಹೋಗಿದ್ದು: ${f.payee}. ನನ್ನ ಬ್ಯಾಂಕ್: ${f.bank}.`,
 };
 
+const LANG_NAME: Record<ReadbackLang, string> = { en: 'English', hi: 'Hindi', te: 'Telugu', kn: 'Kannada' };
+
 export type Pack =
   | { ok: false; missing: string[] }
-  | { ok: true; bankLetter: string; script1930: string; deadlines: ReturnType<typeof deadlines> };
+  | {
+      ok: true;
+      bankLetter: string;
+      script1930: string;
+      operatorCard: string;
+      minutesSinceDebit: number | null;
+      deadlines: ReturnType<typeof deadlines>;
+    };
 
-export function buildPack(c: Complaint, today: string): Pack {
+// The debit time is recorded as Indian local time without an offset.
+export function minutesSince(whenIst: string, now: Date): number | null {
+  const t = Date.parse(/[zZ]|[+-]\d\d:\d\d$/.test(whenIst) ? whenIst : `${whenIst.length === 16 ? `${whenIst}:00` : whenIst}+05:30`);
+  if (Number.isNaN(t) || t > now.getTime()) return null;
+  return Math.floor((now.getTime() - t) / 60000);
+}
+
+export function buildPack(c: Complaint, today: string, now: Date = new Date()): Pack {
   const missing = missingFields(c);
   if (missing.length) return { ok: false, missing };
   const f = c.fields as Required<Complaint['fields']>;
@@ -38,5 +54,16 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     payee: f.payee.value,
     bank: f.victim_bank.value,
   });
-  return { ok: true, bankLetter, script1930, deadlines: d };
+  const operatorCard = [
+    'UPI fraud report, prepared by voice (UTR Pakka)',
+    `Caller language: ${LANG_NAME[c.lang]}`,
+    `UTR: ${f.utr.value.replace(/(\d{4})(?=\d)/g, '$1 ')} (confirmed by caller${c.shot?.utr === f.utr.value ? ', matches payment screenshot' : ''})`,
+    `Amount: Rs ${inr(f.amount.value)}`,
+    `Debited: ${when}`,
+    `Paid to: ${f.payee.value}`,
+    `Caller's bank: ${f.victim_bank.value}`,
+    `Bank deadline (zero liability): ${d.zeroLiabilityBy}`,
+    ...(c.story ? [`What happened: ${c.story.en}`, `Caller's words: "${c.story.words}"`] : []),
+  ].join('\n');
+  return { ok: true, bankLetter, script1930, operatorCard, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
 }

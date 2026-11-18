@@ -53,6 +53,14 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       inputSchema: z.object({ field: z.enum(['utr', 'amount', 'payee']) }),
       execute: async ({ field }) => takeFromShot(c, field),
     }),
+    record_story: tool({
+      description: 'Record how the fraud happened, once they have told you: a one-line English summary for the helpline operator (scam type, what they were asked to do). Their own words are kept from their last turn.',
+      inputSchema: z.object({ summary_en: z.string().max(300) }),
+      execute: async ({ summary_en }) => {
+        c.story = { en: summary_en, words: lastUser.slice(0, 500) };
+        return { ok: true };
+      },
+    }),
     confirm: tool({
       description: 'Mark a field confirmed after the caller said the read-back is right.',
       inputSchema: z.object({ field: z.enum(['utr', 'amount', 'when', 'payee', 'victim_bank']) }),

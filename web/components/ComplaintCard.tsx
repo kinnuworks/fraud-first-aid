@@ -2,11 +2,12 @@
 // The complaint as it is captured during the call: each field, whether the caller confirmed
 // it, the RBI deadlines, and the finished pack. Plain on purpose until the design pass.
 import { useEffect, useState } from 'react';
+import { minutesSince } from '@/lib/complaint/pack';
 
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
-  | { ok: true; bankLetter: string; script1930: string; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
+  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 export type ComplaintView = {
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
@@ -75,6 +76,7 @@ export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView 
           />
         </label>
       )}
+      <SinceDebit when={data.fields.when?.value} />
       {data.deadlines && (
         <p className="mt-3">
           Tell your bank by <strong>{data.deadlines.zeroLiabilityBy}</strong> for zero liability (RBI, 3 working days).
@@ -85,12 +87,34 @@ export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView 
   );
 }
 
+const hm = (m: number) => (m < 60 ? `${m} min` : `${Math.floor(m / 60)} h ${m % 60} min`);
+
+// Time since the money left: the first hours decide whether it can still be held.
+function SinceDebit({ when }: { when?: string | number }) {
+  const [now, setNow] = useState(() => new Date());
+  useEffect(() => {
+    const t = setInterval(() => setNow(new Date()), 30000);
+    return () => clearInterval(t);
+  }, []);
+  const m = typeof when === 'string' ? minutesSince(when, now) : null;
+  if (m === null) return null;
+  return (
+    <p className="mt-3" data-testid="since-debit">
+      Money left your account <strong>{hm(m)}</strong> ago. Report it now: the sooner 1930 hears, the better the chance it is held.
+    </p>
+  );
+}
+
 function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
   return (
     <div className="mt-4 space-y-3" data-testid="pack">
       <h3 className="font-semibold">Ready: call 1930 now, then send this to your bank</h3>
+      {pack.minutesSinceDebit !== null && (
+        <p className="text-xs text-muted-foreground">Complaint ready {hm(pack.minutesSinceDebit)} after the money left.</p>
+      )}
       <Copyable title="What to say on 1930" text={pack.script1930} />
       <Copyable title="Letter for your bank" text={pack.bankLetter} />
+      <Copyable title="For the 1930 operator (English)" text={pack.operatorCard} />
     </div>
   );
 }

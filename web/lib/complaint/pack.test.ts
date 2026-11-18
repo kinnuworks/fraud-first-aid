@@ -43,3 +43,24 @@ describe('buildPack', () => {
     expect(hi.script1930).toContain('चार शून्य दो एक');
   });
 });
+
+describe('operator card and golden-hour clock', () => {
+  it('builds an English 1930 operator ticket with the caller language and story', () => {
+    const c = full('te');
+    c.story = { en: 'Caller got a fake KYC-update call and scanned a QR code to "receive" money.', words: 'KYC update ani call vachindi' };
+    const p = buildPack(c, '2026-11-19', new Date('2026-11-19T15:10:00+05:30'));
+    if (!p.ok) throw new Error('expected a pack');
+    expect(p.operatorCard).toContain('Caller language: Telugu');
+    expect(p.operatorCard).toContain('UTR: 4021 7788 9910');
+    expect(p.operatorCard).toContain('fake KYC-update call');
+    expect(p.operatorCard).toContain('Bank deadline (zero liability): 2026-11-23');
+    expect(p.minutesSinceDebit).toBe(40);
+  });
+
+  it('leaves the clock empty when the debit time is unknown or in the future', () => {
+    const c = full('en');
+    const p = buildPack(c, '2026-11-19', new Date('2026-11-19T14:00:00+05:30'));
+    if (!p.ok) throw new Error('expected a pack');
+    expect(p.minutesSinceDebit).toBeNull();
+  });
+});
