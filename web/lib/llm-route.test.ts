@@ -155,3 +155,33 @@ describe('shortcut replies', () => {
     expect(called).toBe(true);
   });
 });
+
+describe('only the new words reach the tools', () => {
+  it('after a silent reply, Agora appends to the same user message; tools and shortcuts see just the new part', async () => {
+    const seen: string[] = [];
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: fakeStream(['<silent>']),
+      shortcut: (_s, last) => {
+        seen.push(last);
+        return '<silent>';
+      },
+    });
+    const send = (content: string) =>
+      route(
+        new NextRequest('http://localhost/api/chat/completions?session=acc1', {
+          method: 'POST',
+          body: JSON.stringify({ messages: [{ role: 'user', content }] }),
+          headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+        }),
+      ).then((r) => r.text());
+    await send('four zero two one');
+    await send('four zero two one seven seven eight eight');
+    await send('four zero two one seven seven eight eight nine nine one zero');
+    expect(seen).toEqual(['four zero two one', ' seven seven eight eight', ' nine nine one zero']);
+    // a genuinely new message is passed whole
+    await send('yes');
+    expect(seen.at(-1)).toBe('yes');
+  });
+});

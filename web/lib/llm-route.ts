@@ -45,6 +45,9 @@ function authorized(
 
 export const SILENT = "<silent>";
 
+// Last user message seen per session (see the append behaviour in the route).
+const seenUser = new Map<string, string>();
+
 export function createLlmRoute({
   secret,
   model,
@@ -75,7 +78,13 @@ export function createLlmRoute({
     init?.(session, request.nextUrl.searchParams);
     const msgs = body.messages ?? [];
     const last = [...msgs].reverse().find((m) => m.role === "user")?.content;
-    const lastUser = typeof last === "string" ? last : "";
+    const whole = typeof last === "string" ? last : "";
+    // After a silent reply Agora appends the next utterance to the same user message, so pass on
+    // only the words this session hasn't seen yet.
+    const prev = seenUser.get(session) ?? "";
+    const lastUser =
+      prev && whole.startsWith(prev) && whole.length > prev.length ? whole.slice(prev.length) : whole;
+    seenUser.set(session, whole);
     const fixed = shortcut?.(session, lastUser) ?? null;
     const result =
       fixed !== null
