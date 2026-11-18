@@ -74,6 +74,7 @@ describe('scam-call guard phase', () => {
     expect(p).toMatch(/AnyDesk|screen-sharing/);
     expect(p).toMatch(/digital arrest/i);
     expect(p).toContain('fake_kyc');
+    expect(p).toContain('[[flag:');
     expect(p).toContain('start_complaint');
     expect(p).not.toContain('Still needed');
     const r = await run(complaintTools('g1', 'naa dabbulu poyayi').start_complaint);
@@ -82,11 +83,16 @@ describe('scam-call guard phase', () => {
     expect(complaintSystem('g1', '2026-11-19')).toContain('Still needed');
   });
 
-  it('records which red flag fired, for the card and the operator ticket', async () => {
-    startComplaint('g2', 'en', 'guard');
-    const r = await run(complaintTools('g2', 'share the OTP sir').flag_scam, { red_flag: 'asked for an OTP', scam: 'vishing_otp' });
-    expect(peekComplaint('g2')?.flags).toEqual([{ red_flag: 'asked for an OTP', scam: 'vishing_otp', heard: 'share the OTP sir' }]);
-    // the tool hands back the official line so the agent can say it in the caller's language
-    expect(String(r.official)).toContain('never ask customers to share');
+});
+
+describe('addFlag', () => {
+  it('keeps one flag per scam type', async () => {
+    const { addFlag } = await import('./session');
+    startComplaint('g3', 'te', 'guard');
+    const c = peekComplaint('g3')!;
+    addFlag(c, 'fake_kyc', 'asked for the OTP', 'OTP bata dijiye');
+    addFlag(c, 'fake_kyc', 'threatened to block the account', 'block ho jayega');
+    addFlag(c, 'not_a_scam_id', 'x', 'y');
+    expect(c.flags).toEqual([{ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'OTP bata dijiye' }]);
   });
 });

@@ -3,6 +3,7 @@
 import { spokenToDigits, groupForReadback, readbackText, type ReadbackLang } from '../entities/numbers';
 import { isUtr, isMobile, spokenUpiId, parseAmount } from './fields';
 import { addBankWorkingDays } from './deadline';
+import { scamById } from './scams';
 
 export type FieldName = 'utr' | 'amount' | 'when' | 'payee' | 'victim_bank';
 export const REQUIRED: FieldName[] = ['utr', 'amount', 'when', 'payee', 'victim_bank'];
@@ -124,4 +125,11 @@ export function takeFromShot(c: Complaint, field: 'utr' | 'amount' | 'payee'): R
   if (field === 'amount') c.fields.amount = { value: Number(v), confirmed: false };
   else c.fields.payee = { value: String(v), confirmed: false };
   return { ok: true, value: v };
+}
+
+// One flag per scam type; unknown ids are ignored.
+export function addFlag(c: Complaint, scam: string, red_flag: string, heard: string): boolean {
+  if (!scamById(scam) || c.flags.some((f) => f.scam === scam)) return false;
+  c.flags.push({ scam, red_flag, heard: heard.slice(0, 300) });
+  return true;
 }

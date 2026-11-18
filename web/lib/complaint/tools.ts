@@ -6,20 +6,10 @@ import { getComplaint } from './store';
 import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
 import { isIfsc } from './fields';
-import { SCAM_IDS, scamById } from './scams';
 
 export function complaintTools(session: string, lastUser: string): ToolSet {
   const c = getComplaint(session);
   return {
-    flag_scam: tool({
-      description: 'Guard mode: record the red flag you just heard on the call (what the caller asked for) and the scam it points to, before you warn the user.',
-      inputSchema: z.object({ red_flag: z.string().max(120), scam: z.enum(SCAM_IDS) }),
-      execute: async ({ red_flag, scam }) => {
-        c.flags.push({ red_flag, scam, heard: lastUser.slice(0, 300) });
-        const s = scamById(scam);
-        return { ok: true, scam: s?.name, official: s?.official, source: s?.source };
-      },
-    }),
     start_complaint: tool({
       description: 'Switch from listening (guard) to taking the fraud report, when the user asks for help or says money has already gone.',
       inputSchema: z.object({}),

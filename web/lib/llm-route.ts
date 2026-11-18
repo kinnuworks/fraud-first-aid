@@ -16,6 +16,9 @@ type Deps = {
   tools?: (session: string, lastUser: string) => ToolSet;
   // Called first with the URL's query, so a session can be (re)created with its language and mode.
   init?: (session: string, params: URLSearchParams) => void;
+  // Inline markers the model writes before speaking, e.g. [[flag:fake_kyc|asked for the OTP]]:
+  // removed from the spoken text and reported here (saves a tool round-trip).
+  onMarker?: (session: string, id: string, detail: string, lastUser: string) => void;
 };
 
 function authorized(header: string | null, secret: string | undefined): boolean {
@@ -27,7 +30,7 @@ function authorized(header: string | null, secret: string | undefined): boolean 
 
 export const SILENT = '<silent>';
 
-export function createLlmRoute({ secret, model, streamTextImpl, system, tools, init }: Deps) {
+export function createLlmRoute({ secret, model, streamTextImpl, system, tools, init, onMarker }: Deps) {
   return async function POST(request: NextRequest) {
     if (!authorized(request.headers.get('authorization'), secret)) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
@@ -75,12 +78,44 @@ export function createLlmRoute({ secret, model, streamTextImpl, system, tools, i
           // (the scam-call guard listens without talking over the call).
           // Spoken output: no markdown symbols for the voice to read out.
           const plain = (t: string) => t.replace(/[*_`]+/g, '').replace(/(^|\n|\. )#+\s*/g, '$1');
+          let pending = '';
+          const say = (t: string) => {
+            if (t) controller.enqueue(chunk({ content: plain(t) }));
+          };
+          const feed = (t: string, end = false) => {
+            pending += t;
+            for (;;) {
+              const open = pending.indexOf('[[');
+              if (open < 0) {
+                // keep a lone trailing "[" in case it starts a marker in the next chunk
+                const keep = !end && pending.endsWith('[') ? 1 : 0;
+                say(pending.slice(0, pending.length - keep));
+                pending = pending.slice(pending.length - keep);
+                return;
+              }
+              say(pending.slice(0, open));
+              pending = pending.slice(open);
+              const close = pending.indexOf(']]');
+              if (close < 0) {
+                if (end) {
+                  say(pending);
+                  pending = '';
+                }
+                return;
+              }
+              const m = pending.slice(2, close).match(/^flag:([a-z_]+)\|([\s\S]*)$/);
+              if (m) onMarker?.(session, m[1], m[2].trim(), lastUser);
+              pending = pending.slice(close + 2).replace(/^\s+/, '');
+            }
+          };
+          // A reply that starts with <silent> is dropped whole, so the agent says nothing
+          // (the scam-call guard listens without talking over the call).
           let head = '';
           let decided: 'speak' | 'silent' | null = null;
           for await (const part of result.textStream) {
             if (decided === 'silent') continue;
             if (decided === 'speak') {
-              controller.enqueue(chunk({ content: plain(part) }));
+              feed(part);
               continue;
             }
             head += part;
@@ -88,10 +123,11 @@ export function createLlmRoute({ secret, model, streamTextImpl, system, tools, i
             if (t.startsWith(SILENT)) decided = 'silent';
             else if (t.length >= SILENT.length || !SILENT.startsWith(t)) {
               decided = 'speak';
-              controller.enqueue(chunk({ content: plain(head) }));
+              feed(head);
             }
           }
-          if (decided === null && head && !head.trimStart().startsWith(SILENT)) controller.enqueue(chunk({ content: plain(head) }));
+          if (decided === null && head && !head.trimStart().startsWith(SILENT)) feed(head);
+          if (decided !== 'silent') feed('', true);
           controller.enqueue(chunk({}, 'stop'));
           controller.enqueue(enc.encode('data: [DONE]\n\n'));
           controller.close();

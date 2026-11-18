@@ -4,6 +4,7 @@ import { createLlmRoute } from '@/lib/llm-route';
 import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint } from '@/lib/complaint/store';
+import { addFlag } from '@/lib/complaint/session';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -14,6 +15,9 @@ export const POST = createLlmRoute({
   streamTextImpl: streamText,
   tools: complaintTools,
   system: (session) => complaintSystem(session),
+  onMarker: (session, id, detail, lastUser) => {
+    addFlag(getComplaint(session), id, detail, lastUser);
+  },
   // lang and mode ride on the URL Agora calls, so a restarted instance rebuilds the session right.
   init: (session, q) => {
     const lang = q.get('lang') ?? '';

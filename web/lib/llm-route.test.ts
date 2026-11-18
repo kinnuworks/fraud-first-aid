@@ -106,3 +106,27 @@ describe('silent replies (scam-call guard)', () => {
     expect(await contentOf(['Call **19', '30** now. ', '# Done'])).toBe('Call 1930 now. Done');
   });
 });
+
+describe('inline markers', () => {
+  it('pulls [[flag:id|ask]] markers out of the spoken text, even split across chunks, and reports them', async () => {
+    const seen: Array<[string, string, string]> = [];
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: fakeStream(['[[fla', 'g:fake_kyc|asked for the ', 'OTP]]This is a fake ', 'KYC call. Hang up.']),
+      onMarker: (session, id, detail) => seen.push([session, id, detail]),
+    });
+    const r = new NextRequest('http://localhost/api/chat/completions?session=m1', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'x' }] }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    const text = (await (await route(r)).text())
+      .split('\n\n')
+      .filter((l) => l.startsWith('data: {'))
+      .map((l) => JSON.parse(l.slice(6)).choices[0].delta.content ?? '')
+      .join('');
+    expect(text).toBe('This is a fake KYC call. Hang up.');
+    expect(seen).toEqual([['m1', 'fake_kyc', 'asked for the OTP']]);
+  });
+});
