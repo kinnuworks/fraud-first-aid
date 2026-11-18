@@ -44,6 +44,38 @@ describe('spokenToDigits', () => {
     expect(spokenToDigits('पाँच॥')).toBe('5');
   });
 
+  // Raw Sarvam saarika:v2.5 transcripts of numbers spoken in pairs (pairs probe, 18 Nov 2026).
+  it('reads Hindi two-digit number words, including spelling variants', () => {
+    expect(spokenToDigits('मेरा नंबर है सत्तर उन्नीस अट्ठाईस सैंतीस छियालीस।')).toBe('7019283746');
+    expect(spokenToDigits('अट्ठानवे पैंतालीस शून्य एक तेईस पैंतालीस')).toBe('9845012345');
+    expect(spokenToDigits('अट्ठानबे अड़तीस अड़सठ')).toBe('983868');
+    expect(spokenToDigits('दस ग्यारह निन्यानबे')).toBe('101199');
+  });
+
+  it('reads Telugu tens followed by a unit as one pair', () => {
+    expect(
+      spokenToDigits('నా నంబర్ తొంభై ఎనిమిది నలభై ఐదు సున్నా ఒకటి ఇరవై మూడు నలభై ఐదు'),
+    ).toBe('9845012345');
+    expect(spokenToDigits('నా నంబర్ డెబ్బై పందొమ్మిది ఇరవై ఎనిమిది ముప్పై ఏడు నలభై ఆరు')).toBe(
+      '7019283746',
+    );
+    expect(spokenToDigits('పది యాభై')).toBe('1050');
+  });
+
+  it('reads Kannada joined and separate two-digit words', () => {
+    expect(
+      spokenToDigits('ನನ್ನ ನಂಬರ್ ತೊಂಬತ್ತೆಂಟು ನಲವತ್ತೈದು ಸೊನ್ನೆ ಒಂದು ಇಪ್ಪತ್ಮೂರು ನಲವತ್ತೈದು.'),
+    ).toBe('9845012345');
+    expect(spokenToDigits('ಎಪ್ಪತ್ತು ಹತ್ತೊಂಬತ್ತು ಇಪ್ಪತ್ತು ಎಂಟು')).toBe('701928');
+  });
+
+  it('reads English tens and teens', () => {
+    expect(spokenToDigits('ninety eight forty five zero one twenty three forty-five')).toBe(
+      '9845012345',
+    );
+    expect(spokenToDigits('seventy nineteen')).toBe('7019');
+  });
+
   it('returns an empty string when there is no number', () => {
     expect(spokenToDigits('mera paisa chala gaya')).toBe('');
   });

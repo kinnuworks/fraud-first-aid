@@ -1,7 +1,7 @@
 // Turns a spoken or transcribed number into exact digits, and reads digits back
 // group by group. Handles ASCII digits, Devanagari and Kannada numerals, and
-// digit words in English, Hindi (Devanagari and Latin) and Kannada (script and Latin),
-// including "double"/"triple" and code-mixed utterances.
+// digit words in English, Hindi, Kannada and Telugu, two-digit number words ("ninety eight",
+// अट्ठानवे, ತೊಂಬತ್ತೆಂಟು), "double"/"triple" and code-mixed utterances.
 
 export type ReadbackLang = 'en' | 'hi' | 'kn' | 'te';
 
@@ -10,8 +10,20 @@ const NUMERALS: Record<string, string> = {};
 '೦೧೨೩೪೫೬೭೮೯'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
 '౦౧౨౩౪౫౬౭౮౯'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
 
+// Devanagari spellings vary in transcripts: nukta (ड़/ड), chandrabindu (ँ/ं) and a final
+// वे/बे (अट्ठानवे/अट्ठानबे). Fold them so one table entry covers every variant.
+function fold(tok: string): string {
+  return tok
+    .normalize('NFD')
+    .replace(/\u093C/g, '')
+    .replace(/\u0901/g, '\u0902')
+    .replace(/वे$/, 'बे')
+    .normalize('NFC');
+}
+
 const WORDS: Record<string, string> = {};
-const add = (digit: number, words: string[]) => words.forEach((w) => (WORDS[w] = String(digit)));
+const add = (digit: number, words: string[]) =>
+  words.forEach((w) => (WORDS[fold(w)] = String(digit)));
 // English
 add(0, ['zero', 'oh', 'o']);
 add(1, ['one']);
@@ -89,6 +101,57 @@ add(7, ['edu', 'yedu']);
 add(8, ['enimidi']);
 add(9, ['tommidi']);
 
+// Two-digit words that stand alone (teens, every Hindi 10-99 word, Kannada joined compounds).
+const PAIRS: Record<string, string> = {};
+// Tens (20-90) that combine with a following unit word: "forty five" -> 45, alone -> 40.
+const TENS: Record<string, number> = {};
+const pair = (n: number, words: string[]) => words.forEach((w) => (PAIRS[fold(w)] = String(n)));
+const tens = (n: number, words: string[]) => words.forEach((w) => (TENS[fold(w)] = n));
+
+// English
+pair(10, ['ten']);
+['eleven', 'twelve', 'thirteen', 'fourteen', 'fifteen', 'sixteen', 'seventeen', 'eighteen', 'nineteen']
+  .forEach((w, i) => pair(11 + i, [w]));
+['twenty', 'thirty', 'forty', 'fifty', 'sixty', 'seventy', 'eighty', 'ninety'].forEach((w, i) =>
+  tens(20 + 10 * i, [w]),
+);
+// Hindi: every number from 10 to 99 has its own word.
+`दस ग्यारह बारह तेरह चौदह पंद्रह सोलह सत्रह अठारह उन्नीस
+बीस इक्कीस बाईस तेईस चौबीस पच्चीस छब्बीस सत्ताईस अट्ठाईस उनतीस
+तीस इकतीस बत्तीस तैंतीस चौंतीस पैंतीस छत्तीस सैंतीस अड़तीस उनतालीस
+चालीस इकतालीस बयालीस तैंतालीस चवालीस पैंतालीस छियालीस सैंतालीस अड़तालीस उनचास
+पचास इक्यावन बावन तिरपन चौवन पचपन छप्पन सत्तावन अट्ठावन उनसठ
+साठ इकसठ बासठ तिरसठ चौंसठ पैंसठ छियासठ सड़सठ अड़सठ उनहत्तर
+सत्तर इकहत्तर बहत्तर तिहत्तर चौहत्तर पचहत्तर छिहत्तर सतहत्तर अठहत्तर उन्यासी
+अस्सी इक्यासी बयासी तिरासी चौरासी पचासी छियासी सत्तासी अट्ठासी नवासी
+नब्बे इक्यानबे बानबे तिरानबे चौरानबे पचानबे छियानबे सत्तानबे अट्ठानबे निन्यानबे`
+  .split(/\s+/)
+  .forEach((w, i) => pair(10 + i, [w]));
+pair(15, ['पन्द्रह']);
+pair(17, ['सतरह']);
+pair(39, ['उंतालीस']);
+pair(79, ['उनासी']);
+// Telugu
+pair(10, ['పది']);
+['పదకొండు', 'పన్నెండు', 'పదమూడు', 'పద్నాలుగు', 'పదిహేను', 'పదహారు', 'పదిహేడు', 'పద్దెనిమిది', 'పందొమ్మిది']
+  .forEach((w, i) => pair(11 + i, [w]));
+[['ఇరవై'], ['ముప్పై', 'ముప్ఫై'], ['నలభై', 'నలబై'], ['యాభై', 'యాబై'], ['అరవై'], ['డెబ్బై'], ['ఎనభై', 'ఎనబై'], ['తొంభై', 'తొంబై']]
+  .forEach((ws, i) => tens(20 + 10 * i, ws));
+// Kannada: separate tens, teens, and tens joined with their unit (ಇಪ್ಪತ್ತು + ಐದು = ಇಪ್ಪತ್ತೈದು).
+pair(10, ['ಹತ್ತು']);
+['ಹನ್ನೊಂದು', 'ಹನ್ನೆರಡು', 'ಹದಿಮೂರು', 'ಹದಿನಾಲ್ಕು', 'ಹದಿನೈದು', 'ಹದಿನಾರು', 'ಹದಿನೇಳು', 'ಹದಿನೆಂಟು', 'ಹತ್ತೊಂಬತ್ತು']
+  .forEach((w, i) => pair(11 + i, [w]));
+const KN_JOINED: string[][] = [
+  ['ತ್ತೊಂದು'], ['ತ್ತೆರಡು'], ['ತ್ಮೂರು', 'ತ್ತಮೂರು', 'ತ್ತುಮೂರು'], ['ತ್ನಾಲ್ಕು', 'ತ್ತನಾಲ್ಕು', 'ತ್ತುನಾಲ್ಕು'],
+  ['ತ್ತೈದು'], ['ತ್ತಾರು'], ['ತ್ತೇಳು'], ['ತ್ತೆಂಟು'], ['ತ್ತೊಂಬತ್ತು'],
+];
+['ಇಪ್ಪತ್ತು', 'ಮೂವತ್ತು', 'ನಲವತ್ತು', 'ಐವತ್ತು', 'ಅರವತ್ತು', 'ಎಪ್ಪತ್ತು', 'ಎಂಬತ್ತು', 'ತೊಂಬತ್ತು'].forEach((w, i) => {
+  const n = 20 + 10 * i;
+  tens(n, [w]);
+  const stem = w.slice(0, -'ತ್ತು'.length);
+  KN_JOINED.forEach((ends, u) => pair(n + u + 1, ends.map((e) => stem + e)));
+});
+
 const REPEAT: Record<string, number> = {
   double: 2,
   triple: 3,
@@ -105,7 +168,16 @@ const AMBIGUOUS = new Set(['do', 'no', 'o', 'oh', 'che', 'char', 'aat']);
 function tokenDigits(tok: string): string | null {
   if (/^[0-9]+$/.test(tok)) return tok;
   if ([...tok].every((c) => c in NUMERALS)) return [...tok].map((c) => NUMERALS[c]).join('');
-  return WORDS[tok] ?? null;
+  const f = fold(tok);
+  if (f in TENS) return String(TENS[f]);
+  return PAIRS[f] ?? WORDS[f] ?? null;
+}
+
+// A unit word 1-9 that can complete a tens word ("forty" + "five").
+function unitAfterTens(tok: string | undefined): string | null {
+  if (!tok || AMBIGUOUS.has(tok)) return null;
+  const d = WORDS[fold(tok)];
+  return d && d !== '0' ? d : null;
 }
 
 export function spokenToDigits(text: string): string {
@@ -117,7 +189,17 @@ export function spokenToDigits(text: string): string {
   const isNum = tokens.map((t) => tokenDigits(t) !== null && !AMBIGUOUS.has(t));
   let out = '';
   let repeat = 1;
+  let skip = -1;
   tokens.forEach((tok, i) => {
+    if (i === skip) return;
+    const f = fold(tok);
+    if (f in TENS) {
+      const unit = unitAfterTens(tokens[i + 1]);
+      if (unit) skip = i + 1;
+      out += (String(TENS[f] / 10) + (unit ?? '0')).repeat(repeat);
+      repeat = 1;
+      return;
+    }
     if (tok in REPEAT) {
       repeat = REPEAT[tok];
       return;
