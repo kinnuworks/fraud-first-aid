@@ -3,7 +3,7 @@
 import { tool, type ToolSet } from 'ai';
 import { z } from 'zod';
 import { getComplaint } from './store';
-import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, type FieldName } from './session';
+import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
 import { isIfsc } from './fields';
 
@@ -47,6 +47,11 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       description: "Replace one read-back group (1-based) of the UTR or payee mobile with the digits in the caller's last words.",
       inputSchema: z.object({ field: z.enum(['utr', 'payee']), group: z.number().int() }),
       execute: async ({ field, group }) => correctGroup(c, field, group, lastUser),
+    }),
+    take_from_screenshot: tool({
+      description: 'Use the value from the payment screenshot the caller uploaded (for a field they did not say, or when the screenshot and their words differ and they agree the screenshot is right). Then read it back.',
+      inputSchema: z.object({ field: z.enum(['utr', 'amount', 'payee']) }),
+      execute: async ({ field }) => takeFromShot(c, field),
     }),
     confirm: tool({
       description: 'Mark a field confirmed after the caller said the read-back is right.',

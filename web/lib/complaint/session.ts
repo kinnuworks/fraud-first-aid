@@ -11,6 +11,8 @@ type Field<T> = { value: T; confirmed: boolean };
 export type Complaint = {
   lang: ReadbackLang;
   story?: string;
+  // What the payment screenshot showed (second source), if the caller added one.
+  shot?: import('./screenshot').Shot;
   fields: Partial<{
     utr: Field<string>;
     amount: Field<number>;
@@ -102,4 +104,18 @@ export function deadlines(alertedOn: string, holidays: string[] = []) {
     zeroLiabilityBy: addBankWorkingDays(alertedOn, 3, holidays),
     boardPolicyAfter: addBankWorkingDays(alertedOn, 7, holidays),
   };
+}
+
+// Copy a field the caller didn't say (or wants corrected) from their payment screenshot.
+// It stays unconfirmed until they hear the read-back and say yes.
+export function takeFromShot(c: Complaint, field: 'utr' | 'amount' | 'payee'): Result {
+  const v = c.shot?.[field];
+  if (v === undefined) return { ok: false, problem: `the screenshot has no ${field}` };
+  if (field === 'utr') {
+    c.fields.utr = { value: String(v), confirmed: false };
+    return numberResult(c, String(v));
+  }
+  if (field === 'amount') c.fields.amount = { value: Number(v), confirmed: false };
+  else c.fields.payee = { value: String(v), confirmed: false };
+  return { ok: true, value: v };
 }

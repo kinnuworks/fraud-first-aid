@@ -7,8 +7,10 @@ type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
   | { ok: true; bankLetter: string; script1930: string; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
+type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 export type ComplaintView = {
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
+  check?: Partial<Record<'utr' | 'amount' | 'payee' | 'when', Check>> | null;
   missing: string[];
   deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } | null;
   pack: Pack;
@@ -25,7 +27,25 @@ const LABELS: Array<[keyof ComplaintView['fields'], string]> = [
 const show = (k: string, v: string | number) =>
   k === 'utr' ? String(v).replace(/(\d{4})(?=\d)/g, '$1 ') : k === 'amount' ? `₹${Number(v).toLocaleString('en-IN')}` : String(v);
 
-export function ComplaintCardView({ data }: { data: ComplaintView | null }) {
+const CHECK_TEXT: Record<Check['status'], string> = {
+  match: 'screenshot ✓',
+  mismatch: 'screenshot differs',
+  spoken_only: 'not on screenshot',
+  screenshot_only: 'on screenshot',
+  missing: '',
+};
+
+function CheckNote({ c, k }: { c?: Check; k: string }) {
+  if (!c || c.status === 'missing') return null;
+  const extra = c.status === 'mismatch' || c.status === 'screenshot_only' ? `: ${show(k, c.screenshot!)}` : '';
+  return (
+    <span data-check={c.status} className={`ml-2 text-xs ${c.status === 'mismatch' ? 'text-destructive' : 'text-muted-foreground'}`}>
+      ({CHECK_TEXT[c.status]}{extra})
+    </span>
+  );
+}
+
+export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView | null; onScreenshot?: (f: File) => void }) {
   if (!data) return <p className="text-sm text-muted-foreground">Waiting for the call to start…</p>;
   return (
     <section aria-label="Your complaint" className="rounded-lg border border-border p-4 text-sm">
@@ -38,11 +58,23 @@ export function ComplaintCardView({ data }: { data: ComplaintView | null }) {
               <dt className="text-muted-foreground">{label}</dt>
               <dd className="font-mono">
                 {f ? `${show(k, f.value)} ${f.confirmed ? '✓ confirmed' : '(checking…)'}` : '—'}
+                <CheckNote c={data.check?.[k as 'utr']} k={k} />
               </dd>
             </div>
           );
         })}
       </dl>
+      {onScreenshot && (
+        <label className="mt-3 inline-block cursor-pointer rounded border px-2 py-1 text-xs">
+          {data.check ? 'Replace payment screenshot' : 'Add payment screenshot (double-checks the numbers)'}
+          <input
+            type="file"
+            accept="image/png,image/jpeg,image/webp"
+            className="sr-only"
+            onChange={(e) => e.target.files?.[0] && onScreenshot(e.target.files[0])}
+          />
+        </label>
+      )}
       {data.deadlines && (
         <p className="mt-3">
           Tell your bank by <strong>{data.deadlines.zeroLiabilityBy}</strong> for zero liability (RBI, 3 working days).
@@ -92,5 +124,19 @@ export function ComplaintCard({ session }: { session: string }) {
       clearInterval(t);
     };
   }, [session]);
-  return <ComplaintCardView data={data} />;
+  const [shotState, setShotState] = useState<string | null>(null);
+  async function upload(file: File) {
+    setShotState('Reading the screenshot…');
+    const fd = new FormData();
+    fd.append('file', file);
+    const r = await fetch(`/api/call/screenshot?session=${encodeURIComponent(session)}`, { method: 'POST', body: fd });
+    const j = await r.json().catch(() => ({}));
+    setShotState(r.ok ? null : `Couldn't read it: ${j.error ?? r.status}`);
+  }
+  return (
+    <>
+      <ComplaintCardView data={data} onScreenshot={upload} />
+      {shotState && <p className="text-xs text-muted-foreground" role="status">{shotState}</p>}
+    </>
+  );
 }

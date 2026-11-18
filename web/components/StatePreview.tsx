@@ -5,13 +5,15 @@ import { ComplaintCardView, type ComplaintView } from './ComplaintCard';
 import { newComplaint } from '@/lib/complaint/session';
 import { buildPack } from '@/lib/complaint/pack';
 import { missingFields, deadlines } from '@/lib/complaint/session';
+import { compareWithScreenshot, type Shot } from '@/lib/complaint/screenshot';
 
-function view(lang: 'te' | 'en', fields: ReturnType<typeof newComplaint>['fields']): ComplaintView {
-  const c = { ...newComplaint(lang), fields };
+function view(lang: 'te' | 'en', fields: ReturnType<typeof newComplaint>['fields'], shot?: Shot): ComplaintView {
+  const c = { ...newComplaint(lang), fields, shot };
   return {
     fields: c.fields,
     missing: missingFields(c),
     deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,
+    check: shot ? compareWithScreenshot(c, shot) : null,
     pack: buildPack(c, '2026-11-19'),
   };
 }
@@ -29,7 +31,8 @@ export const STATES: Record<string, ComplaintView | null> = {
   'complaint-empty': view('te', {}),
   'complaint-checking': view('te', { utr: { value: '402177889910', confirmed: false } }),
   'complaint-partial': view('te', { utr: SAMPLE.utr, amount: SAMPLE.amount, when: { value: SAMPLE.when.value, confirmed: false } }),
-  'complaint-done': view('te', SAMPLE),
+  'complaint-mismatch': view('te', { utr: { value: '402177889910', confirmed: false } }, { utr: '402177869910', amount: 25000, payee: 'ramesh@okaxis', when: '19 Nov 2026, 2:30 pm' }),
+  'complaint-done': view('te', SAMPLE, { utr: '402177889910', amount: 25000, payee: 'ramesh@okaxis' }),
 };
 
 export function StatePreview({ state }: { state: string }) {

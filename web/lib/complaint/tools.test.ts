@@ -36,3 +36,26 @@ describe('complaintSystem', () => {
     expect(p).toContain('Still needed: utr, amount, when, payee, victim_bank');
   });
 });
+
+describe('screenshot in the call', () => {
+  it('take_from_screenshot copies a field unconfirmed and returns the read-back', async () => {
+    startComplaint('s4', 'te');
+    peekComplaint('s4')!.shot = { utr: '402177889910', amount: 25000 };
+    const r = await run(complaintTools('s4', '').take_from_screenshot, { field: 'utr' });
+    expect(r).toMatchObject({ ok: true, digits: '402177889910' });
+    expect(peekComplaint('s4')?.fields.utr).toEqual({ value: '402177889910', confirmed: false });
+    const a = await run(complaintTools('s4', '').take_from_screenshot, { field: 'amount' });
+    expect(a).toMatchObject({ ok: true, value: 25000 });
+    expect((await run(complaintTools('s4', '').take_from_screenshot, { field: 'payee' })).ok).toBe(false);
+  });
+
+  it('the prompt tells the agent about a screenshot mismatch and which group differs', () => {
+    startComplaint('s5', 'en');
+    const c = peekComplaint('s5')!;
+    c.fields.utr = { value: '402177889910', confirmed: false };
+    c.shot = { utr: '402177869910' };
+    const p = complaintSystem('s5', '2026-11-19');
+    expect(p).toContain('Screenshot check');
+    expect(p).toContain('utr: MISMATCH (said 402177889910, screenshot 402177869910, group 2)');
+  });
+});
