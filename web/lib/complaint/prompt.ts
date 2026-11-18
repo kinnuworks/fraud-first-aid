@@ -4,6 +4,7 @@ import { missingFields } from './session';
 import { compareWithScreenshot } from './screenshot';
 import { LANG_NAME as LANG } from './pack';
 import { scamList } from './scams';
+import { istNow, istToday } from './today';
 
 
 const GUARD = (lang: string) => `You are UTR Pakka, on guard. The user has put a phone call they are receiving on speaker, and you hear both sides as one stream of text. Stay silent: answer with exactly <silent> and nothing else, unless one of these happens.
@@ -13,7 +14,7 @@ On (a): start your reply with a marker [[flag:<id>|<what the caller asked for, i
 On (b): if money has gone or they want to report it, call start_complaint and begin taking the report.
 Never answer the scammer; you speak only to the user. Every reply is spoken aloud: at most three short sentences, no lists, no markdown, no asterisks.`;
 
-export function complaintSystem(session: string, today = new Date().toISOString().slice(0, 10)): string {
+export function complaintSystem(session: string, today = istToday()): string {
   const c = getComplaint(session);
   if (c.phase === 'guard') return GUARD(LANG[c.lang]);
   const have = Object.entries(c.fields)
@@ -31,7 +32,7 @@ export function complaintSystem(session: string, today = new Date().toISOString(
         )
         .join('; ')}. On a mismatch, say both versions and ask which is right; if the screenshot is right, call take_from_screenshot. A field only on the screenshot can be taken with take_from_screenshot and read back.`
     : 'If they have a screenshot of the payment, they can add it on screen; it double-checks the numbers.';
-  return `You help someone in India who has just lost money in a UPI or online payment fraud. Today is ${today}.
+  return `You help someone in India who has just lost money in a UPI or online payment fraud. Today is ${today} (India time; it is now ${today === istToday() ? istNow().slice(11) : 'unknown'} IST). Record times as India time.
 Speak only ${LANG[c.lang]}, in short, calm spoken sentences (at most three per reply), never lists, markdown or asterisks. They may be upset: acknowledge it once, then move on.
 If they are still talking to the scammer, or someone is asking them right now for an OTP, PIN, password, a QR scan, a screen-sharing app or a "refund" payment, stop everything else: tell them to hang up now, do not scan, do not share any code and do not pay anything more, and then continue. If money has not left yet, tell them to call their bank and 1930 straight away to block it.
 First let them say briefly what happened and call record_story once. Then collect, one at a time: the 12-digit UTR (transaction reference, in the bank SMS or the UPI app), the amount, when it happened, who it went to (UPI ID or mobile), and their own bank (name or IFSC).

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { peekComplaint } from '@/lib/complaint/store';
 import { missingFields, deadlines } from '@/lib/complaint/session';
 import { buildPack } from '@/lib/complaint/pack';
+import { istToday } from '@/lib/complaint/today';
 import { compareWithScreenshot } from '@/lib/complaint/screenshot';
 
 export function GET(request: NextRequest) {
@@ -18,6 +19,6 @@ export function GET(request: NextRequest) {
     missing: missingFields(c),
     deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,
     check: c.shot ? compareWithScreenshot(c, c.shot) : null,
-    pack: buildPack(c, new Date().toISOString().slice(0, 10)),
+    pack: buildPack(c, istToday()),
   });
 }
