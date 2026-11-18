@@ -114,6 +114,9 @@ export function QuickstartPreCallCard({
         A scam call is happening? Let UTR Pakka listen
       </button>
       {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
+      <p className="mt-6 text-[11px] leading-5 text-muted-foreground">
+        Live voice by Agora Conversational AI, with Sarvam speech-to-text and Murf Falcon voices in ten Indian languages.
+      </p>
     </div>
   );
 }

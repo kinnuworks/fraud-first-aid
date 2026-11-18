@@ -61,7 +61,15 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 
 ## Evidence
 
-Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) of our number layer against the speech-to-text's own numerals, planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md). The sealed test slice is run once, after the build freezes; its result will appear here with its interval and rerun command.
+Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: our own break test of the main claim (spoken numbers in noise), and a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md). Each one reruns from the repo with one command.
+
+> Claim: UTR Pakka reads spoken 10- and 12-digit numbers exactly in 295 of 300 noisy clips.
+> Evidence type: our own break test (we tried to make it fail), not real users.
+> Data: Murf Falcon voices speaking 25 numbers digit by digit in Hindi, Telugu, Kannada and English, with white noise at 20, 10 and 5 dB, 19 Nov 2026, 300 clips ([results](evidence/results/breaktest-2026-11-19.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same clips, 79 of 300.
+> Result: 98.3% exact (95% interval 96.2% to 99.3%); 96 of 100 even at 5 dB.
+> Rerun: `npx tsx evidence/breaktest/run.ts` (needs Murf and Sarvam keys). Limits: synthetic voices and white noise, not real callers on phone lines; in English the baseline already writes numerals, so the gain is in Hindi, Telugu and Kannada.
+
+The FLEURS test slice stays sealed until the build freezes; its result will appear here with its interval and rerun command. Limits, in numbers: zero real users; 300 synthetic clips; the next real test is a recorded phone call per language, where a miss rate above 5% would change this claim.
 
 ## What doesn't work yet
 

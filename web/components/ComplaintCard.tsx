@@ -29,8 +29,25 @@ const LABELS: Array<[keyof ComplaintView['fields'], string]> = [
   ['victim_bank', 'Your bank'],
 ];
 
+// "2026-11-19T14:30" -> "19 Nov 2026, 2:30 pm" (Indian time, as recorded)
+const when = (v: string) => {
+  const m = v.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+  if (!m) return v;
+  const mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][Number(m[2]) - 1];
+  const date = `${Number(m[3])} ${mon} ${m[1]}`;
+  if (!m[4]) return date;
+  const h = Number(m[4]);
+  return `${date}, ${h % 12 || 12}:${m[5]} ${h < 12 ? 'am' : 'pm'}`;
+};
+
 const show = (k: string, v: string | number) =>
-  k === 'utr' ? String(v).replace(/(\d{4})(?=\d)/g, '$1 ') : k === 'amount' ? `₹${Number(v).toLocaleString('en-IN')}` : String(v);
+  k === 'utr'
+    ? String(v).replace(/(\d{4})(?=\d)/g, '$1 ')
+    : k === 'amount'
+      ? `₹${Number(v).toLocaleString('en-IN')}`
+      : k === 'when'
+        ? when(String(v))
+        : String(v);
 
 const CHECK_TEXT: Record<Check['status'], string> = {
   match: 'screenshot ✓',
@@ -166,9 +183,9 @@ function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
       {pack.minutesSinceDebit !== null && (
         <p className="text-xs text-muted-foreground">Complaint ready {hm(pack.minutesSinceDebit)} after the money left.</p>
       )}
-      <Copyable title="What to say on 1930" text={pack.script1930} />
-      <Copyable title="Letter for your bank" text={pack.bankLetter} />
-      <Copyable title="For the 1930 operator (English)" text={pack.operatorCard} />
+      <Copyable title="1. Call 1930 now and read this out" text={pack.script1930} />
+      <Copyable title={`2. Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
+      <Copyable title="3. If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
     </div>
   );
 }
