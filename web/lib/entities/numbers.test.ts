@@ -76,6 +76,23 @@ describe('spokenToDigits', () => {
     expect(spokenToDigits('seventy nineteen')).toBe('7019');
   });
 
+  // From the FLEURS building slice (dev), 19 Nov 2026.
+  it('keeps numerals that carry a suffix (8वीं, 2008ರಲ್ಲಿ, ₹500)', () => {
+    expect(spokenToDigits('2008ರಲ್ಲಿ 14 ಸಾವಿರ')).toBe('200814');
+    expect(spokenToDigits('यह 8वीं बार है')).toBe('8');
+    expect(spokenToDigits('₹500 दिए')).toBe('500');
+  });
+
+  it('ignores a lone "one" that is really the article "a" (एक दिन, ಒಂದು ದಿನ)', () => {
+    expect(spokenToDigits('एक दिन उसने 1636 में लिखा')).toBe('1636');
+    expect(spokenToDigits('ಒಂದು ದಿನ ಅವನು ಬಂದ')).toBe('');
+    // other lone number words are real numbers (Sarvam writes Telugu numbers as words)
+    expect(spokenToDigits('ఆరు గంటలకు వచ్చారు')).toBe('6');
+    // ...but a run of two or more number words is a number
+    expect(spokenToDigits('एक दो तीन')).toBe('123');
+    expect(spokenToDigits('नौ 8')).toBe('98');
+  });
+
   it('returns an empty string when there is no number', () => {
     expect(spokenToDigits('mera paisa chala gaya')).toBe('');
   });

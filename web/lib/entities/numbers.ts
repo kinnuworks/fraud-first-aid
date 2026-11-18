@@ -165,6 +165,8 @@ const REPEAT: Record<string, number> = {
 // They only count as digits when a neighbouring token is a number.
 const AMBIGUOUS = new Set(['do', 'no', 'o', 'oh', 'che', 'char', 'aat']);
 
+const ARTICLE_ONE = new Set(['एक', 'ek', 'ಒಂದು', 'ondu', 'one'].map(fold));
+
 function tokenDigits(tok: string): string | null {
   if (/^[0-9]+$/.test(tok)) return tok;
   if ([...tok].every((c) => c in NUMERALS)) return [...tok].map((c) => NUMERALS[c]).join('');
@@ -180,18 +182,39 @@ function unitAfterTens(tok: string | undefined): string | null {
   return d && d !== '0' ? d : null;
 }
 
+// Numerals inside a token that also has letters ("8वीं", "2008ರಲ್ಲಿ", "₹500").
+function embeddedNumerals(tok: string): string | null {
+  const d = [...tok].map((c) => (/[0-9]/.test(c) ? c : NUMERALS[c] ?? '')).join('');
+  return d || null;
+}
+
 export function spokenToDigits(text: string): string {
   const tokens = text
     .toLowerCase()
     .replace(/[-–—_.,;:!?()।॥]/g, ' ')
     .split(/\s+/)
     .filter(Boolean);
-  const isNum = tokens.map((t) => tokenDigits(t) !== null && !AMBIGUOUS.has(t));
+  // Numerals always count. A lone "one" (एक, ಒಂದು, one) counts only next to another number
+  // or when the whole utterance is numbers: in a sentence it is usually the article "a".
+  const numeral = tokens.map((t) => embeddedNumerals(t) !== null);
+  const word = tokens.map((t, i) => !numeral[i] && (tokenDigits(t) !== null || t in REPEAT));
+  const isNum = tokens.map((t, i) => numeral[i] || (word[i] && !AMBIGUOUS.has(t)));
+  const allNumbers = tokens.every((_, i) => numeral[i] || word[i]);
   let out = '';
   let repeat = 1;
   let skip = -1;
   tokens.forEach((tok, i) => {
     if (i === skip) return;
+    if (numeral[i]) {
+      out += embeddedNumerals(tok)!.repeat(repeat);
+      repeat = 1;
+      return;
+    }
+    const near = isNum[i - 1] || isNum[i + 1];
+    if (!word[i] || (ARTICLE_ONE.has(fold(tok)) && !(near || allNumbers || repeat > 1))) {
+      repeat = 1;
+      return;
+    }
     const f = fold(tok);
     if (f in TENS) {
       const unit = unitAfterTens(tokens[i + 1]);
@@ -204,13 +227,8 @@ export function spokenToDigits(text: string): string {
       repeat = REPEAT[tok];
       return;
     }
-    const d = tokenDigits(tok);
-    if (d === null) {
-      repeat = 1;
-      return;
-    }
     if (AMBIGUOUS.has(tok) && !(isNum[i - 1] || isNum[i + 1] || repeat > 1)) return;
-    out += d.repeat(repeat);
+    out += tokenDigits(tok)!.repeat(repeat);
     repeat = 1;
   });
   return out;

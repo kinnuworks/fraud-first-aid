@@ -52,7 +52,7 @@ Then one card per claim:
 Then a short limits paragraph, in numbers: zero real users, the interval, the data's years, and the next real test, with the metric and threshold that would change the conclusion.
 
 ## Changes after the first run
-None yet.
+- 19 Nov 2026, after the first building-slice (dev) run: Sarvam's real-time speech-to-text refuses audio over 30 seconds, so those clips are left out for both the baseline and ours alike and counted in the output (dev: 0 hi, 1 te, 1 kn). Reason: API limit, found on the first run; the test slice has not been opened.
 
 ## Second claim: our own break test (not real users, not public data)
 12-digit UTRs, 10-digit mobiles and amounts spoken digit by digit and in pairs by Murf Falcon voices in hi, te, kn and en, with white noise mixed in at 20, 10 and 5 dB SNR, 25 numbers per language per noise level (seeded, seed 7). Same metric and baseline as above. Labelled "Our own break test" everywhere; it measures robustness on synthetic audio and says so.
