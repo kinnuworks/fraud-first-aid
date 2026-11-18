@@ -165,6 +165,10 @@ mult(1e5, ['lakh', 'lakhs', 'लाख', 'లక్ష', 'లక్షల', 'ల
 mult(1e7, ['crore', 'crores', 'करोड़', 'కోటి', 'కోట్ల', 'ಕೋಟಿ']);
 mult(1e6, ['million']);
 
+// Scale words that mean one of themselves when said alone ("a hundred", "a thousand");
+// plurals like వేలు (thousands) alone are not a number.
+const LONE_SCALE = new Set(['వంద', 'వెయ్యి', 'ನೂರು', 'सौ'].map(fold));
+
 const REPEAT: Record<string, number> = {
   double: 2,
   triple: 3,
@@ -231,7 +235,7 @@ export function spokenToDigits(text: string): string {
         else cur += Number(tokenDigits(tokens[k]));
       }
       composed.set(i, { end: j, value: String(total + cur) });
-    } else if (j - i === 1 && scale[i] && !numeral[i - 1]) {
+    } else if (j - i === 1 && scale[i] && !numeral[i - 1] && LONE_SCALE.has(fold(tokens[i]))) {
       composed.set(i, { end: j, value: String(MULT[fold(tokens[i])]) });
     }
     i = j;

@@ -35,6 +35,11 @@ export function parseAmount(text: string): number | null {
   const t = text.toLowerCase().replace(/(\d),(?=\d)/g, '$1').replace(/₹/g, ' ');
   const nums = Object.keys(SMALL).join('|');
   const scales = Object.keys(SCALE).join('|');
+  // Indian-language amounts in words ("ఇరవై ఐదు వేలు", "पच्चीस हज़ार"): the number layer composes them.
+  if (!/[0-9]/.test(t)) {
+    const d = spokenToDigits(t);
+    if (d && d.length <= 9 && Number(d) >= 100) return Number(d);
+  }
   const m = t.match(new RegExp(`(\\d+(?:\\.\\d+)?|\\b(?:${nums})\\b)\\s*(${scales})?`));
   if (!m) return null;
   const n = /\d/.test(m[1]) ? Number(m[1]) : SMALL[m[1]];
