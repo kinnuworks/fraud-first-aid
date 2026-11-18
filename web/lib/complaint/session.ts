@@ -1,0 +1,105 @@
+// The complaint being built during one call. Pure state: the model's tools call these
+// functions, so numbers are parsed and checked by code, never by the model.
+import { spokenToDigits, groupForReadback, readbackText, type ReadbackLang } from '../entities/numbers';
+import { isUtr, isMobile, spokenUpiId, parseAmount } from './fields';
+import { addBankWorkingDays } from './deadline';
+
+export type FieldName = 'utr' | 'amount' | 'when' | 'payee' | 'victim_bank';
+export const REQUIRED: FieldName[] = ['utr', 'amount', 'when', 'payee', 'victim_bank'];
+
+type Field<T> = { value: T; confirmed: boolean };
+export type Complaint = {
+  lang: ReadbackLang;
+  story?: string;
+  fields: Partial<{
+    utr: Field<string>;
+    amount: Field<number>;
+    when: Field<string>;
+    payee: Field<string>;
+    victim_bank: Field<string>;
+  }>;
+};
+
+export type Result = { ok: boolean; problem?: string; [k: string]: unknown };
+
+export const newComplaint = (lang: ReadbackLang): Complaint => ({ lang, fields: {} });
+
+const NUMBER_RULES = {
+  utr: { len: 12, check: isUtr, label: 'a UTR has 12' },
+  payee: { len: 10, check: isMobile, label: 'a mobile number has 10' },
+} as const;
+type NumberField = keyof typeof NUMBER_RULES;
+
+function numberResult(c: Complaint, digits: string) {
+  const groups = groupForReadback(digits);
+  return { ok: true, digits, groups, readback: readbackText(digits, c.lang) };
+}
+
+export function recordNumber(c: Complaint, field: NumberField, spoken: string): Result {
+  const digits = spokenToDigits(spoken);
+  const rule = NUMBER_RULES[field];
+  if (!rule.check(digits)) {
+    return { ok: false, problem: `heard ${digits.length} digits, ${rule.label}` };
+  }
+  c.fields[field] = { value: digits, confirmed: false };
+  return numberResult(c, digits);
+}
+
+// Replace one read-back group (1-based) with newly spoken digits of the same length.
+export function correctGroup(c: Complaint, field: NumberField, group: number, spoken: string): Result {
+  const f = c.fields[field];
+  if (!f) return { ok: false, problem: `${field} not recorded yet` };
+  const groups = groupForReadback(f.value);
+  if (group < 1 || group > groups.length) return { ok: false, problem: `there are ${groups.length} groups` };
+  const digits = spokenToDigits(spoken);
+  if (digits.length !== groups[group - 1].length) {
+    return { ok: false, problem: `heard ${digits.length} digits, group ${group} has ${groups[group - 1].length}` };
+  }
+  groups[group - 1] = digits;
+  c.fields[field] = { value: groups.join(''), confirmed: false };
+  return numberResult(c, groups.join(''));
+}
+
+export function confirmField(c: Complaint, field: FieldName): Result {
+  const f = c.fields[field];
+  if (!f) return { ok: false, problem: `${field} not recorded yet` };
+  f.confirmed = true;
+  return { ok: true };
+}
+
+// Payee: a UPI ID ("ramesh at okaxis") or the 10-digit mobile they paid.
+export function recordUpi(c: Complaint, spoken: string): Result {
+  const id = spokenUpiId(spoken);
+  if (!id) return recordNumber(c, 'payee', spoken);
+  c.fields.payee = { value: id, confirmed: false };
+  return { ok: true, value: id };
+}
+
+export function recordAmount(c: Complaint, spoken: string): Result {
+  const n = parseAmount(spoken);
+  if (n === null || n <= 0) return { ok: false, problem: 'no amount heard; ask for it digit by digit' };
+  c.fields.amount = { value: n, confirmed: false };
+  return { ok: true, value: n };
+}
+
+export function recordText(c: Complaint, field: 'when' | 'victim_bank', value: string): Result {
+  const v = value.trim();
+  if (!v) return { ok: false, problem: 'empty' };
+  c.fields[field] = { value: v, confirmed: false };
+  return { ok: true, value: v };
+}
+
+export function missingFields(c: Complaint): string[] {
+  return REQUIRED.flatMap((f) =>
+    !c.fields[f] ? [f] : c.fields[f]!.confirmed ? [] : [`${f} (not confirmed)`],
+  );
+}
+
+// RBI/2017-18/15: zero liability when the bank is told within 3 working days of its alert;
+// beyond 7 working days, liability follows the bank's board-approved policy.
+export function deadlines(alertedOn: string, holidays: string[] = []) {
+  return {
+    zeroLiabilityBy: addBankWorkingDays(alertedOn, 3, holidays),
+    boardPolicyAfter: addBankWorkingDays(alertedOn, 7, holidays),
+  };
+}

@@ -1,0 +1,57 @@
+import { describe, expect, it } from 'vitest';
+import { newComplaint, recordNumber, correctGroup, confirmField, recordUpi, recordAmount, missingFields, deadlines } from './session';
+
+describe('complaint session', () => {
+  it('records a spoken UTR unconfirmed, with a grouped read-back in the victim language', () => {
+    const c = newComplaint('te');
+    const r = recordNumber(c, 'utr', 'నాలుగు సున్నా రెండు ఒకటి ఏడు ఏడు ఎనిమిది ఎనిమిది తొమ్మిది తొమ్మిది ఒకటి సున్నా');
+    expect(r).toMatchObject({ ok: true, digits: '402177889910', groups: ['4021', '7788', '9910'] });
+    expect(r.readback).toBe('నాలుగు సున్నా రెండు ఒకటి, ఏడు ఏడు ఎనిమిది ఎనిమిది, తొమ్మిది తొమ్మిది ఒకటి సున్నా');
+    expect(c.fields.utr).toEqual({ value: '402177889910', confirmed: false });
+  });
+
+  it('rejects a UTR with the wrong digit count and says how many it heard', () => {
+    const c = newComplaint('en');
+    const r = recordNumber(c, 'utr', 'four zero two one seven seven');
+    expect(r.ok).toBe(false);
+    expect(r.problem).toBe('heard 6 digits, a UTR has 12');
+    expect(c.fields.utr).toBeUndefined();
+  });
+
+  it('replaces only the corrected group and keeps it unconfirmed', () => {
+    const c = newComplaint('en');
+    recordNumber(c, 'utr', '4021 7788 9910');
+    const r = correctGroup(c, 'utr', 2, 'seven seven eight six');
+    expect(r).toMatchObject({ ok: true, digits: '402177869910' });
+    expect(c.fields.utr?.confirmed).toBe(false);
+    expect(correctGroup(c, 'utr', 2, 'seven seven').ok).toBe(false);
+    expect(correctGroup(c, 'utr', 4, '1234').ok).toBe(false);
+  });
+
+  it('confirms a field only after it was recorded', () => {
+    const c = newComplaint('en');
+    expect(confirmField(c, 'utr').ok).toBe(false);
+    recordNumber(c, 'utr', '402177889910');
+    expect(confirmField(c, 'utr').ok).toBe(true);
+    expect(c.fields.utr?.confirmed).toBe(true);
+  });
+
+  it('records the payee UPI ID and the amount', () => {
+    const c = newComplaint('en');
+    expect(recordUpi(c, 'ramesh at the rate okaxis')).toMatchObject({ ok: true, value: 'ramesh@okaxis' });
+    expect(recordAmount(c, '25,000 rupees')).toMatchObject({ ok: true, value: 25000 });
+    expect(recordAmount(c, 'a lot').ok).toBe(false);
+  });
+
+  it('lists what is still missing or unconfirmed', () => {
+    const c = newComplaint('en');
+    recordNumber(c, 'utr', '402177889910');
+    confirmField(c, 'utr');
+    recordAmount(c, '25000');
+    expect(missingFields(c)).toEqual(['amount (not confirmed)', 'when', 'payee', 'victim_bank']);
+  });
+
+  it('computes the RBI reporting deadlines from the report date', () => {
+    expect(deadlines('2026-11-19')).toEqual({ zeroLiabilityBy: '2026-11-23', boardPolicyAfter: '2026-11-27' });
+  });
+});
