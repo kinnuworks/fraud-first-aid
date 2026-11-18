@@ -17,6 +17,6 @@ const cases = [
 (async () => { for (const c of cases) {
   const a = await (await fetch('https://global.api.murf.ai/v1/speech/stream', { method: 'POST', headers: { 'api-key': MURF, 'content-type': 'application/json' }, body: JSON.stringify({ text: c.text, voiceId: c.voice, multiNativeLocale: c.locale, model: 'FALCON', format: 'WAV', sampleRate: 16000 }) })).arrayBuffer();
   const fd = new FormData(); fd.append('file', new Blob([a], { type: 'audio/wav' }), 'a.wav'); fd.append('model', 'saarika:v2.5'); fd.append('language_code', c.sarvam);
-  const t = ((await (await fetch('https://api.sarvam.ai/speech-to-text', { method: 'POST', headers: { 'api-subscription-key': SARVAM }, body: fd })).json()) as any).transcript;
+  const t = ((await (await fetch('https://api.sarvam.ai/speech-to-text', { method: 'POST', headers: { 'api-subscription-key': SARVAM }, body: fd })).json()) as { transcript: string }).transcript;
   const g = spokenToDigits(t); console.log(`${g === c.d ? 'PASS' : 'FAIL'} ${c.sarvam} ${c.d} -> ${g || '(none)'} | ${t}`);
 } })();

@@ -8,7 +8,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-(cd web && pnpm -s typecheck && pnpm -s test)
+(cd web && pnpm -s typecheck && pnpm -s lint && pnpm -s test)
 # Real external API the agent calls: IFSC -> bank branch (public, no key).
 curl -sf -m 15 https://ifsc.razorpay.com/SBIN0000813 | grep -q '"BANK":"State Bank of India"' \
   || { echo "check.sh: live IFSC API check failed"; exit 1; }

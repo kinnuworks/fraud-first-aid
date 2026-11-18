@@ -65,8 +65,8 @@ export async function POST(request: NextRequest) {
       appCertificate,
     });
 
-    // Pipeline: Deepgram (reseller) STT → OpenAI (reseller) LLM → MiniMax (reseller) TTS.
-    // Omit vendor API keys for supported models — AgentKit infers reseller presets on start (see Agora Console / billing).
+    // Pipeline: Sarvam speech-to-text (caller's language) → our model route with complaint
+    // tools (or Agora's managed model before deploy) → Murf Falcon voice for that language.
     const agent = new Agent({
       client,
       // With our route, the system prompt is built per turn server-side (lib/complaint/prompt.ts).

@@ -1,7 +1,47 @@
 'use client';
 
 import { Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
+
+const LANGS = [
+  ['te', 'తెలుగు'],
+  ['hi', 'हिन्दी'],
+  ['kn', 'ಕನ್ನಡ'],
+  ['en', 'English'],
+] as const;
+
+// The chosen language rides in ?lang=, which the call start reads.
+function LanguageChips() {
+  const [lang, setLang] = useState('te');
+  function pick(code: string) {
+    const url = new URL(window.location.href);
+    url.searchParams.set('lang', code);
+    window.history.replaceState(null, '', url);
+    setLang(code);
+  }
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('lang');
+    if (q && LANGS.some(([c]) => c === q)) setLang(q);
+    else pick('te');
+  }, []);
+  return (
+    <div role="radiogroup" aria-label="Language" className="mt-6 flex flex-wrap justify-center gap-2">
+      {LANGS.map(([code, label]) => (
+        <button
+          key={code}
+          type="button"
+          role="radio"
+          aria-checked={lang === code}
+          onClick={() => pick(code)}
+          className={`rounded-full border px-3 py-1 text-sm ${lang === code ? 'border-primary bg-primary text-black' : 'border-[#2b2b2b] text-white'}`}
+        >
+          {label}
+        </button>
+      ))}
+    </div>
+  );
+}
 
 type QuickstartPreCallCardProps = {
   isLoading: boolean;
@@ -23,12 +63,12 @@ export function QuickstartPreCallCard({
       }}
     >
       <h1 className="text-[28px] font-medium leading-[1.2] text-white">
-        Try Agora&apos;s Voice Agent
+        Lost money to a UPI scam? Tell me what happened.
       </h1>
       <p className="mt-[14px] text-sm font-medium leading-6 text-muted-foreground">
-        Built on Agora&apos;s flagship Conversational AI engine, for effortless
-        agentic conversations.
+        Speak Telugu, Hindi, Kannada or English. Keep your bank SMS open: it has the 12-digit UTR.
       </p>
+      <LanguageChips />
 
       <Button
         onClick={onStartConversation}
@@ -46,7 +86,7 @@ export function QuickstartPreCallCard({
             Starting...
           </>
         ) : (
-          'Start Conversation'
+          'Start talking'
         )}
       </Button>
       {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
