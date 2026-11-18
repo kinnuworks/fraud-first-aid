@@ -2,6 +2,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { peekComplaint } from '@/lib/complaint/store';
 import { missingFields, deadlines } from '@/lib/complaint/session';
+import { buildPack } from '@/lib/complaint/pack';
 
 export function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get('session') ?? '';
@@ -13,5 +14,6 @@ export function GET(request: NextRequest) {
     fields: c.fields,
     missing: missingFields(c),
     deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,
+    pack: buildPack(c, new Date().toISOString().slice(0, 10)),
   });
 }

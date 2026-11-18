@@ -43,6 +43,7 @@ import {
   type QuickstartAgentMetric,
 } from './QuickstartPipelineMetrics';
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
+import { ComplaintCard } from './ComplaintCard';
 import type { ConversationComponentProps } from '@/types/conversation';
 
 // Cap the displayed issues list to avoid overwhelming the UI during a cascade of errors.
@@ -481,11 +482,14 @@ export default function ConversationComponent({
       }
       pipelineMetrics={<QuickstartPipelineMetrics metrics={agentMetrics} />}
       transcriptPanel={
-        <QuickstartTranscriptPanel
-          messageList={messageList}
-          currentInProgressMessage={currentInProgressMessage}
-          agentUID={agentUID}
-        />
+        <div className="flex flex-col gap-4">
+          <ComplaintCard session={agoraData.channel} />
+          <QuickstartTranscriptPanel
+            messageList={messageList}
+            currentInProgressMessage={currentInProgressMessage}
+            agentUID={agentUID}
+          />
+        </div>
       }
       visualizer={
         <div
