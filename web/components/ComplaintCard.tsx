@@ -109,6 +109,19 @@ function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
   return (
     <div className="mt-4 space-y-3" data-testid="pack">
       <h3 className="font-semibold">Ready: call 1930 now, then send this to your bank</h3>
+      <div className="flex flex-wrap gap-2">
+        <a href="tel:1930" className="rounded bg-primary px-3 py-1.5 text-sm font-medium text-black" data-testid="call-1930">
+          Call 1930 now
+        </a>
+        <a
+          href="https://cybercrime.gov.in/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="rounded border px-3 py-1.5 text-sm"
+        >
+          File on cybercrime.gov.in
+        </a>
+      </div>
       {pack.minutesSinceDebit !== null && (
         <p className="text-xs text-muted-foreground">Complaint ready {hm(pack.minutesSinceDebit)} after the money left.</p>
       )}
