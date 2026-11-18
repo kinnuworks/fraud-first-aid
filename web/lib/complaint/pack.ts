@@ -2,6 +2,7 @@
 // helpline call in the caller's language. Built only from confirmed fields.
 import { readbackText, type ReadbackLang } from '../entities/numbers';
 import { missingFields, deadlines, type Complaint } from './session';
+import { scamById } from './scams';
 
 const inr = (n: number) => n.toLocaleString('en-IN');
 
@@ -71,6 +72,7 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     `Paid to: ${f.payee.value}`,
     `Caller's bank: ${f.victim_bank.value}`,
     `Bank deadline (zero liability): ${d.zeroLiabilityBy}`,
+    ...c.flags.map((f) => `Scam red flag heard live: ${scamById(f.scam)?.name ?? f.scam} (caller ${f.red_flag})`),
     ...(c.story ? [`What happened: ${c.story.en}`, `Caller's words: "${c.story.words}"`] : []),
   ].join('\n');
   return { ok: true, bankLetter, script1930, operatorCard, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };

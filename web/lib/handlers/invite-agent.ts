@@ -53,7 +53,8 @@ export async function POST(request: NextRequest) {
     if (!/^[\w-]{1,64}$/.test(channel_name)) {
       return NextResponse.json({ error: 'bad channel_name' }, { status: 400 });
     }
-    startComplaint(channel_name, lang);
+    const mode = (body as unknown as { mode?: string }).mode === 'guard' ? 'guard' : 'complaint';
+    startComplaint(channel_name, lang, mode);
 
     // --- 2. Build and start the agent ---
 
@@ -71,7 +72,7 @@ export async function POST(request: NextRequest) {
       client,
       // With our route, the system prompt is built per turn server-side (lib/complaint/prompt.ts).
       instructions: llmUrl ? '' : prototypeInstructions(preset),
-      greeting: preset.greeting,
+      greeting: mode === 'guard' ? undefined : preset.greeting,
       failureMessage: 'Please wait a moment.',
       maxHistory: 50,
       // VAD controls how the agent detects the start and end of a user's turn.
@@ -120,10 +121,11 @@ export async function POST(request: NextRequest) {
       .withLlm(
         llmUrl
           ? new OpenAI({
-              url: `${llmUrl}/api/call/chat/completions?session=${channel_name}`,
+              url: `${llmUrl}/api/call/chat/completions?session=${channel_name}&lang=${lang}&mode=${mode}`,
               apiKey: requireEnv('LLM_SHARED_SECRET'),
               model: 'custom',
-              greetingMessage: preset.greeting,
+              // On guard the agent stays quiet until it hears a red flag.
+              greetingMessage: mode === 'guard' ? undefined : preset.greeting,
               failureMessage: 'Please wait a moment.',
               maxHistory: 30,
             })

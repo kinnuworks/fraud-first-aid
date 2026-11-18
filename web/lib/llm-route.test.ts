@@ -83,3 +83,26 @@ describe('custom LLM route with complaint tools', () => {
     expect((await route(r)).status).toBe(400);
   });
 });
+
+describe('silent replies (scam-call guard)', () => {
+  const contentOf = async (parts: string[]) => {
+    const route = createLlmRoute({ secret: 's3cret', streamTextImpl: fakeStream(parts), model: {} as never });
+    const text = await (await route(req({ messages: [{ role: 'user', content: 'x' }] }, 'Bearer s3cret'))).text();
+    return text
+      .split('\n\n')
+      .filter((l) => l.startsWith('data: {'))
+      .map((l) => JSON.parse(l.slice(6)).choices[0].delta.content ?? '')
+      .join('');
+  };
+  it('sends no words when the model answers <silent>, even split across chunks', async () => {
+    expect(await contentOf(['<sil', 'ent>'])).toBe('');
+    expect(await contentOf([' <silent>', ' (nothing to flag)'])).toBe('');
+  });
+  it('passes ordinary replies through unchanged', async () => {
+    expect(await contentOf(['Hang', ' up now.'])).toBe('Hang up now.');
+    expect(await contentOf(['<'])).toBe('<');
+  });
+  it('strips markdown so the voice never reads asterisks or hashes aloud', async () => {
+    expect(await contentOf(['Call **19', '30** now. ', '# Done'])).toBe('Call 1930 now. Done');
+  });
+});

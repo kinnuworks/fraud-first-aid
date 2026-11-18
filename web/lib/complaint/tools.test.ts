@@ -63,3 +63,30 @@ describe('screenshot in the call', () => {
     expect(p).toContain('utr: MISMATCH (said 402177889910, screenshot 402177869910, group 2)');
   });
 });
+
+describe('scam-call guard phase', () => {
+  it('a guard session listens silently, names the red flags, and can hand over to the complaint', async () => {
+    startComplaint('g1', 'te', 'guard');
+    const p = complaintSystem('g1', '2026-11-19');
+    expect(p).toContain('<silent>');
+    expect(p).toMatch(/OTP/);
+    expect(p).toMatch(/QR/);
+    expect(p).toMatch(/AnyDesk|screen-sharing/);
+    expect(p).toMatch(/digital arrest/i);
+    expect(p).toContain('fake_kyc');
+    expect(p).toContain('start_complaint');
+    expect(p).not.toContain('Still needed');
+    const r = await run(complaintTools('g1', 'naa dabbulu poyayi').start_complaint);
+    expect(r).toMatchObject({ ok: true });
+    expect(peekComplaint('g1')?.phase).toBe('complaint');
+    expect(complaintSystem('g1', '2026-11-19')).toContain('Still needed');
+  });
+
+  it('records which red flag fired, for the card and the operator ticket', async () => {
+    startComplaint('g2', 'en', 'guard');
+    const r = await run(complaintTools('g2', 'share the OTP sir').flag_scam, { red_flag: 'asked for an OTP', scam: 'vishing_otp' });
+    expect(peekComplaint('g2')?.flags).toEqual([{ red_flag: 'asked for an OTP', scam: 'vishing_otp', heard: 'share the OTP sir' }]);
+    // the tool hands back the official line so the agent can say it in the caller's language
+    expect(String(r.official)).toContain('never ask customers to share');
+  });
+});

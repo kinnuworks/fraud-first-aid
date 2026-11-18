@@ -44,6 +44,7 @@ import {
 } from './QuickstartPipelineMetrics';
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
+import { SampleScamCall } from './SampleScamCall';
 import type { ConversationComponentProps } from '@/types/conversation';
 
 // Cap the displayed issues list to avoid overwhelming the UI during a cascade of errors.
@@ -483,6 +484,15 @@ export default function ConversationComponent({
       pipelineMetrics={<QuickstartPipelineMetrics metrics={agentMetrics} />}
       transcriptPanel={
         <div className="flex flex-col gap-4">
+          {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'guard' && (
+            <>
+              <p className="rounded-lg bg-muted p-3 text-sm" role="status">
+                On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the
+                moment the caller asks for an OTP, a PIN, a QR scan, an app install or money.
+              </p>
+              <SampleScamCall />
+            </>
+          )}
           <ComplaintCard session={agoraData.channel} />
           <QuickstartTranscriptPanel
             messageList={messageList}

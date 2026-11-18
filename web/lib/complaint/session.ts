@@ -8,8 +8,13 @@ export type FieldName = 'utr' | 'amount' | 'when' | 'payee' | 'victim_bank';
 export const REQUIRED: FieldName[] = ['utr', 'amount', 'when', 'payee', 'victim_bank'];
 
 type Field<T> = { value: T; confirmed: boolean };
+export type Phase = 'guard' | 'complaint';
+export type Flag = { red_flag: string; scam: string; heard: string };
 export type Complaint = {
   lang: ReadbackLang;
+  // guard: listening to a suspicious call on speaker; complaint: taking the report.
+  phase: Phase;
+  flags: Flag[];
   // How it happened: a one-line English summary for the operator, and the caller's own words.
   story?: { en: string; words: string };
   // What the payment screenshot showed (second source), if the caller added one.
@@ -25,7 +30,7 @@ export type Complaint = {
 
 export type Result = { ok: boolean; problem?: string; [k: string]: unknown };
 
-export const newComplaint = (lang: ReadbackLang): Complaint => ({ lang, fields: {} });
+export const newComplaint = (lang: ReadbackLang, phase: Phase = 'complaint'): Complaint => ({ lang, phase, flags: [], fields: {} });
 
 const NUMBER_RULES = {
   utr: { len: 12, check: isUtr, label: 'a UTR has 12' },

@@ -77,7 +77,12 @@ export function QuickstartPreCallCard({
       <LanguageChips />
 
       <Button
-        onClick={onStartConversation}
+        onClick={() => {
+          const url = new URL(window.location.href);
+          url.searchParams.delete('mode');
+          window.history.replaceState(null, '', url);
+          onStartConversation();
+        }}
         disabled={isLoading}
         className="mt-12 h-10 w-full rounded-lg border border-primary bg-primary text-sm font-medium text-black hover:border-white hover:bg-white hover:text-black disabled:hover:border-primary disabled:hover:bg-primary disabled:hover:text-black"
         aria-label={
@@ -95,6 +100,19 @@ export function QuickstartPreCallCard({
           'Start talking'
         )}
       </Button>
+      <button
+        type="button"
+        disabled={isLoading}
+        onClick={() => {
+          const url = new URL(window.location.href);
+          url.searchParams.set('mode', 'guard');
+          window.history.replaceState(null, '', url);
+          onStartConversation();
+        }}
+        className="mt-3 h-10 w-full rounded-lg border border-[#2b2b2b] text-sm font-medium text-white hover:border-white"
+      >
+        A scam call is happening? Let UTR Pakka listen
+      </button>
       {error && <p className="mt-3 text-xs text-destructive">{error}</p>}
     </div>
   );

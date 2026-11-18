@@ -26,7 +26,15 @@ const SAMPLE = {
   victim_bank: { value: 'State Bank of India, BANGALORE (SBIN0000813)', confirmed: true },
 };
 
+const GUARD_FLAGGED: ComplaintView = {
+  ...view('te', {}),
+  phase: 'guard',
+  flags: [{ red_flag: 'asked for the OTP sent to the phone', scam: 'fake_kyc', heard: 'आपके phone पर एक OTP आया होगा, वो मुझे बता दीजिए' }],
+};
+
 export const STATES: Record<string, ComplaintView | null> = {
+  'guard-listening': { ...view('te', {}), phase: 'guard', flags: [] },
+  'guard-flagged': GUARD_FLAGGED,
   'complaint-waiting': null,
   'complaint-empty': view('te', {}),
   'complaint-checking': view('te', { utr: { value: '402177889910', confirmed: false } }),

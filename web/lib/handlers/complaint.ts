@@ -12,6 +12,8 @@ export function GET(request: NextRequest) {
   if (!c) return NextResponse.json({ error: 'no such call' }, { status: 404 });
   return NextResponse.json({
     lang: c.lang,
+    phase: c.phase,
+    flags: c.flags,
     fields: c.fields,
     missing: missingFields(c),
     deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,

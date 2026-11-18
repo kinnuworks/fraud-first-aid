@@ -3,13 +3,17 @@
 // it, the RBI deadlines, and the finished pack. Plain on purpose until the design pass.
 import { useEffect, useState } from 'react';
 import { minutesSince } from '@/lib/complaint/pack';
+import { scamById } from '@/lib/complaint/scams';
 
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
   | { ok: true; bankLetter: string; script1930: string; operatorCard: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
+type Flag = { red_flag: string; scam: string; heard: string };
 export type ComplaintView = {
+  phase?: 'guard' | 'complaint';
+  flags?: Flag[];
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
   check?: Partial<Record<'utr' | 'amount' | 'payee' | 'when', Check>> | null;
   missing: string[];
@@ -48,8 +52,43 @@ function CheckNote({ c, k }: { c?: Check; k: string }) {
 
 export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView | null; onScreenshot?: (f: File) => void }) {
   if (!data) return <p className="text-sm text-muted-foreground">Waiting for the call to start…</p>;
+  const flags = data.flags ?? [];
+  if (data.phase === 'guard' && flags.length === 0) {
+    return (
+      <section aria-label="Scam-call guard" className="rounded-lg border border-border p-4 text-sm" data-testid="guard-listening">
+        <h2 className="font-semibold">Listening for scam signs…</h2>
+        <p className="mt-1 text-muted-foreground">Nothing suspicious yet.</p>
+      </section>
+    );
+  }
   return (
     <section aria-label="Your complaint" className="rounded-lg border border-border p-4 text-sm">
+      {flags.length > 0 && (
+        <div className="mb-3 rounded border border-destructive/60 p-2" data-testid="red-flags">
+          <h2 className="font-semibold text-destructive">Scam warning given</h2>
+          <ul className="mt-1 space-y-1">
+            {flags.map((f, i) => {
+              const s = scamById(f.scam);
+              return (
+                <li key={i}>
+                  <strong>{s?.name ?? f.scam}</strong>: the caller {f.red_flag}.{' '}
+                  <span className="text-muted-foreground">Heard: “{f.heard}”</span>
+                  {s && (
+                    <p className="mt-1 text-xs">
+                      “{s.official}”{' '}
+                      <a href={s.url} target="_blank" rel="noopener noreferrer" className="underline">
+                        {s.source}
+                      </a>
+                    </p>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+      {data.phase === 'guard' ? null : (
+      <>
       <h2 className="mb-3 font-semibold">Your complaint</h2>
       <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2">
         {LABELS.map(([k, label]) => {
@@ -83,6 +122,8 @@ export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView 
         </p>
       )}
       {data.pack.ok && <PackView pack={data.pack} />}
+      </>
+      )}
     </section>
   );
 }
