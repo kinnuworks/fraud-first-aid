@@ -1,6 +1,6 @@
 // Language presets for the voice agent: which Sarvam ASR language code and which Murf
 // Falcon voice to use. Voice IDs come from Murf's live voice list (GET /v1/speech/voices).
-export type LangCode = 'hi' | 'kn' | 'auto';
+export type LangCode = 'hi' | 'kn' | 'te' | 'en' | 'auto';
 
 export type LangPreset = {
   asrLanguage: string; // Sarvam code, or "unknown" for automatic detection
@@ -21,6 +21,18 @@ export const PRESETS: Record<LangCode, LangPreset> = {
     voiceId: 'kn-IN-harshitha',
     locale: 'kn-IN',
     greeting: 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇನೆ. ಏನಾಯಿತು ಹೇಳಿ?',
+  },
+  te: {
+    asrLanguage: 'te-IN',
+    voiceId: 'en-IN-anisha',
+    locale: 'te-IN',
+    greeting: 'నమస్కారం! నేను మీకు సహాయం చేయడానికి ఇక్కడ ఉన్నాను. ఏమైందో చెప్పండి?',
+  },
+  en: {
+    asrLanguage: 'en-IN',
+    voiceId: 'en-IN-anisha',
+    locale: 'en-IN',
+    greeting: "Hello! I'm here to help. Tell me what happened.",
   },
   auto: {
     asrLanguage: 'unknown',

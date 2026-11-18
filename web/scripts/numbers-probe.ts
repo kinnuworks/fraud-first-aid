@@ -8,12 +8,14 @@ const MURF = process.env.MURF_API_KEY!;
 const SARVAM = process.env.SARVAM_API_KEY!;
 if (!MURF || !SARVAM) throw new Error('MURF_API_KEY and SARVAM_API_KEY must be set');
 
-type Case = { lang: 'hi' | 'kn'; voice: string; locale: string; sarvamLang: string; digits: string; phrase: (spoken: string) => string };
+type Case = { lang: 'hi' | 'kn' | 'te'; voice: string; locale: string; sarvamLang: string; digits: string; phrase: (spoken: string) => string };
 
 const numbers = ['9845012345', '7019283746', '8800556677', '6362904518', '9108273645'];
+const only = process.env.PROBE_LANGS?.split(',');
 const cases: Case[] = [];
 for (const d of numbers) {
   cases.push({ lang: 'hi', voice: 'hi-IN-namrita', locale: 'hi-IN', sarvamLang: 'hi-IN', digits: d, phrase: (s) => `मेरा नंबर है ${s}` });
+  cases.push({ lang: 'te', voice: 'en-IN-anisha', locale: 'te-IN', sarvamLang: 'te-IN', digits: d, phrase: (s) => `నా నంబర్ ${s}` });
   cases.push({ lang: 'kn', voice: 'kn-IN-harshitha', locale: 'kn-IN', sarvamLang: 'kn-IN', digits: d, phrase: (s) => `ನನ್ನ ನಂಬರ್ ${s}` });
 }
 
@@ -44,7 +46,8 @@ async function sarvam(audio: ArrayBuffer, lang: string): Promise<string> {
 
 (async () => {
   let ok = 0;
-  for (const c of cases) {
+  const run = only ? cases.filter((c) => only.includes(c.lang)) : cases;
+  for (const c of run) {
     const spoken = readbackText(c.digits, c.lang); // digits as words, grouped 5+5
     const text = c.phrase(spoken);
     try {
@@ -57,5 +60,5 @@ async function sarvam(audio: ArrayBuffer, lang: string): Promise<string> {
       console.log(`ERROR ${c.lang} ${c.digits}: ${(e as Error).message}`);
     }
   }
-  console.log(`\n${ok}/${cases.length} numbers exact`);
+  console.log(`\n${ok}/${run.length} numbers exact`);
 })();

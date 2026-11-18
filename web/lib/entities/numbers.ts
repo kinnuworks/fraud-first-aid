@@ -3,11 +3,12 @@
 // digit words in English, Hindi (Devanagari and Latin) and Kannada (script and Latin),
 // including "double"/"triple" and code-mixed utterances.
 
-export type ReadbackLang = 'en' | 'hi' | 'kn';
+export type ReadbackLang = 'en' | 'hi' | 'kn' | 'te';
 
 const NUMERALS: Record<string, string> = {};
 '०१२३४५६७८९'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
 '೦೧೨೩೪೫೬೭೮೯'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
+'౦౧౨౩౪౫౬౭౮౯'.split('').forEach((c, i) => (NUMERALS[c] = String(i)));
 
 const WORDS: Record<string, string> = {};
 const add = (digit: number, words: string[]) => words.forEach((w) => (WORDS[w] = String(digit)));
@@ -67,6 +68,27 @@ add(7, ['elu', 'yelu']);
 add(8, ['entu', 'yentu']);
 add(9, ['ombattu']);
 
+// Telugu, script
+add(0, ['సున్నా', 'సున్న']);
+add(1, ['ఒకటి']);
+add(2, ['రెండు']);
+add(3, ['మూడు']);
+add(4, ['నాలుగు']);
+add(5, ['ఐదు']);
+add(6, ['ఆరు']);
+add(7, ['ఏడు']);
+add(8, ['ఎనిమిది']);
+add(9, ['తొమ్మిది']);
+// Telugu, Latin
+add(0, ['sunna']);
+add(1, ['okati']);
+add(2, ['rendu']);
+add(3, ['moodu', 'mudu']);
+add(4, ['naalugu', 'nalugu']);
+add(7, ['edu', 'yedu']);
+add(8, ['enimidi']);
+add(9, ['tommidi']);
+
 const REPEAT: Record<string, number> = {
   double: 2,
   triple: 3,
@@ -123,6 +145,7 @@ export function groupForReadback(digits: string): string[] {
 const SAY: Record<ReadbackLang, string[]> = {
   en: ['zero', 'one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'],
   hi: ['शून्य', 'एक', 'दो', 'तीन', 'चार', 'पांच', 'छह', 'सात', 'आठ', 'नौ'],
+  te: ['సున్నా', 'ఒకటి', 'రెండు', 'మూడు', 'నాలుగు', 'ఐదు', 'ఆరు', 'ఏడు', 'ఎనిమిది', 'తొమ్మిది'],
   kn: ['ಸೊನ್ನೆ', 'ಒಂದು', 'ಎರಡು', 'ಮೂರು', 'ನಾಲ್ಕು', 'ಐದು', 'ಆರು', 'ಏಳು', 'ಎಂಟು', 'ಒಂಬತ್ತು'],
 };
 

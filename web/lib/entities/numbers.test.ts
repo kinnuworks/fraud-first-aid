@@ -28,6 +28,13 @@ describe('spokenToDigits', () => {
     expect(spokenToDigits('ombattu entu naalku aidu')).toBe('9845');
   });
 
+  it('reads Telugu digit words and numerals', () => {
+    expect(spokenToDigits('తొమ్మిది ఎనిమిది నాలుగు ఐదు')).toBe('9845');
+    expect(spokenToDigits('tommidi enimidi naalugu aidu')).toBe('9845');
+    expect(spokenToDigits('౯౮౪౫')).toBe('9845');
+    expect(spokenToDigits('సున్నా ఒకటి రెండు మూడు ఆరు ఏడు')).toBe('012367');
+  });
+
   it('mixes scripts and digits in one utterance (code-mixed speech)', () => {
     expect(spokenToDigits('98 चार पांच ೧೨ three')).toBe('98451' + '23');
   });
@@ -60,6 +67,9 @@ describe('readbackText', () => {
   });
   it('reads each digit in Kannada', () => {
     expect(readbackText('9845', 'kn')).toBe('ಒಂಬತ್ತು ಎಂಟು ನಾಲ್ಕು ಐದು');
+  });
+  it('reads each digit in Telugu', () => {
+    expect(readbackText('9845', 'te')).toBe('తొమ్మిది ఎనిమిది నాలుగు ఐదు');
   });
   it('separates groups with a pause marker', () => {
     expect(readbackText('402177889910', 'en')).toBe(
