@@ -7,7 +7,7 @@ import { getComplaint } from '@/lib/complaint/store';
 import { addFlag } from '@/lib/complaint/session';
 import { guardShortcut } from '@/lib/complaint/redflags';
 import { complaintShortcut, guardHandover } from '@/lib/complaint/fastpath';
-import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
+import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -24,7 +24,9 @@ export const POST = createLlmRoute({
     // Turn decisions for debugging, only with DEBUG_TURNS=1; never the caller's words.
     if (process.env.DEBUG_TURNS === '1') {
       const kind = out === null ? 'model' : out === '<silent>' ? 'silent' : 'fast';
-      console.log(`[turn] ${session.slice(-6)} ${before} -> ${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length} len${lastUser.length} ${kind} fields=${Object.keys(c.fields).join(',')}`);
+      const line = `${before} -> ${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length} len${lastUser.length} digits${spokenToDigits(lastUser).length} ${kind} fields=${Object.entries(c.fields).map(([k, f]) => `${k}${f!.confirmed ? '+' : '?'}`).join(',')}`;
+      (c.trace ??= []).push(line);
+      console.log(`[turn] ${session.slice(-6)} ${line}`);
     }
     return out;
   },

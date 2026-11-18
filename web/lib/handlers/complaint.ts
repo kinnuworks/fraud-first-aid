@@ -14,6 +14,7 @@ export function GET(request: NextRequest) {
   return NextResponse.json({
     lang: c.lang,
     phase: c.phase,
+    ...(process.env.DEBUG_TURNS === '1' ? { trace: c.trace ?? [] } : {}),
     flags: c.flags,
     fields: c.fields,
     missing: missingFields(c),

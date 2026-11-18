@@ -66,7 +66,11 @@ const play = async (page: Page, clip: string) => {
   for (let i = 0; i < 3 && !(await page.getByTestId('pack').isVisible().catch(() => false)); i++) await play(page, 'victim-4-yes');
   const packed = await page.getByTestId('pack').isVisible().catch(() => false);
   log(packed ? 'PACK READY' : 'pack not ready');
-  if (session) log(`state: ${JSON.stringify((await (await fetch(`${BASE}/api/call/complaint?session=${session}`)).json()).fields)}`);
+  if (session) {
+    const st = await (await fetch(`${BASE}/api/call/complaint?session=${session}`)).json();
+    log(`state: ${JSON.stringify(st.fields)}`);
+    for (const t of st.trace ?? []) log(`  turn: ${t}`);
+  }
   await page.waitForTimeout(4000);
   await page.screenshot({ path: `${OUT}final.png`, fullPage: true });
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});

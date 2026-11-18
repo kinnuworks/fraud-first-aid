@@ -20,6 +20,8 @@ export type Complaint = {
   pending?: FieldName;
   // Digits of a UTR said in pieces across turns, held until 12 arrive.
   digitBuffer?: string;
+  // Turn decisions for debugging (no caller words), filled only when DEBUG_TURNS=1.
+  trace?: string[];
   // How it happened: a one-line English summary for the operator, and the caller's own words.
   story?: { en: string; words: string };
   // What the payment screenshot showed (second source), if the caller added one.
