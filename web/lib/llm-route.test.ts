@@ -44,3 +44,42 @@ describe('custom LLM route', () => {
     expect(chunks.at(-1).choices[0].finish_reason).toBe('stop');
   });
 });
+
+describe('custom LLM route with complaint tools', () => {
+  it('passes the session from ?session= to the tools factory and the tools to the model', async () => {
+    let seen: { tools?: unknown; system?: unknown } = {};
+    const sessions: string[] = [];
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: ((opts: { tools?: unknown; system?: unknown }) => {
+        seen = opts;
+        return { textStream: (async function* () { yield 'ok'; })() };
+      }) as never,
+      tools: (session) => {
+        sessions.push(session);
+        return { record_utr: {} } as never;
+      },
+      system: (session) => `session ${session}`,
+    });
+    const r = new NextRequest('http://localhost/api/chat/completions?session=chan-42', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'hi' }] }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    expect((await route(r)).status).toBe(200);
+    expect(sessions).toEqual(['chan-42']);
+    expect(seen.tools).toEqual({ record_utr: {} });
+    expect(seen.system).toBe('session chan-42');
+  });
+
+  it('rejects a tools request without a session id', async () => {
+    const route = createLlmRoute({ secret: 's3cret', model: {} as never, streamTextImpl: (() => ({})) as never, tools: () => ({}) as never });
+    const r = new NextRequest('http://localhost/api/chat/completions', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [] }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    expect((await route(r)).status).toBe(400);
+  });
+});

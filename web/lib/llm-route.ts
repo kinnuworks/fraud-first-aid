@@ -2,14 +2,18 @@
 // calls as its custom LLM (llm.url). Guarded by a shared secret that Agora sends as
 // its LLM api_key (Authorization: Bearer <secret>), so nobody else can spend tokens.
 import { NextRequest, NextResponse } from 'next/server';
-import type { streamText, LanguageModel } from 'ai';
+import { stepCountIs, type streamText, type LanguageModel, type ToolSet } from 'ai';
 import { randomUUID, timingSafeEqual } from 'crypto';
 
 type Deps = {
   secret: string | undefined;
   model: LanguageModel;
   streamTextImpl: typeof streamText;
-  system?: string;
+  // A fixed system prompt, or one built per session (the complaint so far).
+  system?: string | ((session: string) => string);
+  // Server-side tools bound to one call's session (?session=<id> on llm.url).
+  // lastUser: the caller's latest transcript, so number tools read the ASR text itself.
+  tools?: (session: string, lastUser: string) => ToolSet;
 };
 
 function authorized(header: string | null, secret: string | undefined): boolean {
@@ -19,7 +23,7 @@ function authorized(header: string | null, secret: string | undefined): boolean 
   return a.length === b.length && timingSafeEqual(a, b);
 }
 
-export function createLlmRoute({ secret, model, streamTextImpl, system }: Deps) {
+export function createLlmRoute({ secret, model, streamTextImpl, system, tools }: Deps) {
   return async function POST(request: NextRequest) {
     if (!authorized(request.headers.get('authorization'), secret)) {
       return NextResponse.json({ error: 'unauthorized' }, { status: 401 });
@@ -30,10 +34,18 @@ export function createLlmRoute({ secret, model, streamTextImpl, system }: Deps) 
     } catch {
       return NextResponse.json({ error: 'Invalid JSON body' }, { status: 400 });
     }
+    const session = request.nextUrl.searchParams.get('session') ?? '';
+    if (tools && !/^[\w-]{1,64}$/.test(session)) {
+      return NextResponse.json({ error: 'missing or bad session' }, { status: 400 });
+    }
+    const msgs = body.messages ?? [];
+    const last = [...msgs].reverse().find((m) => m.role === 'user')?.content;
+    const lastUser = typeof last === 'string' ? last : '';
     const result = streamTextImpl({
       model,
-      system,
-      messages: (body.messages ?? []).filter((m) => m.role !== 'system') as never,
+      system: typeof system === 'function' ? system(session) : system,
+      messages: msgs.filter((m) => m.role !== 'system') as never,
+      ...(tools ? { tools: tools(session, lastUser), stopWhen: stepCountIs(6) } : {}),
     });
 
     const enc = new TextEncoder();
