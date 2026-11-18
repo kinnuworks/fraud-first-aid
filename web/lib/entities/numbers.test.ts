@@ -93,6 +93,24 @@ describe('spokenToDigits', () => {
     expect(spokenToDigits('नौ 8')).toBe('98');
   });
 
+  it('composes numbers said with hundreds, thousands, lakhs and crores', () => {
+    expect(spokenToDigits('నాలుగు వేల ఎనిమిది వందల తొంభై రెండు')).toBe('4892');
+    expect(spokenToDigits('పది వేల ఎనిమిది వందల యాభై ఆరు')).toBe('10856');
+    expect(spokenToDigits('నాలుగు లక్షల')).toBe('400000');
+    expect(spokenToDigits('వంద')).toBe('100');
+    expect(spokenToDigits('दो हज़ार दस')).toBe('2010');
+    expect(spokenToDigits('एक सौ पाँच लोग')).toBe('105');
+    expect(spokenToDigits('ಎರಡು ಸಾವಿರದ ಎಂಟು')).toBe('2008');
+    expect(spokenToDigits('ಇನ್ನೂರು ಐವತ್ತು')).toBe('250');
+    expect(spokenToDigits('four thousand eight hundred ninety two')).toBe('4892');
+    expect(spokenToDigits('twenty five thousand rupees')).toBe('25000');
+  });
+
+  it('keeps digit-by-digit dictation as digits, and a numeral before a scale word as written', () => {
+    expect(spokenToDigits('nine eight four five')).toBe('9845');
+    expect(spokenToDigits('14 ಸಾವಿರ ಜನ')).toBe('14');
+  });
+
   it('returns an empty string when there is no number', () => {
     expect(spokenToDigits('mera paisa chala gaya')).toBe('');
   });

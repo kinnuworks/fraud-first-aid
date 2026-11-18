@@ -152,6 +152,19 @@ const KN_JOINED: string[][] = [
   KN_JOINED.forEach((ends, u) => pair(n + u + 1, ends.map((e) => stem + e)));
 });
 
+// Kannada fuses the hundreds into one word.
+[['ಇನ್ನೂರು'], ['ಮುನ್ನೂರು'], ['ನಾನೂರು', 'ನಾನ್ನೂರು'], ['ಐನೂರು'], ['ಆರುನೂರು'], ['ಏಳುನೂರು'], ['ಎಂಟುನೂರು'], ['ಒಂಬೈನೂರು', 'ಒಂಬತ್ತುನೂರು']]
+  .forEach((ws, i) => pair(200 + 100 * i, ws));
+
+// Scale words: "four thousand eight hundred", "నాలుగు వేల ఎనిమిది వందల", "दो हज़ार".
+const MULT: Record<string, number> = {};
+const mult = (n: number, words: string[]) => words.forEach((w) => (MULT[fold(w)] = n));
+mult(100, ['hundred', 'सौ', 'వంద', 'వందల', 'వందలు', 'నూరు', 'ನೂರು', 'ನೂರ']);
+mult(1000, ['thousand', 'हज़ार', 'हजार', 'వెయ్యి', 'వేల', 'వేలు', 'ಸಾವಿರ', 'ಸಾವಿರದ']);
+mult(1e5, ['lakh', 'lakhs', 'लाख', 'లక్ష', 'లక్షల', 'లక్షలు', 'ಲಕ್ಷ']);
+mult(1e7, ['crore', 'crores', 'करोड़', 'కోటి', 'కోట్ల', 'ಕೋಟಿ']);
+mult(1e6, ['million']);
+
 const REPEAT: Record<string, number> = {
   double: 2,
   triple: 3,
@@ -200,11 +213,42 @@ export function spokenToDigits(text: string): string {
   const word = tokens.map((t, i) => !numeral[i] && (tokenDigits(t) !== null || t in REPEAT));
   const isNum = tokens.map((t, i) => numeral[i] || (word[i] && !AMBIGUOUS.has(t)));
   const allNumbers = tokens.every((_, i) => numeral[i] || word[i]);
+  // Runs of number words that contain a scale word are one composed number.
+  const scale = tokens.map((t, i) => !numeral[i] && fold(t) in MULT);
+  const inRun = tokens.map((t, i) => scale[i] || (word[i] && !(t in REPEAT)));
+  const composed = new Map<number, { end: number; value: string }>();
+  for (let i = 0; i < tokens.length; ) {
+    if (!inRun[i]) { i++; continue; }
+    let j = i;
+    while (j < tokens.length && inRun[j]) j++;
+    const big = (k: number) => scale[k] || Number(tokenDigits(tokens[k]) ?? 0) >= 100;
+    if (j - i > 1 && tokens.slice(i, j).some((_, k) => big(i + k)) && !scale[i]) {
+      let total = 0, cur = 0;
+      for (let k = i; k < j; k++) {
+        const m = MULT[fold(tokens[k])];
+        if (m === 100) cur = (cur || 1) * 100;
+        else if (m) { total += (cur || 1) * m; cur = 0; }
+        else cur += Number(tokenDigits(tokens[k]));
+      }
+      composed.set(i, { end: j, value: String(total + cur) });
+    } else if (j - i === 1 && scale[i] && !numeral[i - 1]) {
+      composed.set(i, { end: j, value: String(MULT[fold(tokens[i])]) });
+    }
+    i = j;
+  }
   let out = '';
   let repeat = 1;
   let skip = -1;
+  let runEnd = -1;
   tokens.forEach((tok, i) => {
-    if (i === skip) return;
+    if (i === skip || i < runEnd) return;
+    const run = composed.get(i);
+    if (run) {
+      out += run.value;
+      runEnd = run.end;
+      repeat = 1;
+      return;
+    }
     if (numeral[i]) {
       out += embeddedNumerals(tok)!.repeat(repeat);
       repeat = 1;
