@@ -1888,3 +1888,136 @@ html[data-large] {
     grid-template-columns: 1fr;
   }
 }
+
+/* logo with its tagline */
+.up-logo__words {
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1.05;
+}
+.up-logo__tag {
+  font-family: var(--font-ui);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--ink-3);
+}
+.cs-side .up-logo__tag {
+  color: var(--on-navy-2);
+}
+
+/* hero: the stakes in one line */
+.rc-stakes {
+  margin-top: 20px;
+  max-width: 34rem;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--ink);
+}
+.rc-src {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ink-3);
+}
+
+/* the journey: four steps, outcome first */
+.jr {
+  padding-top: 96px;
+}
+.jr-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 20px;
+  margin-top: 18px;
+  counter-reset: none;
+}
+@media (max-width: 1100px) {
+  .jr-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (max-width: 620px) {
+  .jr-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.jr-step {
+  display: flex;
+  flex-direction: column;
+  padding: 26px 24px 28px;
+  border-radius: 24px;
+  background: #f4f5f8;
+}
+.jr-step:nth-child(2) {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+.jr-step:nth-child(2) .jr-k,
+.jr-step:nth-child(2) .jr-proof {
+  color: var(--on-navy-2);
+}
+.jr-n {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 4rem;
+  line-height: 0.9;
+  letter-spacing: -0.04em;
+}
+.jr-k {
+  margin-top: 14px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+.jr-out {
+  margin-top: 8px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.375rem;
+  line-height: 1.25;
+  letter-spacing: -0.015em;
+  flex: 1;
+}
+.jr-proof {
+  margin-top: 16px;
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: var(--ink-3);
+}
+
+/* reported cases: money back after a fast 1930 report */
+.cs2 {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding-top: 24px;
+  padding-bottom: 24px;
+}
+@media (max-width: 760px) {
+  .cs2 {
+    grid-template-columns: 1fr;
+  }
+}
+.cs2-card {
+  padding: 26px 28px;
+  border-radius: 24px;
+  background: var(--ok-bg);
+}
+.cs2-num {
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: clamp(2rem, 1.4rem + 1.8vw, 2.75rem);
+  letter-spacing: -0.03em;
+  line-height: 1;
+  color: var(--ok);
+}
+.cs2-text {
+  margin-top: 12px;
+  font-size: 1.125rem;
+  line-height: 1.5;
+}

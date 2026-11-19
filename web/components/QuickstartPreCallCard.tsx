@@ -201,73 +201,86 @@ const FACTS: Array<[string, string, string]> = [
   ['Held through 1930, till 30 Jun 2026', '₹11,158 crore+', 'Lok Sabha reply, Aug 2026'],
 ];
 
-const STEPS: Array<[string, string, string, string, string]> = [
+// The journey, outcome first, each step with one small proof line (STATE.md, JOURNEY HIGHLIGHT).
+const JOURNEY: Array<[string, string, string]> = [
   [
-    'Before',
-    'Scam guard',
-    '/design/step-before.png',
-    'Illustration: a phone on speaker with a red warning sign',
-    'Put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the moment the caller asks for an OTP, a PIN, a QR scan, an app install or money.',
+    'During the scam',
+    'It hears the call and tells you to hang up before you lose anything.',
+    'Caught 40 of 40 scam requests in our own guard break test, after 3 fixes.',
   ],
   [
-    'During',
-    'Complaint',
-    '/design/step-during.png',
-    'Illustration: a speech bubble with three boxes and a green tick',
-    'Say the 12-digit UTR. It reads it back in groups of four, and you fix one group by voice. Add the payment screenshot and the numbers are double-checked.',
+    "If money's gone",
+    'It takes your complaint by voice, in your language, every detail right.',
+    'Checked against your payment screenshot; 295 of 300 numbers exact in noise in our own break test.',
   ],
   [
-    'After',
-    'The pack',
-    '/design/step-after.png',
-    'Illustration: a stamped letter and a calendar with a day circled',
-    'What to say on 1930, a letter for your bank with the RBI 3-working-day date, an English summary for the operator, and two calendar reminders.',
+    'It acts',
+    "It finds your bank and branch, your bank's own fraud line, and your RBI deadline.",
+    'Zero liability if your bank hears within 3 working days (RBI circular RBI/2017-18/15).',
+  ],
+  [
+    'It hands you everything',
+    'The 1930 script in your language, an English card for the operator, the bank letter and reminders. Family can listen live.',
+    'Plus the RBI Ombudsman step after 30 days and the Chakshu report.',
   ],
 ];
+
+function Journey() {
+  return (
+    <section id="how" className="jr up-wrap" aria-labelledby="jr-title">
+      <h2 id="jr-title" className="up-label">
+        What UTR Pakka does for you
+      </h2>
+      <ol className="jr-grid">
+        {JOURNEY.map(([k, outcome, proof], i) => (
+          <li key={k} className="jr-step">
+            <span className="jr-n" aria-hidden="true">
+              {i + 1}
+            </span>
+            <p className="jr-k">{k}</p>
+            <p className="jr-out">{outcome}</p>
+            <p className="jr-proof">{proof}</p>
+          </li>
+        ))}
+      </ol>
+    </section>
+  );
+}
+
+// Reported outcomes after a fast 1930 report. No faces here.
+function Cases() {
+  return (
+    <section className="cs2 up-wrap" aria-label="Reported cases">
+      <div className="cs2-card">
+        <p className="cs2-num">₹17 lakh back</p>
+        <p className="cs2-text">
+          A 79-year-old in Mangaluru lost her life savings to a fake video &ldquo;arrest&rdquo;. Police reached the bank through
+          1930 the same day and froze it before the money left. All of it came back.
+        </p>
+        <p className="jr-proof">The Mangalorean, 31 Oct 2025</p>
+      </div>
+      <div className="cs2-card">
+        <p className="cs2-num">₹14 lakh back</p>
+        <p className="cs2-text">A 44-year-old in Bengaluru called 1930 within the golden hour. All ₹14 lakh came back.</p>
+        <p className="jr-proof">Telangana Today / PTI, 23 Sep 2025</p>
+      </div>
+    </section>
+  );
+}
 
 function Below() {
   return (
     <>
-      <section id="how" className="up-wrap" style={{ paddingTop: 96 }}>
-        <Image
-          src="/design/pile.png"
-          alt="Illustration: a phone with an incoming call, a bank SMS, rupee notes, a QR stand, a glass of chai, a rubber stamp and a receipt book"
-          width={1100}
-          height={733}
-          className="fd-pile"
-        />
-        <h2 className="up-h2 text-center" style={{ maxWidth: '20ch', marginInline: 'auto' }}>
-          One call: before, during and after the money goes.
-        </h2>
-        <div className="up-steps3" style={{ marginTop: 40 }}>
-          {STEPS.map(([k, title, src, alt, text]) => (
-            <div key={k} className="up-step">
-              <Image src={src} alt={alt} width={400} height={400} />
-              <span className="up-label">{k}</span>
-              <h3>{title}</h3>
-              <p>{text}</p>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section className="up-wrap" style={{ paddingTop: 72 }} aria-label="Why the first hour matters">
-        <div className="up-stats">
-          {FACTS.map(([k, v]) => (
-            <div key={k} className="up-card up-stat">
-              <span className="up-label">{k}</span>
-              <strong>{v}</strong>
-            </div>
-          ))}
-        </div>
-      </section>
-      <section id="sources" className="up-wrap" style={{ paddingTop: 56, paddingBottom: 96 }}>
+      <section id="sources" className="up-wrap" style={{ paddingTop: 72, paddingBottom: 96 }}>
         <h2 className="up-label">Sources for the numbers on this page</h2>
         <ul className="mt-3 space-y-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
+          <li>Reported lost since 2021, and refunded: about ₹64,447 crore and about ₹323 crore. MHA review, reported by the Indian Express, 14 Jul 2026.</li>
           {FACTS.map(([k, v, s]) => (
             <li key={k}>
               {k}: {v}. {s}.
             </li>
           ))}
+          <li>Guard and number break tests: our own tests, described with their data in the README.</li>
         </ul>
         <p className="mt-6 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
           UTR Pakka never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
@@ -306,10 +319,6 @@ function Compare() {
       </div>
       <div className="cmp-proof">
         <p>
-          In Mangaluru and Bengaluru, fast reports through 1930 got all of the money back: ₹17 lakh and ₹14 lakh (The
-          Mangalorean, 31 Oct 2025; Telangana Today / PTI, 23 Sep 2025).
-        </p>
-        <p>
           In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support, because language
           barriers stop people from reporting promptly (Devdiscourse, 17 Jun 2026).
         </p>
@@ -337,14 +346,15 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         <section className="rc-hero">
           <div>
             <p className="up-label">UTR = the 12-digit payment reference. Pakka = for sure.</p>
-            <h1 className="up-display rc-h1" style={{ marginTop: 16 }}>
-              1930 can freeze your money, if they hear fast and get every digit right.{' '}
-              <span className="rc-h1-accent">UTR Pakka makes sure they do.</span>
+            <h1 className="up-display" style={{ marginTop: 16 }}>
+              Get your money frozen in the first hour.
             </h1>
-            <p className="up-lead" style={{ marginTop: 22, maxWidth: '36rem' }}>
-              It warns you during the scam call. Then, in your language, it takes down the 12-digit UTR, the amount and who
-              got the money, reads each back until you confirm it, and hands you the 1930 script, an English card for the
-              operator, your bank&apos;s fraud line and the bank letter.
+            <p className="rc-stakes">
+              About ₹64,447 crore reported lost since 2021; about ₹323 crore refunded. The first hour decides it.
+              <span className="rc-src"> MHA review, reported by the Indian Express, 14 Jul 2026</span>
+            </p>
+            <p className="up-lead" style={{ marginTop: 14, maxWidth: '34rem' }}>
+              <strong className="rc-h1-accent">UTR Pakka is the calm voice beside you in that hour, in your language.</strong>
             </p>
             <div className="mt-7">
               <LanguageChips />
@@ -424,6 +434,10 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
             </div>
           </div>
         </section>
+      </div>
+      <Journey />
+      <Cases />
+      <div className="up-wrap">
         <section className="mw" aria-label="More ways to try it">
           <MoreWays />
           <span className="fd-qr">
@@ -436,9 +450,11 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
           </span>
           <p className="mw-why">{WHY}</p>
         </section>
-        <Compare />
       </div>
       <ImpactBand />
+      <div className="up-wrap">
+        <Compare />
+      </div>
       <Below />
       <PhotoCredits />
     </div>

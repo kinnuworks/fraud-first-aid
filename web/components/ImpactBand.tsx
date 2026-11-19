@@ -105,10 +105,6 @@ export function ImpactBand() {
           <a href="#photo-credits">Photo credits</a>
         </p>
       </section>
-      <section className="up-wrap im-case" aria-label="A reported case">
-        <p className="im-case__text">A 44-year-old in Bengaluru called 1930 within the golden hour. All ₹14 lakh came back.</p>
-        <p className="im-src">Telangana Today / PTI, 23 Sep 2025</p>
-      </section>
     </>
   );
 }
