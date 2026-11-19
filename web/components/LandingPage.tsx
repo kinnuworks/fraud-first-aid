@@ -204,22 +204,12 @@ export default function LandingPage() {
   };
 
   return (
-    <div className="relative flex h-dvh min-h-screen flex-col overflow-hidden bg-background text-foreground">
-      {/* Hero shell: either shows the pre-call CTA or swaps in the live conversation experience. */}
-      <div
-        className={`flex min-h-0 flex-1 flex-col ${
-          showConversation
-            ? 'items-stretch justify-start'
-            : 'items-center justify-center'
-        }`}
-      >
-        <div
-          className={`z-10 flex min-h-0 flex-1 flex-col ${
-            showConversation
-              ? 'h-full w-full max-w-none items-stretch gap-0 px-0 text-left'
-              : 'w-full max-w-none items-center justify-center px-4 text-center'
-          }`}
-        >
+    <div
+      className={`relative flex flex-col text-foreground ${showConversation ? 'h-dvh min-h-screen overflow-hidden' : 'min-h-dvh'}`}
+      style={{ background: 'var(--paper)' }}
+    >
+      <div className={`flex min-h-0 flex-1 flex-col ${showConversation ? 'items-stretch justify-start' : ''}`}>
+        <div className={`z-10 flex min-h-0 flex-1 flex-col ${showConversation ? 'h-full w-full max-w-none items-stretch gap-0 px-0 text-left' : 'w-full'}`}>
           {!showConversation ? (
             <QuickstartPreCallCard
               isLoading={isLoading}
@@ -230,7 +220,7 @@ export default function LandingPage() {
             <>
               {/* Non-fatal invite warning: the browser session can still render even if agent start failed. */}
               {agentJoinError && (
-                <div className="p-3 bg-destructive/10 rounded-md text-destructive text-sm max-w-sm">
+                <div className="up-note m-3" role="alert">
                   Failed to connect with AI agent. The conversation may not work
                   as expected.
                 </div>
@@ -259,9 +249,9 @@ export default function LandingPage() {
       </div>
 
       {/* Persistent attribution footer for the pre-call and in-call views. */}
-      <footer className="fixed bottom-0 right-0 z-40 py-4 pr-4 md:py-6 md:pr-6">
-        <div className="flex items-center justify-end gap-2 text-muted-foreground">
-          <span className="text-xs font-medium tracking-wide uppercase">
+      <footer className={`${showConversation ? 'fixed bottom-0 right-0 pr-4 md:pr-6' : 'up-wrap pb-8'} z-40 py-4`}>
+        <div className="flex items-center justify-end gap-2" style={{ color: 'var(--ink-3)' }}>
+          <span className="text-[0.8125rem] font-medium">
             Powered by
           </span>
           <a
