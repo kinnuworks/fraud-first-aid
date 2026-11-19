@@ -65,3 +65,24 @@ describe('addFlag fallback for a warning the model gave under another name', () 
     expect(addFlag(c, 'another_unknown', 'x', 'y')).toBe(false);
   });
 });
+
+// Scam-call evidence (20 Nov): on guard, every line heard on the speakerphone is kept with its time,
+// so the pack can hand 1930 and the cyber cell the scammer's own words in order.
+describe('logHeard', () => {
+  it('keeps what was heard on guard, with the time, bounded', async () => {
+    const { newComplaint, logHeard } = await import('./session');
+    const c = newComplaint('te', 'guard');
+    logHeard(c, 'Hello sir, I am calling from SBI', new Date('2026-11-19T09:00:05Z'));
+    logHeard(c, '   ', new Date('2026-11-19T09:00:06Z'));
+    expect(c.heard).toEqual([{ at: '2026-11-19T14:30:05', text: 'Hello sir, I am calling from SBI' }]);
+    for (let i = 0; i < 100; i++) logHeard(c, `line ${i}`);
+    expect(c.heard!.length).toBe(60);
+    expect(c.heard![59].text).toBe('line 99');
+  });
+  it('keeps nothing once the call is a complaint', async () => {
+    const { newComplaint, logHeard } = await import('./session');
+    const c = newComplaint('te', 'complaint');
+    logHeard(c, 'my UTR is 4021');
+    expect(c.heard).toBeUndefined();
+  });
+});

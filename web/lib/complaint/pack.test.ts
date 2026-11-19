@@ -135,3 +135,37 @@ describe('pack: deadline from the debit date', () => {
     expect(p.reminders).toMatch(/Bank's complaint number/);
   });
 });
+
+describe('pack: the scam call as evidence', () => {
+  it('lists what was heard with times and marks the red-flag lines', async () => {
+    const { newComplaint } = await import('./session');
+    const { buildPack } = await import('./pack');
+    const c = newComplaint('te');
+    c.fields = {
+      utr: { value: '402177889910', confirmed: true },
+      amount: { value: 25000, confirmed: true },
+      payee: { value: 'ramesh@okaxis', confirmed: true },
+      when: { value: '2026-11-19T14:30', confirmed: true },
+      victim_bank: { value: 'State Bank of India', confirmed: true },
+    } as never;
+    c.heard = [
+      { at: '2026-11-19T14:20:05', text: 'Hello, I am calling from your bank, KYC update' },
+      { at: '2026-11-19T14:20:31', text: 'An OTP has come on your phone, tell it to me' },
+    ];
+    c.flags = [{ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'An OTP has come on your phone, tell it to me' }];
+    const p = buildPack(c, '2026-11-19');
+    if (!p.ok) throw new Error('pack');
+    expect(p.callRecord).toMatch(/14:20:05 {2}Hello, I am calling from your bank/);
+    expect(p.callRecord).toMatch(/14:20:31 {2}RED FLAG \(asked for the OTP\): An OTP has come/);
+    expect(p.operatorCard).toMatch(/Scam call record: 2 lines heard/);
+  });
+  it('has no call record when nothing was heard on guard', async () => {
+    const { newComplaint } = await import('./session');
+    const { buildPack } = await import('./pack');
+    const c = newComplaint('en');
+    c.fields = { utr: { value: '402177889910', confirmed: true }, amount: { value: 1, confirmed: true }, payee: { value: 'a@b', confirmed: true }, when: { value: '2026-11-19T14:30', confirmed: true }, victim_bank: { value: 'SBI', confirmed: true } } as never;
+    const p = buildPack(c, '2026-11-19');
+    if (!p.ok) throw new Error('pack');
+    expect(p.callRecord).toBe('');
+  });
+});

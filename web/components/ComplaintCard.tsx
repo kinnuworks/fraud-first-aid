@@ -10,7 +10,7 @@ import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
-  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; bankLine?: { bank: string; phone: string; source: string } | null; portalSheet?: string; nextSteps?: string; ombudsmanDraft?: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
+  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; bankLine?: { bank: string; phone: string; source: string } | null; portalSheet?: string; nextSteps?: string; ombudsmanDraft?: string; callRecord?: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
 type EmailState = { id: string; at: string } | { problem: string } | null;
@@ -556,8 +556,9 @@ function PackView({
         <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
         <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
         <PackItem n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
+        {pack.callRecord && <PackItem n={4} title="The scam call as UTR Pakka heard it, with the red flags marked (evidence for 1930 and the cyber cell)" text={pack.callRecord} />}
         <div className="flex items-center gap-[14px] py-[14px]">
-          <span className="pk-num">4</span>
+          <span className="pk-num">{pack.callRecord ? 5 : 4}</span>
           <a
             href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
             download="utr-pakka-reminders.ics"
@@ -568,9 +569,9 @@ function PackView({
           </a>
         </div>
         {(pack.portalSheet || pack.nextSteps) && <p className="pk-group">If you need more</p>}
-        {pack.portalSheet && <PackItem n={5} title="Filing online yourself? Every field in the portal's order" text={pack.portalSheet} />}
-        {pack.nextSteps && <PackItem n={6} title="If the bank doesn't fix it: the next three steps" text={pack.nextSteps} />}
-        {pack.ombudsmanDraft && <PackItem n={7} title="Day 30, if the bank hasn't replied: your RBI Ombudsman complaint, ready to paste" text={pack.ombudsmanDraft} />}
+        {pack.portalSheet && <PackItem n={pack.callRecord ? 6 : 5} title="Filing online yourself? Every field in the portal's order" text={pack.portalSheet} />}
+        {pack.nextSteps && <PackItem n={pack.callRecord ? 7 : 6} title="If the bank doesn't fix it: the next three steps" text={pack.nextSteps} />}
+        {pack.ombudsmanDraft && <PackItem n={pack.callRecord ? 8 : 7} title="Day 30, if the bank hasn't replied: your RBI Ombudsman complaint, ready to paste" text={pack.ombudsmanDraft} />}
       </div>
       <div className="pk-actions">
         <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost up-btn--sm">

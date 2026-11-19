@@ -37,6 +37,7 @@ export type Pack =
       portalSheet: string;
       nextSteps: string;
       ombudsmanDraft: string;
+      callRecord: string;
       minutesSinceDebit: number | null;
       deadlines: ReturnType<typeof deadlines>;
     };
@@ -87,6 +88,17 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     payee: f.payee.value,
     bank: f.victim_bank.value,
   });
+  // The scam call as heard on speaker, with the red-flag lines marked: evidence for 1930 and the cyber cell.
+  const flagFor = (text: string) => c.flags.find((x) => x.heard && text.startsWith(x.heard.slice(0, 80)));
+  const callRecord = c.heard?.length
+    ? [
+        `The scam call, as UTR Pakka heard it on speaker (India time, ${c.heard[0].at.slice(0, 10)}). Both sides of the call are in one stream.`,
+        ...c.heard.map((h) => {
+          const fl = flagFor(h.text);
+          return `${h.at.slice(11, 19)}  ${fl ? `RED FLAG (${fl.red_flag}): ` : ''}${h.text}`;
+        }),
+      ].join('\n')
+    : '';
   const operatorCard = [
     'UPI fraud report, prepared by voice (UTR Pakka)',
     `Caller language: ${LANG_NAME[c.lang]}`,
@@ -99,6 +111,7 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     `Bank deadline (zero liability): ${d.zeroLiabilityBy}`,
     ...c.flags.map((f) => `Scam red flag heard live: ${scamById(f.scam)?.name ?? f.scam} (caller ${f.red_flag})`),
     ...(c.story ? [`What happened: ${c.story.en}`, `Caller's words: "${c.story.words}"`] : []),
+    ...(c.heard?.length ? [`Scam call record: ${c.heard.length} lines heard on speaker, from ${c.heard[0].at.slice(11, 19)} to ${c.heard[c.heard.length - 1].at.slice(11, 19)} (in the pack)`] : []),
   ].join('\n');
   const bankLine = line ? { bank: line.bank, phone: line.phone, source: line.source, ...(line.also ? { also: line.also } : {}) } : null;
   const [date, time = ''] = f.when.value.split('T');
@@ -141,5 +154,5 @@ What I ask: a refund of Rs ${inr(f.amount.value)}, under RBI circular RBI/2017-1
 
 Attached: my letter to the bank, the bank's reply if any, and the payment screenshot.`;
   const reminders = reminderIcs({ utr: f.utr.value, amount: f.amount.value, reportedOn: today, debitOn: debitDay, bank: f.victim_bank.value.split(',')[0], ombudsman: ombudsmanDraft });
-  return { ok: true, bankLetter, script1930, operatorCard, reminders, bankLine, portalSheet, nextSteps, ombudsmanDraft, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
+  return { ok: true, bankLetter, script1930, operatorCard, reminders, bankLine, portalSheet, nextSteps, ombudsmanDraft, callRecord, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
 }

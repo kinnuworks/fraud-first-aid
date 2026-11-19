@@ -31,6 +31,8 @@ export type Complaint = {
   story?: { en: string; words: string };
   // What the payment screenshot showed (second source), if the caller added one.
   shot?: import('./screenshot').Shot;
+  // On guard: each line heard on the speakerphone, with its India time, as evidence of the scam.
+  heard?: Array<{ at: string; text: string }>;
   fields: Partial<{
     utr: Field<string>;
     amount: Field<number>;
@@ -43,6 +45,16 @@ export type Complaint = {
 export type Result = { ok: boolean; problem?: string; [k: string]: unknown };
 
 export const newComplaint = (lang: ReadbackLang, phase: Phase = 'complaint'): Complaint => ({ lang, phase, flags: [], fields: {} });
+
+// Keep what was heard on guard (the scam call itself), at most 60 lines of 300 characters, with
+// India time to the second. Nothing is kept once the call has become a complaint.
+export function logHeard(c: Complaint, text: string, now: Date = new Date()): void {
+  const t = text.trim();
+  if (c.phase !== 'guard' || !t) return;
+  const at = new Date(now.getTime() + 330 * 60000).toISOString().slice(0, 19);
+  (c.heard ??= []).push({ at, text: t.slice(0, 300) });
+  if (c.heard.length > 60) c.heard.splice(0, c.heard.length - 60);
+}
 
 const NUMBER_RULES = {
   utr: { len: 12, check: isUtr, label: 'a UTR has 12' },

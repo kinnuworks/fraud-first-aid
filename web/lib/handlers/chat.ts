@@ -4,7 +4,7 @@ import { createLlmRoute } from '@/lib/llm-route';
 import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint, hydrate, persist, hold, release } from '@/lib/complaint/store';
-import { addFlag } from '@/lib/complaint/session';
+import { addFlag, logHeard } from '@/lib/complaint/session';
 import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
@@ -20,6 +20,8 @@ export const POST = createLlmRoute({
   shortcut: (session, lastUser) => {
     const c = getComplaint(session);
     followLanguage(c, lastUser);
+    // on guard, keep the scam call itself as evidence for the pack
+    logHeard(c, lastUser);
     const before = `${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length}`;
     const out = guardHandover(c, lastUser) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
     // Turn decisions for debugging, only with DEBUG_TURNS=1; never the caller's words.
