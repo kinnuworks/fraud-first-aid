@@ -24,3 +24,36 @@ describe('listen: a read-only RTC token for family', () => {
     expect(typeof j.token).toBe('string');
   });
 });
+
+// Family joins the call (20 Nov): a separate talk key lets a family member speak into the call;
+// the view key (also given to the 1930 operator view) still only listens.
+describe('listen: family can talk only with the talk key', () => {
+  it('the view key listens and cannot speak', async () => {
+    const { GET } = await import('./listen');
+    const { viewCapFor } = await import('../capability');
+    const j = await (await GET(new NextRequest(`http://x/api/call/listen?session=up-2&key=${viewCapFor('up-2')}`))).json();
+    expect(j.canSpeak).toBe(false);
+  });
+  it('the talk key gets a speaking token and can also read the call', async () => {
+    const { GET } = await import('./listen');
+    const { talkCapFor, canView } = await import('../capability');
+    const key = talkCapFor('up-2')!;
+    const r = await GET(new NextRequest(`http://x/api/call/listen?session=up-2&key=${key}`));
+    expect(r.status).toBe(200);
+    const j = await r.json();
+    expect(j.canSpeak).toBe(true);
+    expect(j.uid).toBeGreaterThanOrEqual(80000);
+    expect(j.uid).toBeLessThan(90000);
+    expect(canView('up-2', key)).toBe(true);
+  });
+  it('a talk key for one call does not work on another', async () => {
+    const { GET } = await import('./listen');
+    const { talkCapFor } = await import('../capability');
+    const r = await GET(new NextRequest(`http://x/api/call/listen?session=up-3&key=${talkCapFor('up-2')}`));
+    expect(r.status).toBe(403);
+  });
+  it('the talk key differs from the view key', async () => {
+    const { talkCapFor, viewCapFor } = await import('../capability');
+    expect(talkCapFor('up-2')).not.toBe(viewCapFor('up-2'));
+  });
+});

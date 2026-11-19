@@ -507,7 +507,7 @@ export default function ConversationComponent({
       transcriptPanel={
         <>
           <ComplaintCard session={agoraData.channel} cap={agoraData.cap} />
-          <SecondScreens session={agoraData.channel} viewKey={agoraData.viewCap} />
+          <SecondScreens session={agoraData.channel} viewKey={agoraData.viewCap} talkKey={agoraData.talkCap} />
         </>
       }
       transcript={

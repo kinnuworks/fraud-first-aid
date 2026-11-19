@@ -5,6 +5,7 @@ export interface AgoraTokenData {
   cap: string;
   // Read-only link key for the operator and family views.
   viewCap?: string;
+  talkCap?: string;
   token: string;
   uid: string;
   channel: string;

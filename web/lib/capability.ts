@@ -27,9 +27,21 @@ export function viewCapFor(channel: string): string | null {
   return createHmac('sha256', s).update(`view:${channel}`).digest('hex').slice(0, 40);
 }
 
+// Family link that can also speak into the call (it joins the Agora channel as a speaker). It can
+// read the call like the view key, but not start, upload to or stop it. The operator view never
+// gets it.
+export function talkCapFor(channel: string): string | null {
+  const s = secret();
+  if (!s) return null;
+  return createHmac('sha256', s).update(`talk:${channel}`).digest('hex').slice(0, 40);
+}
+
+const same = (want: string | null, key: string | null | undefined) =>
+  !!want && !!key && key.length === want.length && timingSafeEqual(Buffer.from(key), Buffer.from(want));
+
+export const canTalk = (channel: string, key: string | null | undefined) => same(talkCapFor(channel), key);
+
 export function canView(channel: string, key: string | null | undefined): boolean {
   if (checkCap(channel, key)) return true;
-  const want = viewCapFor(channel);
-  if (!want || !key || key.length !== want.length) return false;
-  return timingSafeEqual(Buffer.from(key), Buffer.from(want));
+  return same(viewCapFor(channel), key) || canTalk(channel, key);
 }

@@ -135,7 +135,7 @@ export function FamilyView({ session, viewKey, phone = false }: { session: strin
     <main className="cs" data-testid="family-view">
       <header className="cs-top">
         <Logo />
-        <span className="up-label">{phone ? 'Your phone call · live · answer your phone and speak' : 'Live view for family · read only'}</span>
+        <span className="up-label">{phone ? 'Your phone call · live · answer your phone and speak' : 'Live view for family'}</span>
       </header>
       <div className="up-wrap flex max-w-[56rem] flex-col gap-5 py-8">
         {!phone && <ListenLive session={session} viewKey={viewKey} />}
