@@ -142,6 +142,12 @@ Confirmations and numbers skip the model: our route answers them from the compla
 | Agent metrics | speech-to-text, model and voice latency shown live in the call screen's pipeline bar | [`QuickstartPipelineMetrics.tsx`](web/components/QuickstartPipelineMetrics.tsx) |
 | Murf Falcon TTS | the agent's voice per language: native voices for Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati and Punjabi, and en-IN-anisha speaking Telugu and English | [`agent-config.ts`](web/lib/agent-config.ts) |
 
+Where to look, line by line:
+- The agent starts per call with `session.start()`: [`invite-agent.ts#L105`](web/lib/handlers/invite-agent.ts#L105), listening only to the caller (`remoteUids`, [#L97](web/lib/handlers/invite-agent.ts#L97)).
+- The pipeline is built in [`agent-builder.ts#L29`](web/lib/agent-builder.ts#L29): Sarvam speech-to-text in the caller's language, our model URL with tools, and Murf Falcon as the voice: `new MurfTTS({ voiceId, locale, model: 'FALCON' })` at [#L97](web/lib/agent-builder.ts#L97), slower with `rate: -20` for older callers.
+- Turn detection and the tools/RTM switches: [#L39](web/lib/agent-builder.ts#L39) and [#L59](web/lib/agent-builder.ts#L59).
+- The Murf Falcon voice per language (hi-IN-namrita, kn-IN-harshitha, en-IN-anisha for Telugu and English, and the rest): [`agent-config.ts`](web/lib/agent-config.ts#L12).
+
 ## Check it yourself
 
 - The live app: https://utr-pakka.vercel.app
