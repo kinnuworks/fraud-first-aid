@@ -24,6 +24,7 @@ import {
 import { AgentVisualizer } from 'agora-agent-uikit';
 import { MicButtonWithVisualizer } from 'agora-agent-uikit/rtc';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { TypeInstead } from '@/components/TypeInstead';
 import {
   getCurrentInProgressMessage,
   getMessageList,
@@ -510,11 +511,14 @@ export default function ConversationComponent({
         </>
       }
       transcript={
-        <QuickstartTranscriptPanel
-          messageList={messageList}
-          currentInProgressMessage={currentInProgressMessage}
-          agentUID={agentUID}
-        />
+        <>
+          <QuickstartTranscriptPanel
+            messageList={messageList}
+            currentInProgressMessage={currentInProgressMessage}
+            agentUID={agentUID}
+          />
+          <TypeInstead agentUid={agentUID} />
+        </>
       }
       visualizer={
         <div
