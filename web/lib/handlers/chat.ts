@@ -3,7 +3,7 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import { createLlmRoute } from '@/lib/llm-route';
 import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
-import { getComplaint } from '@/lib/complaint/store';
+import { getComplaint, hydrate, persist } from '@/lib/complaint/store';
 import { addFlag } from '@/lib/complaint/session';
 import { guardShortcut } from '@/lib/complaint/redflags';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
@@ -31,6 +31,8 @@ export const POST = createLlmRoute({
     }
     return out;
   },
+  load: (session) => hydrate(session),
+  save: (session, seen) => persist(session, seen),
   onMarker: (session, id, detail, lastUser) => {
     addFlag(getComplaint(session), id, detail, lastUser);
   },

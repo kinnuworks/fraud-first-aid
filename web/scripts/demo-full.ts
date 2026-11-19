@@ -36,7 +36,7 @@ const play = async (page: Page, clip: string) => {
   await page.evaluate((u) => (window as unknown as { __utrPakkaPlay: (u: string) => Promise<void> }).__utrPakkaPlay(u), `/demo/${clip}.wav`);
   await idle(page);
   // Agora's live pipeline metrics for this turn, as shown in the call screen's pipeline bar
-  const bar = (await page.locator('header, [class*=pipe]').first().innerText().catch(() => '')) || '';
+  const bar = (await page.locator('.up-pipe').first().innerText().catch(() => '')) || '';
   const n = (k: string) => { const m = bar.match(new RegExp(`${k}\\s*(\\d+)\\s*ms`)); return m ? Number(m[1]) : undefined; };
   lat.push({ clip, ttlw: n('ttlw'), ttfs: n('ttfs'), ttfb: n('ttfb') });
 };

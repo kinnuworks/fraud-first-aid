@@ -8,7 +8,7 @@ import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
 import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
-import { startComplaint, getComplaint } from '@/lib/complaint/store';
+import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { checkCap } from '@/lib/capability';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
@@ -70,6 +70,7 @@ export async function POST(request: NextRequest) {
     const mode = (body as unknown as { mode?: string }).mode === 'guard' ? 'guard' : 'complaint';
     startComplaint(channel_name, lang, mode);
     if (langArg === 'auto') getComplaint(channel_name).autoLang = true;
+    await persist(channel_name);
 
     // --- 2. Build and start the agent ---
 

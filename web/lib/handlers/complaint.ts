@@ -1,16 +1,17 @@
 // The complaint card on screen polls this: the fields so far for one call.
 import { NextRequest, NextResponse } from 'next/server';
-import { peekComplaint } from '@/lib/complaint/store';
+import { peekComplaint, hydrate } from '@/lib/complaint/store';
 import { missingFields, deadlines } from '@/lib/complaint/session';
 import { buildPack } from '@/lib/complaint/pack';
 import { istToday } from '@/lib/complaint/today';
 import { canView } from '@/lib/capability';
 import { compareWithScreenshot } from '@/lib/complaint/screenshot';
 
-export function GET(request: NextRequest) {
+export async function GET(request: NextRequest) {
   const id = request.nextUrl.searchParams.get('session') ?? '';
   if (!/^[\w-]{1,64}$/.test(id)) return NextResponse.json({ error: 'bad session' }, { status: 400 });
   if (!canView(id, request.nextUrl.searchParams.get('cap'))) return NextResponse.json({ error: 'not your call' }, { status: 403 });
+  await hydrate(id);
   const c = peekComplaint(id);
   if (!c) return NextResponse.json({ error: 'no such call' }, { status: 404 });
   return NextResponse.json({

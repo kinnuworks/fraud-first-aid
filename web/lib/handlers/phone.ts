@@ -6,7 +6,7 @@ import { AgoraClient, Area, ExpiresIn, generateRtcToken, generateConvoAIToken } 
 import { checkCap } from '@/lib/capability';
 import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
-import { startComplaint, getComplaint } from '@/lib/complaint/store';
+import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { indianMobile, CallLimiter } from '@/lib/phone';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
@@ -43,6 +43,7 @@ export async function POST(request: NextRequest) {
   const mode = body.mode === 'guard' ? 'guard' : 'complaint';
   startComplaint(channel, lang, mode);
   if (langArg === 'auto') getComplaint(channel).autoLang = true;
+  await persist(channel);
   try {
     const client = agoraRestClient(appId, appCertificate);
     const agent = buildAgent({ client, preset: presetFor(langArg), lang, langArg, mode, channel, llmUrl, surface: 'phone' });

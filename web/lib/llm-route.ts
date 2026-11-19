@@ -31,6 +31,10 @@ type Deps = {
   ) => void;
   // A fixed reply to speak at once instead of calling the model (the guard's red-flag rules).
   shortcut?: (session: string, lastUser: string) => string | null;
+  // Shared store across server instances: load the call (returns the user text already seen)
+  // before anything else, and save it once the reply has finished.
+  load?: (session: string) => Promise<string | undefined>;
+  save?: (session: string, seen: string) => Promise<void>;
 };
 
 function authorized(
@@ -57,6 +61,8 @@ export function createLlmRoute({
   init,
   onMarker,
   shortcut,
+  load,
+  save,
 }: Deps) {
   return async function POST(request: NextRequest) {
     if (!authorized(request.headers.get("authorization"), secret)) {
@@ -75,6 +81,8 @@ export function createLlmRoute({
         { status: 400 },
       );
     }
+    const stored = await load?.(session);
+    if (stored !== undefined) seenUser.set(session, stored); // the store wins over this instance's memory
     init?.(session, request.nextUrl.searchParams);
     const msgs = body.messages ?? [];
     const last = [...msgs].reverse().find((m) => m.role === "user")?.content;
@@ -182,6 +190,7 @@ export function createLlmRoute({
           if (decided === null && head && !head.trimStart().startsWith(SILENT))
             feed(head);
           if (decided !== "silent") feed("", true);
+          await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
           controller.enqueue(chunk({}, "stop"));
           controller.enqueue(enc.encode("data: [DONE]\n\n"));
           controller.close();

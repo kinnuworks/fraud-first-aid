@@ -2,7 +2,7 @@
 // compared with what they said.
 import { NextRequest, NextResponse } from 'next/server';
 import { createAnthropic } from '@ai-sdk/anthropic';
-import { peekComplaint } from '@/lib/complaint/store';
+import { peekComplaint, hydrate, persist } from '@/lib/complaint/store';
 import { readScreenshot } from '@/lib/complaint/vision';
 import { compareWithScreenshot } from '@/lib/complaint/screenshot';
 import { checkCap } from '@/lib/capability';
@@ -19,6 +19,7 @@ export async function POST(request: NextRequest) {
   if (!/^[\w-]{1,64}$/.test(id) || !checkCap(id, request.nextUrl.searchParams.get('cap'))) {
     return NextResponse.json({ error: 'not your call' }, { status: 403 });
   }
+  await hydrate(id);
   const c = peekComplaint(id);
   if (!c) return NextResponse.json({ error: 'no such call' }, { status: 404 });
   // Size is checked before the body is read; a few screenshots per call at most.
@@ -40,6 +41,10 @@ export async function POST(request: NextRequest) {
     anthropic(process.env.VISION_MODEL ?? 'claude-sonnet-5-5'),
   );
   if (!r.ok) return NextResponse.json({ error: r.problem }, { status: 422 });
-  c.shot = r.shot;
-  return NextResponse.json({ shot: r.shot, check: compareWithScreenshot(c, r.shot) });
+  // the voice turns went on while the image was read: take the latest call, then add the shot
+  await hydrate(id);
+  const fresh = peekComplaint(id) ?? c;
+  fresh.shot = r.shot;
+  await persist(id);
+  return NextResponse.json({ shot: r.shot, check: compareWithScreenshot(fresh, r.shot) });
 }

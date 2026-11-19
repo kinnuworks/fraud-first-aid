@@ -185,3 +185,29 @@ describe('only the new words reach the tools', () => {
     expect(seen.at(-1)).toBe('yes');
   });
 });
+
+describe('custom LLM route with a shared store', () => {
+  it('loads the call before init, and saves it with the words seen after the reply finishes', async () => {
+    const order: string[] = [];
+    let saved: { session: string; seen: string } | null = null;
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: fakeStream(['ok']),
+      tools: () => ({}),
+      load: async (session) => { order.push(`load:${session}`); return 'hello'; },
+      init: (session) => { order.push(`init:${session}`); },
+      shortcut: (_s, lastUser) => { order.push(`turn:${lastUser}`); return null; },
+      save: async (session, seen) => { order.push('save'); saved = { session, seen }; },
+    });
+    const res = await route(new NextRequest('http://localhost/api/chat/completions?session=up-1', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'hello my UTR is' }] }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    }));
+    await res.text();
+    // the words seen on another instance ('hello') come from the store, so only the new words count
+    expect(order).toEqual(['load:up-1', 'init:up-1', 'turn: my UTR is', 'save']);
+    expect(saved).toEqual({ session: 'up-1', seen: 'hello my UTR is' });
+  });
+});
