@@ -4,7 +4,7 @@
 import { AgoraClient, Area, ExpiresIn, generateRtcToken } from 'agora-agents';
 import { buildAgent } from '../lib/agent-builder';
 import { presetFor } from '../lib/agent-config';
-import { newChannel, viewCapFor } from '../lib/capability';
+import { newChannel } from '../lib/capability';
 import { DEFAULT_AGENT_UID } from '../lib/agora';
 
 const env = (k: string) => { const v = process.env[k]; if (!v) throw new Error(`${k} must be set`); return v; };

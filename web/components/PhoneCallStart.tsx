@@ -1,8 +1,10 @@
 'use client';
 // "Or let UTR Pakka call your phone": rings the caller's Indian mobile and opens the live card.
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
 export function PhoneCallStart() {
+  const router = useRouter();
   const [to, setTo] = useState('');
   const [state, setState] = useState<string | null>(null);
   async function call(e: React.FormEvent) {
@@ -18,7 +20,7 @@ export function PhoneCallStart() {
     });
     const j = await r.json().catch(() => ({}));
     if (!r.ok) return setState(j.error ?? 'Could not place the call.');
-    window.location.href = `/watch?session=${encodeURIComponent(t.channel)}&key=${encodeURIComponent(t.viewCap)}&as=phone`;
+    router.push(`/watch?session=${encodeURIComponent(t.channel)}&key=${encodeURIComponent(t.viewCap)}&as=phone`);
   }
   return (
     <form onSubmit={call} className="flex flex-wrap items-center gap-2" data-testid="phone-call">
