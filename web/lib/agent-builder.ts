@@ -1,6 +1,7 @@
 // One agent definition for every way in: the web call and the phone call share the same
 // pipeline (Sarvam speech-to-text, our model route with complaint tools, Murf Falcon voice).
 import { Agent, SarvamSTT, MurfTTS, OpenAI, type AgoraClient } from 'agora-agents';
+import { fillerWords, SILENCE_PROMPT } from '@/lib/filler';
 import { prototypeInstructions, type LangPreset } from '@/lib/agent-config';
 
 function requireEnv(name: string): string {
@@ -32,6 +33,8 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
       greeting: mode === 'guard' ? undefined : preset.greeting,
       failureMessage: 'Please wait a moment.',
       maxHistory: 50,
+      // Complaint mode only: "one moment" in the caller's language while the model thinks (guard stays silent).
+      ...(mode === 'complaint' ? { fillerWords: fillerWords(langArg === 'auto' ? 'auto' : lang) } : {}),
       // VAD controls how the agent detects the start and end of a user's turn.
       turnDetection: {
         config: {
@@ -64,6 +67,8 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
         data_channel: 'rtm',
         enable_error_message: true,
         enable_metrics: true,
+        // a caller in shock who goes quiet gets a gentle prompt (complaint mode only)
+        ...(mode === 'complaint' ? { silence_config: { timeout_ms: 20000, action: 'think' as const, content: SILENCE_PROMPT } } : {}),
       },
     })
       .withStt(
