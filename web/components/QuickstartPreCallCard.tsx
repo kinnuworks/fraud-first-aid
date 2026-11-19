@@ -257,34 +257,50 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
           </div>
           <div className="rc-stage">
             <div className="rc-phone" aria-label="Sample payment screen">
-              <p className="text-center">
-                <span className="up-sample-tag">Sample</span>
-              </p>
-              <div className="rc-tick" aria-hidden="true">
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M5 12.5l4.5 4.5L19 7.5" />
-                </svg>
-              </div>
-              <p className="rc-amount">₹25,000</p>
-              <p className="rc-meta">Paid to ramesh@okaxis</p>
-              <p className="rc-meta">19 Nov 2026, 2:30 pm</p>
-              <div className="rc-rows">
-                <div>
-                  <span>From</span>
-                  <span>State Bank of India</span>
+              <div className="rc-screen">
+                <span className="rc-cam" aria-hidden="true" />
+                <div className="rc-status" aria-hidden="true">
+                  <span>2:31</span>
+                  <svg width="44" height="12" viewBox="0 0 44 12" fill="currentColor">
+                    <rect x="0" y="8" width="3" height="4" rx="1" />
+                    <rect x="5" y="5" width="3" height="7" rx="1" />
+                    <rect x="10" y="2" width="3" height="10" rx="1" />
+                    <rect x="22" y="1" width="20" height="10" rx="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                    <rect x="24" y="3" width="13" height="6" rx="1.5" />
+                  </svg>
                 </div>
-                <div>
-                  <span>UTR / UPI Ref. No.</span>
-                  <span className="rc-ref">
-                    402177889910
-                    <svg className="rc-circle" viewBox="0 0 160 50" preserveAspectRatio="none" aria-hidden="true">
-                      <path d="M8 26 C 10 6, 150 4, 154 22 C 158 42, 20 48, 6 30 C 2 22, 30 10, 60 9" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" />
-                    </svg>
-                  </span>
+                <p className="mt-4 text-center">
+                  <span className="up-sample-tag">Sample</span>
+                </p>
+                <div className="rc-tick" aria-hidden="true">
+                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M5 12.5l4.5 4.5L19 7.5" />
+                  </svg>
+                </div>
+                <p className="rc-amount">₹25,000</p>
+                <p className="rc-meta">Paid to ramesh@okaxis</p>
+                <p className="rc-meta">19 Nov 2026, 2:30 pm</p>
+                <div className="rc-rows">
+                  <div>
+                    <span>From</span>
+                    <span>State Bank of India</span>
+                  </div>
+                  <div>
+                    <span>UTR / UPI Ref. No.</span>
+                    <span className="rc-ref">
+                      402177889910
+                      <svg className="rc-circle" viewBox="0 0 160 50" preserveAspectRatio="none" aria-hidden="true">
+                        <path d="M8 26 C 10 6, 150 4, 154 22 C 158 42, 20 48, 6 30 C 2 22, 30 10, 60 9" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" />
+                      </svg>
+                    </span>
+                  </div>
+                </div>
+                <div className="rc-done" aria-hidden="true">
+                  Done
                 </div>
               </div>
             </div>
-            <svg className="rc-arrow" style={{ left: 280, top: 380, width: 160, height: 120 }} viewBox="0 0 160 120" aria-hidden="true">
+            <svg className="rc-arrow" style={{ left: 300, top: 410, width: 160, height: 120 }} viewBox="0 0 160 120" aria-hidden="true">
               <path d="M6 8 C 70 6, 120 30, 130 96" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" />
               <path d="M118 84 L131 100 L144 82" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
