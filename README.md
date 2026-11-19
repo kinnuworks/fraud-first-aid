@@ -1,21 +1,23 @@
 # UTR Pakka
 
-**Get your money frozen in the first hour.** A voice agent that stays with a UPI fraud victim through that hour, in their own language: it warns them during the scam call, and if the money has gone it takes the complaint by voice with every number right and gets them to 1930 and their bank within minutes.
+**Hang up before you pay. Get it frozen if you did.** A voice agent for the first hour of a UPI fraud: it listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
 
 It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person, in ten Indian languages, with a Murf Falcon voice that reads every number back.
 
-**Live: https://utr-pakka.vercel.app** · no sign-up · [try it in 30 seconds](#try-it-in-30-seconds)
+**Live: https://utr-pakka.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds.
 
 ![The live app, sped up 16 times: the scam warning, the UTR read back and confirmed, the complaint pack](docs/core-loop.gif)
 
 *The live app in one scripted run, sped up 16 times. The caller's voice is generated sample clips (an illustration); the app and its answers are real.*
 
-[![tests](https://github.com/kinnuworks/utr-pakka/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/utr-pakka/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py)
+Proof, recomputed on every push from the results files in this repo:
+- Back-test on public data (ICFD-31k, synthetic scam calls, 2025): warned in 133 of 200 scam conversations it was never tuned on. Keyword rules alone: 5.
+- Back-test on public data (FLEURS read speech in Hindi, Telugu and Kannada, 2022): the exact numbers in 207 of 330 sentences. The speech-to-text alone: 114.
+- Our own break test (we tried to make it fail): 24 of 24 ordinary calls left alone.
 
-Proof, checked on every push from the results files in this repo:
-- Back-test on public data (ICFD-31k, synthetic scam calls, 2025): it warned in 133 of 200 scam conversations it was never tuned on, against 5 for keyword rules alone.
-- Back-test on public data (FLEURS, Hindi, Telugu and Kannada read aloud, 2022): exact numbers in 207 of 330 sentences, 63%, against 114, 35%, for the speech-to-text alone; 211 of 330 through a phone codec.
-- Our own break test (we tried to make it fail): 40 of 40 scam requests caught, 24 of 24 ordinary calls left alone, 295 of 300 spoken numbers exact in noise.
+[![tests](https://github.com/kinnuworks/utr-pakka/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/utr-pakka/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py) · [technical report](docs/technical-report.md)
+
+Why it matters in Karnataka: the state lost ₹5,473.97 crore to cyber fraud in three years and recovered ₹627 crore, 11.5% (Home Minister's reply in the Assembly, [The News Minute, 10 Dec 2025](https://www.thenewsminute.com/karnataka/karnataka-residents-lost-rs-5474-crore-to-cyber-fraud-only-115-recovered)). Money comes back when 1930 hears fast and exact: a 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru ₹14 lakh, both because 1930 heard within hours ([cases below](#why-this-matters)).
 
 ## What it does for you
 
@@ -24,13 +26,13 @@ Proof, checked on every push from the results files in this repo:
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
 4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?) and an RBI Ombudsman complaint ready for that day. It emails the pack once you say yes. One tap brings a family member onto the call: they hear it, and they can talk to you while the agent keeps working.
 
-A fast report is what gets the money back. A 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru got ₹14 lakh back, both because 1930 heard within hours ([cases below](#why-this-matters)). Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, and about ₹323 crore of it has been refunded (Home Ministry officials briefing the Prime Minister, [reported by Pratidin Time, 9 Jul 2026](https://www.pratidintime.com/national/rs-25000-cr-saved-via-e-zero-firs-pm-modi-briefed-12149338), and by the Indian Express).
+Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, and about ₹323 crore of it has been refunded (Home Ministry officials briefing the Prime Minister, [reported by Pratidin Time, 9 Jul 2026](https://www.pratidintime.com/national/rs-25000-cr-saved-via-e-zero-firs-pm-modi-briefed-12149338), and by the Indian Express).
 
 It does not replace 1930 or file the complaint for you, and it can't recover money itself. It gets you to 1930 and your bank within minutes, with every number already right.
 
 ### Try it in 30 seconds
 
-1. Open https://utr-pakka.vercel.app on a laptop or phone, press **A scam call is happening? Let UTR Pakka listen**, then **Play a sample scam call**: it stays silent through the small talk and warns in Telugu the moment the caller asks for the OTP.
+1. Open https://utr-pakka.vercel.app on a laptop or phone and press **Watch it catch a scam call (30 s)**: no microphone needed. A sample scam call (an illustration with a generated voice) plays into the call; it stays silent through the small talk and warns in Hindi the moment the caller pushes.
 2. Or pick a language, press **Start talking**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
 3. Say "the second group is wrong" when it reads the UTR back, and correct it. When all five details are confirmed, the pack appears.
 
