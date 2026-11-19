@@ -8,7 +8,7 @@ const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
   const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--autoplay-policy=no-user-gesture-required'] });
   const caller = await (await browser.newContext({ permissions: ['microphone'] })).newPage();
   await caller.goto(`${BASE}/?lang=te&demo=1`);
-  await caller.getByRole('button', { name: /Let UTR Pakka listen/ }).click();
+  await caller.getByRole('button', { name: /let it listen/i }).click();
   await caller.getByTestId('guard-listening').waitFor({ timeout: 45000 });
   const href = await caller.getByTestId('invite-family-talk').getAttribute('href');
   if (!href) throw new Error('no family invite link');

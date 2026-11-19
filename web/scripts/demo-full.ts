@@ -49,7 +49,7 @@ const play = async (page: Page, clip: string) => {
   let cap = '';
   page.on('request', (r) => { const m = r.url().match(/complaint\?session=([\w-]+)&cap=(\w+)/); if (m) { session = m[1]; cap = m[2]; } });
   await page.goto(`${BASE}/?lang=te&demo=1`);
-  await page.getByRole('button', { name: /Let UTR Pakka listen/ }).click();
+  await page.getByRole('button', { name: /let it listen/i }).click();
   await page.getByTestId('guard-listening').waitFor({ timeout: 30000 });
   log('guard on; playing the sample scam call');
   await page.getByRole('button', { name: /Play a sample scam call/ }).click();

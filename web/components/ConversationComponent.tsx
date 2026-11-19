@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import AgoraRTC, {
   useRTCClient,
   useLocalMicrophoneTrack,
@@ -106,6 +106,10 @@ export default function ConversationComponent({
     if (typeof window === 'undefined' || new URLSearchParams(window.location.search).get('demo') !== '1') return;
     (window as unknown as { __utrPakkaPlay?: (u: string) => Promise<void> }).__utrPakkaPlay = (u) => playClipIntoCall(client, u);
   }, [client]);
+  // ?watch=1: "Watch it catch a scam call" from the first screen. No microphone is opened; once the
+  // agent is listening, the labelled sample scam call plays into the call by itself.
+  const [watch] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('watch') === '1');
+  const watchPlayed = useRef(false);
   const remoteUsers = useRemoteUsers();
   const [isEnabled, setIsEnabled] = useState(true);
   const [isAgentConnected, setIsAgentConnected] = useState(false);
@@ -181,7 +185,7 @@ export default function ConversationComponent({
   // synchronously before the timeout, so only the real second mount's timer fires.
   // Do NOT pass `isEnabled` — that ties track lifetime to mute state and breaks the Web Audio
   // graph inside MicButtonWithVisualizer. Mute uses track.setEnabled() only.
-  const { localMicrophoneTrack } = useLocalMicrophoneTrack(isReady);
+  const { localMicrophoneTrack } = useLocalMicrophoneTrack(isReady && !watch);
 
   // ENABLE_AUDIO_PTS is a module-level SDK parameter (not on the client instance).
   // It must be set before publishing audio for transcript timing to be accurate.
@@ -398,6 +402,16 @@ export default function ConversationComponent({
   useClientEvent(client, 'user-left', (user) => {
     if (user.uid.toString() === agentUID) setIsAgentConnected(false);
   });
+
+  // Watch mode: play the sample scam call once the agent is in the call (after its greeting).
+  useEffect(() => {
+    if (!watch || !isAgentConnected || watchPlayed.current) return;
+    watchPlayed.current = true;
+    const t = setTimeout(() => {
+      playClipIntoCall(client, '/demo/sample-scam-call.wav').catch((e) => console.error('[watch]', e));
+    }, 2500);
+    return () => clearTimeout(t);
+  }, [watch, isAgentConnected, client]);
 
   // Sync isAgentConnected with remoteUsers (covers cases where user-joined/left are missed)
   useEffect(() => {

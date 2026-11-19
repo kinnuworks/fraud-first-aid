@@ -26,7 +26,7 @@ async function sse(path: string, content: string, session: string, extra = '') {
   const ctx = await browser.newContext({ recordVideo: { dir: OUT, size: { width: 1280, height: 800 } }, viewport: { width: 1280, height: 800 }, permissions: ['microphone'] });
   const page = await ctx.newPage();
   await page.goto(`${BASE}/?lang=te`);
-  await page.getByRole('button', { name: /Let UTR Pakka listen/ }).click();
+  await page.getByRole('button', { name: /let it listen/i }).click();
   await page.getByTestId('guard-listening').waitFor({ timeout: 30000 }).catch(() => fail('guard did not start'));
   await page.getByRole('button', { name: /Play a sample scam call/ }).click();
   await page.getByTestId('red-flags').waitFor({ timeout: 60000 }).catch(() => fail('no scam warning within 60 s of the sample call'));

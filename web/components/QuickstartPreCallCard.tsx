@@ -11,22 +11,22 @@ import { ImpactBand, PhotoCredits } from './ImpactBand';
 import Image from 'next/image';
 
 const LANGS = [
-  ['te', 'తెలుగు'],
-  ['hi', 'हिन्दी'],
+  ['en', 'English'],
   ['kn', 'ಕನ್ನಡ'],
+  ['hi', 'हिन्दी'],
+  ['te', 'తెలుగు'],
   ['ta', 'தமிழ்'],
   ['ml', 'മലയാളം'],
   ['bn', 'বাংলা'],
   ['mr', 'मराठी'],
   ['gu', 'ગુજરાતી'],
   ['pa', 'ਪੰਜਾਬੀ'],
-  ['en', 'English'],
   ['auto', 'Any language (auto)'],
 ] as const;
 
 // The chosen language rides in ?lang=, which the call start reads.
 function LanguageChips() {
-  const [lang, setLang] = useState('te');
+  const [lang, setLang] = useState('en');
   function pick(code: string) {
     const url = new URL(window.location.href);
     url.searchParams.set('lang', code);
@@ -36,16 +36,19 @@ function LanguageChips() {
   useEffect(() => {
     const q = new URLSearchParams(window.location.search).get('lang');
     if (q && LANGS.some(([c]) => c === q)) setLang(q);
-    else pick('te');
+    else pick('en');
   }, []);
   return (
-    <div role="radiogroup" aria-label="Language" id="langs" className="up-chips">
-      {LANGS.map(([code, label]) => (
-        <button key={code} type="button" role="radio" aria-checked={lang === code} onClick={() => pick(code)} className="up-chip">
-          {label}
-        </button>
-      ))}
-    </div>
+    <label className="up-langpick" id="langs">
+      <span className="up-label">Your language</span>
+      <select value={lang} onChange={(e) => pick(e.target.value)} className="up-select" aria-label="Language">
+        {LANGS.map(([code, label]) => (
+          <option key={code} value={code}>
+            {label}
+          </option>
+        ))}
+      </select>
+    </label>
   );
 }
 
@@ -154,6 +157,37 @@ function StartButton({ isLoading, onStartConversation, arrow }: Actions) {
   );
 }
 
+// One click from the first screen: a guarded call with no microphone, and the labelled sample scam
+// call plays by itself, so a judge sees the silent listening and the warning in about 30 seconds.
+function WatchButton({ isLoading, onStartConversation }: Actions) {
+  return (
+    <button
+      type="button"
+      disabled={isLoading}
+      onClick={() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('mode', 'guard');
+        url.searchParams.set('watch', '1');
+        // the sample caller speaks Hindi: warn in Hindi unless the visitor picked a language
+        if ((url.searchParams.get('lang') ?? 'en') === 'en') url.searchParams.set('lang', 'hi');
+        window.history.replaceState(null, '', url);
+        onStartConversation();
+      }}
+      className="up-btn up-btn--bad"
+      data-testid="watch-scam"
+    >
+      {isLoading ? (
+        <>
+          <Loader2 className="h-4 w-4 animate-spin" />
+          Starting the sample call…
+        </>
+      ) : (
+        <>▶ Watch it catch a scam call (30 s)</>
+      )}
+    </button>
+  );
+}
+
 function ListenButton({ isLoading, onStartConversation, link = false }: Actions & { link?: boolean }) {
   return (
     <button
@@ -168,7 +202,7 @@ function ListenButton({ isLoading, onStartConversation, link = false }: Actions 
       className={link ? 'up-link text-left text-[1.0625rem]' : 'up-btn up-btn--ghost'}
       style={link ? { background: 'none', border: 0, cursor: 'pointer', whiteSpace: 'normal' } : { whiteSpace: 'normal' }}
     >
-      A scam call is happening? Let UTR Pakka listen
+      Real scam call on now? Put it on speaker and let it listen
     </button>
   );
 }
@@ -329,8 +363,8 @@ function Compare() {
 
 const DEADLINE = when(STATES['complaint-done']!.deadlines!.zeroLiabilityBy);
 
-/* The payment screen every UPI user has seen, its 12-digit reference circled, and that number
-   carried into the complaint (Fold's app system). */
+/* The hero shows both halves: on the phone, the agent catching a fake KYC call (labelled sample);
+   beside it, the complaint card with the UTR read back in groups of four (Fold's app system). */
 export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
   return (
     <div className="up-page" style={{ overflowX: 'clip' }}>
@@ -345,31 +379,35 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         </header>
         <section className="rc-hero">
           <div>
-            <p className="up-label">UTR = the 12-digit payment reference. Pakka = for sure.</p>
+            <p className="up-label">Voice AI for the first hour of a UPI fraud</p>
             <h1 className="up-display" style={{ marginTop: 16 }}>
-              Get your money frozen in the first hour.
+              Hang up before you pay. Get it frozen if you did.
             </h1>
             <p className="rc-stakes">
-              About ₹64,447 crore reported lost since 2021; about ₹323 crore refunded. The first hour decides it.
-              <span className="rc-src"> Home Ministry officials, reported by Pratidin Time, 9 Jul 2026</span>
+              Karnataka lost <strong>₹5,474 crore</strong> to cyber fraud in three years. Only <strong>₹627 crore</strong> came back.
+              <span className="rc-src"> Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
             </p>
-            <p className="up-lead" style={{ marginTop: 14, maxWidth: '34rem' }}>
-              <strong className="rc-h1-accent">UTR Pakka is the calm voice beside you in that hour, in your language.</strong>
+            <p className="up-lead" style={{ marginTop: 14, maxWidth: '36rem' }}>
+              It listens to the scam call on speaker and warns you in your language. If the money&apos;s gone, it takes your
+              complaint by voice, reads every number back until you confirm it, and gets 1930 and your bank what they need
+              within minutes.
             </p>
-            <div className="mt-7">
-              <LanguageChips />
-            </div>
-            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <p className="rc-tech">Agora Conversational AI · Murf Falcon voices · Sarvam speech-to-text · 10 Indian languages</p>
+            <div className="mt-6 flex flex-wrap items-center gap-3">
+              <WatchButton {...p} />
               <StartButton {...p} />
+            </div>
+            <div className="mt-3">
               <ListenButton {...p} link />
             </div>
-            <div className="mt-4">
+            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <LanguageChips />
               <SlowToggle />
             </div>
             {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
           </div>
           <div className="rc-stage">
-            <div className="rc-phone" aria-label="Sample payment screen">
+            <div className="rc-phone" aria-label="Sample: the agent hears a fake KYC call ask for an OTP and tells the user to hang up">
               <span className="rc-btn-vol" aria-hidden="true" />
               <div className="rc-screen">
                 <span className="rc-cam" aria-hidden="true" />
@@ -383,44 +421,31 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                     <rect x="24" y="3" width="13" height="6" rx="1.5" />
                   </svg>
                 </div>
-                <div className="rc-body">
-                <p className="text-center">
-                  <span className="up-sample-tag">Sample</span>
-                </p>
-                <div className="rc-tick" aria-hidden="true">
-                  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                    <path d="M5 12.5l4.5 4.5L19 7.5" />
-                  </svg>
-                </div>
-                <p className="rc-amount">₹25,000</p>
-                <p className="rc-meta">Paid to ramesh@okaxis</p>
-                <p className="rc-meta">19 Nov 2026, 2:30 pm</p>
-                <div className="rc-rows">
-                  <div>
-                    <span>From</span>
-                    <span>State Bank of India</span>
-                  </div>
-                  <div>
-                    <span>UTR / UPI Ref. No.</span>
-                    <span className="rc-ref">
-                      402177889910
-                      <svg className="rc-circle" viewBox="0 0 160 50" preserveAspectRatio="none" aria-hidden="true">
-                        <path d="M8 26 C 10 6, 150 4, 154 22 C 158 42, 20 48, 6 30 C 2 22, 30 10, 60 9" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" />
-                      </svg>
-                    </span>
-                  </div>
-                </div>
-                <div className="rc-done" aria-hidden="true">
-                  Done
-                </div>
+                <div className="rc-body rc-guard">
+                  <p className="text-center">
+                    <span className="up-sample-tag">Sample</span>
+                  </p>
+                  <p className="rc-guard__head">
+                    <span className="rc-guard__dot" aria-hidden="true" /> Listening to the call on speaker
+                  </p>
+                  <p className="rc-bubble">
+                    <span className="rc-bubble__who">Caller</span>
+                    Madam, your KYC expires tonight. Your account will be blocked.
+                  </p>
+                  <p className="rc-bubble rc-bubble--flag">
+                    <span className="rc-bubble__who">Caller · red flag</span>
+                    An OTP has come on your phone. Tell it to me now.
+                  </p>
+                  <p className="rc-bubble rc-bubble--agent">
+                    <span className="rc-bubble__who">It speaks up, in your language</span>
+                    यह धोखाधड़ी वाली कॉल है। अभी फ़ोन काट दीजिए।
+                    <span className="rc-bubble__en">This is a scam call. Hang up now.</span>
+                  </p>
+                  <p className="rc-warn">Scam warning: fake KYC update</p>
                 </div>
                 <span className="rc-home" aria-hidden="true" />
               </div>
             </div>
-            <svg className="rc-arrow" style={{ left: 300, top: 410, width: 160, height: 120 }} viewBox="0 0 160 120" aria-hidden="true">
-              <path d="M6 8 C 70 6, 120 30, 130 96" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" />
-              <path d="M118 84 L131 100 L144 82" fill="none" stroke="var(--marker)" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
-            </svg>
             <div className="rc-card up-card">
               <div className="flex items-center justify-between gap-2">
                 <span className="text-[1.125rem] font-bold">Your complaint</span>

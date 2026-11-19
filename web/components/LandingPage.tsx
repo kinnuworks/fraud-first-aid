@@ -99,7 +99,7 @@ export default function LandingPage() {
             requester_id: responseData.uid,
             channel_name: responseData.channel,
             cap: responseData.cap,
-            lang: new URLSearchParams(window.location.search).get('lang') ?? 'te',
+            lang: new URLSearchParams(window.location.search).get('lang') ?? 'en',
             mode: new URLSearchParams(window.location.search).get('mode') === 'guard' ? 'guard' : 'complaint',
             slow: new URLSearchParams(window.location.search).get('slow') === '1',
           } as ClientStartRequest & { lang: string; mode: string; slow: boolean }),
