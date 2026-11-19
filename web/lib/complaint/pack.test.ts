@@ -64,3 +64,28 @@ describe('operator card and golden-hour clock', () => {
     expect(p.minutesSinceDebit).toBeNull();
   });
 });
+
+describe('pack: bank fraud line, portal sheet and next steps', () => {
+  it('adds the bank fraud line, a portal sheet in the portal order and the escalation steps', async () => {
+    const { newComplaint } = await import('./session');
+    const { buildPack } = await import('./pack');
+    const c = newComplaint('en');
+    c.fields = {
+      utr: { value: '402177889910', confirmed: true },
+      amount: { value: 25000, confirmed: true },
+      payee: { value: 'ramesh@okaxis', confirmed: true },
+      when: { value: '2026-11-19T14:30', confirmed: true },
+      victim_bank: { value: 'State Bank of India, BANGALORE (SBIN0000813)', confirmed: true },
+    } as never;
+    c.flags = [{ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'otp' }];
+    const p = buildPack(c, '2026-11-19');
+    if (!p.ok) throw new Error('pack not ok');
+    expect(p.bankLine?.phone).toMatch(/1800 1234/);
+    expect(p.portalSheet).toMatch(/Online Financial Fraud/);
+    expect(p.portalSheet).toMatch(/UPI Related Frauds/);
+    expect(p.portalSheet.indexOf('Transaction ID / UTR')).toBeGreaterThan(p.portalSheet.indexOf('Incident'));
+    expect(p.nextSteps).toMatch(/cms\.rbi\.org\.in/);
+    expect(p.nextSteps).toMatch(/14448/);
+    expect(p.nextSteps).toMatch(/KYC and Payment related/);
+  });
+});

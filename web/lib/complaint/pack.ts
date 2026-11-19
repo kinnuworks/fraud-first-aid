@@ -1,3 +1,4 @@
+import { bankFraudLine } from './banks';
 // The complaint pack: a dispute letter for the bank (English) and a script for the 1930
 // helpline call in the caller's language. Built only from confirmed fields.
 import { readbackText, type ReadbackLang } from '../entities/numbers';
@@ -32,6 +33,9 @@ export type Pack =
       script1930: string;
       operatorCard: string;
       reminders: string;
+      bankLine: { bank: string; phone: string; source: string; also?: string } | null;
+      portalSheet: string;
+      nextSteps: string;
       minutesSinceDebit: number | null;
       deadlines: ReturnType<typeof deadlines>;
     };
@@ -43,12 +47,26 @@ export function minutesSince(whenIst: string, now: Date): number | null {
   return Math.floor((now.getTime() - t) / 60000);
 }
 
+// Chakshu (sancharsaathi.gov.in/sfc) category for each scam we flag, in Chakshu's own words.
+const CHAKSHU: Record<string, string> = {
+  fake_kyc: 'KYC and Payment related to Bank / Electricity / Gas / Insurance etc',
+  vishing_otp: 'KYC and Payment related to Bank / Electricity / Gas / Insurance etc',
+  digital_arrest: 'Impersonation as Police, CBI, Customs, Aadhaar, RBI etc',
+  mobile_disconnection: 'Impersonation as DoT / TRAI',
+  fake_customer_care: 'Fake Customer Care Helpline',
+  job_task: 'Online job / lottery /gifts/loan offers',
+  lottery: 'Online job / lottery /gifts/loan offers',
+  impersonation: 'Impersonation as a relative / friend',
+};
+
 export function buildPack(c: Complaint, today: string, now: Date = new Date()): Pack {
   const missing = missingFields(c);
   if (missing.length) return { ok: false, missing };
   const f = c.fields as Required<Complaint['fields']>;
   const d = deadlines(today);
   const when = f.when.value.replace('T', ' ');
+  const line = bankFraudLine(f.victim_bank.value);
+
   const bankLetter = `To the Grievance Redressal Officer, ${f.victim_bank.value}
 
 Subject: Fraudulent UPI transaction, UTR ${f.utr.value}
@@ -73,10 +91,40 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     `Debited: ${when}`,
     `Paid to: ${f.payee.value}`,
     `Caller's bank: ${f.victim_bank.value}`,
+    ...(line ? [`Bank fraud line: ${line.phone}`] : []),
     `Bank deadline (zero liability): ${d.zeroLiabilityBy}`,
     ...c.flags.map((f) => `Scam red flag heard live: ${scamById(f.scam)?.name ?? f.scam} (caller ${f.red_flag})`),
     ...(c.story ? [`What happened: ${c.story.en}`, `Caller's words: "${c.story.words}"`] : []),
   ].join('\n');
+  const bankLine = line ? { bank: line.bank, phone: line.phone, source: line.source, ...(line.also ? { also: line.also } : {}) } : null;
+  const [date, time = ''] = f.when.value.split('T');
+  // The portal's own order (National Cybercrime Reporting Portal instructions): incident, then the
+  // transaction, then the suspect.
+  const portalSheet = [
+    'cybercrime.gov.in > Report Cyber Crime > Financial Fraud',
+    'Incident details',
+    '  Category: Online Financial Fraud',
+    '  Sub-category: UPI Related Frauds',
+    `  Date and time of incident: ${date} ${time}`.trimEnd(),
+    '  Did you lose money? Yes',
+    'Transaction details',
+    '  Mode: UPI',
+    `  Bank: ${f.victim_bank.value}`,
+    '  Account number or UPI ID the money left from: (your own, from your bank app)',
+    `  Transaction ID / UTR: ${f.utr.value}`,
+    `  Amount: ${f.amount.value}`,
+    `  Transaction date and time: ${date} ${time}`.trimEnd(),
+    'Suspect details (optional)',
+    `  UPI ID or number paid: ${f.payee.value}`,
+    'Evidence: the payment screenshot (files up to 10 MB)',
+    'The portal asks for an OTP to your mobile and a captcha: only you can do those.',
+  ].join('\n');
+  const chakshu = c.flags.map((x) => CHAKSHU[x.scam]).find(Boolean) ?? 'Any Other Suspected Fraud';
+  const nextSteps = [
+    `1. Call your bank's fraud line now${line ? `: ${line.phone} (${line.bank}, from ${new URL(line.source).hostname})` : ' (the number on the back of your card)'}, and keep the complaint number they give you.`,
+    '2. If the bank does not reply within 30 days, or rejects your complaint, complain to the RBI Ombudsman at cms.rbi.org.in. It is free; the RBI helpline is 14448. Attach the bank letter and the bank\'s complaint number.',
+    `3. Report the caller's number on Sanchar Saathi (Chakshu), sancharsaathi.gov.in/sfc, within 30 days: medium "Call", category "${chakshu}".`,
+  ].join('\n');
   const reminders = reminderIcs({ utr: f.utr.value, amount: f.amount.value, reportedOn: today, bank: f.victim_bank.value.split(',')[0] });
-  return { ok: true, bankLetter, script1930, operatorCard, reminders, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
+  return { ok: true, bankLetter, script1930, operatorCard, reminders, bankLine, portalSheet, nextSteps, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
 }

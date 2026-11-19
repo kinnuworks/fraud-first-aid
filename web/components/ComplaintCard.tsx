@@ -10,7 +10,7 @@ import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
-  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
+  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; bankLine?: { bank: string; phone: string; source: string } | null; portalSheet?: string; nextSteps?: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
 type EmailState = { id: string; at: string } | { problem: string } | null;
@@ -527,6 +527,21 @@ function PackView({
           <p className="mt-2 text-[1.0625rem]" style={{ color: 'var(--ink-2)' }}>
             Tell your bank by <strong>{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
           </p>
+          {pack.bankLine && (
+            <p className="mt-1 text-[1rem]" data-testid="bank-line">
+              {pack.bankLine.bank} fraud line:{' '}
+              {/^\d/.test(pack.bankLine.phone) ? (
+                <a className="up-link font-semibold" href={`tel:${pack.bankLine.phone.split(' or ')[0].replace(/\D/g, '')}`}>
+                  {pack.bankLine.phone}
+                </a>
+              ) : (
+                <strong>{pack.bankLine.phone}</strong>
+              )}{' '}
+              <a className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }} href={pack.bankLine.source} target="_blank" rel="noopener noreferrer">
+                (from the bank&apos;s site)
+              </a>
+            </p>
+          )}
           {pack.minutesSinceDebit !== null && (
             <p className="mt-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
               Complaint ready {hm(pack.minutesSinceDebit)} after the money left.
@@ -551,6 +566,8 @@ function PackView({
             4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
           </a>
         </div>
+        {pack.portalSheet && <PackItem n={5} title="Filing online yourself? Every field in the portal's order" text={pack.portalSheet} />}
+        {pack.nextSteps && <PackItem n={6} title="If the bank doesn't fix it: the next three steps" text={pack.nextSteps} />}
       </div>
       <div className="pk-actions">
         <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost up-btn--sm">
