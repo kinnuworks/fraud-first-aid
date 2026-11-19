@@ -67,7 +67,7 @@ async function one(c: Conv, idx: number) {
   const done = new Map<string, unknown>(existsSync(out) ? readFileSync(out, 'utf8').trim().split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return [r.uid, r]; }) : []);
   const todo = sample.map((c, i) => [c, i] as const).filter(([c]) => !done.has(c.release_metadata.conversation_uid));
   let next = 0;
-  await Promise.all(Array.from({ length: 6 }, async () => {
+  await Promise.all(Array.from({ length: 1 }, async () => {
     while (next < todo.length) {
       const [c, i] = todo[next++];
       const r = await one(c, i).catch((e) => ({ uid: c.release_metadata.conversation_uid, error: String(e) }));
