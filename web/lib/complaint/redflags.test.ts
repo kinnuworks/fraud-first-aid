@@ -78,3 +78,19 @@ describe('detectRedFlag: OTP asked for in other words', () => {
     expect(detectRedFlag('my number is in the message I sent')).toBeNull();
   });
 });
+
+// From the ICFD run, 19 Nov: "paid promoters" is not money lost.
+describe('LOSS: "paid" only as a payment the caller made', () => {
+  it('does not count "paid" as an adjective', async () => {
+    const { isLoss } = await import('./redflags');
+    expect(isLoss('Influencers, sir? Like, paid promoters?')).toBe(false);
+    expect(isLoss('this is a paid partnership')).toBe(false);
+  });
+  it('still counts a payment the caller made', async () => {
+    const { isLoss } = await import('./redflags');
+    expect(isLoss('I paid 25,000 to him')).toBe(true);
+    expect(isLoss('maine paid kar diya')).toBe(true);
+    expect(isLoss('I have paid them already')).toBe(true);
+    expect(isLoss('paid ₹5000 on the link')).toBe(true);
+  });
+});

@@ -18,7 +18,7 @@ const KYC = /\bkyc\b|केवाईसी|కేవైసీ|ಕೆವೈಸಿ
 
 // Words that say the money has already gone: the caller is telling their story, not on a live
 // scam call, so the model should switch to the complaint instead of warning.
-export const LOSS = /already|paid|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
+export const LOSS = /already|\b(i|we|i've|i have|maine|humne|have|has|had|just|already)\s+paid\b|\bpaid\s+(him|her|them|it|rs|inr|₹|\d|kar|kiya|ho)|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
 
 // "Already" on its own (any language) is not a loss when the same line carries a red flag: a
 // scammer says "the user has already approved this" (guard break test, 19 Nov).
