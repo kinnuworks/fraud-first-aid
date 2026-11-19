@@ -30,7 +30,7 @@ type Deps = {
     lastUser: string,
   ) => void;
   // A fixed reply to speak at once instead of calling the model (the guard's red-flag rules).
-  shortcut?: (session: string, lastUser: string) => string | null;
+  shortcut?: (session: string, lastUser: string) => string | null | Promise<string | null>;
   // Shared store across server instances: load the call (returns the user text already seen)
   // before anything else, and save it once the reply has finished.
   // Called once with what was actually spoken (markers removed), when the turn wasn't silent.
@@ -107,7 +107,7 @@ export function createLlmRoute({
     let fixed: string | null;
     let result: { textStream: AsyncIterable<string> };
     try {
-      fixed = shortcut?.(session, lastUser) ?? null;
+      fixed = (await shortcut?.(session, lastUser)) ?? null;
       result =
       fixed !== null
         ? {

@@ -6,6 +6,7 @@ import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint, hydrate, persist, hold, release } from '@/lib/complaint/store';
 import { addFlag, logHeard } from '@/lib/complaint/session';
 import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
+import { guardReported, reportOnce } from '@/lib/complaint/reported';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
@@ -17,13 +18,14 @@ export const POST = createLlmRoute({
   streamTextImpl: streamText,
   tools: complaintTools,
   system: (session) => complaintSystem(session),
-  shortcut: (session, lastUser) => {
+  shortcut: async (session, lastUser) => {
     const c = getComplaint(session);
     followLanguage(c, lastUser);
     // on guard, keep the scam call itself as evidence for the pack
     logHeard(c, lastUser);
     const before = `${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length}`;
-    const out = guardHandover(c, lastUser) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
+    // a UPI ID already named in an earlier complaint is the most specific warning, so it goes first
+    const out = guardHandover(c, lastUser) ?? (await guardReported(c, lastUser)) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
     // Turn decisions for debugging, only with DEBUG_TURNS=1; never the caller's words.
     if (process.env.DEBUG_TURNS === '1') {
       const kind = out === null ? 'model' : out === '<silent>' ? 'silent' : 'fast';
@@ -40,7 +42,11 @@ export const POST = createLlmRoute({
     hold(session);
     return seen;
   },
-  save: (session, seen) => persist(session, seen).finally(() => release(session)),
+  save: async (session, seen) => {
+    // a confirmed complaint counts its payee for the next caller's guard (a hash, once per call)
+    await reportOnce(getComplaint(session));
+    await persist(session, seen).finally(() => release(session));
+  },
   // The guard warned aloud but wrote no marker: the warning still goes on the card (guard break test, 19 Nov).
   onReply: (session, spoken, lastUser) => {
     const c = getComplaint(session);

@@ -16,6 +16,9 @@ export function createShared({ url, token, fetchImpl = fetch }: { url?: string; 
       const v = await cmd(['GET', `call:${id}`]);
       return typeof v === 'string' ? (JSON.parse(v) as Stored) : undefined;
     },
+    async count(key: string): Promise<number> {
+      return Number((await cmd(['GET', key])) ?? 0) || 0;
+    },
     async incr(key: string, ttlSeconds: number): Promise<number> {
       const n = Number(await cmd(['INCR', key]));
       if (n === 1) await cmd(['EXPIRE', key, String(ttlSeconds)]);

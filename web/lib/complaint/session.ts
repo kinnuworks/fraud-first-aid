@@ -33,6 +33,8 @@ export type Complaint = {
   shot?: import('./screenshot').Shot;
   // On guard: each line heard on the speakerphone, with its India time, as evidence of the scam.
   heard?: Array<{ at: string; text: string }>;
+  // The payee was counted in the reported-payees registry (once per call).
+  reportedPayee?: boolean;
   fields: Partial<{
     utr: Field<string>;
     amount: Field<number>;

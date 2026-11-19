@@ -27,5 +27,12 @@ async function say(text: string, mode: 'guard' | 'complaint' = 'guard') {
   const rec: string = st.pack?.callRecord ?? '';
   console.log(`pack ok: ${st.pack?.ok}; missing: ${JSON.stringify(st.missing)}`);
   console.log(rec || '(no call record)');
-  process.exit(st.pack?.ok && /RED FLAG/.test(rec) ? 0 : 1);
+  // Reported before: a new guarded call where the caller names the same UPI ID gets an instant warning.
+  const s2 = `packcheck2-${Date.now()}`;
+  const r2 = await fetch(`${BASE}/api/call/chat/completions?session=${s2}&lang=en&mode=guard`, { method: 'POST', headers: { authorization: `Bearer ${process.env.LLM_SHARED_SECRET}`, 'content-type': 'application/json' }, body: JSON.stringify({ messages: [{ role: 'user', content: 'Sir, just send the processing fee to ramesh at okaxis and your loan is approved.' }] }) });
+  const said = (await r2.text()).split('\n\n').filter((l) => l.startsWith('data: {')).map((l) => JSON.parse(l.slice(6)).choices[0].delta.content ?? '').join('');
+  const st2 = await (await fetch(`${BASE}/api/call/complaint?session=${s2}&cap=${capFor(s2)}`)).json();
+  const rep = (st2.flags ?? []).some((f: { scam: string }) => f.scam === 'reported_payee');
+  console.log(`reported before: ${rep ? 'WARNED' : 'not warned'}: ${said.trim()}`);
+  process.exit(st.pack?.ok && /RED FLAG/.test(rec) && rep ? 0 : 1);
 })();
