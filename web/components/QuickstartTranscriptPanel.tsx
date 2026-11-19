@@ -66,7 +66,7 @@ export function QuickstartTranscriptPanel({
                 <span className="tr-time">{time ?? ''}</span>
                 <span>
                   <span className="tr-who">{isAgent ? 'UTR Pakka' : 'You'}</span>
-                  <span className="tr-text">{text || '...'}</span>
+                  <span className="tr-text up-bubble">{text || '...'}</span>
                 </span>
               </article>
             );
