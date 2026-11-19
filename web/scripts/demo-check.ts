@@ -33,6 +33,10 @@ async function sse(path: string, content: string, session: string, extra = '') {
   const flagged = await page.getByTestId('red-flags').innerText();
   console.log('guard flagged:', flagged.split('\n').slice(0, 2).join(' / '));
   await page.waitForTimeout(6000);
+  // The caller's words must show in the live transcript, not only in the warning card.
+  const bubbles = await page.locator('.up-bubble').count();
+  console.log('transcript bubbles:', bubbles);
+  if (bubbles === 0) fail('the live transcript stayed empty during the guard run');
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});
   await ctx.close();
   console.log('video:', await page.video()?.path());
