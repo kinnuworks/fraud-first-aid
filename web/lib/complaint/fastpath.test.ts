@@ -90,7 +90,7 @@ describe('guardHandover', () => {
   it('switches other languages too, leaving the words to the model', async () => {
     const { guardHandover } = await import('./fastpath');
     const c = newComplaint('ta', 'guard');
-    expect(guardHandover(c, 'I already paid them')).toBeNull();
+    expect(guardHandover(c, 'I already paid them, it was a scam')).toBeNull();
     expect(c.phase).toBe('complaint');
   });
   it('does nothing without loss words or outside guard', async () => {
