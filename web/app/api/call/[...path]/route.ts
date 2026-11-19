@@ -4,6 +4,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { POST as inviteAgent } from '@/lib/handlers/invite-agent';
 import { POST as chat } from '@/lib/handlers/chat';
 import { GET as complaint } from '@/lib/handlers/complaint';
+import { GET as listen } from '@/lib/handlers/listen';
 import { POST as screenshot } from '@/lib/handlers/screenshot';
 import { POST as stop } from '@/lib/handlers/stop';
 import { POST as email } from '@/lib/handlers/email';
@@ -26,5 +27,6 @@ export async function POST(request: NextRequest, { params }: Ctx) {
 export async function GET(request: NextRequest, { params }: Ctx) {
   const path = (await params).path.join('/');
   if (path === 'complaint') return complaint(request);
+  if (path === 'listen') return listen(request);
   return notFound();
 }

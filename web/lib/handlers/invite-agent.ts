@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
       appCertificate,
     });
 
-    const agent = buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface: 'web' });
+    const agent = buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface: 'web', slow: (body as unknown as { slow?: boolean }).slow === true });
 
     // remoteUids restricts the agent to only process audio from this user
     const session = agent.createSession({

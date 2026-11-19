@@ -1,4 +1,5 @@
 'use client';
+import { ListenLive } from './ListenLive';
 // Read-only live views of a call, opened by link on a second screen:
 //  - operator: the complaint as a 1930 helpline operator would receive it, in English
 //  - family: the same card the caller sees, for a son or daughter
@@ -133,6 +134,7 @@ export function FamilyView({ session, viewKey, phone = false }: { session: strin
     <main className="up-page" data-testid="family-view">
       <div className="up-wrap flex flex-col gap-4 py-8">
         <p className="up-label">{phone ? 'Your phone call · live · answer your phone and speak' : 'Live view for family · read only'}</p>
+        {!phone && <ListenLive session={session} viewKey={viewKey} />}
         <ComplaintCardView data={data} />
       </div>
     </main>

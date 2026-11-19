@@ -101,7 +101,8 @@ export default function LandingPage() {
             cap: responseData.cap,
             lang: new URLSearchParams(window.location.search).get('lang') ?? 'te',
             mode: new URLSearchParams(window.location.search).get('mode') === 'guard' ? 'guard' : 'complaint',
-          } as ClientStartRequest & { lang: string; mode: string }),
+            slow: new URLSearchParams(window.location.search).get('slow') === '1',
+          } as ClientStartRequest & { lang: string; mode: string; slow: boolean }),
         })
           .then(async (res) => {
             if (!res.ok) {

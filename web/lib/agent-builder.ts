@@ -18,9 +18,11 @@ export type BuildOpts = {
   channel: string;
   llmUrl?: string;
   surface: 'web' | 'phone';
+  // Slower, clearer voice for older callers (Murf rate runs -50 to 50; 0 is normal).
+  slow?: boolean;
 };
 
-export function buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface }: BuildOpts) {
+export function buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface, slow = false }: BuildOpts) {
     // Pipeline: Sarvam speech-to-text (caller's language) → our model route with complaint
     // tools (or Agora's managed model before deploy) → Murf Falcon voice for that language.
   return new Agent({
@@ -93,6 +95,7 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
           locale: preset.locale,
           model: 'FALCON',
           sampleRate: 24000,
+          ...(slow ? { rate: -20 } : {}),
         }),
       );
 }
