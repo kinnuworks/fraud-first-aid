@@ -19,7 +19,7 @@ Proof, checked on every push from the results files in this repo:
 
 ## What it does for you
 
-1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. Every line the scammer said is kept, with the red flags marked, as evidence for 1930.
+1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. If the caller names a UPI ID from an earlier complaint, it says so at once. Every line the scammer said is kept, with the red flags marked and any OTP or PIN blanked, as evidence for 1930.
 2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot.
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
 4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?) and an RBI Ombudsman complaint ready for that day. It emails the pack once you say yes. One tap brings a family member onto the call: they hear it, and they can talk to you while the agent keeps working.
@@ -44,6 +44,10 @@ To see every screen without talking: [`?state=complaint-done`](https://utr-pakka
 - [`web/lib/llm-route.ts`](web/lib/llm-route.ts): the custom model endpoint Agora calls, with tools and silent turns
 - [`web/lib/agent-config.ts`](web/lib/agent-config.ts) and [`invite-agent.ts`](web/lib/handlers/invite-agent.ts): the Agora agent with Sarvam speech-to-text and Murf Falcon voices per language
 
+
+## Reported before
+
+Every confirmed complaint makes the guard sharper for the next person. When a complaint is confirmed, a keyed one-way hash of the payee's UPI ID is counted for 90 days. If a caller on a later guarded call names that ID ("send the fee to ramesh at okaxis"), UTR Pakka warns at once that the ID was named in an earlier fraud complaint. Only the hash is kept, never the ID, and the warning never says who anyone is. The counts so far come from our own test calls, not real victims. Code: [`reported.ts`](web/lib/complaint/reported.ts).
 
 ## Hard cases it handles
 
