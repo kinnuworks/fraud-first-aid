@@ -162,3 +162,13 @@ describe('fast payee and bank', () => {
     expect(complaintShortcut(c, 'my cooperative society bank')).toBeNull();
   });
 });
+
+describe('payee out of order', () => {
+  it('takes a UPI ID whenever the payee is still missing, even if the time is not given yet', () => {
+    const c = newComplaint('te');
+    c.fields.utr = { value: '402177889910', confirmed: true };
+    c.fields.amount = { value: 25000, confirmed: true };
+    complaintShortcut(c, 'డబ్బు ramesh at okaxis కి వెళ్ళింది.');
+    expect(c.fields.payee?.value).toBe('ramesh@okaxis');
+  });
+});

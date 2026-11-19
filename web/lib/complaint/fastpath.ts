@@ -131,7 +131,7 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
   }
   const needed = REQUIRED.find((f) => !c.fields[f]);
   // The payee, when it is the next thing we need: a UPI ID or a 10-digit mobile.
-  if (needed === 'payee' && c.fields.utr?.confirmed) {
+  if (!c.fields.payee && c.fields.utr?.confirmed) {
     const m = t.match(UPI_IN_TEXT);
     if (m && recordUpi(c, `${m[1]} at ${m[2]}`).ok) return say(c, 'payee', lang);
     const d = spokenToDigits(t);
