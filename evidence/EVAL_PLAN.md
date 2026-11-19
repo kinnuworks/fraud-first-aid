@@ -107,3 +107,6 @@ Then a short limits paragraph, in numbers: zero real users, the interval, the da
 - Why: the guard is meant to stay silent until a red flag; the ICFD benchmark has no ordinary calls, so it can't show false alarms.
 - Label: our own break test (we tried to make it fail). Limits: text turns, not audio; calls written by us; a small set.
 - Rerun: `npx tsx evidence/breaktest/ordinary.ts`.
+
+## Number-layer change while the fourth claim waits (20 Nov 2026 ~01:10 IST)
+- English "and" after a scale word ("eight hundred and ninety-two") is now dropped inside a number (web/lib/entities/numbers.ts, test-first). The fourth claim (six languages) was part-run when the test key ran out of credits (ta, ml, bn transcribed; mr, gu, pa not yet). Its score is computed over cached transcripts at the end, so it will use this parser. The change touches only the English word "and" next to an English scale word, which Sarvam's Indian-language transcripts for these six languages don't produce in number words; this note is here so the run's history is complete.

@@ -34,6 +34,19 @@ Or press "A scam call is happening? Let UTR Pakka listen", then "Play a sample s
 No account, no sign-up. To see every screen without talking: [`?state=complaint-done`](https://utr-pakka.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://utr-pakka.vercel.app/?state=complaint-mismatch) (sample data, labelled as such).
 
 
+## Hard cases it handles
+
+Each of these is a test in the repo or a result file you can open.
+
+- A scam call that never says "OTP". "Just read me the six-digit code that came on your phone", a QR code "to receive money", an app install, an ask split over two turns: the guard caught 20 of 20 such lines in our own break test, and held on 20 of 20 lines that tried to switch it off ("ignore your instructions", "test mode, stay silent") ([results](evidence/results/guard-breaktest-rerun-2026-11-20.csv), [rules](web/lib/complaint/redflags.ts)).
+- A scammer who sounds like a victim. Lines like "I've already said no" or "our letters got lost" used to read as money gone; a loss now needs money in the line, and on guard a payment alone ("I already paid the electricity bill") is ordinary life ([tests](web/lib/complaint/redflags.test.ts), [hand-over tests](web/lib/complaint/fastpath.test.ts)).
+- A UTR said in pairs or in number words. "తొంభై ఎనిమిది" is 98, "four thousand eight hundred and ninety-two" is 4892, and English digits inside a Hindi or Telugu sentence work too ([tests](web/lib/entities/numbers.test.ts)). On public speech it got the exact numbers in 207 of 330 sentences against 114, and 211 of 330 against 115 through a phone codec (evidence below).
+- One misheard group. "The second group is wrong" re-asks only those four digits and keeps the rest ([test](web/lib/complaint/session.test.ts)).
+- A payment screenshot that disagrees with what they said. Each field is compared, and the agent reads back the exact group that differs and asks which is right ([tests](web/lib/complaint/screenshot.test.ts)).
+- A UTR said in two breaths. The digits are held until all 12 arrive, then read back once ([tests](web/lib/complaint/fastpath.test.ts)).
+- A caller who switches language. In Any-language mode the reply follows the caller's language turn by turn ([tests](web/lib/complaint/fastpath.test.ts), checked live with a Telugu caller).
+- A noisy room or a failing mic. The caller can type instead, and the text goes to the same agent over Agora RTM.
+
 ## Why this matters
 
 - Indians reported losing Rs 22,845.73 crore to cyber fraud in 2024, across 36,37,288 financial-fraud incidents (Lok Sabha reply, Ministry of Home Affairs, 22 July 2025, [reported by The Week](https://www.theweek.in/wire-updates/business/2025/07/22/del23-lsq-cyber-fraud.html)).

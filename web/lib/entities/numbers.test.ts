@@ -171,3 +171,14 @@ describe('readbackText', () => {
     );
   });
 });
+
+// Found while writing the README, 20 Nov: English says "and" inside a number.
+describe('spokenToDigits: "and" inside an English number', () => {
+  it('reads "four thousand eight hundred and ninety-two" as 4892', () => {
+    expect(spokenToDigits('four thousand eight hundred and ninety-two')).toBe('4892');
+    expect(spokenToDigits('one hundred and five')).toBe('105');
+  });
+  it('keeps "and" between two separate numbers', () => {
+    expect(spokenToDigits('four and five')).toBe('45');
+  });
+});
