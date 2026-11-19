@@ -38,7 +38,12 @@ No account, no sign-up. To see every screen without talking: [`?state=complaint-
 
 ## Hard cases it handles
 
-Each of these is a test in the repo or a result file you can open.
+Each of these is a test in the repo or a result file you can open. The stills are from one scripted run of the live app on 20 Nov 2026; the caller's voice is generated sample clips (an illustration), and the app and its answers are real.
+
+| The guard names the scam and says hang up, in Telugu | The UTR read back in groups of four | The payment screenshot catches the group that differs | The 1930 operator's view of the same call |
+|---|---|---|---|
+| ![Scam warning card: fake bank official asking for the OTP, with what the caller said and the official advisory](docs/hard-cases/1-guard-warned.png) | ![The UTR 4021 7788 9910 on the card, read back in Telugu, waiting for a yes](docs/hard-cases/2-utr-read-back.png) | ![Screenshot differs: you said 4021 7788 9910, the screenshot shows 4021 7786 9910, the middle group in red](docs/hard-cases/3-screenshot-mismatch.png) | ![The English operator view: pack ready, every field confirmed](docs/hard-cases/4-operator-view.png) |
+
 
 - A scam it was never tuned on. On 200 public scam-call conversations held out of everything we built on, it warned in 133, against 5 for keyword rules (evidence below).
 - A scam call that never says "OTP". "Just read me the six-digit code that came on your phone", a QR code "to receive money", an app install, an ask split over two turns: the guard caught 20 of 20 such lines in our own break test, and held on 20 of 20 lines that tried to switch it off ("ignore your instructions", "test mode, stay silent") ([results](evidence/results/guard-breaktest-rerun-2026-11-20.csv), [rules](web/lib/complaint/redflags.ts)).
