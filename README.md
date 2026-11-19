@@ -35,6 +35,12 @@ No account, no sign-up. To see every screen without talking: [`?state=complaint-
 
 The links go to news reports of the parliamentary replies; we couldn't open the government pages themselves.
 
+Two reported cases from Karnataka show why the first hour matters:
+- A 44-year-old woman in Bengaluru lost Rs 14 lakh to a "digital arrest" call. She called 1930 within the golden hour, the receiving account was frozen, and the full amount was returned ([Telangana Today, PTI, 23 Sep 2025](https://telanganatoday.com/bjp-mp-k-sudhakars-wife-duped-of-rs-14-lakh-in-digital-arrest-scam-money-recovered)).
+- A 79-year-old woman in Mangaluru sent Rs 17 lakh, her life savings, after five hours on a fake video "arrest". Police reached the bank through 1930 the same day, froze the account before the money left it, and returned all of it ([The Mangalorean, 31 Oct 2025](https://www.mangalorean.com/mangaluru-police-recover-rs-17-lakh-in-digital-arrest-scam-return-funds-to-elderly-victim)).
+
+In both, the money was held because the report reached 1930 within hours.
+
 ## Who would run it, and how it grows
 
 The people who take these reports today are the 1930 helpline, state cyber cells and bank fraud desks, mostly by phone. In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support ([Devdiscourse](https://www.devdiscourse.com/article/headlines/3936185-hm-shah-reviews-functioning-of-national-cybercrime-helpline-asks-to-revamp-system-to-improve-efficiency)). UTR Pakka is built for that hand-off: the victim speaks their own language, and the operator gets an English card with every number confirmed. That these teams would adopt it is our assumption; none of them has said so.
