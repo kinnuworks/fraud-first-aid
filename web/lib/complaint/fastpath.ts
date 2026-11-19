@@ -83,7 +83,7 @@ function next(c: Complaint, lang: Lang, today: string): string {
     if (!have.confirmed) return say(c, f, lang);
   }
   c.pending = undefined;
-  return P[lang].done(deadlines(c.fields.when?.value.slice(0, 10) ?? today).zeroLiabilityBy);
+  return P[lang].done(spokenDate(deadlines(c.fields.when?.value.slice(0, 10) ?? today).zeroLiabilityBy, lang));
 }
 
 const SHORT: Record<Lang, (n: number, digits: string) => string> = {
@@ -174,4 +174,17 @@ export function followLanguage(c: Complaint, lastUser: string): void {
   if (!c.autoLang) return;
   const l = scriptLang(lastUser);
   if (l) c.lang = l;
+}
+
+// A date the voice can say: "23 November", "23 नवंबर", "నవంబర్ 23", "ನವೆಂಬರ್ 23".
+const MONTHS: Record<Lang, string[]> = {
+  en: ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'],
+  hi: ['जनवरी', 'फ़रवरी', 'मार्च', 'अप्रैल', 'मई', 'जून', 'जुलाई', 'अगस्त', 'सितंबर', 'अक्टूबर', 'नवंबर', 'दिसंबर'],
+  te: ['జనవరి', 'ఫిబ్రవరి', 'మార్చి', 'ఏప్రిల్', 'మే', 'జూన్', 'జూలై', 'ఆగస్టు', 'సెప్టెంబర్', 'అక్టోబర్', 'నవంబర్', 'డిసెంబర్'],
+  kn: ['ಜನವರಿ', 'ಫೆಬ್ರವರಿ', 'ಮಾರ್ಚ್', 'ಏಪ್ರಿಲ್', 'ಮೇ', 'ಜೂನ್', 'ಜುಲೈ', 'ಆಗಸ್ಟ್', 'ಸೆಪ್ಟೆಂಬರ್', 'ಅಕ್ಟೋಬರ್', 'ನವೆಂಬರ್', 'ಡಿಸೆಂಬರ್'],
+};
+export function spokenDate(iso: string, lang: Lang): string {
+  const [, m, d] = iso.split('-').map(Number);
+  const month = MONTHS[lang][m - 1];
+  return lang === 'en' || lang === 'hi' ? `${d} ${month}` : `${month} ${d}`;
 }
