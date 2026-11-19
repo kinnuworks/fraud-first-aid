@@ -140,7 +140,8 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
   }
   // The caller's bank, when it is next: a major bank named in any script.
   if (!c.fields.victim_bank && c.fields.utr?.confirmed) {
-    const b = matchBank(t);
+    // a UPI handle ("okaxis", "oksbi") names the payee's app bank, not the caller's own bank
+    const b = matchBank(t.replace(new RegExp(UPI_IN_TEXT.source, 'gi'), ' '));
     if (b && recordText(c, 'victim_bank', b).ok) return say(c, 'victim_bank', lang);
   }
   // A spoken UTR while we still need one.

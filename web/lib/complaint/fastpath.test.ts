@@ -215,3 +215,22 @@ describe('guardHandover: a payment alone is not a fraud', () => {
     }
   });
 });
+
+// Found 20 Nov: a UPI handle names a bank ("okaxis", "oksbi"), but it is the payee's handle, not the
+// caller's own bank. "ramesh at the rate okaxis" must not record Axis Bank as the caller's bank.
+describe('complaintShortcut: a UPI handle is not the caller\'s bank', () => {
+  it('does not take the bank from a UPI handle', async () => {
+    const { complaintShortcut } = await import('./fastpath');
+    const c = newComplaint('te');
+    c.fields = { amount: { value: 25000, confirmed: true }, utr: { value: '402177869910', confirmed: true }, payee: { value: 'ramesh@okaxis', confirmed: true } } as never;
+    complaintShortcut(c, 'Dabbu ramesh at the rate okaxis ki vellindi', '2026-11-19');
+    expect(c.fields.victim_bank).toBeUndefined();
+  });
+  it('still takes a bank the caller names', async () => {
+    const { complaintShortcut } = await import('./fastpath');
+    const c = newComplaint('te');
+    c.fields = { utr: { value: '402177869910', confirmed: true }, payee: { value: 'ramesh@okaxis', confirmed: true } } as never;
+    complaintShortcut(c, 'నా బ్యాంక్ స్టేట్ బ్యాంక్ ఆఫ్ ఇండియా.', '2026-11-19');
+    expect(c.fields.victim_bank?.value).toMatch(/State Bank of India/);
+  });
+});
