@@ -206,7 +206,7 @@ const JOURNEY: Array<[string, string, string]> = [
   [
     'During the scam',
     'It hears the call and tells you to hang up before you lose anything.',
-    'Caught 40 of 40 scam requests in our own guard break test, after 3 fixes.',
+    'Warned in 133 of 200 public scam calls it never saw (ICFD-31k back-test; keyword rules: 5). Names a UPI ID from an earlier complaint at once.',
   ],
   [
     "If money's gone",
@@ -220,8 +220,8 @@ const JOURNEY: Array<[string, string, string]> = [
   ],
   [
     'It hands you everything',
-    'The 1930 script in your language, an English card for the operator, the bank letter and reminders. Family can listen live.',
-    'Plus the RBI Ombudsman step after 30 days and the Chakshu report.',
+    'The 1930 script in your language, an English card for the operator, the bank letter and reminders. One tap brings family onto the call.',
+    'Plus what the scammer said, timestamped with the red flags marked, and the RBI Ombudsman complaint ready for day 30.',
   ],
 ];
 
