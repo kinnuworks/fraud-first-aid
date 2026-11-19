@@ -2,7 +2,7 @@
 // Run: cd web && set -a && . ./.env && . ./.env.local && set +a && npx -y tsx@4.20.6 scripts/preflight.ts
 import { capFor } from '../lib/capability';
 
-const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 const results: Array<[string, boolean, string]> = [];
 const check = async (name: string, fix: string, fn: () => Promise<string>) => {
   const t0 = Date.now();

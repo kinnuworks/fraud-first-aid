@@ -3,7 +3,7 @@ import { chromium } from 'playwright';
 (async () => {
   const b = await chromium.launch();
   const p = await b.newPage({ viewport: { width: 1280, height: 800 } });
-  await p.goto('https://utr-pakka.vercel.app/', { waitUntil: 'networkidle' });
+  await p.goto('https://fraudfirstaid.vercel.app/', { waitUntil: 'networkidle' });
   await p.waitForTimeout(4000);
   // scroll through so count-up numbers and lazy images settle
   for (let y = 0; y < 12000; y += 700) { await p.mouse.wheel(0, 700); await p.waitForTimeout(250); }

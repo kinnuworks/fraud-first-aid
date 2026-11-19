@@ -3,7 +3,7 @@
 // member's audio track. Spends a short Agora session. Run: npx -y tsx@4.20.6 scripts/family-check.ts [base]
 import { chromium } from 'playwright';
 
-const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 (async () => {
   const browser = await chromium.launch({ args: ['--use-fake-ui-for-media-stream', '--use-fake-device-for-media-stream', '--autoplay-policy=no-user-gesture-required'] });
   const caller = await (await browser.newContext({ permissions: ['microphone'] })).newPage();

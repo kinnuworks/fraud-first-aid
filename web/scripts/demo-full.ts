@@ -4,11 +4,11 @@
 //         payment screenshot, the agent catches the difference, the caller confirms the screenshot.
 // AFTER:  payee, time and bank are confirmed and the pack appears (1930, letter, reminders).
 // Spends real Agora/Sarvam/Murf/model credits. Video: evidence/.cache/demo-full/
-// Run: npx -y tsx@4.20.6 scripts/demo-full.ts [https://utr-pakka.vercel.app]
+// Run: npx -y tsx@4.20.6 scripts/demo-full.ts [https://fraudfirstaid.vercel.app]
 import { chromium, type Page } from 'playwright';
 import { mkdirSync } from 'fs';
 
-const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 const HERE = new URL('.', import.meta.url).pathname;
 const OUT = new URL('../../evidence/.cache/demo-full/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });

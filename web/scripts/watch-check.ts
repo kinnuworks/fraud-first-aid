@@ -4,7 +4,7 @@
 // Run: npx -y tsx@4.20.6 scripts/watch-check.ts [base]
 import { chromium } from 'playwright';
 
-const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 (async () => {
   const browser = await chromium.launch({ args: ['--autoplay-policy=no-user-gesture-required'] });
   const ctx = await browser.newContext({ viewport: { width: 1280, height: 800 }, recordVideo: { dir: '../evidence/.cache/watch-video/', size: { width: 1280, height: 800 } } });

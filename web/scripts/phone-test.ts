@@ -11,7 +11,7 @@ const env = (k: string) => { const v = process.env[k]; if (!v) throw new Error(`
 (async () => {
   const appId = env('NEXT_PUBLIC_AGORA_APP_ID'), appCertificate = env('NEXT_AGORA_APP_CERTIFICATE');
   const lang = process.argv[2] ?? 'te', mode = process.argv[3] === 'guard' ? 'guard' : 'complaint';
-  const llmUrl = process.env.LLM_PUBLIC_URL ?? 'https://utr-pakka.vercel.app';
+  const llmUrl = process.env.LLM_PUBLIC_URL ?? 'https://fraudfirstaid.vercel.app';
   const client = new AgoraClient({ area: Area.US, appId, appCertificate, customerId: env('AGORA_CUSTOMER_ID'), customerSecret: env('AGORA_CUSTOMER_SECRET') });
   const channel = newChannel();
   const SIP_UID = 7001;

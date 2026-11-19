@@ -1,10 +1,10 @@
-# UTR Pakka
+# Fraud First Aid
 
-**Hang up before you pay. Get it frozen if you did.** A voice agent for the first hour of a UPI fraud: it listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
+**Hang up before you pay. Get it frozen if you did.** First aid for a UPI fraud, and like first aid it has to be fast: the first hour decides whether the money can still be frozen. It listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
 
 It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person, in ten Indian languages, with a Murf Falcon voice that reads every number back.
 
-**Live: https://utr-pakka.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds.
+**Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds.
 
 ![The live app, sped up 16 times: the scam warning, the UTR read back and confirmed, the complaint pack](docs/core-loop.gif)
 
@@ -15,7 +15,7 @@ Proof, recomputed on every push from the results files in this repo:
 - Back-test on public data (FLEURS read speech in Hindi, Telugu and Kannada, 2022): the exact numbers in 207 of 330 sentences. The speech-to-text alone: 114.
 - Our own break test (we tried to make it fail): 24 of 24 ordinary calls left alone.
 
-[![tests](https://github.com/kinnuworks/utr-pakka/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/utr-pakka/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py) · [technical report](docs/technical-report.md)
+[![tests](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py) · [technical report](docs/technical-report.md)
 
 Why it matters in Karnataka: the state lost ₹5,473.97 crore to cyber fraud in three years and recovered ₹627 crore, 11.5% (Home Minister's reply in the Assembly, [The News Minute, 10 Dec 2025](https://www.thenewsminute.com/karnataka/karnataka-residents-lost-rs-5474-crore-to-cyber-fraud-only-115-recovered)). Money comes back when 1930 hears fast and exact: a 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru ₹14 lakh, both because 1930 heard within hours ([cases below](#why-this-matters)).
 
@@ -32,11 +32,11 @@ It does not replace 1930 or file the complaint for you, and it can't recover mon
 
 ### Try it in 30 seconds
 
-1. Open https://utr-pakka.vercel.app on a laptop or phone and press **Watch it catch a scam call (30 s)**: no microphone needed. A sample scam call (an illustration with a generated voice) plays into the call; it stays silent through the small talk and warns in Hindi the moment the caller pushes.
+1. Open https://fraudfirstaid.vercel.app on a laptop or phone and press **Watch it catch a scam call (30 s)**: no microphone needed. A sample scam call (an illustration with a generated voice) plays into the call; it stays silent through the small talk and warns in Hindi the moment the caller pushes.
 2. Or pick a language, press **Start talking**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
 3. Say "the second group is wrong" when it reads the UTR back, and correct it. When all five details are confirmed, the pack appears.
 
-To see every screen without talking: [`?state=complaint-done`](https://utr-pakka.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://utr-pakka.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://utr-pakka.vercel.app/demo/full-flow.mp4) shows one whole call (sample voices, no audio track).
+To see every screen without talking: [`?state=complaint-done`](https://fraudfirstaid.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://fraudfirstaid.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://fraudfirstaid.vercel.app/demo/full-flow.mp4) shows one whole call (sample voices, no audio track).
 
 ### Read the code: five files
 
@@ -49,7 +49,7 @@ To see every screen without talking: [`?state=complaint-done`](https://utr-pakka
 
 ## Reported before
 
-Every confirmed complaint makes the guard sharper for the next person. When a complaint is confirmed, a keyed one-way hash of the payee's UPI ID is counted for 90 days. If a caller on a later guarded call names that ID ("send the fee to ramesh at okaxis"), UTR Pakka warns at once that the ID was named in an earlier fraud complaint. Only the hash is kept, never the ID, and the warning never says who anyone is. The counts so far come from our own test calls, not real victims. Code: [`reported.ts`](web/lib/complaint/reported.ts).
+Every confirmed complaint makes the guard sharper for the next person. When a complaint is confirmed, a keyed one-way hash of the payee's UPI ID is counted for 90 days. If a caller on a later guarded call names that ID ("send the fee to ramesh at okaxis"), Fraud First Aid warns at once that the ID was named in an earlier fraud complaint. Only the hash is kept, never the ID, and the warning never says who anyone is. The counts so far come from our own test calls, not real victims. Code: [`reported.ts`](web/lib/complaint/reported.ts).
 
 ## Hard cases it handles
 
@@ -89,7 +89,7 @@ In both, the money was held because the report reached 1930 within hours.
 
 ## Who would run it, and how it grows
 
-The people who take these reports today are the 1930 helpline, state cyber cells and bank fraud desks, mostly by phone. In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support ([Devdiscourse](https://www.devdiscourse.com/article/headlines/3936185-hm-shah-reviews-functioning-of-national-cybercrime-helpline-asks-to-revamp-system-to-improve-efficiency)). UTR Pakka is built for that hand-off: the victim speaks their own language, and the operator gets an English card with every number confirmed. That these teams would adopt it is our assumption; none of them has said so.
+The people who take these reports today are the 1930 helpline, state cyber cells and bank fraud desks, mostly by phone. In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support ([Devdiscourse](https://www.devdiscourse.com/article/headlines/3936185-hm-shah-reviews-functioning-of-national-cybercrime-helpline-asks-to-revamp-system-to-improve-efficiency)). Fraud First Aid is built for that hand-off: the victim speaks their own language, and the operator gets an English card with every number confirmed. That these teams would adopt it is our assumption; none of them has said so.
 
 What it already runs on:
 
@@ -152,7 +152,7 @@ Where to look, line by line:
 
 ## Check it yourself
 
-- The live app: https://utr-pakka.vercel.app
+- The live app: https://fraudfirstaid.vercel.app
 - The tests: `cd web && pnpm install && pnpm test` (number layer, complaint session, tools, pack, screenshot check, model route).
 - The probes against the real speech APIs: `web/scripts/numbers-probe.ts` and `web/scripts/pairs-probe.ts` (Murf Falcon speaks a number, Sarvam transcribes it, our parser reads it back).
 
@@ -162,19 +162,19 @@ The methods, every result, the bugs the tests found and the limits are written u
 
 Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) against the speech-to-text's own numerals, the same back-test through a phone codec, planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md), and our own break test of the main claim (spoken numbers in noise). Each one reruns from the repo with one command.
 
-> Claim: UTR Pakka reads spoken 10- and 12-digit numbers exactly in 295 of 300 noisy clips.
+> Claim: Fraud First Aid reads spoken 10- and 12-digit numbers exactly in 295 of 300 noisy clips.
 > Evidence type: our own break test (we tried to make it fail), not real users.
 > Data: Murf Falcon voices speaking 25 numbers digit by digit in Hindi, Telugu, Kannada and English, with white noise at 20, 10 and 5 dB, 19 Nov 2026, 300 clips ([results](evidence/results/breaktest-2026-11-19.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same clips, 79 of 300.
 > Result: 98.3% exact (95% interval 96.2% to 99.3%); 96 of 100 even at 5 dB.
 > Rerun: `npx tsx evidence/breaktest/run.ts` (needs Murf and Sarvam keys). Limits: synthetic voices and white noise, not real callers on phone lines; in English the baseline already writes numerals, so the gain is in Hindi, Telugu and Kannada.
 
-> Claim: on real Hindi, Telugu and Kannada speech, UTR Pakka gets the exact numbers right in 207 of 330 sentences, against 114 for the speech-to-text's own numerals.
+> Claim: on real Hindi, Telugu and Kannada speech, Fraud First Aid gets the exact numbers right in 207 of 330 sentences, against 114 for the speech-to-text's own numerals.
 > Evidence type: back-test on public data (FLEURS, read speech), not real users.
 > Data: FLEURS test slice ([google/fleurs](https://huggingface.co/datasets/google/fleurs), revision 70bb2e84, CC-BY-4.0), every test sentence with a number in Hindi, Telugu and Kannada, 330 sentences (5 over 30 seconds left out for both); planned and committed before any run, run once on 19 Nov 2026 ([results](evidence/results/fleurs-test-2026-11-19.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same audio, 114 of 330 (34.5%).
 > Result: 62.7% exact (95% interval 57.4% to 67.8%); paired difference +0.28 (95% interval 0.23 to 0.33). Hindi 48/64, Telugu 63/105, Kannada 96/161.
 > Rerun: `python3 -I evidence/fleurs/fetch.py test && npx tsx evidence/fleurs/score.ts test` at commit 6e94442. Limits: read sentences, not phone calls; the numbers are years and amounts inside sentences, not dictated UTRs. Limits, in numbers: zero real users; 330 read sentences and 300 synthetic clips; the next real test is a recorded phone call per language, where a miss rate above 5% would change this claim.
 
-> Claim: on the same speech sent through a phone codec, UTR Pakka still gets the exact numbers in 211 of 330 sentences, against 115 for the speech-to-text's own numerals.
+> Claim: on the same speech sent through a phone codec, Fraud First Aid still gets the exact numbers in 211 of 330 sentences, against 115 for the speech-to-text's own numerals.
 > Evidence type: back-test on public data (FLEURS read speech, converted to phone-band audio), not real users.
 > Data: the same 330 FLEURS test sentences in Hindi, Telugu and Kannada, each converted to 8 kHz G.711 mu-law (the codec of Indian phone calls and Twilio) before transcription; planned and committed before the run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md), run once on 19 and 20 Nov 2026 ([results](evidence/results/fleurs-test-phone-2026-11-20.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same audio, 115 of 330 (34.8%).
 > Result: 63.9% exact (95% interval 58.6% to 68.9%); paired difference +0.29 (95% interval 0.24 to 0.34). Hindi 48/64, Telugu 63/105, Kannada 100/161, no lower than on full-band audio (207 of 330).
@@ -200,7 +200,7 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 
 ## What doesn't work yet
 
-- It doesn't file the complaint for you. The national cybercrime portal has no public API and asks for an OTP and a captcha, so UTR Pakka prepares everything and you call 1930 or file yourself.
+- It doesn't file the complaint for you. The national cybercrime portal has no public API and asks for an OTP and a captcha, so Fraud First Aid prepares everything and you call 1930 or file yourself.
 - It can't get money back, and it never asks for an OTP, PIN, password or card number.
 - The phone line isn't reliable yet. The agent can place a call through Agora's telephony and a Twilio SIP trunk, and it has rung a test phone, but in our tests only 2 of about 14 calls left Agora's SIP gateway. For now you talk to it in the browser.
 - Emailing the pack runs on Resend's test sender, which only delivers to our own address until a sending domain is verified. You can copy everything from the screen.

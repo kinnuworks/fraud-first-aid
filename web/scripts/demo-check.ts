@@ -1,11 +1,11 @@
 // Walks the live demo path in a real browser and records a video of it (the rough cut).
 // Spends real Agora, Sarvam, Murf and model credits, so it runs at milestones, not on every stop.
-// Run: set -a; . ./.env; set +a; npx -y tsx@4.20.6 scripts/demo-check.ts [https://utr-pakka.vercel.app]
+// Run: set -a; . ./.env; set +a; npx -y tsx@4.20.6 scripts/demo-check.ts [https://fraudfirstaid.vercel.app]
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
 import { capFor } from '../lib/capability';
 
-const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 const SECRET = process.env.LLM_SHARED_SECRET;
 const OUT = new URL('../../evidence/.cache/demo-video/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });

@@ -3,7 +3,7 @@
 // Spends a few model calls. Run: set -a; . ./.env; set +a; npx -y tsx@4.20.6 scripts/pack-text-check.ts [base]
 import { capFor } from '../lib/capability';
 
-const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 const session = `packcheck-${Date.now()}`;
 const msgs: Array<{ role: string; content: string }> = [];
 async function say(text: string, mode: 'guard' | 'complaint' = 'guard') {
