@@ -91,3 +91,6 @@ Then a short limits paragraph, in numbers: zero real users, the interval, the da
 - Baseline: our keyword rules alone (detectRedFlag on each turn, no model), the obvious simpler detector, on the same turns. Paired difference in detection with a 95% bootstrap interval; the claim is made only if its low end is above 0.
 - Kind and label: back-test on public data (ICFD-31k, synthetic conversations). Limits: text, not audio; synthetic; English and Hinglish only; no normal calls to measure false alarms.
 - Rerun: `npx tsx evidence/icfd/run.ts`.
+
+## Changes after the first run (seventh claim)
+- 19 Nov 2026, first ICFD run: invalid as a measure of the guard. With six conversations at a time against production, the hosting split calls across server instances (the call's card was unavailable in 136 of 239 conversations, and turns reached instances without the call's state), so warnings were lost. Its numbers (10 of 200 warned, 50 handed over to a complaint) are kept in evidence/.cache/icfd/results-run1.jsonl and not published as a result. The rerun waits for the shared call store (Upstash Redis) and runs one conversation at a time. One real finding from reading its hand-overs: "paid" inside "paid promoters" counted as money lost; fixed with a test before the rerun.
