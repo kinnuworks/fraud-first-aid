@@ -6,7 +6,7 @@ import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint } from '@/lib/complaint/store';
 import { addFlag } from '@/lib/complaint/session';
 import { guardShortcut } from '@/lib/complaint/redflags';
-import { complaintShortcut, guardHandover } from '@/lib/complaint/fastpath';
+import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -19,6 +19,7 @@ export const POST = createLlmRoute({
   system: (session) => complaintSystem(session),
   shortcut: (session, lastUser) => {
     const c = getComplaint(session);
+    followLanguage(c, lastUser);
     const before = `${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length}`;
     const out = guardHandover(c, lastUser) ?? guardShortcut(c, lastUser) ?? complaintShortcut(c, lastUser);
     // Turn decisions for debugging, only with DEBUG_TURNS=1; never the caller's words.
@@ -36,10 +37,11 @@ export const POST = createLlmRoute({
   // lang and mode ride on the URL Agora calls, so a restarted instance rebuilds the session right.
   init: (session, q) => {
     const lang = q.get('lang') ?? '';
-    getComplaint(
+    const c = getComplaint(
       session,
       (READBACK_LANGS as readonly string[]).includes(lang) ? (lang as ReadbackLang) : 'en',
       q.get('mode') === 'guard' ? 'guard' : 'complaint',
     );
+    if (lang === 'auto') c.autoLang = true;
   },
 });

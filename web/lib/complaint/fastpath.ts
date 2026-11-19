@@ -8,6 +8,7 @@ import { REQUIRED, recordNumber, recordDigits, confirmField, deadlines, type Com
 import { istToday } from './today';
 import { LOSS } from './redflags';
 import { parseAmount } from './fields';
+import { scriptLang } from '../entities/script';
 
 type Lang = 'te' | 'hi' | 'kn' | 'en';
 const FAST: Lang[] = ['te', 'hi', 'kn', 'en'];
@@ -131,4 +132,11 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
     }
   }
   return null;
+}
+
+// Auto mode: follow the language the caller is speaking (from the transcript's script).
+export function followLanguage(c: Complaint, lastUser: string): void {
+  if (!c.autoLang) return;
+  const l = scriptLang(lastUser);
+  if (l) c.lang = l;
 }

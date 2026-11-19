@@ -70,11 +70,13 @@ export const PRESETS: Record<LangCode, LangPreset> = {
     locale: 'pa-IN',
     greeting: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਇੱਥੇ ਹਾਂ। ਦੱਸੋ ਕੀ ਹੋਇਆ।',
   },
+  // Any language: Sarvam detects it; one Falcon voice that speaks all nine Indian languages
+  // (checked by round-trip: Telugu, Tamil, Kannada and Hindi all came back in the right language).
   auto: {
     asrLanguage: 'unknown',
-    voiceId: 'en-IN-nikhil',
+    voiceId: 'hi-IN-poonam',
     locale: 'hi-IN',
-    greeting: 'नमस्ते! Namaskara! Hello! आप किसी भी भाषा में बात कर सकते हैं।',
+    greeting: 'నమస్కారం! नमस्ते! ನಮಸ್ಕಾರ! வணக்கம்! Hello! Speak in your own language and tell me what happened.',
   },
 };
 

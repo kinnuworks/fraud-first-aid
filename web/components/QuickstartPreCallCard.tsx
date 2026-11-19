@@ -19,6 +19,7 @@ const LANGS = [
   ['gu', 'ગુજરાતી'],
   ['pa', 'ਪੰਜਾਬੀ'],
   ['en', 'English'],
+  ['auto', 'Any language (auto)'],
 ] as const;
 
 // The chosen language rides in ?lang=, which the call start reads.

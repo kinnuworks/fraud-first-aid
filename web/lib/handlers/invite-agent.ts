@@ -11,7 +11,7 @@ import {
 import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
 import { presetFor, prototypeInstructions } from '@/lib/agent-config';
-import { startComplaint } from '@/lib/complaint/store';
+import { startComplaint, getComplaint } from '@/lib/complaint/store';
 import { checkCap } from '@/lib/capability';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
@@ -72,6 +72,7 @@ export async function POST(request: NextRequest) {
     }
     const mode = (body as unknown as { mode?: string }).mode === 'guard' ? 'guard' : 'complaint';
     startComplaint(channel_name, lang, mode);
+    if (langArg === 'auto') getComplaint(channel_name).autoLang = true;
 
     // --- 2. Build and start the agent ---
 
@@ -138,7 +139,7 @@ export async function POST(request: NextRequest) {
       .withLlm(
         llmUrl
           ? new OpenAI({
-              url: `${llmUrl}/api/call/chat/completions?session=${channel_name}&lang=${lang}&mode=${mode}`,
+              url: `${llmUrl}/api/call/chat/completions?session=${channel_name}&lang=${langArg === 'auto' ? 'auto' : lang}&mode=${mode}`,
               apiKey: requireEnv('LLM_SHARED_SECRET'),
               model: 'custom',
               // On guard the agent stays quiet until it hears a red flag.

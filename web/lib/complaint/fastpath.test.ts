@@ -111,3 +111,20 @@ describe('a UTR that stops short', () => {
     expect(c.digitBuffer).toBe('');
   });
 });
+
+describe('followLanguage (auto mode)', () => {
+  it("switches the call's language to whatever the caller is speaking, only in auto mode", async () => {
+    const { followLanguage } = await import('./fastpath');
+    const c = newComplaint('en');
+    c.autoLang = true;
+    followLanguage(c, 'నా డబ్బు పోయింది');
+    expect(c.lang).toBe('te');
+    followLanguage(c, 'ok');
+    expect(c.lang).toBe('te');
+    followLanguage(c, 'मेरे पैसे चले गए');
+    expect(c.lang).toBe('hi');
+    const fixed = newComplaint('kn');
+    followLanguage(fixed, 'నా డబ్బు పోయింది');
+    expect(fixed.lang).toBe('kn');
+  });
+});

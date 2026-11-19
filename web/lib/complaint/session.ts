@@ -24,6 +24,8 @@ export type Complaint = {
   trace?: string[];
   // Where to email the pack (typed on screen), and the result of sending it.
   email?: string;
+  // Auto mode: the reply language follows the script of what the caller says.
+  autoLang?: boolean;
   emailSent?: { id: string; at: string } | { problem: string };
   // How it happened: a one-line English summary for the operator, and the caller's own words.
   story?: { en: string; words: string };
