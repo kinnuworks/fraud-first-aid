@@ -40,7 +40,7 @@ describe('complaintShortcut', () => {
       victim_bank: { value: 'SBI', confirmed: false },
     };
     c.pending = 'victim_bank';
-    expect(complaintShortcut(c, 'yes that is right', '2026-11-19')).toContain('2026-11-23');
+    expect(complaintShortcut(c, 'yes that is right', '2026-11-19')).toContain('23 November');
   });
 
   it('leaves no, corrections, other languages and free talk to the model', () => {
@@ -232,5 +232,18 @@ describe('complaintShortcut: a UPI handle is not the caller\'s bank', () => {
     c.fields = { utr: { value: '402177869910', confirmed: true }, payee: { value: 'ramesh@okaxis', confirmed: true } } as never;
     complaintShortcut(c, 'నా బ్యాంక్ స్టేట్ బ్యాంక్ ఆఫ్ ఇండియా.', '2026-11-19');
     expect(c.fields.victim_bank?.value).toMatch(/State Bank of India/);
+  });
+});
+
+// Found 20 Nov: the closing line gave the voice "2026-11-23"; it should say the date as people do.
+describe('spokenDate in the closing line', () => {
+  it.each([
+    ['en', '23 November'],
+    ['hi', '23 नवंबर'],
+    ['te', 'నవంబర్ 23'],
+    ['kn', 'ನವೆಂಬರ್ 23'],
+  ] as const)('%s says %s', async (lang, want) => {
+    const { spokenDate } = await import('./fastpath');
+    expect(spokenDate('2026-11-23', lang)).toBe(want);
   });
 });
