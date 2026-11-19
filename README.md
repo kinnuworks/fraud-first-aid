@@ -6,8 +6,8 @@ Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, an
 
 What it does for you:
 
-1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (In our own test it caught all 40 scam requests we wrote, including ones that tried to talk it out of warning.)
-2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (On public recordings of Hindi, Telugu and Kannada read aloud, it got the exact numbers in 63% of sentences, against 35% for the speech-to-text alone.)
+1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (Back-test on public data (ICFD-31k, synthetic scam calls, 2025): it warned in 133 of 200 conversations it was never tuned on, against 5 for keyword rules. Our own break test (we tried to make it fail): 40 of 40 scam requests caught, including ones that tried to talk it out of warning.)
+2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (Back-test on public data (FLEURS, Hindi, Telugu and Kannada read aloud, 2022): exact numbers in 207 of 330 sentences, 63%, against 114, 35%, for the speech-to-text alone; 211 of 330 through a phone codec.)
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
 4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?), an RBI Ombudsman complaint ready for that day, and the Chakshu step. It emails the pack once you say yes, and your family can listen to the call live.
 
