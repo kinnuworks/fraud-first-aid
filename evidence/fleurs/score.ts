@@ -12,8 +12,9 @@ import { spokenToDigits } from '../../web/lib/entities/numbers';
 const split = process.argv[2] ?? 'dev';
 // 'phone': the phone-band copies (third claim); 'six': ta, ml, bn, mr, gu, pa (fourth claim)
 const variant = process.argv[3] ?? '';
-const KEY = process.env.SARVAM_API_KEY;
-if (!KEY) throw new Error('SARVAM_API_KEY must be set');
+// Tests use their own key so they can never use up the live app's credits (19 Nov outage).
+const KEY = process.env.SARVAM_EVAL_KEY;
+if (!KEY) throw new Error('SARVAM_EVAL_KEY must be set (a separate Sarvam key for tests, not the live app\'s)');
 const ROOT = join(__dirname, '..', '.cache', 'fleurs');
 const LANGS: Record<string, string> = variant === 'six'
   ? { ta_in: 'ta-IN', ml_in: 'ml-IN', bn_in: 'bn-IN', mr_in: 'mr-IN', gu_in: 'gu-IN', pa_in: 'pa-IN' }

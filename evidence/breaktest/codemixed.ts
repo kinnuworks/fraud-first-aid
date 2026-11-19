@@ -9,8 +9,9 @@ import { join } from 'path';
 import { spokenToDigits, readbackText, groupForReadback, type ReadbackLang } from '../../web/lib/entities/numbers';
 import { PRESETS } from '../../web/lib/agent-config';
 
-const MURF = process.env.MURF_API_KEY, SARVAM = process.env.SARVAM_API_KEY;
-if (!MURF || !SARVAM) throw new Error('MURF_API_KEY and SARVAM_API_KEY must be set');
+// Tests use their own Sarvam key so they can never use up the live app's credits (19 Nov outage).
+const MURF = process.env.MURF_API_KEY, SARVAM = process.env.SARVAM_EVAL_KEY;
+if (!MURF || !SARVAM) throw new Error('MURF_API_KEY and SARVAM_EVAL_KEY (a separate Sarvam key for tests) must be set');
 const CACHE = join(__dirname, '..', '.cache', 'codemixed');
 mkdirSync(CACHE, { recursive: true });
 
