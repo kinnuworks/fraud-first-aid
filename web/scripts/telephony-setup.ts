@@ -62,21 +62,6 @@ async function tw(method: string, url: string, form?: Record<string, string>) {
   const trunkAcls = await tw('GET', `https://trunking.twilio.com/v1/Trunks/${trunk.sid}/IpAccessControlLists`);
   if (!(trunkAcls.ip_access_control_lists ?? []).some((a: any) => a.sid === acl.sid)) await tw('POST', `https://trunking.twilio.com/v1/Trunks/${trunk.sid}/IpAccessControlLists`, { IpAccessControlListSid: acl.sid });
   console.log('agora IP access list attached');
-  // Twilio's Elastic SIP Trunking fails calls to India at once, while ordinary Twilio voice calls to
-  // India go through. So Agora's SIP goes to a Twilio SIP domain instead, whose voice URL (our route,
-  // signature-checked, Indian mobiles only) dials the number as a voice call.
-  const ACC = `https://api.twilio.com/2010-04-01/Accounts/${SID}`;
-  const DOMAIN = 'utrpakka.sip.twilio.com';
-  const voiceUrl = (process.env.LLM_PUBLIC_URL || 'https://utr-pakka.vercel.app') + '/api/call/twilio-dial';
-  const doms = await tw('GET', `${ACC}/SIP/Domains.json`);
-  let dom = (doms.domains ?? []).find((d: any) => d.domain_name === DOMAIN);
-  if (!dom) dom = await tw('POST', `${ACC}/SIP/Domains.json`, { DomainName: DOMAIN, FriendlyName: 'utr-pakka', VoiceUrl: voiceUrl, VoiceMethod: 'POST', SipRegistration: 'false' });
-  else await tw('POST', `${ACC}/SIP/Domains/${dom.sid}.json`, { VoiceUrl: voiceUrl, VoiceMethod: 'POST' });
-  const credMaps = await tw('GET', `${ACC}/SIP/Domains/${dom.sid}/Auth/Calls/CredentialListMappings.json`);
-  if (!(credMaps.contents ?? []).some((c: any) => c.sid === cl.sid)) await tw('POST', `${ACC}/SIP/Domains/${dom.sid}/Auth/Calls/CredentialListMappings.json`, { CredentialListSid: cl.sid });
-  const ipMaps = await tw('GET', `${ACC}/SIP/Domains/${dom.sid}/Auth/Calls/IpAccessControlListMappings.json`);
-  if (!(ipMaps.contents ?? []).some((c: any) => c.sid === acl.sid)) await tw('POST', `${ACC}/SIP/Domains/${dom.sid}/Auth/Calls/IpAccessControlListMappings.json`, { IpAccessControlListSid: acl.sid });
-  console.log('sip domain', dom.domain_name, '->', voiceUrl);
   // Agora: register the number for outbound calls through the trunk
   const appId = env('NEXT_PUBLIC_AGORA_APP_ID'), appCertificate = env('NEXT_AGORA_APP_CERTIFICATE');
   const agora = new AgoraClient({ area: Area.US, appId, appCertificate, customerId: env('AGORA_CUSTOMER_ID'), customerSecret: env('AGORA_CUSTOMER_SECRET') });
@@ -84,12 +69,7 @@ async function tw(method: string, url: string, form?: Record<string, string>) {
   console.log('agora numbers before:', JSON.stringify(existing).slice(0, 200).replace(/[A-Za-z0-9]{16,}:[^@"]+@/g, '***@'));
   const has = Array.isArray(existing) ? existing.some((n: any) => n.phone_number === NUMBER) : JSON.stringify(existing).includes(NUMBER);
   if (!has) {
-    const r = await (agora as any).phoneNumbers.add({ provider: 'byo', phone_number: NUMBER, label: 'utr-pakka', inbound: false, outbound: true, inbound_config: { allowed_addresses: TWILIO_SIGNALING }, outbound_config: { address: `${user}:${pass}@${DOMAIN}`, transport: 'udp' } });
+    const r = await (agora as any).phoneNumbers.add({ provider: 'byo', phone_number: NUMBER, label: 'utr-pakka', inbound: false, outbound: true, inbound_config: { allowed_addresses: TWILIO_SIGNALING }, outbound_config: { address: `${user}:${pass}@${trunk.domain_name}`, transport: 'udp' } });
     console.log('agora number added:', JSON.stringify(r).replace(/:[^:@"]+@/g, ':***@').slice(0, 200));
-  } else {
-    const basic = 'Basic ' + Buffer.from(`${env('AGORA_CUSTOMER_ID')}:${env('AGORA_CUSTOMER_SECRET')}`).toString('base64');
-    const up = await fetch(`https://api.agora.io/api/conversational-ai-agent/v2/phone-numbers/${encodeURIComponent(NUMBER)}`, { method: 'PATCH', headers: { Authorization: basic, 'Content-Type': 'application/json' }, body: JSON.stringify({ outbound_config: { address: `${user}:${pass}@${DOMAIN}`, transport: 'udp' } }) });
-    if (!up.ok) throw new Error(`agora number update ${up.status}`);
-    console.log('agora number points at', DOMAIN);
-  }
+  } else console.log('agora number already registered');
 })().catch((e) => { console.error('SETUP FAILED:', String(e.message ?? e).replace(/:[^:@"\s]+@/g, ':***@')); process.exit(1); });
