@@ -12,7 +12,9 @@ It runs on Agora's Conversational AI Engine because the job is a live conversati
 
 1. Open https://utr-pakka.vercel.app on a laptop or phone, pick a language, press **Start talking** and allow the microphone.
 2. Say what happened, then a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
-3. Listen to the read-back, say "the second group is wrong" and correct it. The card on the right fills in and ticks each confirmed field; when all five are confirmed, the 1930 script, the bank letter and an English card for the 1930 operator appear.
+3. Listen to the read-back, say "the second group is wrong" and correct it. The card fills in and ticks each confirmed field; when all five are confirmed, the 1930 script, the bank letter, an English card for the 1930 operator and two calendar reminders appear.
+
+Or press "A scam call is happening? Let UTR Pakka listen", then "Play a sample scam call": it stays silent through the small talk and warns in Telugu the moment the caller asks for the OTP.
 
 No account, no sign-up. To see every screen without talking: [`?state=complaint-done`](https://utr-pakka.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://utr-pakka.vercel.app/?state=complaint-mismatch) (sample data, labelled as such).
 
@@ -51,6 +53,9 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 | Agora Conversational AI Engine (agora-agents SDK 2.14) | starts the voice agent per call, with Sarvam ASR, our model URL and Murf TTS | [`invite-agent.ts`](web/lib/handlers/invite-agent.ts) |
 | Custom LLM endpoint | Agora calls our OpenAI-compatible route, guarded by a shared secret, with the call's session id | [`llm-route.ts`](web/lib/llm-route.ts), [`route.ts`](web/app/api/call/%5B...path%5D/route.ts) |
 | Agora RTC + RTM | live audio, and transcripts on screen | [`ConversationComponent.tsx`](web/components/ConversationComponent.tsx) |
+| Turn control | on guard the agent answers with a silent turn until it hears a red flag, then interrupts the call; a UTR said in pieces is held across turns until all 12 digits arrive | [`llm-route.ts`](web/lib/llm-route.ts), [`fastpath.ts`](web/lib/complaint/fastpath.ts) |
+| Tool calling on our endpoint | record, read back, correct one group, confirm, take a value from the screenshot, switch from guard to complaint | [`tools.ts`](web/lib/complaint/tools.ts) |
+| Agent metrics | speech-to-text, model and voice latency shown live in the call screen's pipeline bar | [`QuickstartPipelineMetrics.tsx`](web/components/QuickstartPipelineMetrics.tsx) |
 | Murf Falcon TTS | the agent's voice per language: native voices for Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati and Punjabi, and en-IN-anisha speaking Telugu and English | [`agent-config.ts`](web/lib/agent-config.ts) |
 
 ## Check it yourself
