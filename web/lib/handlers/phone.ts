@@ -11,6 +11,7 @@ import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { indianMobile, CallLimiter } from '@/lib/phone';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { allowStart, clientAddress } from '@/lib/ratelimit';
 
 const limiter = new CallLimiter(Number(process.env.PHONE_CALLS_PER_HOUR ?? 20));
 const SIP_UID = 7001; // the phone line's participant in the call's channel
@@ -26,6 +27,10 @@ export async function POST(request: NextRequest) {
   const channel = request.nextUrl.searchParams.get('session') ?? '';
   if (!/^[\w-]{1,64}$/.test(channel) || !checkCap(channel, request.nextUrl.searchParams.get('cap'))) {
     return NextResponse.json({ error: 'not your call' }, { status: 403 });
+  }
+  // a phone call costs money too: the same limit as starting a call in the browser
+  if (!(await allowStart(clientAddress(request.headers)))) {
+    return NextResponse.json({ error: 'Too many calls started from here. Please wait a few minutes and try again, or call 1930 directly.' }, { status: 429 });
   }
   const body = (await request.json().catch(() => ({}))) as { to?: string; lang?: string; mode?: string };
   const to = indianMobile(String(body.to ?? ''));

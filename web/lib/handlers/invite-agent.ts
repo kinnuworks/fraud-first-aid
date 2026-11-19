@@ -10,6 +10,7 @@ import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { checkCap } from '@/lib/capability';
+import { allowStart, clientAddress } from '@/lib/ratelimit';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 
@@ -25,6 +26,11 @@ function requireEnv(name: string): string {
 
 export async function POST(request: NextRequest) {
   try {
+    // A paid agent starts below: limit how often one address (and the whole app) can start calls.
+    if (!(await allowStart(clientAddress(request.headers)))) {
+      return NextResponse.json({ error: 'Too many calls started from here. Please wait a few minutes and try again, or call 1930 directly.' }, { status: 429 });
+    }
+
     // --- 1. Parse request ---
 
     const body: ClientStartRequest = await request.json();
