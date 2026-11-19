@@ -4,7 +4,7 @@ import { bankFraudLine } from './banks';
 import { readbackText, type ReadbackLang } from '../entities/numbers';
 import { missingFields, deadlines, type Complaint } from './session';
 import { scamById } from './scams';
-import { reminderIcs } from './reminder';
+import { reminderIcs, plusDays } from './reminder';
 
 const inr = (n: number) => n.toLocaleString('en-IN');
 
@@ -36,6 +36,7 @@ export type Pack =
       bankLine: { bank: string; phone: string; source: string; also?: string } | null;
       portalSheet: string;
       nextSteps: string;
+      ombudsmanDraft: string;
       minutesSinceDebit: number | null;
       deadlines: ReturnType<typeof deadlines>;
     };
@@ -125,6 +126,17 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     '2. If the bank does not reply within 30 days, or rejects your complaint, complain to the RBI Ombudsman at cms.rbi.org.in. It is free; the RBI helpline is 14448. Attach the bank letter and the bank\'s complaint number.',
     `3. Report the caller's number on Sanchar Saathi (Chakshu), sancharsaathi.gov.in/sfc, within 30 days: medium "Call", category "${chakshu}".`,
   ].join('\n');
+  const ombudsmanDraft = `For the RBI Ombudsman, at cms.rbi.org.in (free; RBI helpline 14448). Use it from ${plusDays(today, 30)} if ${f.victim_bank.value.split(',')[0]} has not replied, or if it rejects your complaint.
+
+Bank: ${f.victim_bank.value}
+Date I complained to the bank: ${today}
+Bank's complaint number: (the number your bank gave you)
+
+What happened: on ${when}, Rs ${inr(f.amount.value)} left my account by UPI to ${f.payee.value} in a fraud. The UTR (transaction reference) is ${f.utr.value}. I reported it to the bank on ${today}, within three working days (by ${d.zeroLiabilityBy}), and to the National Cybercrime Helpline, 1930.
+
+What I ask: a refund of Rs ${inr(f.amount.value)}, as RBI circular RBI/2017-18/15 sets out for an unauthorised electronic transaction reported within three working days.
+
+Attached: my letter to the bank, the bank's reply if any, and the payment screenshot.`;
   const reminders = reminderIcs({ utr: f.utr.value, amount: f.amount.value, reportedOn: today, bank: f.victim_bank.value.split(',')[0] });
-  return { ok: true, bankLetter, script1930, operatorCard, reminders, bankLine, portalSheet, nextSteps, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
+  return { ok: true, bankLetter, script1930, operatorCard, reminders, bankLine, portalSheet, nextSteps, ombudsmanDraft, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
 }

@@ -313,7 +313,7 @@ function Compare() {
             <li>You speak your own language, in ten Indian languages.</li>
             <li>Every digit is read back in groups of four until you confirm it.</li>
             <li>The 1930 operator gets an English card with every number confirmed.</li>
-            <li>You get your bank&apos;s own fraud line, the RBI deadline date and two calendar reminders.</li>
+            <li>You get your bank&apos;s own fraud line, the RBI deadline date and three calendar reminders, up to the day-30 Ombudsman step.</li>
           </ul>
         </div>
       </div>

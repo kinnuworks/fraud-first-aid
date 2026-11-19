@@ -17,22 +17,22 @@ const P: Record<Lang, { heard: string; isRight: string; thanks: string; rupees: 
   en: {
     heard: 'I heard', isRight: 'Is that right?', thanks: 'Thank you.', rupees: 'rupees',
     ask: { utr: 'Please say the 12-digit UTR from your bank SMS, one digit at a time.', amount: 'How much money left your account?', when: 'When did the money leave your account? A rough time is fine.', payee: 'Who was it paid to? Say the UPI ID or the phone number.', victim_bank: 'Which is your bank?' },
-    done: (d) => `Your complaint is ready on the screen. Call 1930 now and read out the script. Tell your bank by ${d}. You can also add two reminders to your calendar.`,
+    done: (d) => `Your complaint is ready on the screen. Call 1930 now and read out the script. Tell your bank by ${d}. You can also add three reminders to your calendar.`,
   },
   hi: {
     heard: 'मैंने सुना:', isRight: 'क्या यह सही है?', thanks: 'धन्यवाद।', rupees: 'रुपये',
     ask: { utr: 'बैंक के SMS से 12 अंकों का UTR नंबर एक-एक अंक करके बताइए।', amount: 'आपके खाते से कितने पैसे गए?', when: 'पैसे कब कटे? अंदाज़े से समय बता दीजिए।', payee: 'पैसे किसको गए? UPI ID या फ़ोन नंबर बताइए।', victim_bank: 'आपका बैंक कौन सा है?' },
-    done: (d) => `आपकी शिकायत स्क्रीन पर तैयार है। अभी 1930 पर कॉल करके यह पढ़ दीजिए। अपने बैंक को ${d} तक बता दीजिए। आप कैलेंडर में दो रिमाइंडर भी जोड़ सकते हैं।`,
+    done: (d) => `आपकी शिकायत स्क्रीन पर तैयार है। अभी 1930 पर कॉल करके यह पढ़ दीजिए। अपने बैंक को ${d} तक बता दीजिए। आप कैलेंडर में तीन रिमाइंडर भी जोड़ सकते हैं।`,
   },
   te: {
     heard: 'నేను విన్నది:', isRight: 'ఇది సరైనదేనా?', thanks: 'ధన్యవాదాలు.', rupees: 'రూపాయలు',
     ask: { utr: 'బ్యాంక్ SMS లోని 12 అంకెల UTR నంబర్‌ను ఒక్కొక్క అంకెగా చెప్పండి.', amount: 'మీ ఖాతా నుంచి ఎంత డబ్బు పోయింది?', when: 'డబ్బు ఎప్పుడు కట్ అయింది? సుమారు సమయం చెప్పినా చాలు.', payee: 'డబ్బు ఎవరికి వెళ్ళింది? UPI ID లేదా ఫోన్ నంబర్ చెప్పండి.', victim_bank: 'మీ బ్యాంక్ ఏది?' },
-    done: (d) => `మీ ఫిర్యాదు స్క్రీన్ మీద సిద్ధంగా ఉంది. ఇప్పుడే 1930 కి కాల్ చేసి ఇది చదవండి. మీ బ్యాంక్‌కి ${d} లోపు చెప్పండి. క్యాలెండర్‌లో రెండు రిమైండర్లు కూడా జోడించుకోవచ్చు.`,
+    done: (d) => `మీ ఫిర్యాదు స్క్రీన్ మీద సిద్ధంగా ఉంది. ఇప్పుడే 1930 కి కాల్ చేసి ఇది చదవండి. మీ బ్యాంక్‌కి ${d} లోపు చెప్పండి. క్యాలెండర్‌లో మూడు రిమైండర్లు కూడా జోడించుకోవచ్చు.`,
   },
   kn: {
     heard: 'ನಾನು ಕೇಳಿದ್ದು:', isRight: 'ಇದು ಸರಿಯೇ?', thanks: 'ಧನ್ಯವಾದಗಳು.', rupees: 'ರೂಪಾಯಿ',
     ask: { utr: 'ಬ್ಯಾಂಕ್ SMS ನಲ್ಲಿರುವ 12 ಅಂಕಿಯ UTR ಸಂಖ್ಯೆಯನ್ನು ಒಂದೊಂದೇ ಅಂಕಿಯಾಗಿ ಹೇಳಿ.', amount: 'ನಿಮ್ಮ ಖಾತೆಯಿಂದ ಎಷ್ಟು ಹಣ ಹೋಯಿತು?', when: 'ಹಣ ಯಾವಾಗ ಕಡಿತವಾಯಿತು? ಅಂದಾಜು ಸಮಯ ಹೇಳಿದರೂ ಸಾಕು.', payee: 'ಹಣ ಯಾರಿಗೆ ಹೋಯಿತು? UPI ID ಅಥವಾ ಫೋನ್ ನಂಬರ್ ಹೇಳಿ.', victim_bank: 'ನಿಮ್ಮ ಬ್ಯಾಂಕ್ ಯಾವುದು?' },
-    done: (d) => `ನಿಮ್ಮ ದೂರು ಪರದೆಯ ಮೇಲೆ ಸಿದ್ಧವಾಗಿದೆ. ಈಗಲೇ 1930ಗೆ ಕರೆ ಮಾಡಿ ಇದನ್ನು ಓದಿ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್‌ಗೆ ${d} ಒಳಗೆ ತಿಳಿಸಿ. ಕ್ಯಾಲೆಂಡರ್‌ಗೆ ಎರಡು ಜ್ಞಾಪನೆಗಳನ್ನೂ ಸೇರಿಸಬಹುದು.`,
+    done: (d) => `ನಿಮ್ಮ ದೂರು ಪರದೆಯ ಮೇಲೆ ಸಿದ್ಧವಾಗಿದೆ. ಈಗಲೇ 1930ಗೆ ಕರೆ ಮಾಡಿ ಇದನ್ನು ಓದಿ. ನಿಮ್ಮ ಬ್ಯಾಂಕ್‌ಗೆ ${d} ಒಳಗೆ ತಿಳಿಸಿ. ಕ್ಯಾಲೆಂಡರ್‌ಗೆ ಮೂರು ಜ್ಞಾಪನೆಗಳನ್ನೂ ಸೇರಿಸಬಹುದು.`,
   },
 };
 

@@ -10,7 +10,7 @@ import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
-  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; bankLine?: { bank: string; phone: string; source: string } | null; portalSheet?: string; nextSteps?: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
+  | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; bankLine?: { bank: string; phone: string; source: string } | null; portalSheet?: string; nextSteps?: string; ombudsmanDraft?: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
 type EmailState = { id: string; at: string } | { problem: string } | null;
@@ -564,12 +564,13 @@ function PackView({
             className="up-link pk-remind font-semibold"
             data-testid="reminders"
           >
-            Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
+            Add 3 reminders to my calendar (the bank deadline, the RBI 10-working-day credit date, and day 30: did the bank reply?)
           </a>
         </div>
         {(pack.portalSheet || pack.nextSteps) && <p className="pk-group">If you need more</p>}
         {pack.portalSheet && <PackItem n={5} title="Filing online yourself? Every field in the portal's order" text={pack.portalSheet} />}
         {pack.nextSteps && <PackItem n={6} title="If the bank doesn't fix it: the next three steps" text={pack.nextSteps} />}
+        {pack.ombudsmanDraft && <PackItem n={7} title="Day 30, if the bank hasn't replied: your RBI Ombudsman complaint, ready to paste" text={pack.ombudsmanDraft} />}
       </div>
       <div className="pk-actions">
         <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost up-btn--sm">

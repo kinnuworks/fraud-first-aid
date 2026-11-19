@@ -25,3 +25,13 @@ describe('reminderIcs escaping', () => {
     expect(ics).not.toMatch(/[^\r]\r(?!\n)/);
   });
 });
+
+describe('reminderIcs: the day-30 check-in', () => {
+  it('reminds on day 30 to check the bank replied, and points to the Ombudsman draft', () => {
+    const ics = reminderIcs({ utr: '402177889910', amount: 25000, reportedOn: '2026-11-19', bank: 'State Bank of India' });
+    // 19 Nov 2026 + 30 days = 19 Dec 2026 (the RBI Ombudsman can take it if the bank hasn't replied in 30 days)
+    expect(ics).toContain('DTSTART;VALUE=DATE:20261219');
+    expect(ics).toMatch(/Did State Bank of India reply/);
+    expect(ics).toMatch(/cms\.rbi\.org\.in/);
+  });
+});

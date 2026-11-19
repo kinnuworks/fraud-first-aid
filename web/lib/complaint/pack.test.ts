@@ -87,5 +87,13 @@ describe('pack: bank fraud line, portal sheet and next steps', () => {
     expect(p.nextSteps).toMatch(/cms\.rbi\.org\.in/);
     expect(p.nextSteps).toMatch(/14448/);
     expect(p.nextSteps).toMatch(/KYC and Payment related/);
+    // ready for day 30: the Ombudsman complaint, filled in from the confirmed details
+    expect(p.ombudsmanDraft).toMatch(/cms\.rbi\.org\.in/);
+    expect(p.ombudsmanDraft).toMatch(/State Bank of India, BANGALORE \(SBIN0000813\)/);
+    expect(p.ombudsmanDraft).toMatch(/402177889910/);
+    expect(p.ombudsmanDraft).toMatch(/Rs 25,000/);
+    expect(p.ombudsmanDraft).toMatch(/2026-11-19/);
+    expect(p.ombudsmanDraft).toMatch(/RBI\/2017-18\/15/);
+    expect(p.ombudsmanDraft).toMatch(/2026-12-19/);
   });
 });

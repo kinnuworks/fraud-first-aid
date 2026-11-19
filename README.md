@@ -9,7 +9,7 @@ What it does for you:
 1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (It caught 40 of 40 scam requests in our own guard break test, after three fixes.)
 2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (295 of 300 spoken numbers exact in noise in our own break test; 207 of 330 on public speech against 114 for the speech-to-text alone.)
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
-4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, two calendar reminders, and the Ombudsman and Chakshu steps. It emails the pack once you say yes, and your family can listen to the call live.
+4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?), an RBI Ombudsman complaint ready for that day, and the Chakshu step. It emails the pack once you say yes, and your family can listen to the call live.
 
 A fast report is what gets the money back. A 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru got ₹14 lakh back, both because 1930 heard within hours ([cases below](#why-this-matters)).
 
@@ -27,7 +27,7 @@ It runs on Agora's Conversational AI Engine because the job is a live conversati
 
 1. Open https://utr-pakka.vercel.app on a laptop or phone, pick a language, press **Start talking** and allow the microphone.
 2. Say what happened, then a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
-3. Listen to the read-back, say "the second group is wrong" and correct it. The card fills in and ticks each confirmed field; when all five are confirmed, the 1930 script, the bank letter, an English card for the 1930 operator and two calendar reminders appear.
+3. Listen to the read-back, say "the second group is wrong" and correct it. The card fills in and ticks each confirmed field; when all five are confirmed, the 1930 script, the bank letter, an English card for the 1930 operator, three calendar reminders and a ready RBI Ombudsman complaint appear.
 
 Or press "A scam call is happening? Let UTR Pakka listen", then "Play a sample scam call": it stays silent through the small talk and warns in Telugu the moment the caller asks for the OTP.
 
@@ -80,7 +80,7 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 3. Numbers in ten languages. Digits said one by one, in pairs ("ninety-eight"), with "double"/"triple", or as hundreds and thousands (నాలుగు వేల ఎనిమిది వందల తొంభై రెండు → 4892) become exact digits. Code and tests: [`web/lib/entities/numbers.ts`](web/lib/entities/numbers.ts).
 4. Confirm. Every number is read back in groups of four in the caller's language. "The second group is wrong" re-asks only that group. Nothing counts until the caller says yes. Code: [`web/lib/complaint/session.ts`](web/lib/complaint/session.ts).
 5. Second source. The caller can add the payment screenshot. An AI model reads the UTR, amount, payee and time from it, and each field is compared with what they said; a mismatch is read back with the exact group that differs. Code: [`web/lib/complaint/screenshot.ts`](web/lib/complaint/screenshot.ts), [`web/lib/complaint/vision.ts`](web/lib/complaint/vision.ts).
-6. Act. The IFSC code is looked up on the public Razorpay IFSC API; the RBI 3- and 7-working-day deadlines are computed (Sundays and 2nd/4th Saturdays skipped); the pack is built: a script for the 1930 call in the caller's language, a dispute letter for the bank, an English card for the 1930 operator, two calendar reminders from the RBI rules, a one-tap Call 1930, and buttons to send the pack to family on WhatsApp or email the letter to the bank. Code: [`web/lib/complaint/ifsc.ts`](web/lib/complaint/ifsc.ts), [`web/lib/complaint/deadline.ts`](web/lib/complaint/deadline.ts), [`web/lib/complaint/pack.ts`](web/lib/complaint/pack.ts).
+6. Act. The IFSC code is looked up on the public Razorpay IFSC API; the RBI 3- and 7-working-day deadlines are computed (Sundays and 2nd/4th Saturdays skipped); the pack is built: a script for the 1930 call in the caller's language, a dispute letter for the bank, an English card for the 1930 operator, three calendar reminders (two from the RBI rules, and day 30 to check the bank replied) with the RBI Ombudsman complaint ready, a one-tap Call 1930, and buttons to send the pack to family on WhatsApp or email the letter to the bank. Code: [`web/lib/complaint/ifsc.ts`](web/lib/complaint/ifsc.ts), [`web/lib/complaint/deadline.ts`](web/lib/complaint/deadline.ts), [`web/lib/complaint/pack.ts`](web/lib/complaint/pack.ts).
 
 ### How fast it answers
 
