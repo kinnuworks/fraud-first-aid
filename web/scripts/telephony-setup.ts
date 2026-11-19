@@ -5,8 +5,10 @@
 // Run: set -a && . ./.env.local && set +a && npx -y tsx@4.20.6 scripts/telephony-setup.ts
 import { appendFileSync } from 'fs';
 import { randomBytes } from 'crypto';
-import { AgoraClient, Area, generateConvoAIToken } from 'agora-agents';
+import { AgoraClient, Area } from 'agora-agents';
 
+// Twilio's SIP signalling ranges (current block plus the long-standing regional ones), allowed inbound.
+const TWILIO_SIGNALING = ['168.86.128.0/18', '54.172.60.0/30', '54.244.51.0/30', '54.171.127.192/30', '35.156.191.128/30', '54.65.63.192/30', '54.169.127.128/30', '54.252.254.64/30', '177.71.206.192/30'];
 const env = (k: string) => { const v = process.env[k]; if (!v) throw new Error(`${k} must be set`); return v; };
 const SID = env('TWILIO_ACCOUNT_SID'), TOK = env('TWILIO_AUTH_TOKEN'), NUMBER = env('TWILIO_PHONE_NUMBER').replace(/\s/g, '');
 const auth = 'Basic ' + Buffer.from(`${SID}:${TOK}`).toString('base64');
@@ -50,13 +52,12 @@ async function tw(method: string, url: string, form?: Record<string, string>) {
   console.log('number attached to trunk');
   // Agora: register the number for outbound calls through the trunk
   const appId = env('NEXT_PUBLIC_AGORA_APP_ID'), appCertificate = env('NEXT_AGORA_APP_CERTIFICATE');
-  const authToken = generateConvoAIToken({ appId, appCertificate, channelName: 'utr-pakka-admin', uid: 0, tokenExpire: 3600 });
-  const agora = new AgoraClient({ area: Area.US, appId, appCertificate, authToken } as never);
+  const agora = new AgoraClient({ area: Area.US, appId, appCertificate, customerId: env('AGORA_CUSTOMER_ID'), customerSecret: env('AGORA_CUSTOMER_SECRET') });
   const existing = await (agora as any).phoneNumbers.list().catch((e: Error) => ({ error: e.message }));
   console.log('agora numbers before:', JSON.stringify(existing).slice(0, 200).replace(/[A-Za-z0-9]{16,}:[^@"]+@/g, '***@'));
   const has = Array.isArray(existing) ? existing.some((n: any) => n.phone_number === NUMBER) : JSON.stringify(existing).includes(NUMBER);
   if (!has) {
-    const r = await (agora as any).phoneNumbers.add({ provider: 'byo', phone_number: NUMBER, label: 'utr-pakka', inbound: false, outbound: true, inbound_config: {}, outbound_config: { address: `${user}:${pass}@${trunk.domain_name}`, transport: 'tcp' } });
+    const r = await (agora as any).phoneNumbers.add({ provider: 'byo', phone_number: NUMBER, label: 'utr-pakka', inbound: false, outbound: true, inbound_config: { allowed_addresses: TWILIO_SIGNALING }, outbound_config: { address: `${user}:${pass}@${trunk.domain_name}`, transport: 'tcp' } });
     console.log('agora number added:', JSON.stringify(r).replace(/:[^:@"]+@/g, ':***@').slice(0, 200));
   } else console.log('agora number already registered');
 })().catch((e) => { console.error('SETUP FAILED:', String(e.message ?? e).replace(/:[^:@"\s]+@/g, ':***@')); process.exit(1); });
