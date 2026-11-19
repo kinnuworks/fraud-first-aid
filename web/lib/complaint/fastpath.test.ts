@@ -128,3 +128,37 @@ describe('followLanguage (auto mode)', () => {
     expect(fixed.lang).toBe('kn');
   });
 });
+
+describe('fast payee and bank', () => {
+  const ready = () => {
+    const c = newComplaint('te');
+    c.fields.utr = { value: '402177889910', confirmed: true };
+    c.fields.amount = { value: 25000, confirmed: true };
+    c.fields.when = { value: '2026-11-19T14:30', confirmed: true };
+    return c;
+  };
+  it('records a spoken UPI ID when the payee is next, and reads it back', () => {
+    const c = ready();
+    const say = complaintShortcut(c, 'డబ్బు ramesh at okaxis కి వెళ్ళింది.');
+    expect(c.fields.payee).toEqual({ value: 'ramesh@okaxis', confirmed: false });
+    expect(say).toContain('ramesh@okaxis');
+    expect(c.pending).toBe('payee');
+  });
+  it('records a known bank in any script when the bank is next', () => {
+    const c = ready();
+    c.fields.payee = { value: 'ramesh@okaxis', confirmed: true };
+    complaintShortcut(c, 'నా బ్యాంక్ స్టేట్ బ్యాంక్ ఆఫ్ ఇండియా.');
+    expect(c.fields.victim_bank).toEqual({ value: 'State Bank of India', confirmed: false });
+    const h = ready();
+    h.lang = 'hi';
+    h.fields.payee = { value: 'x@ybl', confirmed: true };
+    complaintShortcut(h, 'मेरा बैंक एचडीएफसी है');
+    expect(h.fields.victim_bank?.value).toBe('HDFC Bank');
+  });
+  it('leaves an unknown bank or unclear payee to the model', () => {
+    const c = ready();
+    expect(complaintShortcut(c, 'ramesh ki taraf gaya')).toBeNull();
+    c.fields.payee = { value: 'x@ybl', confirmed: true };
+    expect(complaintShortcut(c, 'my cooperative society bank')).toBeNull();
+  });
+});

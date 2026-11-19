@@ -12,6 +12,7 @@ const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
 const HERE = new URL('.', import.meta.url).pathname;
 const OUT = new URL('../../evidence/.cache/demo-full/', import.meta.url).pathname;
 mkdirSync(OUT, { recursive: true });
+const lat: Array<{ clip: string; ttlw?: number; ttfs?: number; ttfb?: number }> = [];
 const log = (m: string) => console.log(`[${new Date().toISOString().slice(11, 19)}] ${m}`);
 
 async function idle(page: Page, ms = 45000) {
@@ -34,6 +35,10 @@ const play = async (page: Page, clip: string) => {
   log(`play ${clip}`);
   await page.evaluate((u) => (window as unknown as { __utrPakkaPlay: (u: string) => Promise<void> }).__utrPakkaPlay(u), `/demo/${clip}.wav`);
   await idle(page);
+  // Agora's live pipeline metrics for this turn, as shown in the call screen's pipeline bar
+  const bar = (await page.locator('header, [class*=pipe]').first().innerText().catch(() => '')) || '';
+  const n = (k: string) => { const m = bar.match(new RegExp(`${k}\\s*(\\d+)\\s*ms`)); return m ? Number(m[1]) : undefined; };
+  lat.push({ clip, ttlw: n('ttlw'), ttfs: n('ttfs'), ttfb: n('ttfb') });
 };
 
 (async () => {
@@ -88,6 +93,9 @@ const play = async (page: Page, clip: string) => {
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});
   await ctx.close();
   log(`video: ${await page.video()?.path()}`);
+  const { writeFileSync } = await import('fs');
+  writeFileSync(`${OUT}latency.csv`, ['clip,trace,ttlw_ms,ttfs_ms,ttfb_ms', ...lat.map((r, i) => `${r.clip},${i},${r.ttlw ?? ''},${r.ttfs ?? ''},${r.ttfb ?? ''}`)].join('\n') + '\n');
+  for (const r of lat) log(`  latency ${r.clip}: stt ${r.ttlw ?? '-'} ms, model ${r.ttfs ?? '-'} ms, voice ${r.ttfb ?? '-'} ms`);
   await browser.close();
   process.exit(packed ? 0 : 1);
 })();

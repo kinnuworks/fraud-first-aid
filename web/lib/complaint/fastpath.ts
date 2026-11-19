@@ -3,8 +3,8 @@
 // next question, without waiting for the model. Everything else (no, corrections, the story,
 // other languages) goes to the model.
 import { spokenToDigits, readbackText, type ReadbackLang } from '../entities/numbers';
-import { isUtr } from './fields';
-import { REQUIRED, recordNumber, recordDigits, confirmField, deadlines, type Complaint, type FieldName } from './session';
+import { isUtr, isMobile } from './fields';
+import { REQUIRED, recordNumber, recordDigits, recordUpi, recordText, confirmField, deadlines, type Complaint, type FieldName } from './session';
 import { istToday } from './today';
 import { LOSS } from './redflags';
 import { parseAmount } from './fields';
@@ -37,6 +37,26 @@ const P: Record<Lang, { heard: string; isRight: string; thanks: string; rupees: 
 };
 
 const SILENT = '<silent>';
+
+// Major banks as callers say them, in English and in the scripts Sarvam writes.
+const BANKS: Array<[string, RegExp]> = [
+  ['State Bank of India', /state bank|\bsbi\b|स्टेट बैंक|स्टेट बँक|స్టేట్ బ్యాంక్|ಸ್ಟೇಟ್ ಬ್ಯಾಂಕ್|எஸ்பிஐ|ஸ்டேட் பேங்க்/i],
+  ['HDFC Bank', /hdfc|एचडीएफसी|హెచ్‌?డీఎఫ్‌?సీ|ಎಚ್‌?ಡಿಎಫ್‌?ಸಿ/i],
+  ['ICICI Bank', /icici|आईसीआईसीआई|ఐసీఐసీఐ|ಐಸಿಐಸಿಐ/i],
+  ['Axis Bank', /axis|एक्सिस|యాక్సిస్|ಆಕ್ಸಿಸ್/i],
+  ['Kotak Mahindra Bank', /kotak|कोटक|కోటక్|ಕೋಟಕ್/i],
+  ['Canara Bank', /canara|केनरा|కెనరా|ಕೆನರಾ/i],
+  ['Punjab National Bank', /punjab national|\bpnb\b|पंजाब नेशनल/i],
+  ['Bank of Baroda', /baroda|बड़ौदा|बडौदा|బరోడా|ಬರೋಡಾ/i],
+  ['Union Bank of India', /union bank|यूनियन बैंक|యూనియన్ బ్యాంక్|ಯೂನಿಯನ್ ಬ್ಯಾಂಕ್/i],
+  ['Bank of India', /bank of india|बैंक ऑफ इंडिया/i],
+  ['Yes Bank', /yes bank|यस बैंक|యెస్ బ్యాంక్/i],
+  ['IndusInd Bank', /indusind|इंडसइंड/i],
+  ['IDFC First Bank', /idfc/i],
+];
+const matchBank = (t: string) => BANKS.find(([, re]) => re.test(t))?.[0] ?? null;
+// "ramesh at okaxis" / "ramesh@okaxis" anywhere in a code-mixed sentence
+const UPI_IN_TEXT = /([a-z0-9][a-z0-9._-]{1,})\s*(?:@|\bat the rate(?: of)?\b|\bat\b)\s*([a-z][a-z0-9]{1,})/i;
 // Amounts and money words: digits here are not a UTR being dictated.
 const NOT_DICTATION = /thousand|hundred|lakh|crore|rupee|\brs\b|₹|हज़ार|हजार|सौ|लाख|रुपय|रुपए|వేల|వేలు|వంద|లక్ష|రూపాయ|ಸಾವಿರ|ನೂರು|ಲಕ್ಷ|ರೂಪಾಯ/i;
 const YES = /^(yes|yeah|yep|correct|right|that'?s right|ha+n?|haan ji|ji haan|sahi|sahi hai|हाँ|हां|जी|सही|ठीक|అవును|ఔను|సరే|సరిగ్గా|కరెక్ట్|ಹೌದು|ಸರಿ)/i;
@@ -108,6 +128,19 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
     const have = c.digitBuffer;
     c.digitBuffer = '';
     return SHORT[lang](have.length, readbackText(have, c.lang as ReadbackLang));
+  }
+  const needed = REQUIRED.find((f) => !c.fields[f]);
+  // The payee, when it is the next thing we need: a UPI ID or a 10-digit mobile.
+  if (needed === 'payee' && c.fields.utr?.confirmed) {
+    const m = t.match(UPI_IN_TEXT);
+    if (m && recordUpi(c, `${m[1]} at ${m[2]}`).ok) return say(c, 'payee', lang);
+    const d = spokenToDigits(t);
+    if (isMobile(d) && recordDigits(c, 'payee', d).ok) return say(c, 'payee', lang);
+  }
+  // The caller's bank, when it is next: a major bank named in any script.
+  if (needed === 'victim_bank' && c.fields.utr?.confirmed) {
+    const b = matchBank(t);
+    if (b && recordText(c, 'victim_bank', b).ok) return say(c, 'victim_bank', lang);
   }
   // A spoken UTR while we still need one.
   if (!NO.test(t) && !c.fields.utr?.confirmed) {
