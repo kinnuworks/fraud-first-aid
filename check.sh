@@ -12,6 +12,9 @@ cd "$(dirname "$0")"
 # Real external API the agent calls: IFSC -> bank branch (public, no key).
 curl -sf -m 15 https://ifsc.razorpay.com/SBIN0000813 | grep -q '"BANK":"State Bank of India"' \
   || { echo "check.sh: live IFSC API check failed"; exit 1; }
+# Accessibility of the live screens (axe-core, WCAG 2.1 AA): no serious or critical rule.
+(cd web && npx -y tsx@4.20.6 scripts/a11y-check.ts >/dev/null 2>&1) \
+  || { echo "check.sh: accessibility check failed (run: cd web && npx -y tsx@4.20.6 scripts/a11y-check.ts)"; exit 1; }
 
 # For example:
 # npm run typecheck
@@ -24,4 +27,4 @@ if [ -f evidence/EVAL_PLAN.md ] && [ -f evidence_lint.py ]; then
   python3 -I evidence_lint.py
 fi
 
-echo "check.sh: web typecheck, unit tests and live IFSC API check passed"
+echo "check.sh: web typecheck, unit tests, live IFSC API and accessibility checks passed"
