@@ -3,10 +3,10 @@ import { reminderIcs } from './reminder';
 
 describe('reminderIcs', () => {
   const ics = reminderIcs({ utr: '402177889910', amount: 25000, reportedOn: '2026-11-19', bank: 'State Bank of India' });
-  it('is a calendar file with two all-day reminders and alarms', () => {
+  it('is a calendar file with three all-day reminders and alarms', () => {
     expect(ics.startsWith('BEGIN:VCALENDAR\r\n')).toBe(true);
-    expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(2);
-    expect(ics.match(/BEGIN:VALARM/g)).toHaveLength(2);
+    expect(ics.match(/BEGIN:VEVENT/g)).toHaveLength(3);
+    expect(ics.match(/BEGIN:VALARM/g)).toHaveLength(3);
     expect(ics.trimEnd().endsWith('END:VCALENDAR')).toBe(true);
   });
   it('puts the zero-liability day and the 10-working-day refund window on the right dates', () => {
@@ -21,7 +21,7 @@ describe('reminderIcs', () => {
 describe('reminderIcs escaping', () => {
   it('cannot be broken by a carriage return or control characters in the bank name', () => {
     const ics = reminderIcs({ utr: '402177889910', amount: 1, reportedOn: '2026-11-19', bank: 'Evil\rBEGIN:VEVENT\u0007' });
-    expect(ics.split('\r\n').filter((l) => l === 'BEGIN:VEVENT')).toHaveLength(2);
+    expect(ics.split('\r\n').filter((l) => l === 'BEGIN:VEVENT')).toHaveLength(3);
     expect(ics).not.toMatch(/[^\r]\r(?!\n)/);
   });
 });
