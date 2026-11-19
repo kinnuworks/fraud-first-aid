@@ -92,7 +92,7 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
   const flagFor = (text: string) => c.flags.find((x) => x.heard && text.startsWith(x.heard.slice(0, 80)));
   const callRecord = c.heard?.length
     ? [
-        `The scam call, as UTR Pakka heard it on speaker (India time, ${c.heard[0].at.slice(0, 10)}). Both sides of the call are in one stream.`,
+        `The scam call, as Fraud First Aid heard it on speaker (India time, ${c.heard[0].at.slice(0, 10)}). Both sides of the call are in one stream.`,
         ...c.heard.map((h) => {
           const fl = flagFor(h.text);
           return `${h.at.slice(11, 19)}  ${fl ? `RED FLAG (${fl.red_flag}): ` : ''}${h.text}`;
@@ -100,7 +100,7 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
       ].join('\n')
     : '';
   const operatorCard = [
-    'UPI fraud report, prepared by voice (UTR Pakka)',
+    'UPI fraud report, prepared by voice (Fraud First Aid)',
     `Caller language: ${LANG_NAME[c.lang]}`,
     `UTR: ${f.utr.value.replace(/(\d{4})(?=\d)/g, '$1 ')} (confirmed by caller${c.shot?.utr === f.utr.value ? ', matches payment screenshot' : ''})`,
     `Amount: Rs ${inr(f.amount.value)}`,

@@ -34,7 +34,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'UTR Pakka: your UPI fraud complaint, spoken',
+  title: 'Fraud First Aid: the first hour of a UPI fraud, in your language',
   description:
     'Tell a voice agent what happened in Telugu, Hindi, Kannada or seven more languages. It reads your 12-digit UTR back in groups of four and builds the 1930 script and bank letter.',
   icons: {

@@ -556,12 +556,12 @@ function PackView({
         <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
         <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
         <PackItem n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
-        {pack.callRecord && <PackItem n={4} title="The scam call as UTR Pakka heard it, with the red flags marked (evidence for 1930 and the cyber cell)" text={pack.callRecord} />}
+        {pack.callRecord && <PackItem n={4} title="The scam call as Fraud First Aid heard it, with the red flags marked (evidence for 1930 and the cyber cell)" text={pack.callRecord} />}
         <div className="flex items-center gap-[14px] py-[14px]">
           <span className="pk-num">{pack.callRecord ? 5 : 4}</span>
           <a
             href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
-            download="utr-pakka-reminders.ics"
+            download="fraud-first-aid-reminders.ics"
             className="up-link pk-remind font-semibold"
             data-testid="reminders"
           >

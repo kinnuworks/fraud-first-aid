@@ -73,7 +73,7 @@ export function ListenLive({ session, viewKey }: { session: string; viewKey: str
                 : 'You are listening. You cannot be heard.'
             : state === 'error'
               ? 'Could not join the call audio.'
-              : 'Hear your family member and UTR Pakka. Your microphone stays off until you choose to talk.'}
+              : 'Hear your family member and Fraud First Aid. Your microphone stays off until you choose to talk.'}
         </p>
       </div>
       {state === 'on' ? (

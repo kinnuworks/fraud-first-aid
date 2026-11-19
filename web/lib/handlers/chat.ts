@@ -51,7 +51,7 @@ export const POST = createLlmRoute({
   onReply: (session, spoken, lastUser) => {
     const c = getComplaint(session);
     // only a reply that tells them to hang up counts as a warning (not an answer to a question)
-    if (c.phase === 'guard' && c.flags.length === 0 && saysHangUp(spoken)) addFlag(c, 'suspicious_call', 'pushed for action on the call, and UTR Pakka told the user to hang up', lastUser);
+    if (c.phase === 'guard' && c.flags.length === 0 && saysHangUp(spoken)) addFlag(c, 'suspicious_call', 'pushed for action on the call, and Fraud First Aid told the user to hang up', lastUser);
   },
   onMarker: (session, id, detail, lastUser) => {
     addFlag(getComplaint(session), id, detail, lastUser);

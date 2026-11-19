@@ -1,4 +1,4 @@
-// POST /api/call/phone?session=&cap=  {to, lang, mode}: UTR Pakka rings the caller's Indian mobile
+// POST /api/call/phone?session=&cap=  {to, lang, mode}: Fraud First Aid rings the caller's Indian mobile
 // through Agora telephony (Twilio SIP trunk) and runs the same agent and complaint tools as the
 // web call; the browser follows the call live on the complaint card.
 import { NextRequest, NextResponse } from 'next/server';
@@ -64,7 +64,7 @@ export async function POST(request: NextRequest) {
     const rtc_token = generateRtcToken({ appId, appCertificate, channel, uid: SIP_UID, expirySeconds: 1200 });
     const r = await client.telephony.call({
       appid: appId,
-      name: `utrpakka-${channel.slice(-12)}`,
+      name: `firstaid-${channel.slice(-12)}`,
       sip: { to_number: to, from_number: from, rtc_uid: String(SIP_UID), rtc_token },
       properties,
     } as never);

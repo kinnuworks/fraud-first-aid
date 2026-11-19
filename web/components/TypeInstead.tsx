@@ -41,7 +41,7 @@ export function TypeInstead({ agentUid }: { agentUid: string }) {
         </button>
       </div>
       <span role="status" className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }}>
-        {state === 'error' ? 'Could not send. Try again, or speak.' : state === 'sent' ? 'Sent. UTR Pakka will answer aloud.' : ''}
+        {state === 'error' ? 'Could not send. Try again, or speak.' : state === 'sent' ? 'Sent. Fraud First Aid will answer aloud.' : ''}
       </span>
     </form>
   );

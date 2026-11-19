@@ -1,5 +1,5 @@
 'use client';
-// "Or let UTR Pakka call your phone": rings the caller's Indian mobile and opens the live card.
+// "Or let Fraud First Aid call your phone": rings the caller's Indian mobile and opens the live card.
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 
@@ -25,7 +25,7 @@ export function PhoneCallStart() {
   return (
     <form onSubmit={call} className="flex flex-wrap items-center gap-2" data-testid="phone-call">
       <label htmlFor="phone-to" className="text-[0.9375rem]" style={{ color: 'var(--ink-2)' }}>
-        Or let UTR Pakka call your phone:
+        Or let Fraud First Aid call your phone:
       </label>
       <input
         id="phone-to"

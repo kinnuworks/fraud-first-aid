@@ -79,7 +79,7 @@ export function StatePreview({ state }: { state: string }) {
             {guard && (
               <section>
                 <p className="up-note text-[1rem]">
-                  On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the moment
+                  On guard: put the suspicious call on speaker near this device. Fraud First Aid stays quiet and speaks up the moment
                   the caller asks for an OTP, a PIN, a QR scan, an app install or money.
                 </p>
               </section>

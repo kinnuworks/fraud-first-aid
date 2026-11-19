@@ -19,7 +19,7 @@ const esc = (t: string) =>
 function event(uid: string, date: string, summary: string, description: string): string[] {
   return [
     'BEGIN:VEVENT',
-    `UID:${uid}@utr-pakka`,
+    `UID:${uid}@fraud-first-aid`,
     `DTSTAMP:${day(date)}T000000Z`,
     `DTSTART;VALUE=DATE:${day(date)}`,
     `SUMMARY:${esc(summary)}`,
@@ -41,7 +41,7 @@ export function reminderIcs({ utr, amount, reportedOn, bank, debitOn, ombudsman 
   return [
     'BEGIN:VCALENDAR',
     'VERSION:2.0',
-    'PRODID:-//UTR Pakka//complaint reminders//EN',
+    'PRODID:-//Fraud First Aid//complaint reminders//EN',
     ...event(`zero-${utr}`, zero, `Last day: make sure ${bank} has your fraud complaint (UTR ${u})`, `RBI: zero liability if the bank is told within 3 working days. UPI fraud of ${rs}, UTR ${u}. If you haven't, call your bank and 1930 today.`),
     ...event(`credit-${utr}`, credit, `${bank} should have credited ${rs} back (UTR ${u})`, `RBI: the bank credits the amount within 10 working days of your notice. If it hasn't, escalate to the RBI Ombudsman at cms.rbi.org.in.`),
     ...event(`ombudsman-${utr}`, plusDays(reportedOn, 30), `Did ${bank} reply to your fraud complaint? (UTR ${u})`, `30 days since you reported the UPI fraud of ${rs}. If ${bank} hasn't replied, or said no, file with the RBI Ombudsman at cms.rbi.org.in (free; helpline 14448). ${ombudsman ? `The complaint, ready to paste:\n\n${ombudsman}` : ''}`),

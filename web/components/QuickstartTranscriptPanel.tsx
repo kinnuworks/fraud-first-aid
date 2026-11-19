@@ -68,7 +68,7 @@ export function QuickstartTranscriptPanel({
               <article key={`${message.turn_id ?? message.uid}-${index}`} className="tr-row" data-agent={isAgent ? '' : undefined}>
                 <span className="tr-time">{time ?? ''}</span>
                 <span>
-                  <span className="tr-who">{isAgent ? 'UTR Pakka' : userLabel}</span>
+                  <span className="tr-who">{isAgent ? 'Fraud First Aid' : userLabel}</span>
                   <span className="tr-text up-bubble">{text || '...'}</span>
                 </span>
               </article>

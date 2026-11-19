@@ -263,7 +263,7 @@ function Journey() {
   return (
     <section id="how" className="jr up-wrap" aria-labelledby="jr-title">
       <h2 id="jr-title" className="up-label">
-        What UTR Pakka does for you
+        What Fraud First Aid does for you
       </h2>
       <ol className="jr-grid">
         {JOURNEY.map(([k, outcome, proof], i) => (
@@ -317,7 +317,7 @@ function Below() {
           <li>Guard and number break tests: our own tests, described with their data in the README.</li>
         </ul>
         <p className="mt-6 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
-          UTR Pakka never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
+          Fraud First Aid never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
           cannot recover money.
         </p>
       </section>
@@ -325,12 +325,12 @@ function Below() {
   );
 }
 
-// 1930 exists, so what is this? The same call, alone and with UTR Pakka.
+// 1930 exists, so what is this? The same call, alone and with Fraud First Aid.
 function Compare() {
   return (
     <section className="cmp" aria-labelledby="cmp-title">
       <h2 id="cmp-title" className="up-h2">
-        1930 is the right number to call. UTR Pakka gets you ready for it.
+        1930 is the right number to call. Fraud First Aid gets you ready for it.
       </h2>
       <div className="cmp-grid">
         <div className="cmp-col">
@@ -342,7 +342,7 @@ function Compare() {
           </ul>
         </div>
         <div className="cmp-col cmp-col--us">
-          <p className="up-label">With UTR Pakka</p>
+          <p className="up-label">With Fraud First Aid</p>
           <ul>
             <li>You speak your own language, in ten Indian languages.</li>
             <li>Every digit is read back in groups of four until you confirm it.</li>
@@ -379,7 +379,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         </header>
         <section className="rc-hero">
           <div>
-            <p className="up-label">Voice AI for the first hour of a UPI fraud</p>
+            <p className="up-label">First aid for a UPI fraud: fast, and in your language</p>
             <h1 className="up-display" style={{ marginTop: 16 }}>
               Hang up before you pay. Get it frozen if you did.
             </h1>
@@ -388,7 +388,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
               <span className="rc-src"> Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
             </p>
             <p className="up-lead" style={{ marginTop: 14, maxWidth: '36rem' }}>
-              It listens to the scam call on speaker and warns you in your language. If the money&apos;s gone, it takes your
+              Like first aid, it has to be fast. It listens to the scam call on speaker and warns you in your language. If the money&apos;s gone, it takes your
               complaint by voice, reads every number back until you confirm it, and gets 1930 and your bank what they need
               within minutes.
             </p>
@@ -466,7 +466,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         <section className="mw" aria-label="More ways to try it">
           <MoreWays />
           <span className="fd-qr">
-            <Image src="/design/qr-live.svg" alt="QR code to open UTR Pakka on your phone" width={76} height={76} unoptimized />
+            <Image src="/design/qr-live.svg" alt="QR code to open Fraud First Aid on your phone" width={76} height={76} unoptimized />
             <span>
               Scan to try it
               <br />
