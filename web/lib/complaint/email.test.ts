@@ -26,7 +26,7 @@ describe('sendPackEmail', () => {
     expect(sent!.body.to).toEqual(['a.b@example.in']);
     expect(String(sent!.body.subject)).toContain('402177889910');
     expect(String(sent!.body.text)).toContain('script');
-    expect((sent!.body.attachments as Array<{ filename: string }>)[0].filename).toBe('utr-pakka-reminders.ics');
+    expect((sent!.body.attachments as Array<{ filename: string }>)[0].filename).toBe('fraud-first-aid-reminders.ics');
   });
 
   it('reports a refusal plainly and never throws', async () => {
