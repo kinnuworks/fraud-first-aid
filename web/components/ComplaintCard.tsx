@@ -264,6 +264,22 @@ function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
         <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost">
           Open cybercrime.gov.in to file yourself
         </a>
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(`${pack.script1930}\n\n${pack.operatorCard}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="up-btn up-btn--ghost"
+          data-testid="share-family"
+        >
+          Send to family on WhatsApp
+        </a>
+        <a
+          href={`mailto:?subject=${encodeURIComponent(pack.bankLetter.split('\n').find((l) => l.startsWith('Subject:'))?.slice(9) ?? 'Fraudulent UPI transaction')}&body=${encodeURIComponent(pack.bankLetter)}`}
+          className="up-btn up-btn--ghost"
+          data-testid="email-bank"
+        >
+          Email the letter to your bank
+        </a>
       </div>
       <p className="text-[1.0625rem]">
         Tell your bank by <strong className="up-num">{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
