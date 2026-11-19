@@ -114,7 +114,7 @@ Measured in one scripted run of the live app (19 Nov 2026, 11 turns, recorded vo
 | Reply (our route) | 151 to 323 ms | 3,247 to 3,575 ms |
 | Voice (Murf Falcon), first audio | 80 to 149 ms | 79 to 230 ms |
 
-Confirmations and numbers skip the model: our route answers them from the complaint's state, so the reply step takes 151 to 323 ms instead of more than 3 seconds. Rerun: `cd web && npx -y tsx@4.20.6 scripts/demo-full.ts`. Limits: one run, synthetic voices, the browser and not a phone line.
+Confirmations and numbers skip the model: our route answers them from the complaint's state, so the reply step takes 151 to 323 ms instead of more than 3 seconds. A second run on 20 Nov 2026, on the current build (13 turns, [results](evidence/results/latency-2026-11-20.csv)), came out alike: 198 to 339 ms for the turns that skip the model, 2,388 to 4,474 ms for the five that go through it, speech-to-text 174 to 353 ms and the voice's first audio 77 to 215 ms. Rerun: `cd web && npx -y tsx@4.20.6 scripts/demo-full.ts`. Limits: two runs, synthetic voices, the browser and not a phone line.
 
 ## How it uses Agora and Murf
 
