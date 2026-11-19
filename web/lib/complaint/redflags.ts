@@ -30,6 +30,14 @@ const SENT = String.raw`\b(i|we|i've|i have|maine|humne|already)\b[^.?!]{0,20}\b
 const INDIC = 'పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|भेज दिए|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು';
 export const LOSS = new RegExp(`${PAID}|${GONE}|${DEBITED}|${SENT}|${INDIC}`, 'i');
 
+// On guard, a payment alone ("I already paid the electricity bill", "maine 200 bhej diye") is
+// everyday life. A loss that should start a complaint at once also has a sign of fraud: money that
+// went without them, or a fraud word (ordinary-calls break test, 20 Nov).
+const WENT = String.raw`\b${MONEY}[^.?!]{0,40}\b(gone|lost|taken|chale? gay\w*|chala gaya|kat gay\w*)\b|\blost\b[^.?!]{0,30}${MONEY}`;
+const FRAUD = /scam|fraud|cheat|dhok|thag|fake|धोखा|ठग|మోస|ಮೋಸ|மோசடி|തട്ടിപ്പ്|প্রতারণা|फसवणूक|છેતરપિંડી|ਧੋਖਾ/i;
+const FRAUD_LOSS = new RegExp(`${WENT}|${DEBITED}|పోయాయి|పోయింది|కట్ అయ్యా|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು`, 'i');
+export const isFraudLoss = (t: string) => FRAUD_LOSS.test(t) || FRAUD.test(t) || detectRedFlag(t) !== null;
+
 // A scammer's line with a red flag ("we sent the OTP to your phone to credit the amount") is a
 // warning, not a loss, unless the money words are first person and past.
 const STRONG = new RegExp(`${PAID}|${GONE}|${DEBITED}|${INDIC}`, 'i');

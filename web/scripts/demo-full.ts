@@ -57,14 +57,16 @@ const play = async (page: Page, clip: string) => {
   log('scam warning given');
   await idle(page);
   await page.waitForTimeout(3000);
+  await page.screenshot({ path: `${OUT}1-guard-warned.png` });
 
   await play(page, 'victim-1-lost');
   await play(page, 'victim-2-utr');
+  await page.screenshot({ path: `${OUT}2-utr-read-back.png` });
   const input = page.locator('input[type=file]');
   if (await input.count()) {
     log('adding the payment screenshot');
     await input.setInputFiles(`${HERE}fixtures/sample-payment.png`);
-    await page.locator('[data-check="mismatch"]').waitFor({ timeout: 60000 }).then(() => log('mismatch shown on the card')).catch(() => log('no mismatch shown'));
+    await page.locator('[data-check="mismatch"]').waitFor({ timeout: 60000 }).then(async () => { log('mismatch shown on the card'); await page.waitForTimeout(1500); await page.screenshot({ path: `${OUT}3-screenshot-mismatch.png` }); }).catch(() => log('no mismatch shown'));
   } else log('no screenshot input (still on guard?)');
   await play(page, 'victim-3-screenshot-right');
   await play(page, 'victim-4-yes');

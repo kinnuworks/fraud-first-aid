@@ -181,3 +181,37 @@ describe('bank out of order', () => {
     expect(c.fields.victim_bank?.value).toBe('State Bank of India');
   });
 });
+
+// From the ordinary-calls break test, 20 Nov: on guard, a payment alone ("I already paid it
+// yesterday on PhonePe", "I transferred 15,000", "maine 200 rupaye bhej diye") is everyday life,
+// not a loss. It hands over only with a sign of fraud: an earlier warning on this call, a red flag
+// or a fraud word in the line, or money that went without them (lost, gone, debited).
+describe('guardHandover: a payment alone is not a fraud', () => {
+  it('stays on guard for ordinary payments', async () => {
+    const { guardHandover } = await import('./fastpath');
+    for (const [lang, t] of [
+      ['en', 'Yes, I already paid it yesterday on PhonePe.'],
+      ['en', 'I transferred 15,000 this morning.'],
+      ['hi', 'Maine tumhe 200 rupaye bhej diye, chai ke.'],
+    ] as const) {
+      const c = newComplaint(lang, 'guard');
+      expect(guardHandover(c, t), t).toBeNull();
+      expect(c.phase, t).toBe('guard');
+    }
+  });
+  it('hands over once the call was already flagged', async () => {
+    const { guardHandover } = await import('./fastpath');
+    const c = newComplaint('en', 'guard');
+    c.flags.push({ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'tell me the OTP' });
+    guardHandover(c, 'I transferred 15,000 this morning.');
+    expect(c.phase).toBe('complaint');
+  });
+  it('hands over on a fraud word or money that went without them', async () => {
+    const { guardHandover } = await import('./fastpath');
+    for (const t of ['I paid 25,000 and now I think it was a scam', 'my money got deducted from my account', 'I lost 40,000 rupees', 'मेरे पैसे कट गए', 'maine 10,000 bhej diye, dhokha ho gaya']) {
+      const c = newComplaint('en', 'guard');
+      guardHandover(c, t);
+      expect(c.phase, t).toBe('complaint');
+    }
+  });
+});

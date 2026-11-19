@@ -6,7 +6,7 @@ import { spokenToDigits, readbackText, type ReadbackLang } from '../entities/num
 import { isUtr, isMobile } from './fields';
 import { REQUIRED, recordNumber, recordDigits, recordUpi, recordText, confirmField, deadlines, type Complaint, type FieldName } from './session';
 import { istToday } from './today';
-import { isLoss } from './redflags';
+import { isLoss, isFraudLoss } from './redflags';
 import { parseAmount } from './fields';
 import { scriptLang } from '../entities/script';
 
@@ -104,6 +104,8 @@ const SORRY: Record<Lang, string> = {
 // depend on the model), keeps their words and any amount, and asks for the UTR.
 export function guardHandover(c: Complaint, lastUser: string): string | null {
   if (c.phase !== 'guard' || !isLoss(lastUser)) return null;
+  // a payment alone is everyday life; hand over once there is a sign of fraud
+  if (c.flags.length === 0 && !isFraudLoss(lastUser)) return null;
   c.phase = 'complaint';
   c.story = { en: c.story?.en ?? 'Caller says money has already left their account.', words: lastUser.slice(0, 500) };
   const amt = parseAmount(lastUser);
