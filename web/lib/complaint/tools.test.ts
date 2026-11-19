@@ -105,3 +105,12 @@ describe('tool set by phase', () => {
     expect(Object.keys(complaintTools('g4', ''))).toContain('record_utr');
   });
 });
+
+describe('record_story', () => {
+  it("keeps the caller's first telling; later calls only refine the English summary", async () => {
+    startComplaint('st1', 'te');
+    await run(complaintTools('st1', 'KYC అని చెప్పి QR స్కాన్ చేయించారు').record_story, { summary_en: 'Fake KYC call, QR scan' });
+    await run(complaintTools('st1', 'UTR నంబర్').record_story, { summary_en: 'Fake KYC call; paid 25,000 by scanning a QR code' });
+    expect(peekComplaint('st1')?.story).toEqual({ en: 'Fake KYC call; paid 25,000 by scanning a QR code', words: 'KYC అని చెప్పి QR స్కాన్ చేయించారు' });
+  });
+});

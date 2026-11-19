@@ -71,7 +71,8 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       description: 'Record how the fraud happened, once they have told you: a one-line English summary for the helpline operator (scam type, what they were asked to do). Their own words are kept from their last turn.',
       inputSchema: z.object({ summary_en: z.string().max(300) }),
       execute: async ({ summary_en }) => {
-        c.story = { en: summary_en, words: lastUser.slice(0, 500) };
+        // the caller's first telling is kept; later calls refine only the English summary
+        c.story = { en: summary_en, words: c.story?.words || lastUser.slice(0, 500) };
         return { ok: true };
       },
     }),
