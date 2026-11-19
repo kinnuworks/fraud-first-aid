@@ -86,3 +86,30 @@ describe('logHeard', () => {
     expect(c.heard).toBeUndefined();
   });
 });
+
+// Privacy (20 Nov): the scam-call record must never keep an OTP, PIN or CVV a victim reads out.
+describe('logHeard redacts short codes', () => {
+  it('blanks 3 to 8 digit codes, spoken or written, and keeps 12-digit references and amounts with money words', async () => {
+    const { newComplaint, logHeard } = await import('./session');
+    const c = newComplaint('en', 'guard');
+    logHeard(c, 'okay the OTP is 482913');
+    logHeard(c, 'my pin is four eight two nine');
+    logHeard(c, 'the CVV is 123');
+    logHeard(c, 'send 5000 rupees to clear the case');
+    expect(c.heard!.map((h) => h.text)).toEqual([
+      'okay the OTP is [code removed]',
+      'my pin is [code removed]',
+      'the CVV is [code removed]',
+      'send 5000 rupees to clear the case',
+    ]);
+  });
+});
+
+describe('red flags and the victim\'s words are redacted too', () => {
+  it('a flag never stores the OTP it heard', async () => {
+    const { newComplaint, addFlag } = await import('./session');
+    const c = newComplaint('en', 'guard');
+    addFlag(c, 'vishing_otp', 'asked for the OTP', 'sir the OTP is 482913, tell me');
+    expect(c.flags[0].heard).toBe('sir the OTP is [code removed], tell me');
+  });
+});

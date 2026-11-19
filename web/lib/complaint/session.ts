@@ -48,8 +48,41 @@ export const newComplaint = (lang: ReadbackLang, phase: Phase = 'complaint'): Co
 
 // Keep what was heard on guard (the scam call itself), at most 60 lines of 300 characters, with
 // India time to the second. Nothing is kept once the call has become a complaint.
+// A code a victim might read out on the call (OTP, PIN, CVV) never goes into the record: any run of
+// 3 to 8 digits, written or spoken, is blanked when the line names a code, and a written 3 to 8 digit
+// run is blanked anyway unless a money word sits next to it. 12-digit references and amounts stay.
+const CODE_WORD = /\b(otp|pin|cvv|password|passcode|code)\b|ओटीपी|पिन|कोड|ఓటీపీ|పిన్|కోడ్|ಒಟಿಪಿ|ಪಿನ್|ಕೋಡ್/i;
+const MONEY_NEAR = /^(rs\.?|inr|₹|rupees?|rupay\w*|lakh|thousand|hazaar|रुपये|रुपए|రూపాయ\S*|ರೂಪಾಯ\S*)$/i;
+export function redactCodes(text: string): string {
+  const named = CODE_WORD.test(text);
+  const tokens = text.split(/(\s+)/);
+  const words = tokens.map((t, i) => (i % 2 ? null : t));
+  const digitsOf = (w: string | null) => (w ? spokenToDigits(w.replace(/[.,;:!?]+$/, '')) : '');
+  const out: string[] = [];
+  for (let i = 0; i < tokens.length; i++) {
+    const w = words[i];
+    if (w === null) { out.push(tokens[i]); continue; }
+    // a run of digit tokens (written digits or digit words) starting here
+    let j = i, run = '';
+    while (j < tokens.length && words[j] !== null && /^[^a-z]*\d|^[a-z\u0900-\u0dff]+[.,]?$/i.test(words[j]!) && digitsOf(words[j]) && /^\d+$/.test(digitsOf(words[j]))) { run += digitsOf(words[j]); j += 2; }
+    if (run.length >= 3 && run.length <= 8) {
+      const prev = words[i - 2] ?? '', next = words[j] ?? '';
+      const money = MONEY_NEAR.test(prev) || MONEY_NEAR.test(next.replace(/[.,]$/, ''));
+      const written = /\d/.test(words.slice(i, j).join(''));
+      if (named || (written && !money)) {
+        const tail = (words[j - 2] ?? '').match(/[.,;:!?]+$/)?.[0] ?? '';
+        out.push('[code removed]' + tail);
+        i = j - 2; // the loop's i++ lands on the space after the run
+        continue;
+      }
+    }
+    out.push(w);
+  }
+  return out.join('');
+}
+
 export function logHeard(c: Complaint, text: string, now: Date = new Date()): void {
-  const t = text.trim();
+  const t = redactCodes(text.trim());
   if (c.phase !== 'guard' || !t) return;
   const at = new Date(now.getTime() + 330 * 60000).toISOString().slice(0, 19);
   (c.heard ??= []).push({ at, text: t.slice(0, 300) });
@@ -171,6 +204,6 @@ export function addFlag(c: Complaint, scam: string, red_flag: string, heard: str
   // A warning the model gave under a name not in our list still reaches the card, once.
   if (!scamById(scam)) scam = 'suspicious_call';
   if (c.flags.some((f) => f.scam === scam)) return false;
-  c.flags.push({ scam, red_flag, heard: heard.slice(0, 300) });
+  c.flags.push({ scam, red_flag, heard: redactCodes(heard).slice(0, 300) });
   return true;
 }
