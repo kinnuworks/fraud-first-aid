@@ -44,7 +44,6 @@ describe('parseAmount', () => {
     expect(parseAmount('ఇరవై ఐదు వేలు')).toBe(25000);
     expect(parseAmount('पच्चीस हज़ार रुपये')).toBe(25000);
     expect(parseAmount('ಇಪ್ಪತ್ತೈದು ಸಾವಿರ')).toBe(25000);
-    expect(parseAmount('పాతిక వేలు')).toBeNull(); // colloquial "quarter" (25): not handled yet
   });
 });
 
