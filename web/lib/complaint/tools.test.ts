@@ -93,7 +93,8 @@ describe('addFlag', () => {
     addFlag(c, 'fake_kyc', 'asked for the OTP', 'OTP bata dijiye');
     addFlag(c, 'fake_kyc', 'threatened to block the account', 'block ho jayega');
     addFlag(c, 'not_a_scam_id', 'x', 'y');
-    expect(c.flags).toEqual([{ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'OTP bata dijiye' }]);
+    // an unknown id is kept once as a suspicious call (guard break test, 19 Nov: warnings were lost)
+    expect(c.flags).toEqual([{ scam: 'fake_kyc', red_flag: 'asked for the OTP', heard: 'OTP bata dijiye' }, { scam: 'suspicious_call', red_flag: 'x', heard: 'y' }]);
   });
 });
 
