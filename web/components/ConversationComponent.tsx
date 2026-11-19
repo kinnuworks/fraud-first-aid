@@ -528,7 +528,7 @@ export default function ConversationComponent({
         >
           <AgentVisualizer state={visualizerState} size="md" />
           {remoteUsers.map((user) => (
-            <div key={user.uid} className="hidden">
+            <div key={user.uid} className="hidden" data-remote-uid={String(user.uid)}>
               <RemoteUser user={user} />
             </div>
           ))}
