@@ -8,6 +8,10 @@ It runs on Agora's Conversational AI Engine because the job is a live conversati
 
 **Live:** https://utr-pakka.vercel.app
 
+![The live app, sped up 16 times: the scam warning, the UTR read back and confirmed, the complaint pack](docs/core-loop.gif)
+
+*The live app in one scripted run, sped up 16 times. The caller's voice is generated sample clips (an illustration), the app and its answers are real.*
+
 **Watch it work:** [a 4-minute screen recording of the live app](https://utr-pakka.vercel.app/demo/full-flow.mp4), start to finish in one call. The voices are generated samples (an illustration, no human speaking) and the recording has no audio track; the transcript on screen shows what was said. It shows the guard staying silent through the small talk and warning in Telugu at the KYC threat, the hand-over when the caller says money has gone, the UTR read back in groups of four, the screenshot catching a misremembered group, and the pack with Call 1930, the bank letter, the operator card and the reminders. The sample call is code-mixed the way real ones are: a Hindi-speaking caller, a Telugu-speaking victim, and English words like UTR, KYC and OTP in both.
 
 ### Try it in 30 seconds
