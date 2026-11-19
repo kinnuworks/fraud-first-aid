@@ -1,39 +1,48 @@
 # UTR Pakka
 
-**Get your money frozen in the first hour.** *Your UPI fraud complaint, spoken.*
+**Get your money frozen in the first hour.** A voice agent that stays with a UPI fraud victim through that hour, in their own language: it warns them during the scam call, and if the money has gone it takes the complaint by voice with every number right and gets them to 1930 and their bank within minutes.
 
-Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, and about ₹323 crore of it has been refunded (Home Ministry officials briefing the Prime Minister, [reported by Pratidin Time, 9 Jul 2026](https://www.pratidintime.com/national/rs-25000-cr-saved-via-e-zero-firs-pm-modi-briefed-12149338), and by the Indian Express). Money can still be frozen if 1930 hears fast and gets every detail exact. That has to happen in the first hour, when the victim is at their worst and may not think in English. UTR Pakka is a voice agent that stays with them through that hour, in Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati, Punjabi or English.
+It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person, in ten Indian languages, with a Murf Falcon voice that reads every number back.
 
-What it does for you:
-
-1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (Back-test on public data (ICFD-31k, synthetic scam calls, 2025): it warned in 133 of 200 conversations it was never tuned on, against 5 for keyword rules. Our own break test (we tried to make it fail): 40 of 40 scam requests caught, including ones that tried to talk it out of warning.)
-2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (Back-test on public data (FLEURS, Hindi, Telugu and Kannada read aloud, 2022): exact numbers in 207 of 330 sentences, 63%, against 114, 35%, for the speech-to-text alone; 211 of 330 through a phone codec.)
-3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
-4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?), an RBI Ombudsman complaint ready for that day, and the Chakshu step. It emails the pack once you say yes. One tap sends a family member a link that puts them on the call: they hear it, and they can talk to you while the agent keeps working.
-
-A fast report is what gets the money back. A 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru got ₹14 lakh back, both because 1930 heard within hours ([cases below](#why-this-matters)).
-
-It does not replace 1930 or file the complaint for you, and it can't recover money itself. It gets you to 1930 and your bank within minutes, with every number already right.
-
-It runs on Agora's Conversational AI Engine because the job is a live conversation with a frightened person: Sarvam speech-to-text in the caller's language, our model with its complaint tools, and a Murf Falcon voice that reads each number back, with Agora handling interruptions and turn-taking.
-
-**Live:** https://utr-pakka.vercel.app
+**Live: https://utr-pakka.vercel.app** · no sign-up · [try it in 30 seconds](#try-it-in-30-seconds)
 
 ![The live app, sped up 16 times: the scam warning, the UTR read back and confirmed, the complaint pack](docs/core-loop.gif)
 
-*The live app in one scripted run, sped up 16 times. The caller's voice is generated sample clips (an illustration), the app and its answers are real.*
+*The live app in one scripted run, sped up 16 times. The caller's voice is generated sample clips (an illustration); the app and its answers are real.*
 
-**Watch it work:** [a 4-minute screen recording of the live app](https://utr-pakka.vercel.app/demo/full-flow.mp4), start to finish in one call. The voices are generated samples (an illustration, no human speaking) and the recording has no audio track; the transcript on screen shows what was said. It shows the guard staying silent through the small talk and warning in Telugu at the KYC threat, the hand-over when the caller says money has gone, the UTR read back in groups of four, the screenshot catching a misremembered group, and the pack with Call 1930, the bank letter, the operator card and the reminders. The sample call is code-mixed the way real ones are: a Hindi-speaking caller, a Telugu-speaking victim, and English words like UTR, KYC and OTP in both.
+[![tests](https://github.com/kinnuworks/utr-pakka/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/utr-pakka/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py)
+
+Proof, checked on every push from the results files in this repo:
+- Back-test on public data (ICFD-31k, synthetic scam calls, 2025): it warned in 133 of 200 scam conversations it was never tuned on, against 5 for keyword rules alone.
+- Back-test on public data (FLEURS, Hindi, Telugu and Kannada read aloud, 2022): exact numbers in 207 of 330 sentences, 63%, against 114, 35%, for the speech-to-text alone; 211 of 330 through a phone codec.
+- Our own break test (we tried to make it fail): 40 of 40 scam requests caught, 24 of 24 ordinary calls left alone, 295 of 300 spoken numbers exact in noise.
+
+## What it does for you
+
+1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. Every line the scammer said is kept, with the red flags marked, as evidence for 1930.
+2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot.
+3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
+4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?) and an RBI Ombudsman complaint ready for that day. It emails the pack once you say yes. One tap brings a family member onto the call: they hear it, and they can talk to you while the agent keeps working.
+
+A fast report is what gets the money back. A 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru got ₹14 lakh back, both because 1930 heard within hours ([cases below](#why-this-matters)). Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, and about ₹323 crore of it has been refunded (Home Ministry officials briefing the Prime Minister, [reported by Pratidin Time, 9 Jul 2026](https://www.pratidintime.com/national/rs-25000-cr-saved-via-e-zero-firs-pm-modi-briefed-12149338), and by the Indian Express).
+
+It does not replace 1930 or file the complaint for you, and it can't recover money itself. It gets you to 1930 and your bank within minutes, with every number already right.
 
 ### Try it in 30 seconds
 
-1. Open https://utr-pakka.vercel.app on a laptop or phone, pick a language, press **Start talking** and allow the microphone.
-2. Say what happened, then a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
-3. Listen to the read-back, say "the second group is wrong" and correct it. The card fills in and ticks each confirmed field; when all five are confirmed, the 1930 script, the bank letter, an English card for the 1930 operator, three calendar reminders and a ready RBI Ombudsman complaint appear.
+1. Open https://utr-pakka.vercel.app on a laptop or phone, press **A scam call is happening? Let UTR Pakka listen**, then **Play a sample scam call**: it stays silent through the small talk and warns in Telugu the moment the caller asks for the OTP.
+2. Or pick a language, press **Start talking**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
+3. Say "the second group is wrong" when it reads the UTR back, and correct it. When all five details are confirmed, the pack appears.
 
-Or press "A scam call is happening? Let UTR Pakka listen", then "Play a sample scam call": it stays silent through the small talk and warns in Telugu the moment the caller asks for the OTP.
+To see every screen without talking: [`?state=complaint-done`](https://utr-pakka.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://utr-pakka.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://utr-pakka.vercel.app/demo/full-flow.mp4) shows one whole call (sample voices, no audio track).
 
-No account, no sign-up. To see every screen without talking: [`?state=complaint-done`](https://utr-pakka.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://utr-pakka.vercel.app/?state=complaint-mismatch) (sample data, labelled as such).
+### Read the code: five files
+
+- [`web/lib/complaint/redflags.ts`](web/lib/complaint/redflags.ts): the guard's red flags and when money counts as gone
+- [`web/lib/entities/numbers.ts`](web/lib/entities/numbers.ts): spoken numbers in ten languages to exact digits
+- [`web/lib/complaint/fastpath.ts`](web/lib/complaint/fastpath.ts): read-back in groups of four, corrections, answers without the model
+- [`web/lib/llm-route.ts`](web/lib/llm-route.ts): the custom model endpoint Agora calls, with tools and silent turns
+- [`web/lib/agent-config.ts`](web/lib/agent-config.ts) and [`invite-agent.ts`](web/lib/handlers/invite-agent.ts): the Agora agent with Sarvam speech-to-text and Murf Falcon voices per language
 
 
 ## Hard cases it handles
