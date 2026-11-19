@@ -32,12 +32,17 @@ const seen = new Map<string, string>();
 // a poll or another request must not load the store over it. A hold ends when the turn saves,
 // or after a minute if the turn never finished.
 const writing = new Map<string, number>();
-export const hold = (id: string) => writing.set(id, Date.now() + 60_000);
+export const hold = (id: string) => {
+  writing.set(id, Date.now() + 60_000);
+  if (writing.size > MAX) writing.delete(writing.keys().next().value as string);
+};
 export const release = (id: string) => writing.delete(id);
 
 export async function hydrate(id: string): Promise<string | undefined> {
   if (!shared) return undefined;
-  if ((writing.get(id) ?? 0) > Date.now() && sessions.has(id)) return seen.get(id);
+  const until = writing.get(id);
+  if (until !== undefined && until > Date.now() && sessions.has(id)) return seen.get(id);
+  if (until !== undefined) writing.delete(id);
   const s = await shared.get(id);
   if (!s) return undefined;
   sessions.set(id, s.c as Complaint);
