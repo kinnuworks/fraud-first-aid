@@ -1,5 +1,6 @@
 'use client';
 import { ListenLive } from './ListenLive';
+import { Logo } from './design/Logo';
 // Read-only live views of a call, opened by link on a second screen:
 //  - operator: the complaint as a 1930 helpline operator would receive it, in English
 //  - family: the same card the caller sees, for a son or daughter
@@ -131,9 +132,12 @@ export function FamilyView({ session, viewKey, phone = false }: { session: strin
   const { data, gone } = useLive(session, viewKey);
   if (gone) return <p className="up-lead p-6">This call has ended or the link is not valid.</p>;
   return (
-    <main className="up-page" data-testid="family-view">
-      <div className="up-wrap flex flex-col gap-4 py-8">
-        <p className="up-label">{phone ? 'Your phone call · live · answer your phone and speak' : 'Live view for family · read only'}</p>
+    <main className="cs" data-testid="family-view">
+      <header className="cs-top">
+        <Logo />
+        <span className="up-label">{phone ? 'Your phone call · live · answer your phone and speak' : 'Live view for family · read only'}</span>
+      </header>
+      <div className="up-wrap flex max-w-[56rem] flex-col gap-5 py-8">
         {!phone && <ListenLive session={session} viewKey={viewKey} />}
         <ComplaintCardView data={data} />
       </div>

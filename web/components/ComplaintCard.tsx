@@ -528,19 +528,19 @@ function PackView({
             Tell your bank by <strong>{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
           </p>
           {pack.bankLine && (
-            <p className="mt-1 text-[1rem]" data-testid="bank-line">
-              {pack.bankLine.bank} fraud line:{' '}
+            <div className="pk-bank" data-testid="bank-line">
+              <span className="pk-bank__k">{pack.bankLine.bank} fraud line</span>
               {/^\d/.test(pack.bankLine.phone) ? (
-                <a className="up-link font-semibold" href={`tel:${pack.bankLine.phone.split(' or ')[0].replace(/\D/g, '')}`}>
+                <a className="pk-bank__num" href={`tel:${pack.bankLine.phone.split(' or ')[0].replace(/\D/g, '')}`}>
                   {pack.bankLine.phone}
                 </a>
               ) : (
-                <strong>{pack.bankLine.phone}</strong>
-              )}{' '}
-              <a className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }} href={pack.bankLine.source} target="_blank" rel="noopener noreferrer">
+                <strong className="pk-bank__num">{pack.bankLine.phone}</strong>
+              )}
+              <a className="pk-bank__src" href={pack.bankLine.source} target="_blank" rel="noopener noreferrer">
                 (from the bank&apos;s site)
               </a>
-            </p>
+            </div>
           )}
           {pack.minutesSinceDebit !== null && (
             <p className="mt-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
@@ -556,16 +556,18 @@ function PackView({
         <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
         <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
         <PackItem n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
-        <div className="py-[14px]">
+        <div className="flex items-center gap-[14px] py-[14px]">
+          <span className="pk-num">4</span>
           <a
             href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
             download="utr-pakka-reminders.ics"
             className="up-link pk-remind font-semibold"
             data-testid="reminders"
           >
-            4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
+            Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
           </a>
         </div>
+        {(pack.portalSheet || pack.nextSteps) && <p className="pk-group">If you need more</p>}
         {pack.portalSheet && <PackItem n={5} title="Filing online yourself? Every field in the portal's order" text={pack.portalSheet} />}
         {pack.nextSteps && <PackItem n={6} title="If the bank doesn't fix it: the next three steps" text={pack.nextSteps} />}
       </div>

@@ -36,17 +36,21 @@ export function ListenLive({ session, viewKey }: { session: string; viewKey: str
     setState('idle');
   };
   return (
-    <div className="flex flex-wrap items-center gap-3" data-testid="listen-live">
+    <div className="ll" data-testid="listen-live" data-on={state === 'on' ? '' : undefined}>
+      <span className="ll-dot" aria-hidden="true" />
+      <div className="min-w-0 flex-1">
+        <p className="font-bold text-[1.0625rem]">{state === 'on' ? 'Listening live' : 'Hear the call'}</p>
+        <p className="text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }} role="status">
+          {state === 'on' ? 'You are listening. You cannot be heard.' : state === 'error' ? 'Could not join the call audio.' : 'Hear your family member and UTR Pakka. Your microphone stays off.'}
+        </p>
+      </div>
       {state === 'on' ? (
-        <button type="button" className="up-btn up-btn--ghost" onClick={stop}>Stop listening</button>
+        <button type="button" className="up-btn up-btn--outline-light up-btn--sm" onClick={stop}>Stop listening</button>
       ) : (
-        <button type="button" className="up-btn" onClick={start} disabled={state === 'joining'}>
+        <button type="button" className="up-btn up-btn--light up-btn--sm" onClick={start} disabled={state === 'joining'}>
           {state === 'joining' ? 'Joining…' : 'Listen to the call live'}
         </button>
       )}
-      <span className="text-[0.875rem]" style={{ color: 'var(--ink-3)' }} role="status">
-        {state === 'on' ? 'You are listening. You cannot be heard.' : state === 'error' ? 'Could not join the call audio.' : 'Hear your family member and UTR Pakka. Your microphone stays off.'}
-      </span>
     </div>
   );
 }
