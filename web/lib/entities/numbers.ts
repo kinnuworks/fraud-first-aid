@@ -161,12 +161,27 @@ const KN_JOINED: string[][] = [
 [['ಇನ್ನೂರು'], ['ಮುನ್ನೂರು'], ['ನಾನೂರು', 'ನಾನ್ನೂರು'], ['ಐನೂರು'], ['ಆರುನೂರು'], ['ಏಳುನೂರು'], ['ಎಂಟುನೂರು'], ['ಒಂಬೈನೂರು', 'ಒಂಬತ್ತುನೂರು']]
   .forEach((ws, i) => pair(200 + 100 * i, ws));
 
+// Amount words seen in the bug check (20 Nov): romanized Hindi tens and 25 (when the speech-to-text
+// writes Latin script), and Telugu "పాతిక" (twenty-five, colloquial). "saath" (60) is left out: it
+// also means "with".
+pair(10, ['das']);
+pair(20, ['bees']);
+pair(25, ['pachchis', 'pacchis', 'pachis', 'పాతిక']);
+pair(30, ['tees']);
+pair(40, ['chalis', 'chalees']);
+pair(50, ['pachas', 'pachaas']);
+pair(70, ['sattar']);
+pair(80, ['assi']);
+pair(90, ['nabbe']);
+// Telugu "ఒక" (one, before a noun) counts like Hindi "ek": only next to another number.
+add(1, ['ఒక']);
+
 // Scale words: "four thousand eight hundred", "నాలుగు వేల ఎనిమిది వందల", "दो हज़ार".
 const MULT: Record<string, number> = {};
 const mult = (n: number, words: string[]) => words.forEach((w) => (MULT[fold(w)] = n));
 mult(100, ['hundred', 'सौ', 'వంద', 'వందల', 'వందలు', 'నూరు', 'ನೂರು', 'ನೂರ']);
-mult(1000, ['thousand', 'हज़ार', 'हजार', 'వెయ్యి', 'వేల', 'వేలు', 'ಸಾವಿರ', 'ಸಾವಿರದ']);
-mult(1e5, ['lakh', 'lakhs', 'लाख', 'లక్ష', 'లక్షల', 'లక్షలు', 'ಲಕ್ಷ']);
+mult(1000, ['thousand', 'hazaar', 'hazar', 'हज़ार', 'हजार', 'వెయ్యి', 'వేల', 'వేలు', 'ಸಾವಿರ', 'ಸಾವಿರದ']);
+mult(1e5, ['lakh', 'lakhs', 'lac', 'लाख', 'లక్ష', 'లక్షల', 'లక్షలు', 'ಲಕ್ಷ']);
 mult(1e7, ['crore', 'crores', 'करोड़', 'కోటి', 'కోట్ల', 'ಕೋಟಿ']);
 mult(1e6, ['million']);
 
@@ -204,7 +219,7 @@ const REPEAT: Record<string, number> = {
 // They only count as digits when a neighbouring token is a number.
 const AMBIGUOUS = new Set(['do', 'no', 'o', 'oh', 'che', 'char', 'aat']);
 
-const ARTICLE_ONE = new Set(['एक', 'ek', 'ಒಂದು', 'ondu', 'one', 'এক', 'એક', 'ਇੱਕ'].map(fold));
+const ARTICLE_ONE = new Set(['एक', 'ek', 'ಒಂದು', 'ondu', 'one', 'এক', 'એક', 'ਇੱਕ', 'ఒక'].map(fold));
 
 function tokenDigits(tok: string): string | null {
   if (/^[0-9]+$/.test(tok)) return tok;

@@ -81,3 +81,18 @@ describe('lookupIfsc', () => {
     expect(called).toBe(false);
   });
 });
+
+// From the bug check on 11a75db (20 Nov): amounts the parser missed or got wrong.
+describe('parseAmount: bug check 20 Nov', () => {
+  it('Telugu "one lakh twenty thousand"', () => {
+    expect(parseAmount('ఒక లక్ష ఇరవై వేలు')).toBe(120000);
+    expect(parseAmount('ఒక లక్ష')).toBe(100000);
+  });
+  it('romanized Hindi "ek lakh bees hazaar"', () => {
+    expect(parseAmount('ek lakh bees hazaar')).toBe(120000);
+    expect(parseAmount('pachchis hazaar rupaye')).toBe(25000);
+  });
+  it('colloquial Telugu "paatika" (twenty-five) thousand', () => {
+    expect(parseAmount('పాతిక వేలు')).toBe(25000);
+  });
+});
