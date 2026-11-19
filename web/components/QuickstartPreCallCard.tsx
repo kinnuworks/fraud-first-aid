@@ -7,6 +7,7 @@ import { PhoneCallStart } from './PhoneCallStart';
 import { when } from './ComplaintCard';
 import { STATES } from './StatePreview';
 import { Logo } from './design/Logo';
+import { ImpactBand, PhotoCredits } from './ImpactBand';
 import Image from 'next/image';
 
 const LANGS = [
@@ -392,7 +393,9 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
           </div>
         </section>
       </div>
+      <ImpactBand />
       <Below />
+      <PhotoCredits />
     </div>
   );
 }
