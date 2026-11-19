@@ -1054,7 +1054,8 @@ html[data-direction='d'] .up-alarm__title {
 }
 .qn-desk {
   position: relative;
-  background: #b7864f url('/design/desk-wood.jpg') center/cover;
+  background: #d9a868 url('/design/desk-wood.jpg') center/cover;
+  background-blend-mode: multiply;
   padding: clamp(24px, 6vw, 72px) clamp(12px, 4vw, 48px);
   min-height: 480px;
   display: flex;
@@ -1063,7 +1064,7 @@ html[data-direction='d'] .up-alarm__title {
   overflow: hidden;
 }
 .qn-desk .up-slip {
-  width: min(100%, 560px);
+  width: min(100%, 640px);
   position: relative;
   z-index: 2;
 }

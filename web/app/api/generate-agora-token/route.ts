@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RtcTokenBuilder, RtcRole } from 'agora-token';
-import { newChannel, capFor, checkCap } from '@/lib/capability';
+import { newChannel, capFor, checkCap, viewCapFor } from '@/lib/capability';
 
 const EXPIRATION_TIME_IN_SECONDS = 3600;
 
@@ -52,6 +52,7 @@ export async function GET(request: NextRequest) {
       uid: uid.toString(),
       channel: channelName,
       cap,
+      viewCap: viewCapFor(channelName),
     });
   } catch (error) {
     console.error('Error generating Agora token:', error);

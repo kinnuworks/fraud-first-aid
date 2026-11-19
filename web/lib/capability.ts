@@ -18,3 +18,18 @@ export function checkCap(channel: string, cap: string | null | undefined): boole
   if (!want || !cap || cap.length !== want.length) return false;
   return timingSafeEqual(Buffer.from(cap), Buffer.from(want));
 }
+
+// Read-only link for a second screen (the 1930 operator view, a family member): it can read the
+// call's complaint but not start, upload to or stop the call.
+export function viewCapFor(channel: string): string | null {
+  const s = secret();
+  if (!s) return null;
+  return createHmac('sha256', s).update(`view:${channel}`).digest('hex').slice(0, 40);
+}
+
+export function canView(channel: string, key: string | null | undefined): boolean {
+  if (checkCap(channel, key)) return true;
+  const want = viewCapFor(channel);
+  if (!want || !key || key.length !== want.length) return false;
+  return timingSafeEqual(Buffer.from(key), Buffer.from(want));
+}

@@ -3,6 +3,8 @@ import type { RTMClient } from 'agora-rtm';
 export interface AgoraTokenData {
   // Capability for this call (server-signed); required by every call route.
   cap: string;
+  // Read-only link key for the operator and family views.
+  viewCap?: string;
   token: string;
   uid: string;
   channel: string;

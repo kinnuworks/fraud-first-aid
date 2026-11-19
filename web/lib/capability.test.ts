@@ -25,3 +25,16 @@ describe('call capability', () => {
     process.env = env;
   });
 });
+
+describe('read-only view capability', () => {
+  it('lets a viewer read a call but is not a full capability', async () => {
+    const { viewCapFor, canView } = await import('./capability');
+    process.env.LLM_SHARED_SECRET = 's3cret';
+    const ch = newChannel();
+    const view = viewCapFor(ch)!;
+    expect(canView(ch, view)).toBe(true);
+    expect(canView(ch, capFor(ch))).toBe(true); // the owner can view too
+    expect(checkCap(ch, view)).toBe(false); // but a view link cannot act on the call
+    expect(canView(newChannel(), view)).toBe(false);
+  });
+});

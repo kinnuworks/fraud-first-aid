@@ -45,6 +45,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
+import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
 // Cap the displayed issues list to avoid overwhelming the UI during a cascade of errors.
@@ -503,6 +504,7 @@ export default function ConversationComponent({
             </>
           )}
           <ComplaintCard session={agoraData.channel} cap={agoraData.cap} />
+          <SecondScreens session={agoraData.channel} viewKey={agoraData.viewCap} />
         </>
       }
       transcript={

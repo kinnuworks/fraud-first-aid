@@ -74,6 +74,17 @@ const play = async (page: Page, clip: string) => {
   }
   await page.waitForTimeout(4000);
   await page.screenshot({ path: `${OUT}final.png`, fullPage: true });
+  // second screen: the 1930 operator view of the same call
+  const opHref = await page.getByTestId('open-operator').getAttribute('href').catch(() => null);
+  if (opHref) {
+    const op = await ctx.newPage();
+    await op.goto(opHref);
+    await op.getByTestId('operator-view').waitFor({ timeout: 20000 }).catch(() => {});
+    await op.waitForTimeout(2500);
+    await op.screenshot({ path: `${OUT}operator.png`, fullPage: true });
+    log(`operator view: ${(await op.getByTestId('operator-status').innerText().catch(() => 'not shown'))}`);
+    await op.close();
+  } else log('no operator link');
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});
   await ctx.close();
   log(`video: ${await page.video()?.path()}`);
