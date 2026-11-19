@@ -4,10 +4,33 @@ import '@fontsource/open-runde/500.css';
 import '@fontsource/open-runde/600.css';
 import '@/styles/design/theme.css';
 import Script from 'next/script';
-import { Archivo, Inter_Tight, IBM_Plex_Mono, Onest, Hanken_Grotesk } from 'next/font/google';
+import {
+  Archivo,
+  Inter_Tight,
+  IBM_Plex_Mono,
+  Figtree,
+  Anek_Latin,
+  Anek_Telugu,
+  Anek_Devanagari,
+  Anek_Kannada,
+  Anek_Tamil,
+  Anek_Malayalam,
+  Anek_Bangla,
+  Anek_Gujarati,
+  Anek_Gurmukhi,
+} from 'next/font/google';
 
-const onest = Onest({ subsets: ['latin'], variable: '--font-onest', display: 'swap' });
-const hanken = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-hanken', display: 'swap' });
+const figtree = Figtree({ subsets: ['latin'], variable: '--font-figtree', display: 'swap' });
+const anekLatin = Anek_Latin({ subsets: ['latin'], variable: '--font-anek-latin', display: 'swap', axes: ['wdth'] });
+// Indian scripts load only when a page uses them.
+const anekTe = Anek_Telugu({ display: 'swap', preload: false, variable: '--font-anek-te' });
+const anekHi = Anek_Devanagari({ display: 'swap', preload: false, variable: '--font-anek-hi' });
+const anekKn = Anek_Kannada({ display: 'swap', preload: false, variable: '--font-anek-kn' });
+const anekTa = Anek_Tamil({ display: 'swap', preload: false, variable: '--font-anek-ta' });
+const anekMl = Anek_Malayalam({ display: 'swap', preload: false, variable: '--font-anek-ml' });
+const anekBn = Anek_Bangla({ display: 'swap', preload: false, variable: '--font-anek-bn' });
+const anekGu = Anek_Gujarati({ display: 'swap', preload: false, variable: '--font-anek-gu' });
+const anekPa = Anek_Gurmukhi({ display: 'swap', preload: false, variable: '--font-anek-pa' });
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', axes: ['wdth'], display: 'swap' });
 const interTight = Inter_Tight({ subsets: ['latin'], variable: '--font-inter-tight', display: 'swap' });
 const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
@@ -52,7 +75,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${onest.variable} ${hanken.variable} ${archivo.variable} ${interTight.variable} ${plexMono.variable}`}
+      className={`h-full ${figtree.variable} ${anekLatin.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')} ${archivo.variable} ${interTight.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <body className="h-full min-h-screen">

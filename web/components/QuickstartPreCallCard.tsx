@@ -4,6 +4,9 @@
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { SampleSlip } from './SampleSlip';
+import { PhoneCallStart } from './PhoneCallStart';
+import { UtrGroups, when } from './ComplaintCard';
+import { STATES } from './StatePreview';
 import { Logo } from './design/Logo';
 import Image from 'next/image';
 import { useDirection } from './design/useDirection';
@@ -102,6 +105,24 @@ function ListenButton({ isLoading, onStartConversation, link = false }: Actions 
 
 const SUB = 'Speak your language: ten to choose from. Keep your bank SMS open: it has the 12-digit UTR.';
 const WHY = 'Live voice by Agora Conversational AI, with Sarvam speech-to-text and Murf Falcon voices in ten Indian languages.';
+
+// Two more ways in, under the start controls: a recording of the whole flow, and a call to the caller's phone.
+function MoreWays({ center = false }: { center?: boolean }) {
+  return (
+    <div className={`mt-5 flex flex-col gap-3 ${center ? 'items-center' : 'items-start'}`}>
+      <PhoneCallStart />
+      <a
+        className="up-link text-left text-[0.9375rem]"
+        href="/demo/full-flow.mp4"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-testid="watch-recording"
+      >
+        Watch it work: a 4-minute screen recording (sample voices, no audio)
+      </a>
+    </div>
+  );
+}
 
 const NAV = (
   <>
@@ -206,16 +227,8 @@ function FirstScreen(p: QuickstartPreCallCardProps) {
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
               <StartButton {...p} arrow />
               <ListenButton {...p} link />
-              <a
-                className="up-link text-left text-[0.9375rem]"
-                href="/demo/full-flow.mp4"
-                target="_blank"
-                rel="noopener noreferrer"
-                data-testid="watch-recording"
-              >
-                Watch it work: a 4-minute screen recording (sample voices, no audio)
-              </a>
             </div>
+            <MoreWays />
             {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
           </div>
           <div className="up-window" style={{ background: 'var(--paper)' }}>
@@ -290,6 +303,7 @@ function DirectionB(p: QuickstartPreCallCardProps) {
           <StartButton {...p} />
           <ListenButton {...p} />
         </div>
+        <MoreWays center />
         {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
         <p className="mx-auto mt-6 max-w-[38rem] text-[1rem]" style={{ color: 'var(--ink-2)' }}>
           {WHY}
@@ -311,114 +325,142 @@ function DirectionB(p: QuickstartPreCallCardProps) {
   );
 }
 
-// What the guard listens for, from the scam list (lib/complaint/scams.ts).
-const SIGNS: Array<[string, string, string, boolean?]> = [
-  ['OTP', '8%', '12%', true],
-  ['UPI PIN “to receive money”', '4%', '34%'],
-  ['KYC expiring tonight', '6%', '58%'],
-  ['Scan this QR code', '9%', '80%', true],
-  ['Install AnyDesk', '80%', '14%'],
-  ['“Digital arrest”', '82%', '38%', true],
-  ['SIM will be blocked', '79%', '62%'],
-  ['Parcel with drugs', '83%', '84%'],
-];
-
-/* D: the Quin system. Ruled column, big centred grotesk, mono caps controls, the slip on a wooden desk. */
-function DirectionD(p: QuickstartPreCallCardProps) {
+/* G: the Fold system. Corner pills, a pile of everyday things from the moment, a big navy headline,
+   the start card with a QR to open it on a phone, and the complaint coming up out of a phone outline. */
+function DirectionG(p: QuickstartPreCallCardProps) {
   return (
-    <div className="up-page">
-      <div className="up-wrap">
-        <header className="up-header qn-header">
+    <div className="up-page" style={{ overflowX: 'clip' }}>
+      <section className="fd-hero up-wrap" style={{ maxWidth: 1440 }}>
+        <div className="fd-corner" style={{ left: 20, alignItems: 'flex-start' }}>
           <Logo />
-          <nav className="qn-nav">{NAV}</nav>
-          <a href="tel:1930" className="up-btn up-btn--sm" style={{ background: 'var(--pill-bg)', borderColor: 'var(--pill-bg)', color: 'var(--ink)', fontFamily: 'var(--label-font)', textTransform: 'uppercase', letterSpacing: '0.06em', fontSize: '0.8125rem' }}>
-            Call 1930
-          </a>
-        </header>
-        <section className="qn-hero">
-          <h1 className="up-display" style={{ marginInline: 'auto', maxWidth: '15ch' }}>
-            Lost money to a UPI scam? Tell me what happened.
-          </h1>
-          <p className="up-lead" style={{ marginTop: 22, marginInline: 'auto', maxWidth: '34rem', color: 'var(--ink-3)' }}>
-            {SUB} {WHY}
-          </p>
-          <div className="mt-7 flex justify-center">
-            <LanguageChips center />
-          </div>
-          {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
-        </section>
-        <div className="qn-ruled">
-          <span className="flex flex-wrap">
-            <ListenButton {...p} />
-            <StartButton {...p} arrow />
-          </span>
+          <a href="tel:1930" className="fd-pill">Call 1930</a>
+          <a href="#langs" className="fd-pill">Ten languages</a>
         </div>
-        <div className="qn-desk">
-          {SIGNS.map(([t, x, y, hot]) => (
-            <span key={t} className="qn-tag" data-hot={hot ? '' : undefined} style={{ left: x, top: y }}>
-              {t}
+        <div className="fd-corner" style={{ right: 20, alignItems: 'flex-end' }}>
+          <a href="#how" className="fd-pill">How it works</a>
+          <a href="#sources" className="fd-pill">Sources</a>
+        </div>
+        <Image src="/design/pile.png" alt="Illustration: a keypad phone, a bank SMS, rupee notes, a QR stand, a glass of chai, a rubber stamp and a carbon receipt book" width={1100} height={733} className="fd-pile" priority />
+        <h1 className="up-display" style={{ marginInline: 'auto', maxWidth: '15ch' }}>
+          Lost money to a UPI scam? Tell me what happened.
+        </h1>
+        <p className="up-lead" style={{ marginTop: 24, marginInline: 'auto', maxWidth: '38rem' }}>
+          {SUB} {WHY}
+        </p>
+        <div className="fd-start">
+          <div className="flex max-w-[34rem] flex-col gap-4">
+            <LanguageChips />
+            <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
+              <StartButton {...p} />
+              <ListenButton {...p} link />
+            </div>
+            <MoreWays />
+          </div>
+          <div className="fd-qr">
+            <Image src="/design/qr-live.svg" alt="QR code to open UTR Pakka on your phone" width={84} height={84} unoptimized />
+            <span>
+              Scan to try it
+              <br />
+              on your phone
             </span>
-          ))}
+          </div>
+        </div>
+        {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
+        <div className="fd-phone">
           <SampleSlip />
         </div>
-      </div>
+      </section>
       <Below />
     </div>
   );
 }
 
-/* E: the Paper system. Paper-grey page, two-tone headline, a ruled backdrop, the product in an app window. */
-function DirectionE(p: QuickstartPreCallCardProps) {
+// A rubber stamp, inked on: the moment a UTR is read back and confirmed.
+function PakkaStamp({ date }: { date: string }) {
+  return (
+    <svg className="tk-stamp" viewBox="0 0 200 200" aria-hidden="true">
+      <defs>
+        <filter id="ink">
+          <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3" result="n" />
+          <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.35" result="m" />
+          <feComposite in="SourceGraphic" in2="m" operator="in" result="c" />
+          <feDisplacementMap in="c" in2="n" scale="2.2" />
+        </filter>
+        <path id="ring" d="M100,100 m-70,0 a70,70 0 1,1 140,0 a70,70 0 1,1 -140,0" />
+      </defs>
+      <g filter="url(#ink)" fill="none" stroke="var(--stamp)" style={{ color: 'var(--stamp)' }}>
+        <circle cx="100" cy="100" r="92" strokeWidth="5" />
+        <circle cx="100" cy="100" r="82" strokeWidth="2" />
+        <text fontFamily="var(--font-anek-latin), sans-serif" fontSize="15" fontWeight="700" letterSpacing="3" fill="var(--stamp)" stroke="none">
+          <textPath href="#ring" startOffset="2%">UTR READ BACK · EVERY DIGIT CHECKED ·</textPath>
+        </text>
+        <rect x="34" y="78" width="132" height="44" strokeWidth="3" />
+        <text x="100" y="111" textAnchor="middle" fontFamily="var(--font-anek-latin), sans-serif" fontSize="34" fontWeight="800" letterSpacing="2" fill="var(--stamp)" stroke="none">
+          PAKKA
+        </text>
+        <text x="100" y="146" textAnchor="middle" fontFamily="var(--font-plex-mono), monospace" fontSize="13" fontWeight="600" fill="var(--stamp)" stroke="none">
+          {date}
+        </text>
+      </g>
+    </svg>
+  );
+}
+
+/* H: the Acctual system in UPI's saffron and green. The complaint is a ticket-style slip with
+   bilingual labels and a PAKKA stamp; the desk objects stay. */
+function DirectionH(p: QuickstartPreCallCardProps) {
   return (
     <div className="up-page" style={{ overflowX: 'clip' }}>
-      <div className="pp-header">
-        <div className="up-wrap">
-          <header className="up-header">
+      <div className="tk-tricolour" aria-hidden="true" />
+      <div className="up-wrap" style={{ maxWidth: 1040 }}>
+        <header className="up-header ac-bar">
+          <div className="flex items-center gap-8">
             <Logo />
-            <nav className="pp-nav">{NAV}</nav>
-            <a href="tel:1930" className="text-[1.125rem]">
-              Call 1930
-            </a>
-          </header>
-        </div>
-      </div>
-      <section className="pp-hero up-wrap">
-        <div className="pp-backdrop" aria-hidden="true" />
-        <h1 className="up-display" style={{ maxWidth: '20ch' }}>
-          Lost money to a UPI scam? <span className="pp-grey">Tell me what happened.</span>
-        </h1>
-        <p className="up-lead" style={{ marginTop: 16, maxWidth: '38rem', color: 'var(--ink-3)' }}>
-          {SUB} {WHY}
-        </p>
-        <div className="mt-6">
-          <LanguageChips />
-        </div>
-        <div className="mt-6 flex flex-wrap items-center gap-x-7 gap-y-3">
-          <StartButton {...p} />
-          <ListenButton {...p} link />
-        </div>
-        {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
-        <div className="pp-window">
-          <div className="pp-tabs">
-            <i />
-            <i />
-            <i />
-            <span aria-current="page">Complaint · sample</span>
-            <span>Scam guard</span>
-            <span>1930 pack</span>
+            <nav className="up-nav" style={{ color: 'var(--ink-2)' }}>{NAV}</nav>
           </div>
-          <div className="pp-body">
-            <div className="pp-side">
-              <span>UTR <b>✓</b></span>
-              <span>Amount lost <b>✓</b></span>
-              <span>When <b>✓</b></span>
-              <span>Money went to <b>✓</b></span>
-              <span>Your bank <b>✓</b></span>
-              <span>Screenshot <b>✓</b></span>
+          <a href="tel:1930" className="up-btn" style={{ minHeight: 40, padding: '0 16px' }}>
+            Call 1930
+          </a>
+        </header>
+      </div>
+      <section className="ac-hero up-wrap">
+        <Image src="/design/desk-stamp.png" alt="" width={200} height={200} className="ac-desk" style={{ left: '-14%', top: 120, transform: 'rotate(-12deg)' }} />
+        <Image src="/design/desk-phone.png" alt="" width={260} height={260} className="ac-desk" style={{ right: '-16%', top: 40, transform: 'rotate(18deg)' }} />
+        <span className="ac-pill">12.64 lakh UPI fraud incidents in FY2024-25</span>
+        <h1 className="up-display" style={{ marginTop: 20, marginInline: 'auto', maxWidth: '20ch' }}>
+          Lost money to a UPI scam? Tell me what happened.
+        </h1>
+        <p className="up-lead" style={{ marginTop: 20, marginInline: 'auto', maxWidth: '36rem', color: 'var(--ink-3)' }}>
+          {SUB}
+        </p>
+        <div className="mt-8 flex justify-center">
+          <LanguageChips center />
+        </div>
+        <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
+          <StartButton {...p} />
+          <ListenButton {...p} />
+        </div>
+        <MoreWays center />
+        {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
+        <p className="mx-auto mt-6 max-w-[38rem] text-[1rem]" style={{ color: 'var(--ink-2)' }}>
+          {WHY}
+        </p>
+        <div className="ac-checks">
+          <span>UTR read back in groups of four</span>
+          <span>Screenshot cross-check</span>
+          <span>RBI deadline date</span>
+        </div>
+        <div className="ac-stage">
+          <div className="ac-under" style={{ transform: 'rotate(-4deg) translate(-90px, 18px)' }} aria-hidden="true" />
+          <Image src="/design/desk-slips.png" alt="" width={240} height={240} className="ac-desk" style={{ left: '-10%', bottom: 0, transform: 'rotate(-8deg)' }} />
+          <div className="tk-ticket">
+            <div className="tk-head">
+              <b>Complaint slip</b>
+              <span className="up-script">ఫిర్యాదు · शिकायत · ದೂರು</span>
+              <span className="up-sample-tag">Sample</span>
             </div>
-            <div className="p-[clamp(12px,2.4vw,24px)]">
-              <SampleSlip />
-            </div>
+            <SampleSlip title={false} />
+            <PakkaStamp date="19 NOV 2026" />
           </div>
         </div>
       </section>
@@ -427,70 +469,103 @@ function DirectionE(p: QuickstartPreCallCardProps) {
   );
 }
 
-/* F: the Kitchen.co system. Bold centred headline, one red button, small print, the before-and-after drawings. */
-function DirectionF(p: QuickstartPreCallCardProps) {
+const DEADLINE = when(STATES['complaint-done']!.deadlines!.zeroLiabilityBy);
+
+/* I: the Fold app system. The payment screen every UPI user has seen, its 12-digit reference circled,
+   and that number carried into the complaint. */
+function DirectionI(p: QuickstartPreCallCardProps) {
   return (
-    <div className="up-page">
+    <div className="up-page" style={{ overflowX: 'clip' }}>
       <div className="up-wrap">
-        <header className="up-header kt-header">
+        <header className="up-header" style={{ minHeight: 88 }}>
           <Logo />
-          <nav className="kt-nav">{NAV}</nav>
-          <a href="tel:1930" className="up-btn up-btn--sm" style={{ background: 'var(--ink)', borderColor: 'var(--ink)', color: '#fff', fontWeight: 700 }}>
-            Call 1930
-          </a>
+          <nav className="flex gap-2">
+            <a href="#how" className="fd-pill">How it works</a>
+            <a href="#sources" className="fd-pill">Sources</a>
+            <a href="tel:1930" className="fd-pill">Call 1930</a>
+          </nav>
         </header>
-        <section className="kt-hero">
-          <p className="kt-kicker">Your UPI fraud complaint, spoken.</p>
-          <h1 className="up-display" style={{ marginTop: 14, marginInline: 'auto', maxWidth: '19ch' }}>
-            Lost money to a UPI scam? Tell me what happened.
-          </h1>
-          <p className="up-lead" style={{ marginTop: 22, marginInline: 'auto', maxWidth: '40rem', color: 'var(--ink-2)' }}>
-            {SUB}
-          </p>
-          <div className="mt-7 flex justify-center">
-            <LanguageChips center />
-          </div>
-          <div className="mt-7 flex justify-center">
-            <StartButton {...p} />
-          </div>
-          <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--ink-2)' }}>
-            Never asks for an OTP, PIN or password.
-          </p>
-          <div className="mt-5 flex justify-center">
-            <ListenButton {...p} link />
-          </div>
-          {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
-          <p className="mx-auto mt-6 max-w-[40rem] text-[1rem]" style={{ color: 'var(--ink-2)' }}>
-            {WHY}
-          </p>
-          <div className="kt-ways">
-            <div>
-              <h2>An English web form, while you panic</h2>
-              <Image src="/design/way-panic.png" alt="Illustration: a man on the phone, panicking, surrounded by a bank SMS, a long form and a clock" width={1000} height={667} />
+        <section className="rc-hero">
+          <div>
+            <h1 className="up-display">Lost money to a UPI scam? Tell me what happened.</h1>
+            <p className="up-lead" style={{ marginTop: 24, maxWidth: '34rem' }}>
+              {SUB}
+            </p>
+            <div className="mt-7">
+              <LanguageChips />
             </div>
-            <hr />
-            <div>
-              <h2>Your language, every digit checked</h2>
-              <Image src="/design/way-voice.png" alt="Illustration: a man calmly speaking into his phone while a ticked complaint slip comes together" width={1000} height={667} />
+            <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
+              <StartButton {...p} />
+              <ListenButton {...p} link />
+            </div>
+            <MoreWays />
+            {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
+            <p className="mt-6 text-[1rem]" style={{ color: 'var(--ink-2)', maxWidth: '34rem' }}>
+              {WHY}
+            </p>
+          </div>
+          <div className="rc-stage">
+            <div className="rc-phone" aria-label="Sample payment screen">
+              <p className="text-center">
+                <span className="up-sample-tag">Sample</span>
+              </p>
+              <div className="rc-tick" aria-hidden="true">
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                  <path d="M5 12.5l4.5 4.5L19 7.5" />
+                </svg>
+              </div>
+              <p className="rc-amount">₹25,000</p>
+              <p className="rc-meta">Paid to ramesh@okaxis</p>
+              <p className="rc-meta">19 Nov 2026, 2:30 pm</p>
+              <div className="rc-rows">
+                <div>
+                  <span>From</span>
+                  <span>State Bank of India</span>
+                </div>
+                <div>
+                  <span>UTR / UPI Ref. No.</span>
+                  <span className="rc-ref">
+                    402177889910
+                    <svg className="rc-circle" viewBox="0 0 160 50" preserveAspectRatio="none" aria-hidden="true">
+                      <path d="M8 26 C 10 6, 150 4, 154 22 C 158 42, 20 48, 6 30 C 2 22, 30 10, 60 9" fill="none" stroke="#ed6a12" strokeWidth="3" strokeLinecap="round" />
+                    </svg>
+                  </span>
+                </div>
+              </div>
+            </div>
+            <svg className="rc-arrow" style={{ left: 250, top: 330, width: 160, height: 120 }} viewBox="0 0 160 120" aria-hidden="true">
+              <path d="M6 8 C 70 6, 120 30, 130 96" fill="none" stroke="#ed6a12" strokeWidth="3" strokeLinecap="round" />
+              <path d="M118 84 L131 100 L144 82" fill="none" stroke="#ed6a12" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            <div className="rc-card up-slip p-5">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-[1.125rem] font-semibold">Your complaint</span>
+                <span className="up-sample-tag">Sample</span>
+              </div>
+              <p className="mt-4 text-[0.875rem]" style={{ color: 'var(--ink-3)' }}>UTR (transaction reference)</p>
+              <div className="mt-2">
+                <UtrGroups value="402177889910" state="ok" />
+              </div>
+              <p className="mt-2">
+                <span className="up-tick" style={{ marginLeft: 0 }}>✓ confirmed</span>
+                <span className="up-tick">(screenshot ✓)</span>
+              </p>
+              <p className="mt-4 border-t pt-4 text-[1rem]" style={{ borderColor: 'var(--rule)' }}>
+                Tell your bank by <strong>{DEADLINE}</strong> for zero liability (RBI, 3 working days).
+              </p>
             </div>
           </div>
         </section>
-      </div>
-      <div className="kt-band">
-        <div className="up-wrap" style={{ maxWidth: 680 }}>
-          <SampleSlip />
-        </div>
       </div>
       <Below />
     </div>
   );
 }
-
 export function QuickstartPreCallCard(props: QuickstartPreCallCardProps) {
   const d = useDirection();
   if (d === 'b') return <DirectionB {...props} />;
-  if (d === 'd') return <DirectionD {...props} />;
-  if (d === 'e') return <DirectionE {...props} />;
-  if (d === 'f') return <DirectionF {...props} />;
+  if (d === 'g') return <DirectionG {...props} />;
+  if (d === 'h') return <DirectionH {...props} />;
+  if (d === 'i') return <DirectionI {...props} />;
   return <FirstScreen {...props} />;
 }

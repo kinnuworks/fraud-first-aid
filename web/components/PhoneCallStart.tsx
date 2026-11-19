@@ -22,7 +22,7 @@ export function PhoneCallStart() {
   }
   return (
     <form onSubmit={call} className="flex flex-wrap items-center gap-2" data-testid="phone-call">
-      <label htmlFor="phone-to" className="text-[0.9375rem]">
+      <label htmlFor="phone-to" className="text-[0.9375rem]" style={{ color: 'var(--ink-2)' }}>
         Or let UTR Pakka call your phone:
       </label>
       <input
@@ -33,7 +33,7 @@ export function PhoneCallStart() {
         value={to}
         onChange={(e) => setTo(e.target.value)}
         placeholder="98450 12345"
-        className="rounded border px-2 py-1 text-black"
+        className="up-input"
         data-testid="phone-to"
       />
       <button type="submit" className="up-btn up-btn--ghost up-btn--sm" data-testid="phone-call-button">
