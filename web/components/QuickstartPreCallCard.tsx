@@ -203,6 +203,15 @@ function FirstScreen(p: QuickstartPreCallCardProps) {
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-4">
               <StartButton {...p} arrow />
               <ListenButton {...p} link />
+              <a
+                className="up-link text-left text-[0.9375rem]"
+                href="/demo/full-flow.mp4"
+                target="_blank"
+                rel="noopener noreferrer"
+                data-testid="watch-recording"
+              >
+                Watch it work: a 4-minute screen recording (sample voices, no audio)
+              </a>
             </div>
             {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
           </div>
