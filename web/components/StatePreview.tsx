@@ -51,23 +51,38 @@ export function StatePreview({ state }: { state: string }) {
   }
   const guard = state.startsWith('guard');
   return (
-    <div className="up-page">
-      <div className="up-wrap">
-        <header className="up-callbar">
-          <Logo />
-          <p role="note" className="up-sample-tag" style={{ textTransform: 'none', letterSpacing: 0 }}>
-            Preview of the “{state}” screen with sample data, not a real complaint.
-          </p>
-        </header>
-        <main className="flex max-w-[52rem] flex-col gap-4 py-6">
+    <div className="cs">
+      <header className="cs-top">
+        <Logo />
+        <p role="note" className="up-sample-tag" style={{ textTransform: 'none', letterSpacing: 0 }}>
+          Preview of the “{state}” screen with sample data, not a real complaint.
+        </p>
+      </header>
+      <div className="cs-grid">
+        <aside className="cs-side" aria-label="Call">
+          <span className="up-label">Live call</span>
+          <div className="cs-orb">
+            <p className="max-w-[14rem] text-center text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }}>
+              The agent appears here during a live call.
+            </p>
+          </div>
           {guard && (
             <p className="up-note text-[1rem]">
               On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the moment the
               caller asks for an OTP, a PIN, a QR scan, an app install or money.
             </p>
           )}
+        </aside>
+        <main className="cs-main">
           <ComplaintCardView data={STATES[state]} />
         </main>
+        <div className="cs-phone-col">
+          <div className="cs-phone">
+            <div className="up-transcript items-center justify-center p-6 text-center text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
+              The live transcript appears here during a call.
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -492,17 +492,19 @@ export default function ConversationComponent({
         />
       }
       pipelineMetrics={<QuickstartPipelineMetrics metrics={agentMetrics} />}
+      side={
+        typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'guard' ? (
+          <>
+            <p className="up-note text-[1rem]" role="status">
+              On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the
+              moment the caller asks for an OTP, a PIN, a QR scan, an app install or money.
+            </p>
+            <SampleScamCall />
+          </>
+        ) : null
+      }
       transcriptPanel={
         <>
-          {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'guard' && (
-            <>
-              <p className="up-note text-[1rem]" role="status">
-                On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the
-                moment the caller asks for an OTP, a PIN, a QR scan, an app install or money.
-              </p>
-              <SampleScamCall />
-            </>
-          )}
           <ComplaintCard session={agoraData.channel} cap={agoraData.cap} />
           <SecondScreens session={agoraData.channel} viewKey={agoraData.viewCap} />
         </>
@@ -516,7 +518,7 @@ export default function ConversationComponent({
       }
       visualizer={
         <div
-          className="relative flex h-full min-h-[16rem] w-full items-center justify-center"
+          className="relative flex h-full min-h-[15rem] w-full items-center justify-center"
           role="region"
           aria-label="AI agent status visualization"
         >
@@ -530,8 +532,8 @@ export default function ConversationComponent({
       }
       controls={
         <div
-          className="mx-auto flex w-fit items-center gap-3 rounded-full border px-4 py-2"
-          style={{ borderColor: 'var(--rule)', background: 'var(--sheet)' }}
+          className="mx-auto flex w-fit items-center gap-3 rounded-full px-4 py-2"
+          style={{ background: 'var(--navy-2)' }}
           role="group"
           aria-label="Audio controls"
         >

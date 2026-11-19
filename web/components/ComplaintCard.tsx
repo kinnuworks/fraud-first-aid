@@ -112,16 +112,65 @@ function Mismatch({ k, said, c }: { k: string; said: string | number; c: Check }
       <p className="up-mismatch__title">Screenshot differs</p>
       <div className="up-mismatch__grid">
         <span className="up-slip__k">You said</span>
-        {k === 'utr' ? <UtrGroups value={said} small /> : <span className="up-num">{show(k, said)}</span>}
+        {k === 'utr' ? <UtrGroups value={said} /> : <span className="up-num text-[1.25rem]">{show(k, said)}</span>}
         <span className="up-slip__k">Screenshot</span>
         {k === 'utr' ? (
-          <UtrGroups value={c.screenshot ?? ''} bad={c.groups ?? []} small />
+          <UtrGroups value={c.screenshot ?? ''} bad={c.groups ?? []} />
         ) : (
-          <span className="up-num" style={{ color: 'var(--bad)', fontWeight: 700 }}>
+          <span className="up-num text-[1.25rem]" style={{ color: 'var(--bad)', fontWeight: 700 }}>
             {show(k, c.screenshot ?? '')}
           </span>
         )}
       </div>
+    </div>
+  );
+}
+
+// What the guard listens for, in the words the guard banner uses.
+const SIGNS = ['an OTP', 'a PIN', 'a QR scan', 'an app install', 'money'];
+
+const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
+function CalendarDay({ iso }: { iso: string }) {
+  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (!m) return null;
+  return (
+    <span className="cd-cal" aria-hidden="true">
+      <b>{MON[Number(m[2]) - 1]}</b>
+      <strong>{Number(m[3])}</strong>
+    </span>
+  );
+}
+
+function FieldCard({
+  k,
+  label,
+  f,
+  c,
+}: {
+  k: keyof ComplaintView['fields'];
+  label: string;
+  f?: Field;
+  c?: Check;
+}) {
+  return (
+    <div className="up-card cd-field" data-field={k}>
+      <div className="cd-k">
+        <span>{label}</span>
+        {f && <Status f={f} />}
+      </div>
+      {f ? (
+        <p className={`cd-v${k === 'amount' ? ' cd-v--big' : ''}${k === 'when' ? ' up-num' : ''}`}>
+          {k === 'payee' && (
+            <span className="cd-avatar" aria-hidden="true">
+              {String(f.value).charAt(0).toUpperCase()}
+            </span>
+          )}
+          {show(k, f.value)}
+        </p>
+      ) : (
+        <p className="cd-v cd-empty">—</p>
+      )}
+      <CheckNote c={c} k={k} />
     </div>
   );
 }
@@ -135,20 +184,39 @@ export function ComplaintCardView({
   onScreenshot?: (f: File) => void;
   onEmail?: (email: string) => Promise<void>;
 }) {
-  if (!data) return <p className="up-card p-5 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>Waiting for the call to start…</p>;
+  if (!data)
+    return (
+      <p className="up-card p-6 text-[1.0625rem]" style={{ color: 'var(--ink-3)' }}>
+        Waiting for the call to start…
+      </p>
+    );
   const flags = data.flags ?? [];
   if (data.phase === 'guard' && flags.length === 0) {
     return (
-      <section aria-label="Scam-call guard" className="up-card p-5" data-testid="guard-listening">
-        <h2 className="flex items-center text-[1.25rem] font-semibold">
-          <span className="up-dot animate-pulse" aria-hidden="true" />
-          Listening for scam signs…
-        </h2>
-        <p className="mt-1" style={{ color: 'var(--ink-3)' }}>Nothing suspicious yet.</p>
+      <section aria-label="Scam-call guard" className="up-card gd-listen" data-testid="guard-listening">
+        <span className="gd-radar" aria-hidden="true">
+          <span />
+          <span />
+          <span />
+          <i />
+        </span>
+        <div>
+          <h2 className="text-[1.625rem] font-bold leading-tight">Listening for scam signs…</h2>
+          <p className="mt-1 text-[1.0625rem]" style={{ color: 'var(--ink-3)' }}>
+            Nothing suspicious yet.
+          </p>
+          <div className="gd-signs" aria-label="It speaks up when the caller asks for">
+            {SIGNS.map((x) => (
+              <span key={x}>{x}</span>
+            ))}
+          </div>
+        </div>
       </section>
     );
   }
   const mismatches = (['utr', 'amount', 'payee', 'when'] as const).filter((k) => data.check?.[k]?.status === 'mismatch' && data.fields[k]);
+  const utr = data.fields.utr;
+  const utrCheck = data.check?.utr;
   return (
     <section aria-label="Your complaint" className="flex flex-col gap-4">
       {flags.length > 0 && (
@@ -157,7 +225,7 @@ export function ComplaintCardView({
           <p className="up-alarm__body">
             Said aloud{data.lang && LANG_LABEL[data.lang] ? ` in ${LANG_LABEL[data.lang]}` : ''}: hang up now, never share a code, scan or pay.
           </p>
-          <ul className="space-y-4">
+          <ul className="space-y-5">
             {flags.map((f, i) => {
               const s = scamById(f.scam);
               return (
@@ -182,64 +250,71 @@ export function ComplaintCardView({
       )}
       {data.phase === 'guard' ? null : (
         <>
-          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} />}
+          <div className="cd-progress" aria-label="Complaint progress">
+            {LABELS.map(([k, label]) => {
+              const f = data.fields[k];
+              return (
+                <span key={k} data-done={f?.confirmed ? '' : undefined} data-now={f && !f.confirmed ? '' : undefined}>
+                  {f?.confirmed ? '✓ ' : ''}
+                  {k === 'utr' ? 'UTR' : label}
+                </span>
+              );
+            })}
+            <span data-done={data.pack.ok ? '' : undefined}>{data.pack.ok ? '✓ ' : ''}Pack</span>
+          </div>
+          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} whenValue={data.fields.when?.value} />}
           {mismatches.map((k) => (
             <Mismatch key={k} k={k} said={data.fields[k]!.value} c={data.check![k]!} />
           ))}
-          <div className="up-slip">
-            <div className="flex items-center justify-between gap-3 px-5 pb-2 pt-4">
-              <h2 className="text-[1.25rem] font-semibold">Your complaint</h2>
+          <h2 className="sr-only">Your complaint</h2>
+          <div className="up-card cd-utr" data-field="utr">
+            <div className="cd-k">
+              <span>UTR (transaction reference)</span>
+              {utr && <Status f={utr} />}
             </div>
-            <dl>
-              {LABELS.map(([k, label]) => {
-                const f = data.fields[k];
-                const c = data.check?.[k as 'utr'];
-                return (
-                  <div key={k} className="up-slip__row" data-field={k}>
-                    <dt className="up-slip__k">{label}</dt>
-                    <dd className="up-slip__v">
-                      {f ? (
-                        <>
-                          {k === 'utr' ? (
-                            <UtrGroups
-                              value={f.value}
-                              state={f.confirmed ? 'ok' : 'pending'}
-                              bad={c?.status === 'mismatch' ? c.groups ?? [] : []}
-                            />
-                          ) : (
-                            <span className="up-num">{show(k, f.value)}</span>
-                          )}
-                          <Status f={f} />
-                        </>
-                      ) : (
-                        <span style={{ color: 'var(--ink-3)' }}>—</span>
-                      )}
-                      <CheckNote c={c} k={k} />
-                    </dd>
-                  </div>
-                );
-              })}
-            </dl>
-            <div className="up-slip__foot">
-              {onScreenshot && (
-                <label className="up-btn up-btn--ghost up-btn--sm w-fit cursor-pointer">
-                  {data.check ? 'Replace payment screenshot' : 'Add payment screenshot (double-checks the numbers)'}
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    className="sr-only"
-                    onChange={(e) => e.target.files?.[0] && onScreenshot(e.target.files[0])}
-                  />
-                </label>
-              )}
-              <SinceDebit when={data.fields.when?.value} />
-              {data.deadlines && !data.pack.ok && (
-                <p className="text-[1.0625rem]">
-                  Tell your bank by <strong className="up-num">{when(data.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
-                </p>
-              )}
+            {utr ? (
+              <UtrGroups
+                value={utr.value}
+                state={utr.confirmed ? 'ok' : 'pending'}
+                bad={utrCheck?.status === 'mismatch' ? utrCheck.groups ?? [] : []}
+              />
+            ) : (
+              <p className="cd-v cd-empty">Say the 12 digits from your bank SMS, in pairs or one by one.</p>
+            )}
+            <div className="mt-2">
+              <CheckNote c={utrCheck} k="utr" />
             </div>
           </div>
+          <div className="cd-grid">
+            {LABELS.filter(([k]) => k !== 'utr').map(([k, label]) => (
+              <FieldCard key={k} k={k} label={label} f={data.fields[k]} c={data.check?.[k as 'utr']} />
+            ))}
+          </div>
+          {data.deadlines && !data.pack.ok && (
+            <div className="cd-deadline">
+              <CalendarDay iso={data.deadlines.zeroLiabilityBy} />
+              <div>
+                <p>
+                  Tell your bank by <strong>{when(data.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
+                </p>
+                <SinceDebit when={data.fields.when?.value} />
+              </div>
+            </div>
+          )}
+          {onScreenshot && (
+            <div className="cd-shot">
+              <p>Your payment screenshot lets every number be checked twice.</p>
+              <label className="up-btn up-btn--ghost up-btn--sm cursor-pointer">
+                {data.check ? 'Replace payment screenshot' : 'Add payment screenshot (double-checks the numbers)'}
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  className="sr-only"
+                  onChange={(e) => e.target.files?.[0] && onScreenshot(e.target.files[0])}
+                />
+              </label>
+            </div>
+          )}
         </>
       )}
     </section>
@@ -270,7 +345,7 @@ function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e
   if (emailSent && 'id' in emailSent) {
     return (
       <p className="text-[0.9375rem]" data-testid="email-sent">
-        Emailed ✓ <span style={{ color: 'var(--ink-2)' }}>(message id {emailSent.id})</span>
+        Emailed ✓ <span style={{ opacity: 0.8 }}>(message id {emailSent.id})</span>
       </p>
     );
   }
@@ -295,14 +370,14 @@ function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         placeholder="you@example.com"
-        className="up-input min-w-[14rem] rounded border px-2 py-1 text-black"
+        className="up-input min-w-[14rem]"
         data-testid="email-input"
       />
-      <button type="submit" disabled={busy} className="up-btn up-btn--ghost" data-testid="email-send">
+      <button type="submit" disabled={busy} className="up-btn up-btn--light up-btn--sm" data-testid="email-send">
         {busy ? 'Sending…' : 'Send'}
       </button>
       {emailSent && 'problem' in emailSent && (
-        <span className="text-[0.875rem]" style={{ color: 'var(--bad)' }} role="status">
+        <span className="text-[0.875rem]" role="status">
           Couldn&apos;t send: {emailSent.problem}
         </span>
       )}
@@ -314,81 +389,95 @@ function PackView({
   pack,
   emailSent,
   onEmail,
+  whenValue,
 }: {
   pack: Extract<Pack, { ok: true }>;
   emailSent: EmailState;
   onEmail?: (e: string) => Promise<void>;
+  whenValue?: string | number;
 }) {
   return (
-    <div className="up-card flex flex-col gap-5 p-5" data-testid="pack">
-      <h3 className="text-[1.375rem] font-semibold leading-tight">Ready: call 1930 now, then send this to your bank</h3>
-      <EmailPack emailSent={emailSent} onEmail={onEmail} />
-      <div className="flex flex-wrap items-center gap-3">
-        <a href="tel:1930" className="up-btn" data-testid="call-1930">
-          Call 1930 now
-        </a>
-        <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost">
-          Open cybercrime.gov.in to file yourself
-        </a>
+    <div className="flex flex-col gap-4" data-testid="pack">
+      <div className="pk-banner">
+        <h3>Ready: call 1930 now, then send this to your bank</h3>
+        <div className="flex flex-wrap items-center gap-4">
+          <a href="tel:1930" className="up-btn pk-call" data-testid="call-1930">
+            Call 1930 now
+          </a>
+          <div className="flex items-center gap-3">
+            <CalendarDay iso={pack.deadlines.zeroLiabilityBy} />
+            <p className="max-w-[22rem] text-[1.0625rem] leading-snug">
+              Tell your bank by <strong>{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
+            </p>
+          </div>
+        </div>
+        <div className="text-[1rem]" style={{ color: 'var(--on-navy-2)' }}>
+          <SinceDebit when={whenValue} />
+          {pack.minutesSinceDebit !== null && <p>Complaint ready {hm(pack.minutesSinceDebit)} after the money left.</p>}
+        </div>
+        <div className="pk-actions">
+          <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--outline-light up-btn--sm">
+            Open cybercrime.gov.in to file yourself
+          </a>
+          <a
+            href={`https://wa.me/?text=${encodeURIComponent(`${pack.script1930}\n\n${pack.operatorCard}`)}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="up-btn up-btn--outline-light up-btn--sm"
+            data-testid="share-family"
+          >
+            Send to family on WhatsApp
+          </a>
+          <a
+            href={`mailto:?subject=${encodeURIComponent(pack.bankLetter.split('\n').find((l) => l.startsWith('Subject:'))?.slice(9) ?? 'Fraudulent UPI transaction')}&body=${encodeURIComponent(pack.bankLetter)}`}
+            className="up-btn up-btn--outline-light up-btn--sm"
+            data-testid="email-bank"
+          >
+            Email the letter to your bank
+          </a>
+        </div>
+        <EmailPack emailSent={emailSent} onEmail={onEmail} />
+      </div>
+      <div className="pk-docs">
+        <Doc n={1} title="Call 1930 now and read this out" text={pack.script1930} />
+        <Doc n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
+        <Doc n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
+      </div>
+      <div className="up-card flex items-center gap-3 p-5">
+        <span className="pk-num">4</span>
         <a
-          href={`https://wa.me/?text=${encodeURIComponent(`${pack.script1930}\n\n${pack.operatorCard}`)}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="up-btn up-btn--ghost"
-          data-testid="share-family"
+          href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
+          download="utr-pakka-reminders.ics"
+          className="up-btn up-btn--ghost pk-remind"
+          data-testid="reminders"
         >
-          Send to family on WhatsApp
-        </a>
-        <a
-          href={`mailto:?subject=${encodeURIComponent(pack.bankLetter.split('\n').find((l) => l.startsWith('Subject:'))?.slice(9) ?? 'Fraudulent UPI transaction')}&body=${encodeURIComponent(pack.bankLetter)}`}
-          className="up-btn up-btn--ghost"
-          data-testid="email-bank"
-        >
-          Email the letter to your bank
+          4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
         </a>
       </div>
-      <p className="text-[1.0625rem]">
-        Tell your bank by <strong className="up-num">{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
-      </p>
-      {pack.minutesSinceDebit !== null && (
-        <p className="text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
-          Complaint ready {hm(pack.minutesSinceDebit)} after the money left.
-        </p>
-      )}
-      <Copyable title="1. Call 1930 now and read this out" text={pack.script1930} />
-      <Copyable title={`2. Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
-      <Copyable title="3. If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
-      <a
-        href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
-        download="utr-pakka-reminders.ics"
-        className="up-btn up-btn--ghost w-fit"
-        data-testid="reminders"
-      >
-        4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
-      </a>
     </div>
   );
 }
 
-function Copyable({ title, text }: { title: string; text: string }) {
+function Doc({ n, title, text }: { n: number; title: string; text: string }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div>
-      <div className="flex items-center justify-between gap-3">
-        <span className="font-semibold">{title}</span>
-        <button
-          type="button"
-          className="up-btn up-btn--ghost up-btn--sm"
-          onClick={() => {
-            navigator.clipboard?.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-          }}
-        >
-          {copied ? 'Copied' : 'Copy'}
-        </button>
+    <div className="up-card pk-doc">
+      <div className="flex items-start gap-3">
+        <span className="pk-num">{n}</span>
+        <h4>{title}</h4>
       </div>
-      <pre className="up-pre mt-2">{text}</pre>
+      <pre className="up-pre">{text}</pre>
+      <button
+        type="button"
+        className="up-btn up-btn--ghost up-btn--sm w-fit"
+        onClick={() => {
+          navigator.clipboard?.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }}
+      >
+        {copied ? 'Copied' : 'Copy'}
+      </button>
     </div>
   );
 }

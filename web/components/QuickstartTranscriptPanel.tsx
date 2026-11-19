@@ -49,7 +49,7 @@ export function QuickstartTranscriptPanel({
       aria-label="Transcription panel"
     >
       <div className="flex shrink-0 items-baseline justify-between gap-3 border-b px-4 py-3" style={{ borderColor: 'var(--rule)' }}>
-        <h2 className="text-[1rem] font-semibold">Transcript</h2>
+        <h2 className="text-[1.0625rem] font-bold">Transcript</h2>
         <p className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }}>Live voice turns</p>
       </div>
 
