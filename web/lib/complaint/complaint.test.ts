@@ -96,3 +96,25 @@ describe('parseAmount: bug check 20 Nov', () => {
     expect(parseAmount('పాతిక వేలు')).toBe(25000);
   });
 });
+
+// Found 20 Nov: Razorpay's IFSC API answered 502 for a moment; a live call shouldn't fail on that.
+describe('lookupIfsc retries a server error', () => {
+  it('tries again after a 502 and returns the branch', async () => {
+    const { lookupIfsc } = await import('./ifsc');
+    let calls = 0;
+    const fake = (async () => {
+      calls++;
+      return calls === 1
+        ? new Response('bad gateway', { status: 502 })
+        : new Response(JSON.stringify({ IFSC: 'SBIN0000813', BANK: 'State Bank of India', BRANCH: 'BANGALORE', CITY: 'BANGALORE', STATE: 'KARNATAKA' }), { status: 200 });
+    }) as unknown as typeof fetch;
+    const b = await lookupIfsc('SBIN0000813', fake, 1);
+    expect(b?.bank).toBe('State Bank of India');
+    expect(calls).toBe(2);
+  });
+  it('gives up after three tries', async () => {
+    const { lookupIfsc } = await import('./ifsc');
+    const fake = (async () => new Response('x', { status: 503 })) as unknown as typeof fetch;
+    await expect(lookupIfsc('SBIN0000813', fake, 1)).rejects.toThrow(/503/);
+  });
+});
