@@ -173,7 +173,6 @@ function ListenButton({ isLoading, onStartConversation, link = false }: Actions 
   );
 }
 
-const SUB = 'Speak your language: ten to choose from. Keep your bank SMS open: it has the 12-digit UTR.';
 const WHY = 'Live voice by Agora Conversational AI, with Sarvam speech-to-text and Murf Falcon voices in ten Indian languages.';
 
 // Two more ways in, under the start controls: a recording of the whole flow, and a call to the caller's phone.
@@ -279,6 +278,46 @@ function Below() {
   );
 }
 
+// 1930 exists, so what is this? The same call, alone and with UTR Pakka.
+function Compare() {
+  return (
+    <section className="cmp" aria-labelledby="cmp-title">
+      <h2 id="cmp-title" className="up-h2">
+        1930 is the right number to call. UTR Pakka gets you ready for it.
+      </h2>
+      <div className="cmp-grid">
+        <div className="cmp-col">
+          <p className="up-label">Calling 1930 alone</p>
+          <ul>
+            <li>You read a 12-digit UTR out loud while you panic.</li>
+            <li>In English or Hindi, whatever language you think in.</li>
+            <li>Any wrong digit slows the freeze.</li>
+          </ul>
+        </div>
+        <div className="cmp-col cmp-col--us">
+          <p className="up-label">With UTR Pakka</p>
+          <ul>
+            <li>You speak your own language, in ten Indian languages.</li>
+            <li>Every digit is read back in groups of four until you confirm it.</li>
+            <li>The 1930 operator gets an English card with every number confirmed.</li>
+            <li>You get your bank&apos;s own fraud line, the RBI deadline date and two calendar reminders.</li>
+          </ul>
+        </div>
+      </div>
+      <div className="cmp-proof">
+        <p>
+          In Mangaluru and Bengaluru, fast reports through 1930 got all of the money back: ₹17 lakh and ₹14 lakh (The
+          Mangalorean, 31 Oct 2025; Telangana Today / PTI, 23 Sep 2025).
+        </p>
+        <p>
+          In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support, because language
+          barriers stop people from reporting promptly (Devdiscourse, 17 Jun 2026).
+        </p>
+      </div>
+    </section>
+  );
+}
+
 const DEADLINE = when(STATES['complaint-done']!.deadlines!.zeroLiabilityBy);
 
 /* The payment screen every UPI user has seen, its 12-digit reference circled, and that number
@@ -298,40 +337,30 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         <section className="rc-hero">
           <div>
             <p className="up-label">UTR = the 12-digit payment reference. Pakka = for sure.</p>
-            <h1 className="up-display" style={{ marginTop: 16 }}>
-              Lost money to a UPI scam? Tell me what happened.
+            <h1 className="up-display rc-h1" style={{ marginTop: 16 }}>
+              1930 can freeze your money, if they hear fast and get every digit right.{' '}
+              <span className="rc-h1-accent">UTR Pakka makes sure they do.</span>
             </h1>
-            <p className="up-lead" style={{ marginTop: 22, maxWidth: '34rem' }}>
-              {SUB}
+            <p className="up-lead" style={{ marginTop: 22, maxWidth: '36rem' }}>
+              It warns you during the scam call. Then, in your language, it takes down the 12-digit UTR, the amount and who
+              got the money, reads each back until you confirm it, and hands you the 1930 script, an English card for the
+              operator, your bank&apos;s fraud line and the bank letter.
             </p>
             <div className="mt-7">
               <LanguageChips />
-            </div>
-            <div className="mt-3">
-              <SlowToggle />
             </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
               <StartButton {...p} />
               <ListenButton {...p} link />
             </div>
-            {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
-            <MoreWays />
-            <div className="mt-6 flex flex-wrap items-center gap-4">
-              <span className="fd-qr">
-                <Image src="/design/qr-live.svg" alt="QR code to open UTR Pakka on your phone" width={76} height={76} unoptimized />
-                <span>
-                  Scan to try it
-                  <br />
-                  on your phone
-                </span>
-              </span>
-              <p className="max-w-[20rem] text-[0.9375rem]" style={{ color: 'var(--ink-2)' }}>
-                {WHY}
-              </p>
+            <div className="mt-4">
+              <SlowToggle />
             </div>
+            {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
           </div>
           <div className="rc-stage">
             <div className="rc-phone" aria-label="Sample payment screen">
+              <span className="rc-btn-vol" aria-hidden="true" />
               <div className="rc-screen">
                 <span className="rc-cam" aria-hidden="true" />
                 <div className="rc-status" aria-hidden="true">
@@ -344,7 +373,8 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                     <rect x="24" y="3" width="13" height="6" rx="1.5" />
                   </svg>
                 </div>
-                <p className="mt-4 text-center">
+                <div className="rc-body">
+                <p className="text-center">
                   <span className="up-sample-tag">Sample</span>
                 </p>
                 <div className="rc-tick" aria-hidden="true">
@@ -373,6 +403,8 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                 <div className="rc-done" aria-hidden="true">
                   Done
                 </div>
+                </div>
+                <span className="rc-home" aria-hidden="true" />
               </div>
             </div>
             <svg className="rc-arrow" style={{ left: 300, top: 410, width: 160, height: 120 }} viewBox="0 0 160 120" aria-hidden="true">
@@ -392,6 +424,19 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
             </div>
           </div>
         </section>
+        <section className="mw" aria-label="More ways to try it">
+          <MoreWays />
+          <span className="fd-qr">
+            <Image src="/design/qr-live.svg" alt="QR code to open UTR Pakka on your phone" width={76} height={76} unoptimized />
+            <span>
+              Scan to try it
+              <br />
+              on your phone
+            </span>
+          </span>
+          <p className="mw-why">{WHY}</p>
+        </section>
+        <Compare />
       </div>
       <ImpactBand />
       <Below />
