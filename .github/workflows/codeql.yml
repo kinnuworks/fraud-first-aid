@@ -10,6 +10,8 @@ permissions:
   security-events: write
 jobs:
   analyze:
+    # Code scanning uploads need a public repo (or paid Advanced Security); it runs once the repo is public.
+    if: github.event.repository.private == false
     runs-on: ubuntu-latest
     strategy:
       matrix:
