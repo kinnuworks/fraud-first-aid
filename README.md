@@ -6,9 +6,9 @@ It runs on Agora's Conversational AI Engine because the job is a live, interrupt
 
 **Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds.
 
-![The live app, sped up 16 times: the scam warning, the UTR read back and confirmed, the complaint pack](docs/core-loop.gif)
+![The live app, sped up: the scam warning, the UTR read back, the screenshot catching a wrong group, and the pack ready for 1930](docs/core-loop.gif)
 
-*The live app in one scripted run, sped up 16 times. The caller's voice is generated sample clips (an illustration); the app and its answers are real.*
+*The live app on 20 Nov 2026, sped up: the one-click scam catch, then a complaint in Telugu with the UTR read back and the pack. The voices are generated sample clips (an illustration); the app and its answers are real.*
 
 Proof, recomputed on every push from the results files in this repo:
 - Back-test on public data (ICFD-31k, synthetic scam calls, 2025): warned in 133 of 200 scam conversations it was never tuned on. Keyword rules alone: 5.
