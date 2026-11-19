@@ -3,6 +3,7 @@
 // Run: set -a; . ./.env; set +a; npx -y tsx@4.20.6 scripts/demo-check.ts [https://utr-pakka.vercel.app]
 import { chromium } from 'playwright';
 import { mkdirSync } from 'fs';
+import { capFor } from '../lib/capability';
 
 const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
 const SECRET = process.env.LLM_SHARED_SECRET;
@@ -41,7 +42,7 @@ async function sse(path: string, content: string, session: string, extra = '') {
   if (!SECRET) fail('LLM_SHARED_SECRET not set');
   const s = `demo-check-${Date.now()}`;
   const said = await sse('', 'UTR నాలుగు సున్నా రెండు ఒకటి ఏడు ఏడు ఎనిమిది ఎనిమిది తొమ్మిది తొమ్మిది ఒకటి సున్నా', s, '&lang=te&mode=complaint');
-  const c = await (await fetch(`${BASE}/api/call/complaint?session=${s}`)).json();
+  const c = await (await fetch(`${BASE}/api/call/complaint?session=${s}&cap=${capFor(s)}`)).json();
   if (c.fields?.utr?.value !== '402177889910') fail(`UTR not captured exactly: ${JSON.stringify(c.fields)}`);
   console.log('complaint: UTR captured', c.fields.utr.value, '| agent said:', said.slice(0, 80));
   console.log('DEMO CHECK PASSED');

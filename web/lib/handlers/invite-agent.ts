@@ -12,6 +12,8 @@ import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { DEFAULT_AGENT_UID } from '@/lib/agora';
 import { presetFor, prototypeInstructions } from '@/lib/agent-config';
 import { startComplaint } from '@/lib/complaint/store';
+import { checkCap } from '@/lib/capability';
+import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 
 // System prompt that defines the agent's personality and behavior.
@@ -60,6 +62,13 @@ export async function POST(request: NextRequest) {
     }
     if (!/^[\w-]{1,64}$/.test(channel_name)) {
       return NextResponse.json({ error: 'bad channel_name' }, { status: 400 });
+    }
+    // Only the holder of this call's capability can start its agent, and only one agent per call.
+    if (!checkCap(channel_name, (body as unknown as { cap?: string }).cap)) {
+      return NextResponse.json({ error: 'not your call' }, { status: 403 });
+    }
+    if (!claimChannel(channel_name)) {
+      return NextResponse.json({ error: 'an agent is already running for this call' }, { status: 409 });
     }
     const mode = (body as unknown as { mode?: string }).mode === 'guard' ? 'guard' : 'complaint';
     startComplaint(channel_name, lang, mode);
@@ -168,11 +177,18 @@ export async function POST(request: NextRequest) {
       agentUid,
       remoteUids: [requester_id],
       idleTimeout: 30,
-      expiresIn: ExpiresIn.hours(1),
+      expiresIn: ExpiresIn.minutes(20), // a call never needs longer; caps cost if a capability leaks
       debug: false, // enable debug to show restful API calls in the console
     });
 
-    const agentId = await session.start();
+    let agentId: string;
+    try {
+      agentId = await session.start();
+    } catch (e) {
+      releaseChannel(channel_name);
+      throw e;
+    }
+    setAgent(channel_name, agentId);
 
     return NextResponse.json({
       agent_id: agentId,
@@ -181,14 +197,6 @@ export async function POST(request: NextRequest) {
     } as AgentResponse);
   } catch (error) {
     console.error('Error starting conversation:', error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to start conversation',
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Failed to start the agent' }, { status: 500 });
   }
 }

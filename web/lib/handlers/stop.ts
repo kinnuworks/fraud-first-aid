@@ -1,6 +1,7 @@
 import { NextResponse } from 'next/server';
 import { AgoraClient, Area } from 'agora-agents';
-import { StopConversationRequest } from '@/types/conversation';
+import { checkCap } from '@/lib/capability';
+import { agentFor } from '@/lib/handlers/agents';
 
 function isAgentAlreadyStoppingOrStopped(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false;
@@ -24,15 +25,13 @@ function isAgentAlreadyStoppingOrStopped(error: unknown): boolean {
 
 export async function POST(request: Request) {
   try {
-    const body: StopConversationRequest = await request.json();
-    const { agent_id } = body;
-
-    if (!agent_id) {
-      return NextResponse.json(
-        { error: 'agent_id is required' },
-        { status: 400 },
-      );
+    const body = (await request.json().catch(() => ({}))) as { channel?: string; cap?: string };
+    // Only the call's own holder can stop it, and only the agent that call started.
+    if (!body.channel || !checkCap(body.channel, body.cap)) {
+      return NextResponse.json({ error: 'not your call' }, { status: 403 });
     }
+    const agent_id = agentFor(body.channel);
+    if (!agent_id) return NextResponse.json({ success: true, state: 'no-agent' });
 
     const appId = process.env.NEXT_PUBLIC_AGORA_APP_ID;
     const appCertificate = process.env.NEXT_AGORA_APP_CERTIFICATE;
@@ -61,14 +60,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error('Error stopping conversation:', error);
-    return NextResponse.json(
-      {
-        error:
-          error instanceof Error
-            ? error.message
-            : 'Failed to stop conversation',
-      },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: 'Failed to stop the agent' }, { status: 500 });
   }
 }

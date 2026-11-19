@@ -17,3 +17,11 @@ describe('reminderIcs', () => {
     expect(ics).toContain('State Bank of India');
   });
 });
+
+describe('reminderIcs escaping', () => {
+  it('cannot be broken by a carriage return or control characters in the bank name', () => {
+    const ics = reminderIcs({ utr: '402177889910', amount: 1, reportedOn: '2026-11-19', bank: 'Evil\rBEGIN:VEVENT\u0007' });
+    expect(ics.split('\r\n').filter((l) => l === 'BEGIN:VEVENT')).toHaveLength(2);
+    expect(ics).not.toMatch(/[^\r]\r(?!\n)/);
+  });
+});

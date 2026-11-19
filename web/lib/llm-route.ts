@@ -85,6 +85,7 @@ export function createLlmRoute({
     const lastUser =
       prev && whole.startsWith(prev) && whole.length > prev.length ? whole.slice(prev.length) : whole;
     seenUser.set(session, whole);
+    if (seenUser.size > 500) seenUser.delete(seenUser.keys().next().value as string);
     const fixed = shortcut?.(session, lastUser) ?? null;
     const result =
       fixed !== null

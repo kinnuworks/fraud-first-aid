@@ -1,13 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RtcTokenBuilder, RtcRole } from 'agora-token';
+import { newChannel, capFor, checkCap } from '@/lib/capability';
 
 const EXPIRATION_TIME_IN_SECONDS = 3600;
-
-function generateChannelName(): string {
-  const timestamp = Date.now();
-  const random = Math.random().toString(36).substring(2, 8);
-  return `ai-conversation-${timestamp}-${random}`;
-}
 
 export async function GET(request: NextRequest) {
   // console.log('Generating Agora token...');
@@ -27,7 +22,14 @@ export async function GET(request: NextRequest) {
   const uid = Number.isNaN(parsedUid) || parsedUid <= 0
     ? Math.floor(Math.random() * 9_999_000) + 1000
     : parsedUid;
-  const channelName = searchParams.get('channel') || generateChannelName();
+  // A new call gets a server-made channel; renewing a token for an existing one needs its capability.
+  const asked = searchParams.get('channel');
+  if (asked && !checkCap(asked, searchParams.get('cap'))) {
+    return NextResponse.json({ error: 'not your call' }, { status: 403 });
+  }
+  const channelName = asked || newChannel();
+  const cap = capFor(channelName);
+  if (!cap) return NextResponse.json({ error: 'server secret not set' }, { status: 500 });
 
   const expirationTime =
     Math.floor(Date.now() / 1000) + EXPIRATION_TIME_IN_SECONDS;
@@ -49,13 +51,13 @@ export async function GET(request: NextRequest) {
       token,
       uid: uid.toString(),
       channel: channelName,
+      cap,
     });
   } catch (error) {
     console.error('Error generating Agora token:', error);
     return NextResponse.json(
       {
         error: 'Failed to generate Agora token',
-        details: error instanceof Error ? error.message : String(error),
       },
       { status: 500 },
     );

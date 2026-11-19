@@ -502,7 +502,7 @@ export default function ConversationComponent({
               <SampleScamCall />
             </>
           )}
-          <ComplaintCard session={agoraData.channel} />
+          <ComplaintCard session={agoraData.channel} cap={agoraData.cap} />
         </>
       }
       transcript={

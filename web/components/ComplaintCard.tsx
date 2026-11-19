@@ -311,12 +311,12 @@ function Copyable({ title, text }: { title: string; text: string }) {
   );
 }
 
-export function ComplaintCard({ session }: { session: string }) {
+export function ComplaintCard({ session, cap }: { session: string; cap: string }) {
   const [data, setData] = useState<ComplaintView | null>(null);
   useEffect(() => {
     let live = true;
     const tick = async () => {
-      const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}`);
+      const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`);
       if (live && r.ok) setData(await r.json());
     };
     tick();
@@ -325,13 +325,13 @@ export function ComplaintCard({ session }: { session: string }) {
       live = false;
       clearInterval(t);
     };
-  }, [session]);
+  }, [session, cap]);
   const [shotState, setShotState] = useState<string | null>(null);
   async function upload(file: File) {
     setShotState('Reading the screenshot…');
     const fd = new FormData();
     fd.append('file', file);
-    const r = await fetch(`/api/call/screenshot?session=${encodeURIComponent(session)}`, { method: 'POST', body: fd });
+    const r = await fetch(`/api/call/screenshot?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, { method: 'POST', body: fd });
     const j = await r.json().catch(() => ({}));
     setShotState(r.ok ? null : `Couldn't read it: ${j.error ?? r.status}`);
   }

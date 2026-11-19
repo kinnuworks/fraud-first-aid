@@ -41,7 +41,8 @@ const play = async (page: Page, clip: string) => {
   const ctx = await browser.newContext({ recordVideo: { dir: OUT, size: { width: 1280, height: 800 } }, viewport: { width: 1280, height: 800 }, permissions: ['microphone'] });
   const page = await ctx.newPage();
   let session = '';
-  page.on('request', (r) => { const m = r.url().match(/complaint\?session=([\w-]+)/); if (m) session = m[1]; });
+  let cap = '';
+  page.on('request', (r) => { const m = r.url().match(/complaint\?session=([\w-]+)&cap=(\w+)/); if (m) { session = m[1]; cap = m[2]; } });
   await page.goto(`${BASE}/?lang=te&demo=1`);
   await page.getByRole('button', { name: /Let UTR Pakka listen/ }).click();
   await page.getByTestId('guard-listening').waitFor({ timeout: 30000 });
@@ -67,7 +68,7 @@ const play = async (page: Page, clip: string) => {
   const packed = await page.getByTestId('pack').isVisible().catch(() => false);
   log(packed ? 'PACK READY' : 'pack not ready');
   if (session) {
-    const st = await (await fetch(`${BASE}/api/call/complaint?session=${session}`)).json();
+    const st = await (await fetch(`${BASE}/api/call/complaint?session=${session}&cap=${cap}`)).json();
     log(`state: ${JSON.stringify(st.fields)}`);
     for (const t of st.trace ?? []) log(`  turn: ${t}`);
   }

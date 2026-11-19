@@ -6,7 +6,8 @@ import { addBankWorkingDays } from './deadline';
 type R = { utr: string; amount: number; reportedOn: string; bank: string };
 
 const day = (iso: string) => iso.replace(/-/g, '');
-const esc = (t: string) => t.replace(/([,;\\])/g, '\\$1').replace(/\n/g, '\\n');
+const esc = (t: string) =>
+  t.replace(/[\x00-\x08\x0b\x0c\x0e-\x1f]/g, '').replace(/([,;\\])/g, '\\$1').replace(/\r?\n|\r/g, '\\n');
 
 function event(uid: string, date: string, summary: string, description: string): string[] {
   return [

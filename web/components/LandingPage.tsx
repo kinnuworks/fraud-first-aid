@@ -98,6 +98,7 @@ export default function LandingPage() {
           body: JSON.stringify({
             requester_id: responseData.uid,
             channel_name: responseData.channel,
+            cap: responseData.cap,
             lang: new URLSearchParams(window.location.search).get('lang') ?? 'te',
             mode: new URLSearchParams(window.location.search).get('mode') === 'guard' ? 'guard' : 'complaint',
           } as ClientStartRequest & { lang: string; mode: string }),
@@ -154,8 +155,8 @@ export default function LandingPage() {
         //   - RTM uses the same UID that was used during RTM login (agoraData.uid).
         // Both are fetched in parallel to stay within the token-expiry grace-period window.
         const [rtcResponse, rtmResponse] = await Promise.all([
-          fetch(`/api/generate-agora-token?channel=${channel}&uid=${uid}`),
-          fetch(`/api/generate-agora-token?channel=${channel}&uid=${agoraData.uid}`),
+          fetch(`/api/generate-agora-token?channel=${channel}&uid=${uid}&cap=${agoraData.cap}`),
+          fetch(`/api/generate-agora-token?channel=${channel}&uid=${agoraData.uid}&cap=${agoraData.cap}`),
         ]);
         const [rtcData, rtmData] = await Promise.all([
           rtcResponse.json(),
@@ -183,10 +184,10 @@ export default function LandingPage() {
     if (agoraData?.agentId) {
       try {
         // console.log('Stopping agent:', agoraData.agentId);
-        const response = await fetch('/api/stop-conversation', {
+        const response = await fetch('/api/call/stop', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ agent_id: agoraData.agentId }),
+          body: JSON.stringify({ channel: agoraData.channel, cap: agoraData.cap }),
         });
         if (!response.ok) {
           console.error('Failed to stop agent:', await response.text());

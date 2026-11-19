@@ -1,6 +1,8 @@
 import type { RTMClient } from 'agora-rtm';
 
 export interface AgoraTokenData {
+  // Capability for this call (server-signed); required by every call route.
+  cap: string;
   token: string;
   uid: string;
   channel: string;
