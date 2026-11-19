@@ -12,8 +12,11 @@ type Pack =
   | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
+type EmailState = { id: string; at: string } | { problem: string } | null;
 export type ComplaintView = {
   lang?: keyof typeof LANG_LABEL;
+  hasEmail?: boolean;
+  emailSent?: EmailState;
   phase?: 'guard' | 'complaint';
   flags?: Flag[];
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
@@ -123,7 +126,15 @@ function Mismatch({ k, said, c }: { k: string; said: string | number; c: Check }
   );
 }
 
-export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView | null; onScreenshot?: (f: File) => void }) {
+export function ComplaintCardView({
+  data,
+  onScreenshot,
+  onEmail,
+}: {
+  data: ComplaintView | null;
+  onScreenshot?: (f: File) => void;
+  onEmail?: (email: string) => Promise<void>;
+}) {
   if (!data) return <p className="up-card p-5 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>Waiting for the call to start…</p>;
   const flags = data.flags ?? [];
   if (data.phase === 'guard' && flags.length === 0) {
@@ -171,7 +182,7 @@ export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView 
       )}
       {data.phase === 'guard' ? null : (
         <>
-          {data.pack.ok && <PackView pack={data.pack} />}
+          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} />}
           {mismatches.map((k) => (
             <Mismatch key={k} k={k} said={data.fields[k]!.value} c={data.check![k]!} />
           ))}
@@ -253,10 +264,65 @@ function SinceDebit({ when }: { when?: string | number }) {
   );
 }
 
-function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
+function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e: string) => Promise<void> }) {
+  const [email, setEmail] = useState('');
+  const [busy, setBusy] = useState(false);
+  if (emailSent && 'id' in emailSent) {
+    return (
+      <p className="text-[0.9375rem]" data-testid="email-sent">
+        Emailed ✓ <span style={{ color: 'var(--ink-2)' }}>(message id {emailSent.id})</span>
+      </p>
+    );
+  }
+  if (!onEmail) return null;
+  return (
+    <form
+      className="flex flex-wrap items-center gap-2"
+      onSubmit={async (e) => {
+        e.preventDefault();
+        setBusy(true);
+        await onEmail(email);
+        setBusy(false);
+      }}
+    >
+      <label className="text-[0.9375rem]" htmlFor="pack-email">
+        Email me this pack:
+      </label>
+      <input
+        id="pack-email"
+        type="email"
+        required
+        value={email}
+        onChange={(e) => setEmail(e.target.value)}
+        placeholder="you@example.com"
+        className="up-input min-w-[14rem] rounded border px-2 py-1 text-black"
+        data-testid="email-input"
+      />
+      <button type="submit" disabled={busy} className="up-btn up-btn--ghost" data-testid="email-send">
+        {busy ? 'Sending…' : 'Send'}
+      </button>
+      {emailSent && 'problem' in emailSent && (
+        <span className="text-[0.875rem]" style={{ color: 'var(--bad)' }} role="status">
+          Couldn&apos;t send: {emailSent.problem}
+        </span>
+      )}
+    </form>
+  );
+}
+
+function PackView({
+  pack,
+  emailSent,
+  onEmail,
+}: {
+  pack: Extract<Pack, { ok: true }>;
+  emailSent: EmailState;
+  onEmail?: (e: string) => Promise<void>;
+}) {
   return (
     <div className="up-card flex flex-col gap-5 p-5" data-testid="pack">
       <h3 className="text-[1.375rem] font-semibold leading-tight">Ready: call 1930 now, then send this to your bank</h3>
+      <EmailPack emailSent={emailSent} onEmail={onEmail} />
       <div className="flex flex-wrap items-center gap-3">
         <a href="tel:1930" className="up-btn" data-testid="call-1930">
           Call 1930 now
@@ -353,7 +419,17 @@ export function ComplaintCard({ session, cap }: { session: string; cap: string }
   }
   return (
     <>
-      <ComplaintCardView data={data} onScreenshot={upload} />
+      <ComplaintCardView
+        data={data}
+        onScreenshot={upload}
+        onEmail={async (email) => {
+          await fetch(`/api/call/email?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ email, send: true }),
+          });
+        }}
+      />
       {shotState && (
         <p className="text-[0.875rem]" style={{ color: 'var(--ink-3)' }} role="status">
           {shotState}

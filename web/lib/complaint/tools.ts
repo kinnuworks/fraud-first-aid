@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { getComplaint } from './store';
 import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
+import { sendPack } from './send';
 import { isIfsc } from './fields';
 
 export function complaintTools(session: string, lastUser: string): ToolSet {
@@ -78,6 +79,11 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       description: 'Mark a field confirmed after the caller said the read-back is right.',
       inputSchema: z.object({ field: z.enum(['utr', 'amount', 'when', 'payee', 'victim_bank']) }),
       execute: async ({ field }) => confirmField(c, field as FieldName),
+    }),
+    send_pack_email: tool({
+      description: 'Email the finished complaint pack (letter, 1930 script, operator summary, calendar reminders) to the address the caller typed on screen. Call it only after they agree.',
+      inputSchema: z.object({}),
+      execute: async () => sendPack(c),
     }),
     status: tool({
       description: 'What is still missing or unconfirmed, and the RBI reporting deadlines once the date is known.',

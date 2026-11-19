@@ -22,6 +22,9 @@ export type Complaint = {
   digitBuffer?: string;
   // Turn decisions for debugging (no caller words), filled only when DEBUG_TURNS=1.
   trace?: string[];
+  // Where to email the pack (typed on screen), and the result of sending it.
+  email?: string;
+  emailSent?: { id: string; at: string } | { problem: string };
   // How it happened: a one-line English summary for the operator, and the caller's own words.
   story?: { en: string; words: string };
   // What the payment screenshot showed (second source), if the caller added one.

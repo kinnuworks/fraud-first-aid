@@ -16,6 +16,8 @@ export function GET(request: NextRequest) {
   return NextResponse.json({
     lang: c.lang,
     phase: c.phase,
+    hasEmail: Boolean(c.email),
+    emailSent: c.emailSent ?? null,
     ...(process.env.DEBUG_TURNS === '1' ? { trace: c.trace ?? [] } : {}),
     flags: c.flags,
     fields: c.fields,

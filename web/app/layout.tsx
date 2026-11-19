@@ -1,8 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import '@fontsource/open-runde/500.css';
+import '@fontsource/open-runde/600.css';
 import '@/styles/design/theme.css';
-import { Archivo, Inter_Tight, IBM_Plex_Mono } from 'next/font/google';
+import Script from 'next/script';
+import { Archivo, Inter_Tight, IBM_Plex_Mono, Onest, Hanken_Grotesk } from 'next/font/google';
 
+const onest = Onest({ subsets: ['latin'], variable: '--font-onest', display: 'swap' });
+const hanken = Hanken_Grotesk({ subsets: ['latin'], variable: '--font-hanken', display: 'swap' });
 const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', axes: ['wdth'], display: 'swap' });
 const interTight = Inter_Tight({ subsets: ['latin'], variable: '--font-inter-tight', display: 'swap' });
 const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
@@ -47,10 +52,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${archivo.variable} ${interTight.variable} ${plexMono.variable}`}
+      className={`h-full ${onest.variable} ${hanken.variable} ${archivo.variable} ${interTight.variable} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <body className="h-full min-h-screen">
+        <Script src="/design/runtime.js" strategy="beforeInteractive" />
         {children}
       </body>
     </html>

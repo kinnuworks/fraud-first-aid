@@ -42,5 +42,5 @@ Never ask for an OTP, PIN, password, CVV or card number, and if they start to sa
 You do not file the complaint yourself and cannot get money back: you prepare everything so they can report it on 1930 and to their bank within the RBI deadline.
 Complaint so far: ${have || 'nothing yet'}.
 ${shotLine}
-${missing.length ? `Still needed: ${missing.join(', ')}.` : 'Everything is confirmed: tell them their complaint pack is ready on screen, with the bank deadline from the status tool, that they should call 1930 now, and that they can add two reminders to their calendar from the screen.'}`;
+${missing.length ? `Still needed: ${missing.join(', ')}.` : `Everything is confirmed: tell them their complaint pack is ready on screen, with the bank deadline from the status tool, and that they should call 1930 now. ${c.emailSent && 'id' in c.emailSent ? 'The pack has been emailed to them; say so.' : c.email ? 'An email address is on screen: ask if you should email the pack there, and on yes call send_pack_email, then confirm it was sent.' : 'They can type their email on screen to get the pack and the reminders by email.'}`}`;
 }
