@@ -1,5 +1,5 @@
-// Complaint sessions, keyed by the Agora channel name. In memory: one call lives on one
-// server instance for the demo. A shared store (KV) replaces this before multi-instance use.
+// Complaint sessions, keyed by the Agora channel name: this instance's copy of each call, loaded
+// from and saved to the shared store (below) on every request.
 import { newComplaint, type Complaint, type Phase } from './session';
 import type { ReadbackLang } from '../entities/numbers';
 
@@ -28,8 +28,16 @@ export const startComplaint = (id: string, lang: ReadbackLang, phase: Phase = 'c
 import { shared } from './shared';
 const seen = new Map<string, string>();
 
+// While a voice turn on this instance is changing the call, this copy is newer than the store's:
+// a poll or another request must not load the store over it. A hold ends when the turn saves,
+// or after a minute if the turn never finished.
+const writing = new Map<string, number>();
+export const hold = (id: string) => writing.set(id, Date.now() + 60_000);
+export const release = (id: string) => writing.delete(id);
+
 export async function hydrate(id: string): Promise<string | undefined> {
   if (!shared) return undefined;
+  if ((writing.get(id) ?? 0) > Date.now() && sessions.has(id)) return seen.get(id);
   const s = await shared.get(id);
   if (!s) return undefined;
   sessions.set(id, s.c as Complaint);

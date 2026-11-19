@@ -212,6 +212,8 @@ export function createLlmRoute({
           controller.close();
         } catch (err) {
           console.error("[llm-route] stream error:", err);
+          // keep what the turn changed before it failed (and end its hold on the call)
+          await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
           controller.error(err);
         }
       },

@@ -3,7 +3,7 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import { createLlmRoute } from '@/lib/llm-route';
 import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
-import { getComplaint, hydrate, persist } from '@/lib/complaint/store';
+import { getComplaint, hydrate, persist, hold, release } from '@/lib/complaint/store';
 import { addFlag } from '@/lib/complaint/session';
 import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
@@ -31,8 +31,14 @@ export const POST = createLlmRoute({
     }
     return out;
   },
-  load: (session) => hydrate(session),
-  save: (session, seen) => persist(session, seen),
+  // Load the call, then hold it while this turn's tools change it, so the card's poll can't load
+  // an older copy over it (full-flow run, 20 Nov).
+  load: async (session) => {
+    const seen = await hydrate(session);
+    hold(session);
+    return seen;
+  },
+  save: (session, seen) => persist(session, seen).finally(() => release(session)),
   // The guard warned aloud but wrote no marker: the warning still goes on the card (guard break test, 19 Nov).
   onReply: (session, spoken, lastUser) => {
     const c = getComplaint(session);
