@@ -37,8 +37,7 @@ export function QuickstartConversationLayout({
             <a href="#pack">Pack</a>
           </nav>
         </div>
-        <div className="flex flex-wrap items-center gap-3">
-          {pipelineMetrics}
+        <div className="flex items-center gap-3">
           {statusPanel}
           <button
             type="button"
@@ -59,6 +58,7 @@ export function QuickstartConversationLayout({
               <span className="up-label">Live call</span>
               <div className="cs-orb">{visualizer}</div>
               <div className="cs-controls">{controls}</div>
+              <div className="cs-pipe">{pipelineMetrics}</div>
             </section>
             {side && <section className="flex flex-col gap-3">{side}</section>}
             <div id="cs-deadline-slot" />

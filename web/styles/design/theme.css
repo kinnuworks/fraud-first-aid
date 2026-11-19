@@ -1021,7 +1021,7 @@ body {
 }
 .tr-row {
   display: grid;
-  grid-template-columns: 52px 1fr;
+  grid-template-columns: 66px 1fr;
   gap: 10px;
   padding: 12px 0;
   border-top: 1px solid #eef0f5;
@@ -1030,6 +1030,7 @@ body {
   border-top: 0;
 }
 .tr-time {
+  white-space: nowrap;
   font-family: var(--font-num);
   font-size: 0.8125rem;
   color: var(--ink-3);
@@ -1408,4 +1409,18 @@ body {
   to {
     transform: none;
   }
+}
+
+.cs-pipe {
+  margin-top: 12px;
+}
+.cs-pipe .up-pipe {
+  color: var(--on-navy-2);
+}
+.cs-pipe .up-pipe .step {
+  background: var(--navy-2);
+  color: var(--on-navy);
+}
+.cs-pipe .up-pipe .step b {
+  color: var(--on-navy-2);
 }
