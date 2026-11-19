@@ -14,8 +14,8 @@ type QuickstartConversationLayoutProps = {
   onEndConversation: () => void;
 };
 
-// The live call: a top bar with the pipeline, a navy call panel (agent, mic, guard), the complaint
-// dashboard in the middle (biggest), and the transcript inside a phone on the right (smallest).
+// The live call (Fold app system): a white top bar, a navy panel with the call and the bank deadline,
+// the complaint in the middle (biggest), the transcript on the right (smallest).
 export function QuickstartConversationLayout({
   statusPanel,
   pipelineMetrics,
@@ -29,11 +29,16 @@ export function QuickstartConversationLayout({
   return (
     <div className="cs flex min-h-0 flex-1 flex-col overflow-y-auto text-left">
       <header className="cs-top">
-        <div className="flex min-w-0 flex-wrap items-center gap-x-6 gap-y-2">
+        <div className="flex items-center gap-6">
           <Logo />
-          {pipelineMetrics}
+          <nav className="cs-tabs" aria-label="Sections">
+            <a href="#live" aria-current="true">Live call</a>
+            <a href="#complaint">Complaint</a>
+            <a href="#pack">Pack</a>
+          </nav>
         </div>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-3">
+          {pipelineMetrics}
           {statusPanel}
           <button
             type="button"
@@ -48,16 +53,19 @@ export function QuickstartConversationLayout({
         </div>
       </header>
       <div className="cs-grid">
-        <aside className="cs-side" aria-label="Call">
-          <span className="up-label">Live call</span>
-          <div className="cs-orb">{visualizer}</div>
-          <div className="cs-controls">{controls}</div>
-          {side}
-        </aside>
-        <main className="cs-main">{transcriptPanel}</main>
-        <div className="cs-phone-col">
-          <div className="cs-phone">{transcript}</div>
+        <div className="cs-left">
+          <aside className="cs-side" aria-label="Call" id="live">
+            <section>
+              <span className="up-label">Live call</span>
+              <div className="cs-orb">{visualizer}</div>
+              <div className="cs-controls">{controls}</div>
+            </section>
+            {side && <section className="flex flex-col gap-3">{side}</section>}
+            <div id="cs-deadline-slot" />
+          </aside>
         </div>
+        <main className="cs-main">{transcriptPanel}</main>
+        <div className="cs-right">{transcript}</div>
       </div>
     </div>
   );

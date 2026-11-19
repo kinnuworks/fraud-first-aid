@@ -53,35 +53,52 @@ export function StatePreview({ state }: { state: string }) {
   return (
     <div className="cs">
       <header className="cs-top">
-        <Logo />
+        <div className="flex items-center gap-6">
+          <Logo />
+          <nav className="cs-tabs" aria-label="Sections">
+            <a href="#live" aria-current="true">Live call</a>
+            <a href="#complaint">Complaint</a>
+            <a href="#pack">Pack</a>
+          </nav>
+        </div>
         <p role="note" className="up-sample-tag" style={{ textTransform: 'none', letterSpacing: 0 }}>
           Preview of the “{state}” screen with sample data, not a real complaint.
         </p>
       </header>
       <div className="cs-grid">
-        <aside className="cs-side" aria-label="Call">
-          <span className="up-label">Live call</span>
-          <div className="cs-orb">
-            <p className="max-w-[14rem] text-center text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }}>
-              The agent appears here during a live call.
-            </p>
-          </div>
-          {guard && (
-            <p className="up-note text-[1rem]">
-              On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the moment the
-              caller asks for an OTP, a PIN, a QR scan, an app install or money.
-            </p>
-          )}
-        </aside>
+        <div className="cs-left">
+          <aside className="cs-side" aria-label="Call" id="live">
+            <section>
+              <span className="up-label">Live call</span>
+              <div className="cs-orb">
+                <p className="max-w-[14rem] text-center text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }}>
+                  The agent appears here during a live call.
+                </p>
+              </div>
+            </section>
+            {guard && (
+              <section>
+                <p className="up-note text-[1rem]">
+                  On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the moment
+                  the caller asks for an OTP, a PIN, a QR scan, an app install or money.
+                </p>
+              </section>
+            )}
+            <div id="cs-deadline-slot" />
+          </aside>
+        </div>
         <main className="cs-main">
           <ComplaintCardView data={STATES[state]} />
         </main>
-        <div className="cs-phone-col">
-          <div className="cs-phone">
-            <div className="up-transcript items-center justify-center p-6 text-center text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
+        <div className="cs-right">
+          <section className="up-transcript" aria-label="Transcription panel">
+            <div className="px-6 pb-3 pt-5">
+              <h2 className="up-label">Transcript</h2>
+            </div>
+            <div className="flex flex-1 items-center justify-center px-6 text-center text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
               The live transcript appears here during a call.
             </div>
-          </div>
+          </section>
         </div>
       </div>
     </div>

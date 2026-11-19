@@ -2,6 +2,7 @@
 // The complaint as it is captured during the call: each field, whether the caller confirmed
 // it, the RBI deadlines, and the finished pack.
 import { useEffect, useState } from 'react';
+import { createPortal } from 'react-dom';
 import { minutesSince } from '@/lib/complaint/pack';
 import { scamById } from '@/lib/complaint/scams';
 import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
@@ -129,48 +130,121 @@ function Mismatch({ k, said, c }: { k: string; said: string | number; c: Check }
 // What the guard listens for, in the words the guard banner uses.
 const SIGNS = ['an OTP', 'a PIN', 'a QR scan', 'an app install', 'money'];
 
-const MON = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
-function CalendarDay({ iso }: { iso: string }) {
-  const m = iso.match(/^(\d{4})-(\d{2})-(\d{2})/);
-  if (!m) return null;
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+
+// The bank deadline as a month calendar: the day the money left, and the day the bank must hear by.
+function DeadlineCalendar({ data }: { data: ComplaintView }) {
+  const [today] = useState(() => new Date());
+  const debitIso = typeof data.fields.when?.value === 'string' ? data.fields.when.value.slice(0, 10) : null;
+  const deadlineIso = data.deadlines?.zeroLiabilityBy ?? null;
+  const anchor = deadlineIso ?? debitIso;
+  const year = anchor ? Number(anchor.slice(0, 4)) : today.getFullYear();
+  const month = anchor ? Number(anchor.slice(5, 7)) - 1 : today.getMonth();
+  const first = new Date(Date.UTC(year, month, 1)).getUTCDay();
+  const days = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
+  const iso = (d: number) => `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
+  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   return (
-    <span className="cd-cal" aria-hidden="true">
-      <b>{MON[Number(m[2]) - 1]}</b>
-      <strong>{Number(m[3])}</strong>
-    </span>
+    <section aria-label="Bank deadline">
+      <span className="up-label">Bank deadline</span>
+      <div className="cal-head">
+        <span>
+          {MONTHS[month]} {year}
+        </span>
+      </div>
+      <div className="cal-grid" aria-hidden="true">
+        {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+          <b key={d}>{d}</b>
+        ))}
+        {Array.from({ length: first }, (_, i) => (
+          <i key={`e${i}`} />
+        ))}
+        {Array.from({ length: days }, (_, i) => {
+          const d = i + 1;
+          const k = iso(d);
+          return (
+            <span
+              key={d}
+              data-deadline={k === deadlineIso ? '' : undefined}
+              data-debit={k === debitIso ? '' : undefined}
+              data-today={k === todayIso && k !== deadlineIso ? '' : undefined}
+            >
+              {d}
+            </span>
+          );
+        })}
+      </div>
+      {deadlineIso ? (
+        <>
+          <div className="cal-legend">
+            <span>
+              <i style={{ boxShadow: 'inset 0 0 0 1.5px rgb(255 255 255 / 0.6)' }} />
+              Money left
+            </span>
+            <span>
+              <i style={{ background: '#fff' }} />
+              Tell your bank by
+            </span>
+          </div>
+          <div className="cal-rows">
+            {debitIso && (
+              <div>
+                <span>Money left</span>
+                <span>{when(String(data.fields.when!.value))}</span>
+              </div>
+            )}
+            <div>
+              <span>Tell your bank by</span>
+              <span>{when(deadlineIso)}</span>
+            </div>
+            <div>
+              <span>RBI rule</span>
+              <span>3 working days for zero liability</span>
+            </div>
+          </div>
+        </>
+      ) : (
+        <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }}>
+          The date appears here once you say when the money left.
+        </p>
+      )}
+    </section>
   );
 }
 
-function FieldCard({
-  k,
-  label,
-  f,
-  c,
-}: {
-  k: keyof ComplaintView['fields'];
-  label: string;
-  f?: Field;
-  c?: Check;
-}) {
+// Puts the calendar into the navy call panel when the page has one; otherwise shows it inline.
+function CalendarSlot({ data }: { data: ComplaintView }) {
+  const [slot, setSlot] = useState<HTMLElement | null>(null);
+  const [checked, setChecked] = useState(false);
+  useEffect(() => {
+    setSlot(document.getElementById('cs-deadline-slot'));
+    setChecked(true);
+  }, []);
+  if (!checked) return null;
+  if (slot) return createPortal(<DeadlineCalendar data={data} />, slot);
   return (
-    <div className="up-card cd-field" data-field={k}>
-      <div className="cd-k">
-        <span>{label}</span>
+    <div className="cs-side">
+      <DeadlineCalendar data={data} />
+    </div>
+  );
+}
+
+const BANK = (v?: string | number) => {
+  const m = typeof v === 'string' ? v.match(/^(.*?)\s*\(([A-Z]{4}0[A-Z0-9]{6})\)\s*$/) : null;
+  const full = m ? m[1] : v ? String(v) : null;
+  const [name, branch] = full ? full.split(/,\s*/) : [null, null];
+  return { name, branch: branch ?? null, ifsc: m ? m[2] : null };
+};
+
+function Row({ k, label, f, c, children }: { k: string; label: string; f?: Field; c?: Check; children?: React.ReactNode }) {
+  return (
+    <div className="cd-row" data-field={k}>
+      <span>{label}</span>
+      <span>
+        {f ? children ?? show(k, f.value) : <span className="cd-muted">—</span>}
         {f && <Status f={f} />}
-      </div>
-      {f ? (
-        <p className={`cd-v${k === 'amount' ? ' cd-v--big' : ''}${k === 'when' ? ' up-num' : ''}`}>
-          {k === 'payee' && (
-            <span className="cd-avatar" aria-hidden="true">
-              {String(f.value).charAt(0).toUpperCase()}
-            </span>
-          )}
-          {show(k, f.value)}
-        </p>
-      ) : (
-        <p className="cd-v cd-empty">—</p>
-      )}
-      <CheckNote c={c} k={k} />
+        <CheckNote c={c} k={k} />
+      </span>
     </div>
   );
 }
@@ -186,14 +260,14 @@ export function ComplaintCardView({
 }) {
   if (!data)
     return (
-      <p className="up-card p-6 text-[1.0625rem]" style={{ color: 'var(--ink-3)' }}>
+      <p className="cd-card text-[1.0625rem]" style={{ color: 'var(--ink-3)' }}>
         Waiting for the call to start…
       </p>
     );
   const flags = data.flags ?? [];
   if (data.phase === 'guard' && flags.length === 0) {
     return (
-      <section aria-label="Scam-call guard" className="up-card gd-listen" data-testid="guard-listening">
+      <section aria-label="Scam-call guard" className="cd-card gd-listen" data-testid="guard-listening">
         <span className="gd-radar" aria-hidden="true">
           <span />
           <span />
@@ -215,10 +289,17 @@ export function ComplaintCardView({
     );
   }
   const mismatches = (['utr', 'amount', 'payee', 'when'] as const).filter((k) => data.check?.[k]?.status === 'mismatch' && data.fields[k]);
-  const utr = data.fields.utr;
+  const f = data.fields;
   const utrCheck = data.check?.utr;
+  const done = LABELS.filter(([k]) => f[k]?.confirmed).length;
+  const bank = BANK(f.victim_bank?.value);
+  const shotStatus = (k: 'utr' | 'amount' | 'payee') => {
+    const c = data.check?.[k];
+    if (!c) return 'not added';
+    return c.status === 'match' ? 'matches' : c.status === 'mismatch' ? 'differs' : c.status === 'spoken_only' ? 'not on screenshot' : 'on screenshot';
+  };
   return (
-    <section aria-label="Your complaint" className="flex flex-col gap-4">
+    <section aria-label="Your complaint" className="flex flex-col gap-5" id="complaint">
       {flags.length > 0 && (
         <div className="up-alarm" data-motion-in="" data-testid="red-flags">
           <h2 className="up-alarm__kicker">Scam warning given</h2>
@@ -226,19 +307,19 @@ export function ComplaintCardView({
             Said aloud{data.lang && LANG_LABEL[data.lang] ? ` in ${LANG_LABEL[data.lang]}` : ''}: hang up now, never share a code, scan or pay.
           </p>
           <ul className="space-y-5">
-            {flags.map((f, i) => {
-              const s = scamById(f.scam);
+            {flags.map((fl, i) => {
+              const sc = scamById(fl.scam);
               return (
                 <li key={i}>
-                  <p className="up-alarm__title">{s?.name ?? f.scam}</p>
+                  <p className="up-alarm__title">{sc?.name ?? fl.scam}</p>
                   <p className="up-alarm__body">
-                    The caller {f.red_flag}. <span style={{ opacity: 0.9 }}>Heard: “{f.heard}”</span>
+                    The caller {fl.red_flag}. <span style={{ opacity: 0.9 }}>Heard: “{fl.heard}”</span>
                   </p>
-                  {s && (
+                  {sc && (
                     <p className="up-alarm__quote">
-                      “{s.official}”{' '}
-                      <a href={s.url} target="_blank" rel="noopener noreferrer">
-                        {s.source}
+                      “{sc.official}”{' '}
+                      <a href={sc.url} target="_blank" rel="noopener noreferrer">
+                        {sc.source}
                       </a>
                     </p>
                   )}
@@ -250,57 +331,94 @@ export function ComplaintCardView({
       )}
       {data.phase === 'guard' ? null : (
         <>
-          <div className="cd-progress" aria-label="Complaint progress">
-            {LABELS.map(([k, label]) => {
-              const f = data.fields[k];
-              return (
-                <span key={k} data-done={f?.confirmed ? '' : undefined} data-now={f && !f.confirmed ? '' : undefined}>
-                  {f?.confirmed ? '✓ ' : ''}
-                  {k === 'utr' ? 'UTR' : label}
-                </span>
-              );
-            })}
-            <span data-done={data.pack.ok ? '' : undefined}>{data.pack.ok ? '✓ ' : ''}Pack</span>
+          <CalendarSlot data={data} />
+          <div className="cd-head">
+            <span className="up-label">
+              {data.lang && LANG_LABEL[data.lang] ? `Speaking ${LANG_LABEL[data.lang]} · ` : ''}
+              {done} of 5 details confirmed
+            </span>
+            <span className="text-[0.9375rem]" style={{ color: 'var(--ink-2)' }}>
+              <SinceDebit when={f.when?.value} />
+            </span>
           </div>
-          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} whenValue={data.fields.when?.value} />}
+          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} />}
           {mismatches.map((k) => (
-            <Mismatch key={k} k={k} said={data.fields[k]!.value} c={data.check![k]!} />
+            <Mismatch key={k} k={k} said={f[k]!.value} c={data.check![k]!} />
           ))}
           <h2 className="sr-only">Your complaint</h2>
-          <div className="up-card cd-utr" data-field="utr">
+          <div className="cd-card" data-field="utr">
             <div className="cd-k">
               <span>UTR (transaction reference)</span>
-              {utr && <Status f={utr} />}
+              {f.utr && <Status f={f.utr} />}
             </div>
-            {utr ? (
-              <UtrGroups
-                value={utr.value}
-                state={utr.confirmed ? 'ok' : 'pending'}
-                bad={utrCheck?.status === 'mismatch' ? utrCheck.groups ?? [] : []}
-              />
+            {f.utr ? (
+              <p className="cd-utr" aria-label={show('utr', f.utr.value)}>
+                {(String(f.utr.value).match(/\d{1,4}/g) ?? []).map((g, i) => (
+                  <span
+                    key={i}
+                    data-state={
+                      utrCheck?.status === 'mismatch' && (utrCheck.groups ?? []).includes(i + 1) ? 'bad' : f.utr!.confirmed ? undefined : 'pending'
+                    }
+                  >
+                    {g}
+                  </span>
+                ))}
+              </p>
             ) : (
-              <p className="cd-v cd-empty">Say the 12 digits from your bank SMS, in pairs or one by one.</p>
+              <p className="cd-utr-empty">Say the 12 digits from your bank SMS, in pairs or one by one.</p>
             )}
-            <div className="mt-2">
+            <div className="cd-sub">
               <CheckNote c={utrCheck} k="utr" />
             </div>
           </div>
-          <div className="cd-grid">
-            {LABELS.filter(([k]) => k !== 'utr').map(([k, label]) => (
-              <FieldCard key={k} k={k} label={label} f={data.fields[k]} c={data.check?.[k as 'utr']} />
-            ))}
-          </div>
-          {data.deadlines && !data.pack.ok && (
-            <div className="cd-deadline">
-              <CalendarDay iso={data.deadlines.zeroLiabilityBy} />
-              <div>
-                <p>
-                  Tell your bank by <strong>{when(data.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
+          <div className="cd-pair">
+            <div className="cd-card cd-bank">
+              <div className="cd-bank-title" data-field="victim_bank">
+                <i aria-hidden="true" />
+                <span className="flex-1">{bank.name ?? 'Your bank'}</span>
+                {f.victim_bank ? <Status f={f.victim_bank} /> : <span className="cd-muted normal-case tracking-normal">not said yet</span>}
+              </div>
+              <div className="cd-big" data-field="amount">
+                <p className="cd-k">
+                  <span>Amount lost</span>
+                  {f.amount && <Status f={f.amount} />}
                 </p>
-                <SinceDebit when={data.fields.when?.value} />
+                <p className={`cd-bigv${f.amount ? '' : ' cd-muted'}`}>{f.amount ? show('amount', f.amount.value) : '—'}</p>
+                <CheckNote c={data.check?.amount} k="amount" />
+              </div>
+              <Row k="when" label="When" f={f.when} c={data.check?.when} />
+              <div className="cd-row">
+                <span>Branch</span>
+                <span className={bank.branch ? '' : 'cd-muted'}>{bank.branch ?? '—'}</span>
+              </div>
+              <div className="cd-row">
+                <span>IFSC code</span>
+                <span className={bank.ifsc ? 'up-num' : 'cd-muted'}>{bank.ifsc ?? '—'}</span>
               </div>
             </div>
-          )}
+            <div className="cd-card cd-bank">
+              <div className="cd-bank-title">
+                <i aria-hidden="true" style={{ background: 'var(--marker)' }} />
+                <span className="flex-1">Money went to</span>
+              </div>
+              <div className="cd-big" data-field="payee">
+                <p className="cd-k">
+                  <span>UPI ID or number</span>
+                  {f.payee && <Status f={f.payee} />}
+                </p>
+                <p className={`cd-bigv${f.payee ? '' : ' cd-muted'}`}>{f.payee ? String(f.payee.value) : '—'}</p>
+                <CheckNote c={data.check?.payee} k="payee" />
+              </div>
+              <div className="cd-row">
+                <span>Screenshot</span>
+                <span>{shotStatus('utr')}</span>
+              </div>
+              <div className="cd-row">
+                <span>Status</span>
+                <span>{data.pack.ok ? 'ready to file' : done === 5 ? 'all confirmed' : 'checking'}</span>
+              </div>
+            </div>
+          </div>
           {onScreenshot && (
             <div className="cd-shot">
               <p>Your payment screenshot lets every number be checked twice.</p>
@@ -345,7 +463,7 @@ function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e
   if (emailSent && 'id' in emailSent) {
     return (
       <p className="text-[0.9375rem]" data-testid="email-sent">
-        Emailed ✓ <span style={{ opacity: 0.8 }}>(message id {emailSent.id})</span>
+        Emailed ✓ <span style={{ color: 'var(--ink-3)' }}>(message id {emailSent.id})</span>
       </p>
     );
   }
@@ -373,7 +491,7 @@ function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e
         className="up-input min-w-[14rem]"
         data-testid="email-input"
       />
-      <button type="submit" disabled={busy} className="up-btn up-btn--light up-btn--sm" data-testid="email-send">
+      <button type="submit" disabled={busy} className="up-btn up-btn--ghost up-btn--sm" data-testid="email-send">
         {busy ? 'Sending…' : 'Send'}
       </button>
       {emailSent && 'problem' in emailSent && (
@@ -389,96 +507,97 @@ function PackView({
   pack,
   emailSent,
   onEmail,
-  whenValue,
 }: {
   pack: Extract<Pack, { ok: true }>;
   emailSent: EmailState;
   onEmail?: (e: string) => Promise<void>;
-  whenValue?: string | number;
 }) {
   return (
-    <div className="flex flex-col gap-4" data-testid="pack">
-      <div className="pk-banner">
-        <h3>Ready: call 1930 now, then send this to your bank</h3>
-        <div className="flex flex-wrap items-center gap-4">
-          <a href="tel:1930" className="up-btn pk-call" data-testid="call-1930">
-            Call 1930 now
-          </a>
-          <div className="flex items-center gap-3">
-            <CalendarDay iso={pack.deadlines.zeroLiabilityBy} />
-            <p className="max-w-[22rem] text-[1.0625rem] leading-snug">
-              Tell your bank by <strong>{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
+    <div className="cd-card" data-testid="pack" id="pack">
+      <div className="pk-hero">
+        <div>
+          <span className="up-label">Your pack is ready</span>
+          <h3 className="mt-2">Ready: call 1930 now, then send this to your bank</h3>
+          <p className="mt-2 text-[1.0625rem]" style={{ color: 'var(--ink-2)' }}>
+            Tell your bank by <strong>{when(pack.deadlines.zeroLiabilityBy)}</strong> for zero liability (RBI, 3 working days).
+          </p>
+          {pack.minutesSinceDebit !== null && (
+            <p className="mt-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
+              Complaint ready {hm(pack.minutesSinceDebit)} after the money left.
             </p>
-          </div>
+          )}
         </div>
-        <div className="text-[1rem]" style={{ color: 'var(--on-navy-2)' }}>
-          <SinceDebit when={whenValue} />
-          {pack.minutesSinceDebit !== null && <p>Complaint ready {hm(pack.minutesSinceDebit)} after the money left.</p>}
-        </div>
-        <div className="pk-actions">
-          <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--outline-light up-btn--sm">
-            Open cybercrime.gov.in to file yourself
-          </a>
-          <a
-            href={`https://wa.me/?text=${encodeURIComponent(`${pack.script1930}\n\n${pack.operatorCard}`)}`}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="up-btn up-btn--outline-light up-btn--sm"
-            data-testid="share-family"
-          >
-            Send to family on WhatsApp
-          </a>
-          <a
-            href={`mailto:?subject=${encodeURIComponent(pack.bankLetter.split('\n').find((l) => l.startsWith('Subject:'))?.slice(9) ?? 'Fraudulent UPI transaction')}&body=${encodeURIComponent(pack.bankLetter)}`}
-            className="up-btn up-btn--outline-light up-btn--sm"
-            data-testid="email-bank"
-          >
-            Email the letter to your bank
-          </a>
-        </div>
-        <EmailPack emailSent={emailSent} onEmail={onEmail} />
-      </div>
-      <div className="pk-docs">
-        <Doc n={1} title="Call 1930 now and read this out" text={pack.script1930} />
-        <Doc n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
-        <Doc n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
-      </div>
-      <div className="up-card flex items-center gap-3 p-5">
-        <span className="pk-num">4</span>
-        <a
-          href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
-          download="utr-pakka-reminders.ics"
-          className="up-btn up-btn--ghost pk-remind"
-          data-testid="reminders"
-        >
-          4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
+        <a href="tel:1930" className="up-btn pk-call" data-testid="call-1930">
+          Call 1930 now
         </a>
+      </div>
+      <div className="pk-list">
+        <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
+        <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
+        <PackItem n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
+        <div className="flex items-center gap-[14px] py-[14px]">
+          <span className="pk-num">4</span>
+          <a
+            href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
+            download="utr-pakka-reminders.ics"
+            className="up-link pk-remind font-semibold"
+            data-testid="reminders"
+          >
+            4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
+          </a>
+        </div>
+      </div>
+      <div className="pk-actions">
+        <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost up-btn--sm">
+          Open cybercrime.gov.in to file yourself
+        </a>
+        <a
+          href={`https://wa.me/?text=${encodeURIComponent(`${pack.script1930}\n\n${pack.operatorCard}`)}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="up-btn up-btn--ghost up-btn--sm"
+          data-testid="share-family"
+        >
+          Send to family on WhatsApp
+        </a>
+        <a
+          href={`mailto:?subject=${encodeURIComponent(pack.bankLetter.split('\n').find((l) => l.startsWith('Subject:'))?.slice(9) ?? 'Fraudulent UPI transaction')}&body=${encodeURIComponent(pack.bankLetter)}`}
+          className="up-btn up-btn--ghost up-btn--sm"
+          data-testid="email-bank"
+        >
+          Email the letter to your bank
+        </a>
+      </div>
+      <div className="mt-4">
+        <EmailPack emailSent={emailSent} onEmail={onEmail} />
       </div>
     </div>
   );
 }
 
-function Doc({ n, title, text }: { n: number; title: string; text: string }) {
+function PackItem({ n, title, text, open = false }: { n: number; title: string; text: string; open?: boolean }) {
   const [copied, setCopied] = useState(false);
   return (
-    <div className="up-card pk-doc">
-      <div className="flex items-start gap-3">
+    <details className="pk-item" open={open}>
+      <summary>
         <span className="pk-num">{n}</span>
-        <h4>{title}</h4>
-      </div>
+        <strong>{title}</strong>
+        <span className="pk-show" aria-hidden="true" />
+        <button
+          type="button"
+          className="up-btn up-btn--ghost up-btn--sm"
+          onClick={(e) => {
+            e.preventDefault();
+            navigator.clipboard?.writeText(text);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 1500);
+          }}
+        >
+          {copied ? 'Copied' : 'Copy'}
+        </button>
+      </summary>
       <pre className="up-pre">{text}</pre>
-      <button
-        type="button"
-        className="up-btn up-btn--ghost up-btn--sm w-fit"
-        onClick={() => {
-          navigator.clipboard?.writeText(text);
-          setCopied(true);
-          setTimeout(() => setCopied(false), 1500);
-        }}
-      >
-        {copied ? 'Copied' : 'Copy'}
-      </button>
-    </div>
+    </details>
   );
 }
 

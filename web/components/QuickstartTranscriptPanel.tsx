@@ -44,19 +44,14 @@ export function QuickstartTranscriptPanel({
   }, [messages]);
 
   return (
-    <section
-      className="up-transcript"
-      aria-label="Transcription panel"
-    >
-      <div className="flex shrink-0 items-baseline justify-between gap-3 border-b px-4 py-3" style={{ borderColor: 'var(--rule)' }}>
-        <h2 className="text-[1.0625rem] font-bold">Transcript</h2>
-        <p className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }}>Live voice turns</p>
+    <section className="up-transcript" aria-label="Transcription panel">
+      <div className="flex shrink-0 items-baseline justify-between gap-3 px-6 pb-3 pt-5">
+        <h2 className="up-label">Transcript</h2>
+        <p className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }}>
+          Live voice turns
+        </p>
       </div>
-
-      <div
-        ref={scrollRef}
-        className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 py-4"
-      >
+      <div ref={scrollRef} className="flex min-h-0 flex-1 flex-col overflow-y-auto px-6 pb-5">
         {messages.length === 0 ? (
           <div className="flex h-full items-center justify-center text-center text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
             Start speaking to see the live transcript here.
@@ -64,24 +59,15 @@ export function QuickstartTranscriptPanel({
         ) : (
           messages.map((message, index) => {
             const isAgent = String(message.uid) === agentUID;
-            const label = isAgent ? 'Agent' : 'You';
             const text = message.text?.trim();
             const time = formatMessageTime(message.createdAt);
-
             return (
-              <article
-                key={`${message.turn_id ?? message.uid}-${index}`}
-                className={`flex flex-col ${isAgent ? 'items-start' : 'items-end'}`}
-              >
-                <div className="mb-1 flex items-center gap-2 px-1 text-[0.8125rem] font-semibold" style={{ color: 'var(--ink-3)' }}>
-                  <span>{label}</span>
-                  {time && <span className="font-normal">{time}</span>}
-                </div>
-                <div
-                  className={`up-bubble ${isAgent ? 'up-bubble--agent' : 'up-bubble--you'}`}
-                >
-                  {text || '...'}
-                </div>
+              <article key={`${message.turn_id ?? message.uid}-${index}`} className="tr-row" data-agent={isAgent ? '' : undefined}>
+                <span className="tr-time">{time ?? ''}</span>
+                <span>
+                  <span className="tr-who">{isAgent ? 'UTR Pakka' : 'You'}</span>
+                  <span className="tr-text">{text || '...'}</span>
+                </span>
               </article>
             );
           })

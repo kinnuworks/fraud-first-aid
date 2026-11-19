@@ -522,7 +522,7 @@ export default function ConversationComponent({
           role="region"
           aria-label="AI agent status visualization"
         >
-          <AgentVisualizer state={visualizerState} size="lg" />
+          <AgentVisualizer state={visualizerState} size="md" />
           {remoteUsers.map((user) => (
             <div key={user.uid} className="hidden">
               <RemoteUser user={user} />
