@@ -1,12 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
-import '@fontsource/open-runde/500.css';
-import '@fontsource/open-runde/600.css';
 import '@/styles/design/theme.css';
-import Script from 'next/script';
 import {
-  Archivo,
-  Inter_Tight,
   IBM_Plex_Mono,
   Figtree,
   Anek_Latin,
@@ -31,8 +26,6 @@ const anekMl = Anek_Malayalam({ display: 'swap', preload: false, variable: '--fo
 const anekBn = Anek_Bangla({ display: 'swap', preload: false, variable: '--font-anek-bn' });
 const anekGu = Anek_Gujarati({ display: 'swap', preload: false, variable: '--font-anek-gu' });
 const anekPa = Anek_Gurmukhi({ display: 'swap', preload: false, variable: '--font-anek-pa' });
-const archivo = Archivo({ subsets: ['latin'], variable: '--font-archivo', axes: ['wdth'], display: 'swap' });
-const interTight = Inter_Tight({ subsets: ['latin'], variable: '--font-inter-tight', display: 'swap' });
 const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
 
 export const viewport: Viewport = {
@@ -75,11 +68,10 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${figtree.variable} ${anekLatin.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')} ${archivo.variable} ${interTight.variable} ${plexMono.variable}`}
+      className={`h-full ${figtree.variable} ${anekLatin.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')} ${plexMono.variable}`}
       suppressHydrationWarning
     >
       <body className="h-full min-h-screen">
-        <Script src="/design/runtime.js" strategy="beforeInteractive" />
         {children}
       </body>
     </html>
