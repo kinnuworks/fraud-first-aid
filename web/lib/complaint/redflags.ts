@@ -20,32 +20,45 @@ const KYC = /\bkyc\b|केवाईसी|కేవైసీ|ಕೆವೈಸಿ
 // scam call, so the model should switch to the complaint instead of warning. A loss needs money in
 // the line: "already", "lost" or "gone" alone come up all the time in a live scam call ("I've already
 // said no", "our letters got lost"; 542 of 4,474 fraud calls in the ICFD validation split).
-const MONEY = String.raw`(money|amount|rs\.?|inr|₹|rupees?|rupay\w*|paise|paisa|lakh|thousand|hazaar|\d)`;
+// Money is an amount: a money word, or a number with a currency or scale word ("2 kids" is not).
+// A bare number counts from 100 up ("15,000", "500"), so "2 kids" and "3 tickets" don't.
+const AMT = String.raw`(?:(?:rs\.?|inr|₹)\s*\d[\d,]*|\d[\d,]*(?:\.\d+)?\s*(?:k\b|rs\b|rupees?|rupay\w*|lakh|thousand|hazaar|crore)|\b\d{1,3}(?:,\d{2,3})+\b|\b[1-9]\d{2,7}\b)`;
+const MONEY = String.raw`(?:money|paise|paisa|rupees?|rupay\w*|lakh|${AMT})`;
 const PAID = String.raw`\b(i|we|i've|we've|i have|we have|maine|humne)\s+(just\s+|already\s+)?paid\b|\b(just|already)\s+paid\b|(?<!be )\bpaid\s+(him|her|them|it|rs|inr|₹|\d|kar|kiya|ho)`;
-const GONE = String.raw`\b${MONEY}[^.?!]{0,40}\b(gone|lost|taken|chale? gay\w*|chala gaya|kat gay\w*|bhej (diya|diye|di))\b`;
-// "Debited" and "deducted" only once it has happened ("was deducted", "debited from my account"),
-// not "it will be deducted from the loan amount".
-const DEBITED = String.raw`\b(got|was|were|been|just|already)\s+(debited|deducted|cut)\b(?! off)|\b(debited|deducted)\s+from\s+(my|our)\b`;
+const GONE = String.raw`${MONEY}[^.?!]{0,40}\b(gone|lost|chale? gay\w*|chala gaya|kat gay\w*|bhej (diya|diye|di))\b`;
+// "Debited" and "deducted" only once it has happened ("was deducted", "debited from my account",
+// "10000 rupees debited"), not "it will be deducted from my salary".
+const DEBITED = String.raw`\b(got|was|were|been|just|already)\s+(debited|deducted|cut)\b(?! off)|(?<!(will|to|would|can|could|should|must) be )\b(debited|deducted)\s+from\s+(my|our)\b|${AMT}\s+(debited|deducted)\b`;
 const SENT = String.raw`\b(i|we|i've|i have|maine|humne|already)\b[^.?!]{0,20}\b(sent|transferred|lost)\b[^.?!]{0,30}${MONEY}`;
 const INDIC = 'పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|भेज दिए|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು';
 export const LOSS = new RegExp(`${PAID}|${GONE}|${DEBITED}|${SENT}|${INDIC}`, 'i');
+// A line about "your account" or "your money" is the caller talking to the victim, not the
+// victim's own loss ("Rs 49,999 was debited from your account", a classic opener).
+const YOURS = /\byour (account|money|card|bank)\b|aapke (account|khate)|आपके (खाते|अकाउंट)|మీ (ఖాతా|అకౌంట్)|ನಿಮ್ಮ (ಖಾತೆ|ಅಕೌಂಟ್)/i;
 
 // On guard, a payment alone ("I already paid the electricity bill", "maine 200 bhej diye") is
 // everyday life. A loss that should start a complaint at once also has a sign of fraud: money that
 // went without them, or a fraud word (ordinary-calls break test, 20 Nov).
-const WENT = String.raw`\b${MONEY}[^.?!]{0,40}\b(gone|lost|taken|chale? gay\w*|chala gaya|kat gay\w*)\b|\blost\b[^.?!]{0,30}${MONEY}`;
+const WENT = String.raw`${MONEY}[^.?!]{0,40}\b(gone|lost|chale? gay\w*|chala gaya|kat gay\w*)\b|\blost\b[^.?!]{0,30}${MONEY}`;
 const FRAUD = /scam|fraud|cheat|dhok|thag|fake|धोखा|ठग|మోస|ಮೋಸ|மோசடி|തട്ടിപ്പ്|প্রতারণা|फसवणूक|છેતરપિંડી|ਧੋਖਾ/i;
 const FRAUD_LOSS = new RegExp(`${WENT}|${DEBITED}|పోయాయి|పోయింది|కట్ అయ్యా|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು`, 'i');
-export const isFraudLoss = (t: string) => FRAUD_LOSS.test(t) || FRAUD.test(t) || detectRedFlag(t) !== null;
+export const isFraudLoss = (t: string) => !YOURS.test(t) && (FRAUD_LOSS.test(t) || FRAUD.test(t) || detectRedFlag(t) !== null);
 
 // A scammer's line with a red flag ("we sent the OTP to your phone to credit the amount") is a
 // warning, not a loss, unless the money words are first person and past.
 const STRONG = new RegExp(`${PAID}|${GONE}|${DEBITED}|${INDIC}`, 'i');
-export const isLoss = (t: string) => (detectRedFlag(t) ? STRONG.test(t) : LOSS.test(t));
+export const isLoss = (t: string) => !YOURS.test(t) && (detectRedFlag(t) ? STRONG.test(t) : LOSS.test(t));
 
 // A reply that tells them to put the phone down, in any of our languages: the guard warned.
-const HANGUP = /hang up|cut the call|phone cut|kaat|काट|रख (दो|दीजिए|दें)|फ़?ोन रखिए|కట్|పెట్టేయ|పెట్టండి|ಕಟ್|ಇಟ್ಟುಬಿಡಿ|துண்டி|வைத்துவிடு|കട്ട്|কেটে|કાપી|ਕੱਟ/i;
-export const saysHangUp = (spoken: string) => HANGUP.test(spoken);
+// The phone word comes first, so "pay the bill" (బిల్లు కట్టండి) or "write it down" doesn't count,
+// and "don't" in front of it (मत काटिए, don't hang up) cancels it.
+const HANGUP = /hang up|cut the call|phone cut|(phone|fon|फ़ोन|फोन|ఫోన్|ಫೋನ್|ഫോൺ|ফোন|ફોન|ਫ਼ੋਨ|ਫੋਨ)\s*(kaat|काट|रख|कट|కట్ చే|పెట్టేయ|ಕಟ್ ಮಾಡಿ|കട്ട് ചെയ്യ|কেটে|કાપી|ਕੱਟ)|அழைப்பைத் துண்டி/i;
+const DONT = /\b(don'?t|do not|never|mat)\b|मत|వద్దు|ಬೇಡ/i;
+const nearDont = (t: string) => {
+  const m = t.match(HANGUP);
+  return m?.index !== undefined && DONT.test(t.slice(Math.max(0, m.index - 12), m.index + m[0].length + 8));
+};
+export const saysHangUp = (spoken: string) => HANGUP.test(spoken) && !nearDont(spoken);
 
 export type RedFlag = { scam: string; ask: string };
 

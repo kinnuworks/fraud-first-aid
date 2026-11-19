@@ -10,7 +10,7 @@ export const plusDays = (iso: string, n: number) => {
   return d.toISOString().slice(0, 10);
 };
 
-type R = { utr: string; amount: number; reportedOn: string; bank: string };
+type R = { utr: string; amount: number; reportedOn: string; bank: string; debitOn?: string; ombudsman?: string };
 
 const day = (iso: string) => iso.replace(/-/g, '');
 const esc = (t: string) =>
@@ -33,10 +33,10 @@ function event(uid: string, date: string, summary: string, description: string):
   ];
 }
 
-export function reminderIcs({ utr, amount, reportedOn, bank }: R): string {
+export function reminderIcs({ utr, amount, reportedOn, bank, debitOn, ombudsman }: R): string {
   const u = utr.replace(/(\d{4})(?=\d)/g, '$1 ');
   const rs = `Rs ${amount.toLocaleString('en-IN')}`;
-  const zero = addBankWorkingDays(reportedOn, 3);
+  const zero = addBankWorkingDays(debitOn ?? reportedOn, 3);
   const credit = addBankWorkingDays(reportedOn, 10);
   return [
     'BEGIN:VCALENDAR',
@@ -44,7 +44,7 @@ export function reminderIcs({ utr, amount, reportedOn, bank }: R): string {
     'PRODID:-//UTR Pakka//complaint reminders//EN',
     ...event(`zero-${utr}`, zero, `Last day: make sure ${bank} has your fraud complaint (UTR ${u})`, `RBI: zero liability if the bank is told within 3 working days. UPI fraud of ${rs}, UTR ${u}. If you haven't, call your bank and 1930 today.`),
     ...event(`credit-${utr}`, credit, `${bank} should have credited ${rs} back (UTR ${u})`, `RBI: the bank credits the amount within 10 working days of your notice. If it hasn't, escalate to the RBI Ombudsman at cms.rbi.org.in.`),
-    ...event(`ombudsman-${utr}`, plusDays(reportedOn, 30), `Did ${bank} reply to your fraud complaint? (UTR ${u})`, `30 days since you reported the UPI fraud of ${rs}. If ${bank} hasn't replied, or said no, file with the RBI Ombudsman at cms.rbi.org.in (free; helpline 14448). Your UTR Pakka pack has the complaint ready to paste.`),
+    ...event(`ombudsman-${utr}`, plusDays(reportedOn, 30), `Did ${bank} reply to your fraud complaint? (UTR ${u})`, `30 days since you reported the UPI fraud of ${rs}. If ${bank} hasn't replied, or said no, file with the RBI Ombudsman at cms.rbi.org.in (free; helpline 14448). ${ombudsman ? `The complaint, ready to paste:\n\n${ombudsman}` : ''}`),
     'END:VCALENDAR',
     '',
   ].join('\r\n');

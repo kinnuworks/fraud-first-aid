@@ -31,18 +31,26 @@ const seen = new Map<string, string>();
 // While a voice turn on this instance is changing the call, this copy is newer than the store's:
 // a poll or another request must not load the store over it. A hold ends when the turn saves,
 // or after a minute if the turn never finished.
-const writing = new Map<string, number>();
+// Each running turn adds one hold; the copy is newer than the store's until every turn on it has
+// saved (an interrupted reply and the next turn overlap). Holds lapse after a minute.
+const writing = new Map<string, { n: number; until: number }>();
 export const hold = (id: string) => {
-  writing.set(id, Date.now() + 60_000);
+  const w = writing.get(id);
+  writing.set(id, { n: (w && w.until > Date.now() ? w.n : 0) + 1, until: Date.now() + 60_000 });
   if (writing.size > MAX) writing.delete(writing.keys().next().value as string);
 };
-export const release = (id: string) => writing.delete(id);
+export const release = (id: string) => {
+  const w = writing.get(id);
+  if (!w) return;
+  if (w.n <= 1) writing.delete(id);
+  else w.n -= 1;
+};
 
 export async function hydrate(id: string): Promise<string | undefined> {
   if (!shared) return undefined;
-  const until = writing.get(id);
-  if (until !== undefined && until > Date.now() && sessions.has(id)) return seen.get(id);
-  if (until !== undefined) writing.delete(id);
+  const w = writing.get(id);
+  if (w && w.until > Date.now() && sessions.has(id)) return seen.get(id);
+  if (w) writing.delete(id);
   const s = await shared.get(id);
   if (!s) return undefined;
   sessions.set(id, s.c as Complaint);

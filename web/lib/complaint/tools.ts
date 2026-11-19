@@ -3,6 +3,7 @@
 import { tool, type ToolSet } from 'ai';
 import { z } from 'zod';
 import { getComplaint } from './store';
+import type { Complaint } from './session';
 import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
 import { YES, NO } from './fastpath';
@@ -10,7 +11,15 @@ import { sendPack } from './send';
 import { isIfsc } from './fields';
 
 export function complaintTools(session: string, lastUser: string): ToolSet {
-  const c = getComplaint(session);
+  // Every read and write goes to this instance's current copy of the call, looked up each time, so
+  // a copy loaded from the store mid-turn can't leave the tools writing to an old object.
+  const c = new Proxy({} as Complaint, {
+    get: (_, k) => Reflect.get(getComplaint(session), k),
+    set: (_, k, v) => Reflect.set(getComplaint(session), k, v),
+    has: (_, k) => Reflect.has(getComplaint(session), k),
+    ownKeys: () => Reflect.ownKeys(getComplaint(session)),
+    getOwnPropertyDescriptor: (_, k) => Reflect.getOwnPropertyDescriptor(getComplaint(session), k),
+  });
   const all: ToolSet = {
     start_complaint: tool({
       description: 'Switch from listening (guard) to taking the fraud report, when the user asks for help or says money has already gone.',

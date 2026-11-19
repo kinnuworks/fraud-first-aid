@@ -182,3 +182,9 @@ describe('spokenToDigits: "and" inside an English number', () => {
     expect(spokenToDigits('four and five')).toBe('45');
   });
 });
+
+describe('spokenToDigits: "and" only after hundred (review 20 Nov)', () => {
+  it('leaves "a thousand and five hundred" alone', () => {
+    expect(spokenToDigits('a thousand and five hundred')).toBe('500');
+  });
+});

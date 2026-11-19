@@ -156,3 +156,38 @@ describe('saysHangUp: a spoken warning without a marker still reaches the card',
     expect(saysHangUp('I am listening. Tell me if you need help.')).toBe(false);
   });
 });
+
+// From the fresh review of 20 Nov: "money" must be an amount, not any digit; the future is not a
+// loss; a line about "your account" is the caller talking to the victim; hang-up means hang up.
+describe('review 20 Nov: everyday lines that are not a fraud loss', () => {
+  it('a digit near "gone" or "lost" is not money', async () => {
+    const { guardHandover } = await import('./fastpath');
+    for (const t of ['my 2 kids have gone to school', 'I lost my temper with 2 people', 'we have 3 tickets, the rest are gone', 'The amount will be taken care of', 'The EMI will be deducted from my salary every month']) {
+      const c = newComplaint('en', 'guard');
+      guardHandover(c, t);
+      expect(c.phase, t).toBe('guard');
+    }
+  });
+  it('the caller telling the victim about "your account" is not the victim losing money', async () => {
+    const { isLoss } = await import('./redflags');
+    expect(isLoss('Sir I am calling from SBI fraud department, Rs 49,999 was debited from your account')).toBe(false);
+  });
+  it('still hears real losses with amounts', async () => {
+    const { isFraudLoss } = await import('./redflags');
+    for (const t of ['₹5000 got debited from my account', 'I lost 40,000 rupees', 'my money is gone', 'Rs 40,000 was deducted just now', '10000 rupees debited']) expect(isFraudLoss(t), t).toBe(true);
+  });
+});
+
+describe('review 20 Nov: saysHangUp only for hang up', () => {
+  it.each(['ఫోన్ స్పీకర్‌లో పెట్టండి', 'బిల్లు కట్టండి', 'ಹಣ ಕಟ್ಟಿ', 'UTR नंबर लिख के रख दीजिए', 'फ़ोन मत काटिए', "don't hang up yet"])('not: %s', async (t) => {
+    const { saysHangUp } = await import('./redflags');
+    expect(saysHangUp(t)).toBe(false);
+  });
+  it('every fixed warning in our ten languages still counts', async () => {
+    const { saysHangUp, guardShortcut } = await import('./redflags');
+    for (const lang of ['en', 'hi', 'te', 'kn', 'ta', 'ml', 'bn', 'mr', 'gu', 'pa'] as const) {
+      const w = guardShortcut(newComplaint(lang, 'guard'), 'OTP bata do');
+      expect(w && saysHangUp(w), lang).toBe(true);
+    }
+  });
+});

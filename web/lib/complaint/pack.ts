@@ -64,7 +64,10 @@ export function buildPack(c: Complaint, today: string, now: Date = new Date()): 
   const missing = missingFields(c);
   if (missing.length) return { ok: false, missing };
   const f = c.fields as Required<Complaint['fields']>;
-  const d = deadlines(today);
+  // RBI/2017-18/15 counts the three working days from the bank's alert, which comes with the debit.
+  const debitDay = f.when.value.slice(0, 10);
+  const d = deadlines(debitDay);
+  const inTime = today <= d.zeroLiabilityBy;
   const when = f.when.value.replace('T', ' ');
   const line = bankFraudLine(f.victim_bank.value);
 
@@ -74,7 +77,7 @@ Subject: Fraudulent UPI transaction, UTR ${f.utr.value}
 
 I am reporting a fraudulent UPI payment of Rs ${inr(f.amount.value)} made from my account on ${when} to ${f.payee.value}. The UTR (transaction reference) is ${f.utr.value}.
 
-Please block further debits linked to this fraud, raise a dispute with the beneficiary bank, and credit the amount as set out in RBI circular RBI/2017-18/15 on customer protection in unauthorised electronic banking transactions. I am reporting on ${today}, within three working days (by ${d.zeroLiabilityBy}).
+Please block further debits linked to this fraud, raise a dispute with the beneficiary bank, and credit the amount as set out in RBI circular RBI/2017-18/15 on customer protection in unauthorised electronic banking transactions. I am reporting on ${today}${inTime ? `, within three working days of the debit (by ${d.zeroLiabilityBy})` : ''}.
 
 I am also reporting this to the National Cybercrime Helpline, 1930.`;
   const script1930 = SCRIPT[c.lang]({
@@ -132,11 +135,11 @@ Bank: ${f.victim_bank.value}
 Date I complained to the bank: ${today}
 Bank's complaint number: (the number your bank gave you)
 
-What happened: on ${when}, Rs ${inr(f.amount.value)} left my account by UPI to ${f.payee.value} in a fraud. The UTR (transaction reference) is ${f.utr.value}. I reported it to the bank on ${today}, within three working days (by ${d.zeroLiabilityBy}), and to the National Cybercrime Helpline, 1930.
+What happened: on ${when}, Rs ${inr(f.amount.value)} left my account by UPI to ${f.payee.value} in a fraud. The UTR (transaction reference) is ${f.utr.value}. I reported it to the bank on ${today}${inTime ? `, within three working days of the debit (by ${d.zeroLiabilityBy})` : ''}, and to the National Cybercrime Helpline, 1930.
 
-What I ask: a refund of Rs ${inr(f.amount.value)}, as RBI circular RBI/2017-18/15 sets out for an unauthorised electronic transaction reported within three working days.
+What I ask: a refund of Rs ${inr(f.amount.value)}, under RBI circular RBI/2017-18/15 on customer protection in unauthorised electronic banking transactions.
 
 Attached: my letter to the bank, the bank's reply if any, and the payment screenshot.`;
-  const reminders = reminderIcs({ utr: f.utr.value, amount: f.amount.value, reportedOn: today, bank: f.victim_bank.value.split(',')[0] });
+  const reminders = reminderIcs({ utr: f.utr.value, amount: f.amount.value, reportedOn: today, debitOn: debitDay, bank: f.victim_bank.value.split(',')[0], ombudsman: ombudsmanDraft });
   return { ok: true, bankLetter, script1930, operatorCard, reminders, bankLine, portalSheet, nextSteps, ombudsmanDraft, minutesSinceDebit: minutesSince(f.when.value, now), deadlines: d };
 }

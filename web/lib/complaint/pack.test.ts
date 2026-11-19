@@ -97,3 +97,41 @@ describe('pack: bank fraud line, portal sheet and next steps', () => {
     expect(p.ombudsmanDraft).toMatch(/2026-12-19/);
   });
 });
+
+// Review 20 Nov: the zero-liability date counts from the debit, and the letters say "within three
+// working days" only when it is true.
+describe('pack: deadline from the debit date', () => {
+  const make = async (when: string) => {
+    const { newComplaint } = await import('./session');
+    const c = newComplaint('en');
+    c.fields = {
+      utr: { value: '402177889910', confirmed: true },
+      amount: { value: 25000, confirmed: true },
+      payee: { value: 'ramesh@okaxis', confirmed: true },
+      when: { value: when, confirmed: true },
+      victim_bank: { value: 'State Bank of India', confirmed: true },
+    } as never;
+    return c;
+  };
+  it('a debit today: within three working days', async () => {
+    const { buildPack } = await import('./pack');
+    const p = buildPack(await make('2026-11-19T14:30'), '2026-11-19');
+    if (!p.ok) throw new Error('pack');
+    expect(p.deadlines.zeroLiabilityBy).toBe('2026-11-23');
+    expect(p.bankLetter).toMatch(/within three working days/);
+  });
+  it('a debit eight days ago: no such claim, and the deadline is in the past', async () => {
+    const { buildPack } = await import('./pack');
+    const p = buildPack(await make('2026-11-11T10:00'), '2026-11-19');
+    if (!p.ok) throw new Error('pack');
+    expect(p.deadlines.zeroLiabilityBy < '2026-11-19').toBe(true);
+    expect(p.bankLetter).not.toMatch(/within three working days/);
+    expect(p.ombudsmanDraft).not.toMatch(/within three working days/);
+  });
+  it('the reminders carry the Ombudsman draft itself, since the call is not kept', async () => {
+    const { buildPack } = await import('./pack');
+    const p = buildPack(await make('2026-11-19T14:30'), '2026-11-19');
+    if (!p.ok) throw new Error('pack');
+    expect(p.reminders).toMatch(/Bank's complaint number/);
+  });
+});

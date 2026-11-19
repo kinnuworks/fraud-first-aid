@@ -45,3 +45,20 @@ describe('store: a poll during a turn', () => {
     vi.useRealTimers();
   });
 });
+
+// Review 20 Nov: holds belong to each turn. A turn that ends must not release a newer turn's hold.
+describe('store: overlapping turns', () => {
+  it('keeps the hold while any turn is still running', async () => {
+    const { hydrate, persist, getComplaint, hold, release, peekComplaint } = await import('./store');
+    const id = 'call-3';
+    getComplaint(id, 'te', 'complaint');
+    await persist(id, '');
+    hold(id); // turn A
+    hold(id); // turn B, the caller interrupted
+    release(id); // A ends
+    getComplaint(id).fields.amount = { value: 500, confirmed: false }; // B writes
+    await hydrate(id); // a poll
+    expect(peekComplaint(id)?.fields.amount?.value).toBe(500);
+    release(id);
+  });
+});

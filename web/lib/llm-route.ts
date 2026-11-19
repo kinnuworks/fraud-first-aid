@@ -97,8 +97,18 @@ export function createLlmRoute({
       prev && whole.startsWith(prev) && whole.length > prev.length ? whole.slice(prev.length) : whole;
     seenUser.set(session, whole);
     if (seenUser.size > 500) seenUser.delete(seenUser.keys().next().value as string);
-    const fixed = shortcut?.(session, lastUser) ?? null;
-    const result =
+    // Save once per request: a second save would end a newer turn's hold on the call.
+    let saved = false;
+    const saveOnce = async () => {
+      if (saved) return;
+      saved = true;
+      await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
+    };
+    let fixed: string | null;
+    let result: { textStream: AsyncIterable<string> };
+    try {
+      fixed = shortcut?.(session, lastUser) ?? null;
+      result =
       fixed !== null
         ? {
             textStream: (async function* () {
@@ -121,6 +131,11 @@ export function createLlmRoute({
               ? { tools: tools(session, lastUser), stopWhen: stepCountIs(6) }
               : {}),
           });
+    } catch (err) {
+      // something failed before the reply started: still save, which ends this turn's hold
+      await saveOnce();
+      throw err;
+    }
 
     const enc = new TextEncoder();
     const id = `chatcmpl-${randomUUID()}`;
@@ -206,14 +221,14 @@ export function createLlmRoute({
             feed(head);
           if (decided !== "silent") feed("", true);
           if (decided !== "silent" && spoken.trim()) onReply?.(session, spoken.trim(), lastUser);
-          await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
+          await saveOnce();
           controller.enqueue(chunk({}, "stop"));
           controller.enqueue(enc.encode("data: [DONE]\n\n"));
           controller.close();
         } catch (err) {
           console.error("[llm-route] stream error:", err);
           // keep what the turn changed before it failed (and end its hold on the call)
-          await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
+          await saveOnce();
           controller.error(err);
         }
       },

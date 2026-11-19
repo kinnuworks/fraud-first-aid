@@ -1,6 +1,6 @@
 // Sends the complaint pack to the caller's own email through Resend (an action the agent
 // executes): the bank letter, the 1930 script, the operator summary and the calendar reminders.
-type PackParts = { bankLetter: string; script1930: string; operatorCard: string; reminders: string };
+type PackParts = { bankLetter: string; script1930: string; operatorCard: string; reminders: string; ombudsmanDraft?: string };
 type Sent = { ok: true; id: string } | { ok: false; problem: string };
 
 export const isEmail = (s: string) => /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[a-z]{2,}$/i.test(s);
@@ -21,7 +21,8 @@ export async function sendPackEmail(to: string, p: PackParts, key = process.env.
     '3. If the 1930 operator asks, share this summary:',
     p.operatorCard,
     '',
-    'Two reminders (the bank deadline and the RBI credit date) are attached as a calendar file.',
+    'Three reminders (the bank deadline, the RBI credit date and day 30) are attached as a calendar file.',
+    ...(p.ombudsmanDraft ? ['', '4. On day 30, if the bank has not replied, file this with the RBI Ombudsman:', p.ombudsmanDraft, ''] : []),
     'UTR Pakka never asks for an OTP, PIN, password or card number.',
   ].join('\n');
   try {

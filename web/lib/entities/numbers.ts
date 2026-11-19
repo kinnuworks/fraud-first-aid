@@ -233,8 +233,8 @@ export function spokenToDigits(text: string): string {
     .replace(/[-–—_.,;:!?()।॥]/g, ' ')
     .split(/\s+/)
     .filter(Boolean)
-    // English puts "and" inside a number after a scale word ("eight hundred and ninety-two").
-    .filter((t, i, a) => !(t === 'and' && i > 0 && fold(a[i - 1]) in MULT && i + 1 < a.length && tokenDigits(a[i + 1]) !== null));
+    // English puts "and" inside a number after "hundred" ("eight hundred and ninety-two").
+    .filter((t, i, a) => !(t === 'and' && i > 0 && a[i - 1] === 'hundred' && i + 1 < a.length && tokenDigits(a[i + 1]) !== null));
   // Numerals always count. A lone "one" (एक, ಒಂದು, one) counts only next to another number
   // or when the whole utterance is numbers: in a sentence it is usually the article "a".
   const numeral = tokens.map((t) => embeddedNumerals(t) !== null);

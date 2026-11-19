@@ -83,7 +83,7 @@ function next(c: Complaint, lang: Lang, today: string): string {
     if (!have.confirmed) return say(c, f, lang);
   }
   c.pending = undefined;
-  return P[lang].done(deadlines(today).zeroLiabilityBy);
+  return P[lang].done(deadlines(c.fields.when?.value.slice(0, 10) ?? today).zeroLiabilityBy);
 }
 
 const SHORT: Record<Lang, (n: number, digits: string) => string> = {

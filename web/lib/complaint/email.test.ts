@@ -36,3 +36,15 @@ describe('sendPackEmail', () => {
     expect(await sendPackEmail('x@y.com', pack, '', fake)).toEqual({ ok: false, problem: 'email is not set up' });
   });
 });
+
+describe('email: three reminders and the Ombudsman draft (review 20 Nov)', () => {
+  it('says three reminders and includes the draft', async () => {
+    const { sendPackEmail } = await import('./email');
+    let body = '';
+    const fake = (async (_u: string, init: RequestInit) => { body = String(init.body); return new Response(JSON.stringify({ id: 'x' }), { status: 200 }); }) as unknown as typeof fetch;
+    await sendPackEmail('a@b.co', { bankLetter: 'Subject: s', script1930: 's', operatorCard: 'o', reminders: 'r', ombudsmanDraft: 'OMBUDSMAN DRAFT' }, 'key', fake);
+    const text = JSON.parse(body).text as string;
+    expect(text).toMatch(/Three reminders/);
+    expect(text).toMatch(/OMBUDSMAN DRAFT/);
+  });
+});
