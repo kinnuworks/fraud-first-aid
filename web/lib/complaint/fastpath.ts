@@ -59,8 +59,8 @@ const matchBank = (t: string) => BANKS.find(([, re]) => re.test(t))?.[0] ?? null
 const UPI_IN_TEXT = /([a-z0-9][a-z0-9._-]{1,})\s*(?:@|\bat the rate(?: of)?\b|\bat\b)\s*([a-z][a-z0-9]{1,})/i;
 // Amounts and money words: digits here are not a UTR being dictated.
 const NOT_DICTATION = /thousand|hundred|lakh|crore|rupee|\brs\b|₹|हज़ार|हजार|सौ|लाख|रुपय|रुपए|వేల|వేలు|వంద|లక్ష|రూపాయ|ಸಾವಿರ|ನೂರು|ಲಕ್ಷ|ರೂಪಾಯ/i;
-const YES = /^(yes|yeah|yep|correct|right|that'?s right|ha+n?|haan ji|ji haan|sahi|sahi hai|हाँ|हां|जी|सही|ठीक|అవును|ఔను|సరే|సరిగ్గా|కరెక్ట్|ಹೌದು|ಸರಿ)/i;
-const NO = /\b(no|not|wrong|nahi)\b|नहीं|गलत|ग़लत|లేదు|కాదు|తప్పు|ಇಲ್ಲ|ತಪ್ಪು/i;
+export const YES = /^(yes|yeah|yep|correct|right|that'?s right|ha+n?|haan ji|ji haan|sahi|sahi hai|हाँ|हां|जी|सही|ठीक|అవును|ఔను|సరే|సరిగ్గా|కరెక్ట్|ಹೌದು|ಸರಿ)/i;
+export const NO = /\b(no|not|wrong|nahi)\b|नहीं|गलत|ग़लत|లేదు|కాదు|తప్పు|ಇಲ್ಲ|ತಪ್ಪು/i;
 
 function say(c: Complaint, f: FieldName, lang: Lang): string {
   const v = c.fields[f]!.value;

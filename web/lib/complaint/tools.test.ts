@@ -115,3 +115,17 @@ describe('record_story', () => {
     expect(peekComplaint('st1')?.story).toEqual({ en: 'Fake KYC call; paid 25,000 by scanning a QR code', words: 'KYC అని చెప్పి QR స్కాన్ చేయించారు' });
   });
 });
+
+// FAQ 51 (organiser, 19 Nov): ask before critical actions. Emailing the pack needs the caller's own yes.
+describe('send_pack_email asks first', () => {
+  it('does not send unless the caller just said yes', async () => {
+    const { complaintTools } = await import('./tools');
+    startComplaint('em1', 'en');
+    const c = peekComplaint('em1')!;
+    c.email = 'someone@example.com';
+    const t = complaintTools('em1', 'what happens next?') as Record<string, { execute: (a: object, o: object) => Promise<unknown> }>;
+    const r = (await t.send_pack_email.execute({}, {} as never)) as { sent?: boolean; needs_yes?: boolean };
+    expect(r.needs_yes).toBe(true);
+    expect(c.emailSent).toBeUndefined();
+  });
+});

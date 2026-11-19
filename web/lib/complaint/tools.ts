@@ -5,6 +5,7 @@ import { z } from 'zod';
 import { getComplaint } from './store';
 import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
+import { YES, NO } from './fastpath';
 import { sendPack } from './send';
 import { isIfsc } from './fields';
 
@@ -84,7 +85,12 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
     send_pack_email: tool({
       description: 'Email the finished complaint pack (letter, 1930 script, operator summary, calendar reminders) to the address the caller typed on screen. Call it only after they agree.',
       inputSchema: z.object({}),
-      execute: async () => sendPack(c),
+      // A critical action: only on the caller's own yes in this turn, never on the model's word alone.
+      execute: async () => {
+        const t = lastUser.trim().replace(/^[\s,.!।]+/, '');
+        if (!YES.test(t) || NO.test(t)) return { needs_yes: true, say: 'Ask the caller: shall I email the pack to the address on screen? Send only after they say yes.' };
+        return sendPack(c);
+      },
     }),
     status: tool({
       description: 'What is still missing or unconfirmed, and the RBI reporting deadlines once the date is known.',
