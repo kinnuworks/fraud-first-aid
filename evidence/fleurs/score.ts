@@ -28,8 +28,8 @@ async function transcribe(path: string, lang: string): Promise<string> {
   for (let attempt = 1; ; attempt++) {
     const r = await fetch('https://api.sarvam.ai/speech-to-text', { method: 'POST', headers: { 'api-subscription-key': KEY! }, body: fd });
     if (r.ok) return ((await r.json()) as { transcript: string }).transcript;
-    if (attempt >= 3 || r.status < 429) throw new Error(`sarvam ${r.status}: ${(await r.text()).slice(0, 200)}`);
-    await new Promise((s) => setTimeout(s, 2000 * attempt));
+    if (attempt >= 8 || r.status < 429) throw new Error(`sarvam ${r.status}: ${(await r.text()).slice(0, 200)}`);
+    await new Promise((s) => setTimeout(s, 5000 * attempt));
   }
 }
 

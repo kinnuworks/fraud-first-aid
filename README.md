@@ -68,7 +68,7 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 
 ## Evidence
 
-Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: our own break test of the main claim (spoken numbers in noise), and a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md). Each one reruns from the repo with one command.
+Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) against the speech-to-text's own numerals, planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md), and our own break test of the main claim (spoken numbers in noise). Each one reruns from the repo with one command.
 
 > Claim: UTR Pakka reads spoken 10- and 12-digit numbers exactly in 295 of 300 noisy clips.
 > Evidence type: our own break test (we tried to make it fail), not real users.
@@ -76,7 +76,11 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 > Result: 98.3% exact (95% interval 96.2% to 99.3%); 96 of 100 even at 5 dB.
 > Rerun: `npx tsx evidence/breaktest/run.ts` (needs Murf and Sarvam keys). Limits: synthetic voices and white noise, not real callers on phone lines; in English the baseline already writes numerals, so the gain is in Hindi, Telugu and Kannada.
 
-The FLEURS test slice stays sealed until the build freezes; its result will appear here with its interval and rerun command. Limits, in numbers: zero real users; 300 synthetic clips; the next real test is a recorded phone call per language, where a miss rate above 5% would change this claim.
+> Claim: on real Hindi, Telugu and Kannada speech, UTR Pakka gets the exact numbers right in 207 of 330 sentences, against 114 for the speech-to-text's own numerals.
+> Evidence type: back-test on public data (FLEURS, read speech), not real users.
+> Data: FLEURS test slice ([google/fleurs](https://huggingface.co/datasets/google/fleurs), revision 70bb2e84, CC-BY-4.0), every test sentence with a number in Hindi, Telugu and Kannada, 330 sentences (5 over 30 seconds left out for both); planned and committed before any run, run once on 19 Nov 2026 ([results](evidence/results/fleurs-test-2026-11-19.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same audio, 114 of 330 (34.5%).
+> Result: 62.7% exact (95% interval 57.4% to 67.8%); paired difference +0.28 (95% interval 0.23 to 0.33). Hindi 48/64, Telugu 63/105, Kannada 96/161.
+> Rerun: `python3 -I evidence/fleurs/fetch.py test && npx tsx evidence/fleurs/score.ts test` at commit 6e94442. Limits: read sentences, not phone calls; the numbers are years and amounts inside sentences, not dictated UTRs. Limits, in numbers: zero real users; 330 read sentences and 300 synthetic clips; the next real test is a recorded phone call per language, where a miss rate above 5% would change this claim.
 
 ## What doesn't work yet
 
