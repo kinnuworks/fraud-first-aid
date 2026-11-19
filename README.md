@@ -61,6 +61,18 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 5. Second source. The caller can add the payment screenshot. An AI model reads the UTR, amount, payee and time from it, and each field is compared with what they said; a mismatch is read back with the exact group that differs. Code: [`web/lib/complaint/screenshot.ts`](web/lib/complaint/screenshot.ts), [`web/lib/complaint/vision.ts`](web/lib/complaint/vision.ts).
 6. Act. The IFSC code is looked up on the public Razorpay IFSC API; the RBI 3- and 7-working-day deadlines are computed (Sundays and 2nd/4th Saturdays skipped); the pack is built: a script for the 1930 call in the caller's language, a dispute letter for the bank, an English card for the 1930 operator, two calendar reminders from the RBI rules, a one-tap Call 1930, and buttons to send the pack to family on WhatsApp or email the letter to the bank. Code: [`web/lib/complaint/ifsc.ts`](web/lib/complaint/ifsc.ts), [`web/lib/complaint/deadline.ts`](web/lib/complaint/deadline.ts), [`web/lib/complaint/pack.ts`](web/lib/complaint/pack.ts).
 
+### How fast it answers
+
+Measured in one scripted run of the live app (19 Nov 2026, 11 turns, recorded voice clips played into the browser; [results](evidence/results/latency-2026-11-19.csv)). The numbers are Agora's own per-turn metrics from the call screen.
+
+| Step | Turns that skip the model (8 of 11: the opening, the UTR, each yes, the bank) | Turns that go through the model (3 of 11) |
+|---|---|---|
+| Speech-to-text (Sarvam), last word to text | 193 to 426 ms | 202 to 263 ms |
+| Reply (our route) | 151 to 323 ms | 3,247 to 3,575 ms |
+| Voice (Murf Falcon), first audio | 80 to 149 ms | 79 to 230 ms |
+
+Confirmations and numbers skip the model: our route answers them from the complaint's state, so the reply step takes 151 to 323 ms instead of more than 3 seconds. Rerun: `cd web && npx -y tsx@4.20.6 scripts/demo-full.ts`. Limits: one run, synthetic voices, the browser and not a phone line.
+
 ## How it uses Agora and Murf
 
 | Feature | What it does here | Where |
