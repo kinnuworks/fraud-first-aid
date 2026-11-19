@@ -1,0 +1,901 @@
+id,lang,condition,digits,kind,spoken_text,file
+en-00-clean,en,clean,556585056448,utr,"five five six five eight five zero five six four four eight",en-00-clean.wav
+en-00-noise10,en,noise10,556585056448,utr,"five five six five eight five zero five six four four eight",en-00-noise10.wav
+en-00-phone,en,phone,556585056448,utr,"five five six five eight five zero five six four four eight",en-00-phone.wav
+en-01-clean,en,clean,7661123351,mobile,"seven six six one one two three three five one",en-01-clean.wav
+en-01-noise10,en,noise10,7661123351,mobile,"seven six six one one two three three five one",en-01-noise10.wav
+en-01-phone,en,phone,7661123351,mobile,"seven six six one one two three three five one",en-01-phone.wav
+en-02-clean,en,clean,654887362079,utr,"six five four eight eight seven three six two zero seven nine",en-02-clean.wav
+en-02-noise10,en,noise10,654887362079,utr,"six five four eight eight seven three six two zero seven nine",en-02-noise10.wav
+en-02-phone,en,phone,654887362079,utr,"six five four eight eight seven three six two zero seven nine",en-02-phone.wav
+en-03-clean,en,clean,7173558188,mobile,"seven one seven three five five eight one eight eight",en-03-clean.wav
+en-03-noise10,en,noise10,7173558188,mobile,"seven one seven three five five eight one eight eight",en-03-noise10.wav
+en-03-phone,en,phone,7173558188,mobile,"seven one seven three five five eight one eight eight",en-03-phone.wav
+en-04-clean,en,clean,400845257060,utr,"four zero zero eight four five two five seven zero six zero",en-04-clean.wav
+en-04-noise10,en,noise10,400845257060,utr,"four zero zero eight four five two five seven zero six zero",en-04-noise10.wav
+en-04-phone,en,phone,400845257060,utr,"four zero zero eight four five two five seven zero six zero",en-04-phone.wav
+en-05-clean,en,clean,7694430747,mobile,"seven six nine four four three zero seven four seven",en-05-clean.wav
+en-05-noise10,en,noise10,7694430747,mobile,"seven six nine four four three zero seven four seven",en-05-noise10.wav
+en-05-phone,en,phone,7694430747,mobile,"seven six nine four four three zero seven four seven",en-05-phone.wav
+en-06-clean,en,clean,353811661339,utr,"three five three eight one one six six one three three nine",en-06-clean.wav
+en-06-noise10,en,noise10,353811661339,utr,"three five three eight one one six six one three three nine",en-06-noise10.wav
+en-06-phone,en,phone,353811661339,utr,"three five three eight one one six six one three three nine",en-06-phone.wav
+en-07-clean,en,clean,9649543508,mobile,"nine six four nine five four three five zero eight",en-07-clean.wav
+en-07-noise10,en,noise10,9649543508,mobile,"nine six four nine five four three five zero eight",en-07-noise10.wav
+en-07-phone,en,phone,9649543508,mobile,"nine six four nine five four three five zero eight",en-07-phone.wav
+en-08-clean,en,clean,341075515689,utr,"three four one zero seven five five one five six eight nine",en-08-clean.wav
+en-08-noise10,en,noise10,341075515689,utr,"three four one zero seven five five one five six eight nine",en-08-noise10.wav
+en-08-phone,en,phone,341075515689,utr,"three four one zero seven five five one five six eight nine",en-08-phone.wav
+en-09-clean,en,clean,8654066971,mobile,"eight six five four zero six six nine seven one",en-09-clean.wav
+en-09-noise10,en,noise10,8654066971,mobile,"eight six five four zero six six nine seven one",en-09-noise10.wav
+en-09-phone,en,phone,8654066971,mobile,"eight six five four zero six six nine seven one",en-09-phone.wav
+en-10-clean,en,clean,269393760264,utr,"two six nine three nine three seven six zero two six four",en-10-clean.wav
+en-10-noise10,en,noise10,269393760264,utr,"two six nine three nine three seven six zero two six four",en-10-noise10.wav
+en-10-phone,en,phone,269393760264,utr,"two six nine three nine three seven six zero two six four",en-10-phone.wav
+en-11-clean,en,clean,8273053189,mobile,"eight two seven three zero five three one eight nine",en-11-clean.wav
+en-11-noise10,en,noise10,8273053189,mobile,"eight two seven three zero five three one eight nine",en-11-noise10.wav
+en-11-phone,en,phone,8273053189,mobile,"eight two seven three zero five three one eight nine",en-11-phone.wav
+en-12-clean,en,clean,704857604418,utr,"seven zero four eight five seven six zero four four one eight",en-12-clean.wav
+en-12-noise10,en,noise10,704857604418,utr,"seven zero four eight five seven six zero four four one eight",en-12-noise10.wav
+en-12-phone,en,phone,704857604418,utr,"seven zero four eight five seven six zero four four one eight",en-12-phone.wav
+en-13-clean,en,clean,6096789901,mobile,"six zero nine six seven eight nine nine zero one",en-13-clean.wav
+en-13-noise10,en,noise10,6096789901,mobile,"six zero nine six seven eight nine nine zero one",en-13-noise10.wav
+en-13-phone,en,phone,6096789901,mobile,"six zero nine six seven eight nine nine zero one",en-13-phone.wav
+en-14-clean,en,clean,634500424743,utr,"six three four five zero zero four two four seven four three",en-14-clean.wav
+en-14-noise10,en,noise10,634500424743,utr,"six three four five zero zero four two four seven four three",en-14-noise10.wav
+en-14-phone,en,phone,634500424743,utr,"six three four five zero zero four two four seven four three",en-14-phone.wav
+en-15-clean,en,clean,8392426356,mobile,"eight three nine two four two six three five six",en-15-clean.wav
+en-15-noise10,en,noise10,8392426356,mobile,"eight three nine two four two six three five six",en-15-noise10.wav
+en-15-phone,en,phone,8392426356,mobile,"eight three nine two four two six three five six",en-15-phone.wav
+en-16-clean,en,clean,111818168780,utr,"one one one eight one eight one six eight seven eight zero",en-16-clean.wav
+en-16-noise10,en,noise10,111818168780,utr,"one one one eight one eight one six eight seven eight zero",en-16-noise10.wav
+en-16-phone,en,phone,111818168780,utr,"one one one eight one eight one six eight seven eight zero",en-16-phone.wav
+en-17-clean,en,clean,6721308675,mobile,"six seven two one three zero eight six seven five",en-17-clean.wav
+en-17-noise10,en,noise10,6721308675,mobile,"six seven two one three zero eight six seven five",en-17-noise10.wav
+en-17-phone,en,phone,6721308675,mobile,"six seven two one three zero eight six seven five",en-17-phone.wav
+en-18-clean,en,clean,773722160598,utr,"seven seven three seven two two one six zero five nine eight",en-18-clean.wav
+en-18-noise10,en,noise10,773722160598,utr,"seven seven three seven two two one six zero five nine eight",en-18-noise10.wav
+en-18-phone,en,phone,773722160598,utr,"seven seven three seven two two one six zero five nine eight",en-18-phone.wav
+en-19-clean,en,clean,8805729184,mobile,"eight eight zero five seven two nine one eight four",en-19-clean.wav
+en-19-noise10,en,noise10,8805729184,mobile,"eight eight zero five seven two nine one eight four",en-19-noise10.wav
+en-19-phone,en,phone,8805729184,mobile,"eight eight zero five seven two nine one eight four",en-19-phone.wav
+en-20-clean,en,clean,993440100955,utr,"nine nine three four four zero one zero zero nine five five",en-20-clean.wav
+en-20-noise10,en,noise10,993440100955,utr,"nine nine three four four zero one zero zero nine five five",en-20-noise10.wav
+en-20-phone,en,phone,993440100955,utr,"nine nine three four four zero one zero zero nine five five",en-20-phone.wav
+en-21-clean,en,clean,6908204313,mobile,"six nine zero eight two zero four three one three",en-21-clean.wav
+en-21-noise10,en,noise10,6908204313,mobile,"six nine zero eight two zero four three one three",en-21-noise10.wav
+en-21-phone,en,phone,6908204313,mobile,"six nine zero eight two zero four three one three",en-21-phone.wav
+en-22-clean,en,clean,285493552593,utr,"two eight five four nine three five five two five nine three",en-22-clean.wav
+en-22-noise10,en,noise10,285493552593,utr,"two eight five four nine three five five two five nine three",en-22-noise10.wav
+en-22-phone,en,phone,285493552593,utr,"two eight five four nine three five five two five nine three",en-22-phone.wav
+en-23-clean,en,clean,7412600712,mobile,"seven four one two six zero zero seven one two",en-23-clean.wav
+en-23-noise10,en,noise10,7412600712,mobile,"seven four one two six zero zero seven one two",en-23-noise10.wav
+en-23-phone,en,phone,7412600712,mobile,"seven four one two six zero zero seven one two",en-23-phone.wav
+en-24-clean,en,clean,476663793701,utr,"four seven six six six three seven nine three seven zero one",en-24-clean.wav
+en-24-noise10,en,noise10,476663793701,utr,"four seven six six six three seven nine three seven zero one",en-24-noise10.wav
+en-24-phone,en,phone,476663793701,utr,"four seven six six six three seven nine three seven zero one",en-24-phone.wav
+en-25-clean,en,clean,8609918375,mobile,"eight six zero nine nine one eight three seven five",en-25-clean.wav
+en-25-noise10,en,noise10,8609918375,mobile,"eight six zero nine nine one eight three seven five",en-25-noise10.wav
+en-25-phone,en,phone,8609918375,mobile,"eight six zero nine nine one eight three seven five",en-25-phone.wav
+en-26-clean,en,clean,894237707147,utr,"eight nine four two three seven seven zero seven one four seven",en-26-clean.wav
+en-26-noise10,en,noise10,894237707147,utr,"eight nine four two three seven seven zero seven one four seven",en-26-noise10.wav
+en-26-phone,en,phone,894237707147,utr,"eight nine four two three seven seven zero seven one four seven",en-26-phone.wav
+en-27-clean,en,clean,7971010926,mobile,"seven nine seven one zero one zero nine two six",en-27-clean.wav
+en-27-noise10,en,noise10,7971010926,mobile,"seven nine seven one zero one zero nine two six",en-27-noise10.wav
+en-27-phone,en,phone,7971010926,mobile,"seven nine seven one zero one zero nine two six",en-27-phone.wav
+en-28-clean,en,clean,337769585328,utr,"three three seven seven six nine five eight five three two eight",en-28-clean.wav
+en-28-noise10,en,noise10,337769585328,utr,"three three seven seven six nine five eight five three two eight",en-28-noise10.wav
+en-28-phone,en,phone,337769585328,utr,"three three seven seven six nine five eight five three two eight",en-28-phone.wav
+en-29-clean,en,clean,6546516230,mobile,"six five four six five one six two three zero",en-29-clean.wav
+en-29-noise10,en,noise10,6546516230,mobile,"six five four six five one six two three zero",en-29-noise10.wav
+en-29-phone,en,phone,6546516230,mobile,"six five four six five one six two three zero",en-29-phone.wav
+hi-00-clean,hi,clean,556585056448,utr,"पांच पांच छह पांच आठ पांच शून्य पांच छह चार चार आठ",hi-00-clean.wav
+hi-00-noise10,hi,noise10,556585056448,utr,"पांच पांच छह पांच आठ पांच शून्य पांच छह चार चार आठ",hi-00-noise10.wav
+hi-00-phone,hi,phone,556585056448,utr,"पांच पांच छह पांच आठ पांच शून्य पांच छह चार चार आठ",hi-00-phone.wav
+hi-01-clean,hi,clean,7661123351,mobile,"सात छह छह एक एक दो तीन तीन पांच एक",hi-01-clean.wav
+hi-01-noise10,hi,noise10,7661123351,mobile,"सात छह छह एक एक दो तीन तीन पांच एक",hi-01-noise10.wav
+hi-01-phone,hi,phone,7661123351,mobile,"सात छह छह एक एक दो तीन तीन पांच एक",hi-01-phone.wav
+hi-02-clean,hi,clean,654887362079,utr,"छह पांच चार आठ आठ सात तीन छह दो शून्य सात नौ",hi-02-clean.wav
+hi-02-noise10,hi,noise10,654887362079,utr,"छह पांच चार आठ आठ सात तीन छह दो शून्य सात नौ",hi-02-noise10.wav
+hi-02-phone,hi,phone,654887362079,utr,"छह पांच चार आठ आठ सात तीन छह दो शून्य सात नौ",hi-02-phone.wav
+hi-03-clean,hi,clean,7173558188,mobile,"सात एक सात तीन पांच पांच आठ एक आठ आठ",hi-03-clean.wav
+hi-03-noise10,hi,noise10,7173558188,mobile,"सात एक सात तीन पांच पांच आठ एक आठ आठ",hi-03-noise10.wav
+hi-03-phone,hi,phone,7173558188,mobile,"सात एक सात तीन पांच पांच आठ एक आठ आठ",hi-03-phone.wav
+hi-04-clean,hi,clean,400845257060,utr,"चार शून्य शून्य आठ चार पांच दो पांच सात शून्य छह शून्य",hi-04-clean.wav
+hi-04-noise10,hi,noise10,400845257060,utr,"चार शून्य शून्य आठ चार पांच दो पांच सात शून्य छह शून्य",hi-04-noise10.wav
+hi-04-phone,hi,phone,400845257060,utr,"चार शून्य शून्य आठ चार पांच दो पांच सात शून्य छह शून्य",hi-04-phone.wav
+hi-05-clean,hi,clean,7694430747,mobile,"सात छह नौ चार चार तीन शून्य सात चार सात",hi-05-clean.wav
+hi-05-noise10,hi,noise10,7694430747,mobile,"सात छह नौ चार चार तीन शून्य सात चार सात",hi-05-noise10.wav
+hi-05-phone,hi,phone,7694430747,mobile,"सात छह नौ चार चार तीन शून्य सात चार सात",hi-05-phone.wav
+hi-06-clean,hi,clean,353811661339,utr,"तीन पांच तीन आठ एक एक छह छह एक तीन तीन नौ",hi-06-clean.wav
+hi-06-noise10,hi,noise10,353811661339,utr,"तीन पांच तीन आठ एक एक छह छह एक तीन तीन नौ",hi-06-noise10.wav
+hi-06-phone,hi,phone,353811661339,utr,"तीन पांच तीन आठ एक एक छह छह एक तीन तीन नौ",hi-06-phone.wav
+hi-07-clean,hi,clean,9649543508,mobile,"नौ छह चार नौ पांच चार तीन पांच शून्य आठ",hi-07-clean.wav
+hi-07-noise10,hi,noise10,9649543508,mobile,"नौ छह चार नौ पांच चार तीन पांच शून्य आठ",hi-07-noise10.wav
+hi-07-phone,hi,phone,9649543508,mobile,"नौ छह चार नौ पांच चार तीन पांच शून्य आठ",hi-07-phone.wav
+hi-08-clean,hi,clean,341075515689,utr,"तीन चार एक शून्य सात पांच पांच एक पांच छह आठ नौ",hi-08-clean.wav
+hi-08-noise10,hi,noise10,341075515689,utr,"तीन चार एक शून्य सात पांच पांच एक पांच छह आठ नौ",hi-08-noise10.wav
+hi-08-phone,hi,phone,341075515689,utr,"तीन चार एक शून्य सात पांच पांच एक पांच छह आठ नौ",hi-08-phone.wav
+hi-09-clean,hi,clean,8654066971,mobile,"आठ छह पांच चार शून्य छह छह नौ सात एक",hi-09-clean.wav
+hi-09-noise10,hi,noise10,8654066971,mobile,"आठ छह पांच चार शून्य छह छह नौ सात एक",hi-09-noise10.wav
+hi-09-phone,hi,phone,8654066971,mobile,"आठ छह पांच चार शून्य छह छह नौ सात एक",hi-09-phone.wav
+hi-10-clean,hi,clean,269393760264,utr,"दो छह नौ तीन नौ तीन सात छह शून्य दो छह चार",hi-10-clean.wav
+hi-10-noise10,hi,noise10,269393760264,utr,"दो छह नौ तीन नौ तीन सात छह शून्य दो छह चार",hi-10-noise10.wav
+hi-10-phone,hi,phone,269393760264,utr,"दो छह नौ तीन नौ तीन सात छह शून्य दो छह चार",hi-10-phone.wav
+hi-11-clean,hi,clean,8273053189,mobile,"आठ दो सात तीन शून्य पांच तीन एक आठ नौ",hi-11-clean.wav
+hi-11-noise10,hi,noise10,8273053189,mobile,"आठ दो सात तीन शून्य पांच तीन एक आठ नौ",hi-11-noise10.wav
+hi-11-phone,hi,phone,8273053189,mobile,"आठ दो सात तीन शून्य पांच तीन एक आठ नौ",hi-11-phone.wav
+hi-12-clean,hi,clean,704857604418,utr,"सात शून्य चार आठ पांच सात छह शून्य चार चार एक आठ",hi-12-clean.wav
+hi-12-noise10,hi,noise10,704857604418,utr,"सात शून्य चार आठ पांच सात छह शून्य चार चार एक आठ",hi-12-noise10.wav
+hi-12-phone,hi,phone,704857604418,utr,"सात शून्य चार आठ पांच सात छह शून्य चार चार एक आठ",hi-12-phone.wav
+hi-13-clean,hi,clean,6096789901,mobile,"छह शून्य नौ छह सात आठ नौ नौ शून्य एक",hi-13-clean.wav
+hi-13-noise10,hi,noise10,6096789901,mobile,"छह शून्य नौ छह सात आठ नौ नौ शून्य एक",hi-13-noise10.wav
+hi-13-phone,hi,phone,6096789901,mobile,"छह शून्य नौ छह सात आठ नौ नौ शून्य एक",hi-13-phone.wav
+hi-14-clean,hi,clean,634500424743,utr,"छह तीन चार पांच शून्य शून्य चार दो चार सात चार तीन",hi-14-clean.wav
+hi-14-noise10,hi,noise10,634500424743,utr,"छह तीन चार पांच शून्य शून्य चार दो चार सात चार तीन",hi-14-noise10.wav
+hi-14-phone,hi,phone,634500424743,utr,"छह तीन चार पांच शून्य शून्य चार दो चार सात चार तीन",hi-14-phone.wav
+hi-15-clean,hi,clean,8392426356,mobile,"आठ तीन नौ दो चार दो छह तीन पांच छह",hi-15-clean.wav
+hi-15-noise10,hi,noise10,8392426356,mobile,"आठ तीन नौ दो चार दो छह तीन पांच छह",hi-15-noise10.wav
+hi-15-phone,hi,phone,8392426356,mobile,"आठ तीन नौ दो चार दो छह तीन पांच छह",hi-15-phone.wav
+hi-16-clean,hi,clean,111818168780,utr,"एक एक एक आठ एक आठ एक छह आठ सात आठ शून्य",hi-16-clean.wav
+hi-16-noise10,hi,noise10,111818168780,utr,"एक एक एक आठ एक आठ एक छह आठ सात आठ शून्य",hi-16-noise10.wav
+hi-16-phone,hi,phone,111818168780,utr,"एक एक एक आठ एक आठ एक छह आठ सात आठ शून्य",hi-16-phone.wav
+hi-17-clean,hi,clean,6721308675,mobile,"छह सात दो एक तीन शून्य आठ छह सात पांच",hi-17-clean.wav
+hi-17-noise10,hi,noise10,6721308675,mobile,"छह सात दो एक तीन शून्य आठ छह सात पांच",hi-17-noise10.wav
+hi-17-phone,hi,phone,6721308675,mobile,"छह सात दो एक तीन शून्य आठ छह सात पांच",hi-17-phone.wav
+hi-18-clean,hi,clean,773722160598,utr,"सात सात तीन सात दो दो एक छह शून्य पांच नौ आठ",hi-18-clean.wav
+hi-18-noise10,hi,noise10,773722160598,utr,"सात सात तीन सात दो दो एक छह शून्य पांच नौ आठ",hi-18-noise10.wav
+hi-18-phone,hi,phone,773722160598,utr,"सात सात तीन सात दो दो एक छह शून्य पांच नौ आठ",hi-18-phone.wav
+hi-19-clean,hi,clean,8805729184,mobile,"आठ आठ शून्य पांच सात दो नौ एक आठ चार",hi-19-clean.wav
+hi-19-noise10,hi,noise10,8805729184,mobile,"आठ आठ शून्य पांच सात दो नौ एक आठ चार",hi-19-noise10.wav
+hi-19-phone,hi,phone,8805729184,mobile,"आठ आठ शून्य पांच सात दो नौ एक आठ चार",hi-19-phone.wav
+hi-20-clean,hi,clean,993440100955,utr,"नौ नौ तीन चार चार शून्य एक शून्य शून्य नौ पांच पांच",hi-20-clean.wav
+hi-20-noise10,hi,noise10,993440100955,utr,"नौ नौ तीन चार चार शून्य एक शून्य शून्य नौ पांच पांच",hi-20-noise10.wav
+hi-20-phone,hi,phone,993440100955,utr,"नौ नौ तीन चार चार शून्य एक शून्य शून्य नौ पांच पांच",hi-20-phone.wav
+hi-21-clean,hi,clean,6908204313,mobile,"छह नौ शून्य आठ दो शून्य चार तीन एक तीन",hi-21-clean.wav
+hi-21-noise10,hi,noise10,6908204313,mobile,"छह नौ शून्य आठ दो शून्य चार तीन एक तीन",hi-21-noise10.wav
+hi-21-phone,hi,phone,6908204313,mobile,"छह नौ शून्य आठ दो शून्य चार तीन एक तीन",hi-21-phone.wav
+hi-22-clean,hi,clean,285493552593,utr,"दो आठ पांच चार नौ तीन पांच पांच दो पांच नौ तीन",hi-22-clean.wav
+hi-22-noise10,hi,noise10,285493552593,utr,"दो आठ पांच चार नौ तीन पांच पांच दो पांच नौ तीन",hi-22-noise10.wav
+hi-22-phone,hi,phone,285493552593,utr,"दो आठ पांच चार नौ तीन पांच पांच दो पांच नौ तीन",hi-22-phone.wav
+hi-23-clean,hi,clean,7412600712,mobile,"सात चार एक दो छह शून्य शून्य सात एक दो",hi-23-clean.wav
+hi-23-noise10,hi,noise10,7412600712,mobile,"सात चार एक दो छह शून्य शून्य सात एक दो",hi-23-noise10.wav
+hi-23-phone,hi,phone,7412600712,mobile,"सात चार एक दो छह शून्य शून्य सात एक दो",hi-23-phone.wav
+hi-24-clean,hi,clean,476663793701,utr,"चार सात छह छह छह तीन सात नौ तीन सात शून्य एक",hi-24-clean.wav
+hi-24-noise10,hi,noise10,476663793701,utr,"चार सात छह छह छह तीन सात नौ तीन सात शून्य एक",hi-24-noise10.wav
+hi-24-phone,hi,phone,476663793701,utr,"चार सात छह छह छह तीन सात नौ तीन सात शून्य एक",hi-24-phone.wav
+hi-25-clean,hi,clean,8609918375,mobile,"आठ छह शून्य नौ नौ एक आठ तीन सात पांच",hi-25-clean.wav
+hi-25-noise10,hi,noise10,8609918375,mobile,"आठ छह शून्य नौ नौ एक आठ तीन सात पांच",hi-25-noise10.wav
+hi-25-phone,hi,phone,8609918375,mobile,"आठ छह शून्य नौ नौ एक आठ तीन सात पांच",hi-25-phone.wav
+hi-26-clean,hi,clean,894237707147,utr,"आठ नौ चार दो तीन सात सात शून्य सात एक चार सात",hi-26-clean.wav
+hi-26-noise10,hi,noise10,894237707147,utr,"आठ नौ चार दो तीन सात सात शून्य सात एक चार सात",hi-26-noise10.wav
+hi-26-phone,hi,phone,894237707147,utr,"आठ नौ चार दो तीन सात सात शून्य सात एक चार सात",hi-26-phone.wav
+hi-27-clean,hi,clean,7971010926,mobile,"सात नौ सात एक शून्य एक शून्य नौ दो छह",hi-27-clean.wav
+hi-27-noise10,hi,noise10,7971010926,mobile,"सात नौ सात एक शून्य एक शून्य नौ दो छह",hi-27-noise10.wav
+hi-27-phone,hi,phone,7971010926,mobile,"सात नौ सात एक शून्य एक शून्य नौ दो छह",hi-27-phone.wav
+hi-28-clean,hi,clean,337769585328,utr,"तीन तीन सात सात छह नौ पांच आठ पांच तीन दो आठ",hi-28-clean.wav
+hi-28-noise10,hi,noise10,337769585328,utr,"तीन तीन सात सात छह नौ पांच आठ पांच तीन दो आठ",hi-28-noise10.wav
+hi-28-phone,hi,phone,337769585328,utr,"तीन तीन सात सात छह नौ पांच आठ पांच तीन दो आठ",hi-28-phone.wav
+hi-29-clean,hi,clean,6546516230,mobile,"छह पांच चार छह पांच एक छह दो तीन शून्य",hi-29-clean.wav
+hi-29-noise10,hi,noise10,6546516230,mobile,"छह पांच चार छह पांच एक छह दो तीन शून्य",hi-29-noise10.wav
+hi-29-phone,hi,phone,6546516230,mobile,"छह पांच चार छह पांच एक छह दो तीन शून्य",hi-29-phone.wav
+kn-00-clean,kn,clean,556585056448,utr,"ಐದು ಐದು ಆರು ಐದು ಎಂಟು ಐದು ಸೊನ್ನೆ ಐದು ಆರು ನಾಲ್ಕು ನಾಲ್ಕು ಎಂಟು",kn-00-clean.wav
+kn-00-noise10,kn,noise10,556585056448,utr,"ಐದು ಐದು ಆರು ಐದು ಎಂಟು ಐದು ಸೊನ್ನೆ ಐದು ಆರು ನಾಲ್ಕು ನಾಲ್ಕು ಎಂಟು",kn-00-noise10.wav
+kn-00-phone,kn,phone,556585056448,utr,"ಐದು ಐದು ಆರು ಐದು ಎಂಟು ಐದು ಸೊನ್ನೆ ಐದು ಆರು ನಾಲ್ಕು ನಾಲ್ಕು ಎಂಟು",kn-00-phone.wav
+kn-01-clean,kn,clean,7661123351,mobile,"ಏಳು ಆರು ಆರು ಒಂದು ಒಂದು ಎರಡು ಮೂರು ಮೂರು ಐದು ಒಂದು",kn-01-clean.wav
+kn-01-noise10,kn,noise10,7661123351,mobile,"ಏಳು ಆರು ಆರು ಒಂದು ಒಂದು ಎರಡು ಮೂರು ಮೂರು ಐದು ಒಂದು",kn-01-noise10.wav
+kn-01-phone,kn,phone,7661123351,mobile,"ಏಳು ಆರು ಆರು ಒಂದು ಒಂದು ಎರಡು ಮೂರು ಮೂರು ಐದು ಒಂದು",kn-01-phone.wav
+kn-02-clean,kn,clean,654887362079,utr,"ಆರು ಐದು ನಾಲ್ಕು ಎಂಟು ಎಂಟು ಏಳು ಮೂರು ಆರು ಎರಡು ಸೊನ್ನೆ ಏಳು ಒಂಬತ್ತು",kn-02-clean.wav
+kn-02-noise10,kn,noise10,654887362079,utr,"ಆರು ಐದು ನಾಲ್ಕು ಎಂಟು ಎಂಟು ಏಳು ಮೂರು ಆರು ಎರಡು ಸೊನ್ನೆ ಏಳು ಒಂಬತ್ತು",kn-02-noise10.wav
+kn-02-phone,kn,phone,654887362079,utr,"ಆರು ಐದು ನಾಲ್ಕು ಎಂಟು ಎಂಟು ಏಳು ಮೂರು ಆರು ಎರಡು ಸೊನ್ನೆ ಏಳು ಒಂಬತ್ತು",kn-02-phone.wav
+kn-03-clean,kn,clean,7173558188,mobile,"ಏಳು ಒಂದು ಏಳು ಮೂರು ಐದು ಐದು ಎಂಟು ಒಂದು ಎಂಟು ಎಂಟು",kn-03-clean.wav
+kn-03-noise10,kn,noise10,7173558188,mobile,"ಏಳು ಒಂದು ಏಳು ಮೂರು ಐದು ಐದು ಎಂಟು ಒಂದು ಎಂಟು ಎಂಟು",kn-03-noise10.wav
+kn-03-phone,kn,phone,7173558188,mobile,"ಏಳು ಒಂದು ಏಳು ಮೂರು ಐದು ಐದು ಎಂಟು ಒಂದು ಎಂಟು ಎಂಟು",kn-03-phone.wav
+kn-04-clean,kn,clean,400845257060,utr,"ನಾಲ್ಕು ಸೊನ್ನೆ ಸೊನ್ನೆ ಎಂಟು ನಾಲ್ಕು ಐದು ಎರಡು ಐದು ಏಳು ಸೊನ್ನೆ ಆರು ಸೊನ್ನೆ",kn-04-clean.wav
+kn-04-noise10,kn,noise10,400845257060,utr,"ನಾಲ್ಕು ಸೊನ್ನೆ ಸೊನ್ನೆ ಎಂಟು ನಾಲ್ಕು ಐದು ಎರಡು ಐದು ಏಳು ಸೊನ್ನೆ ಆರು ಸೊನ್ನೆ",kn-04-noise10.wav
+kn-04-phone,kn,phone,400845257060,utr,"ನಾಲ್ಕು ಸೊನ್ನೆ ಸೊನ್ನೆ ಎಂಟು ನಾಲ್ಕು ಐದು ಎರಡು ಐದು ಏಳು ಸೊನ್ನೆ ಆರು ಸೊನ್ನೆ",kn-04-phone.wav
+kn-05-clean,kn,clean,7694430747,mobile,"ಏಳು ಆರು ಒಂಬತ್ತು ನಾಲ್ಕು ನಾಲ್ಕು ಮೂರು ಸೊನ್ನೆ ಏಳು ನಾಲ್ಕು ಏಳು",kn-05-clean.wav
+kn-05-noise10,kn,noise10,7694430747,mobile,"ಏಳು ಆರು ಒಂಬತ್ತು ನಾಲ್ಕು ನಾಲ್ಕು ಮೂರು ಸೊನ್ನೆ ಏಳು ನಾಲ್ಕು ಏಳು",kn-05-noise10.wav
+kn-05-phone,kn,phone,7694430747,mobile,"ಏಳು ಆರು ಒಂಬತ್ತು ನಾಲ್ಕು ನಾಲ್ಕು ಮೂರು ಸೊನ್ನೆ ಏಳು ನಾಲ್ಕು ಏಳು",kn-05-phone.wav
+kn-06-clean,kn,clean,353811661339,utr,"ಮೂರು ಐದು ಮೂರು ಎಂಟು ಒಂದು ಒಂದು ಆರು ಆರು ಒಂದು ಮೂರು ಮೂರು ಒಂಬತ್ತು",kn-06-clean.wav
+kn-06-noise10,kn,noise10,353811661339,utr,"ಮೂರು ಐದು ಮೂರು ಎಂಟು ಒಂದು ಒಂದು ಆರು ಆರು ಒಂದು ಮೂರು ಮೂರು ಒಂಬತ್ತು",kn-06-noise10.wav
+kn-06-phone,kn,phone,353811661339,utr,"ಮೂರು ಐದು ಮೂರು ಎಂಟು ಒಂದು ಒಂದು ಆರು ಆರು ಒಂದು ಮೂರು ಮೂರು ಒಂಬತ್ತು",kn-06-phone.wav
+kn-07-clean,kn,clean,9649543508,mobile,"ಒಂಬತ್ತು ಆರು ನಾಲ್ಕು ಒಂಬತ್ತು ಐದು ನಾಲ್ಕು ಮೂರು ಐದು ಸೊನ್ನೆ ಎಂಟು",kn-07-clean.wav
+kn-07-noise10,kn,noise10,9649543508,mobile,"ಒಂಬತ್ತು ಆರು ನಾಲ್ಕು ಒಂಬತ್ತು ಐದು ನಾಲ್ಕು ಮೂರು ಐದು ಸೊನ್ನೆ ಎಂಟು",kn-07-noise10.wav
+kn-07-phone,kn,phone,9649543508,mobile,"ಒಂಬತ್ತು ಆರು ನಾಲ್ಕು ಒಂಬತ್ತು ಐದು ನಾಲ್ಕು ಮೂರು ಐದು ಸೊನ್ನೆ ಎಂಟು",kn-07-phone.wav
+kn-08-clean,kn,clean,341075515689,utr,"ಮೂರು ನಾಲ್ಕು ಒಂದು ಸೊನ್ನೆ ಏಳು ಐದು ಐದು ಒಂದು ಐದು ಆರು ಎಂಟು ಒಂಬತ್ತು",kn-08-clean.wav
+kn-08-noise10,kn,noise10,341075515689,utr,"ಮೂರು ನಾಲ್ಕು ಒಂದು ಸೊನ್ನೆ ಏಳು ಐದು ಐದು ಒಂದು ಐದು ಆರು ಎಂಟು ಒಂಬತ್ತು",kn-08-noise10.wav
+kn-08-phone,kn,phone,341075515689,utr,"ಮೂರು ನಾಲ್ಕು ಒಂದು ಸೊನ್ನೆ ಏಳು ಐದು ಐದು ಒಂದು ಐದು ಆರು ಎಂಟು ಒಂಬತ್ತು",kn-08-phone.wav
+kn-09-clean,kn,clean,8654066971,mobile,"ಎಂಟು ಆರು ಐದು ನಾಲ್ಕು ಸೊನ್ನೆ ಆರು ಆರು ಒಂಬತ್ತು ಏಳು ಒಂದು",kn-09-clean.wav
+kn-09-noise10,kn,noise10,8654066971,mobile,"ಎಂಟು ಆರು ಐದು ನಾಲ್ಕು ಸೊನ್ನೆ ಆರು ಆರು ಒಂಬತ್ತು ಏಳು ಒಂದು",kn-09-noise10.wav
+kn-09-phone,kn,phone,8654066971,mobile,"ಎಂಟು ಆರು ಐದು ನಾಲ್ಕು ಸೊನ್ನೆ ಆರು ಆರು ಒಂಬತ್ತು ಏಳು ಒಂದು",kn-09-phone.wav
+kn-10-clean,kn,clean,269393760264,utr,"ಎರಡು ಆರು ಒಂಬತ್ತು ಮೂರು ಒಂಬತ್ತು ಮೂರು ಏಳು ಆರು ಸೊನ್ನೆ ಎರಡು ಆರು ನಾಲ್ಕು",kn-10-clean.wav
+kn-10-noise10,kn,noise10,269393760264,utr,"ಎರಡು ಆರು ಒಂಬತ್ತು ಮೂರು ಒಂಬತ್ತು ಮೂರು ಏಳು ಆರು ಸೊನ್ನೆ ಎರಡು ಆರು ನಾಲ್ಕು",kn-10-noise10.wav
+kn-10-phone,kn,phone,269393760264,utr,"ಎರಡು ಆರು ಒಂಬತ್ತು ಮೂರು ಒಂಬತ್ತು ಮೂರು ಏಳು ಆರು ಸೊನ್ನೆ ಎರಡು ಆರು ನಾಲ್ಕು",kn-10-phone.wav
+kn-11-clean,kn,clean,8273053189,mobile,"ಎಂಟು ಎರಡು ಏಳು ಮೂರು ಸೊನ್ನೆ ಐದು ಮೂರು ಒಂದು ಎಂಟು ಒಂಬತ್ತು",kn-11-clean.wav
+kn-11-noise10,kn,noise10,8273053189,mobile,"ಎಂಟು ಎರಡು ಏಳು ಮೂರು ಸೊನ್ನೆ ಐದು ಮೂರು ಒಂದು ಎಂಟು ಒಂಬತ್ತು",kn-11-noise10.wav
+kn-11-phone,kn,phone,8273053189,mobile,"ಎಂಟು ಎರಡು ಏಳು ಮೂರು ಸೊನ್ನೆ ಐದು ಮೂರು ಒಂದು ಎಂಟು ಒಂಬತ್ತು",kn-11-phone.wav
+kn-12-clean,kn,clean,704857604418,utr,"ಏಳು ಸೊನ್ನೆ ನಾಲ್ಕು ಎಂಟು ಐದು ಏಳು ಆರು ಸೊನ್ನೆ ನಾಲ್ಕು ನಾಲ್ಕು ಒಂದು ಎಂಟು",kn-12-clean.wav
+kn-12-noise10,kn,noise10,704857604418,utr,"ಏಳು ಸೊನ್ನೆ ನಾಲ್ಕು ಎಂಟು ಐದು ಏಳು ಆರು ಸೊನ್ನೆ ನಾಲ್ಕು ನಾಲ್ಕು ಒಂದು ಎಂಟು",kn-12-noise10.wav
+kn-12-phone,kn,phone,704857604418,utr,"ಏಳು ಸೊನ್ನೆ ನಾಲ್ಕು ಎಂಟು ಐದು ಏಳು ಆರು ಸೊನ್ನೆ ನಾಲ್ಕು ನಾಲ್ಕು ಒಂದು ಎಂಟು",kn-12-phone.wav
+kn-13-clean,kn,clean,6096789901,mobile,"ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಆರು ಏಳು ಎಂಟು ಒಂಬತ್ತು ಒಂಬತ್ತು ಸೊನ್ನೆ ಒಂದು",kn-13-clean.wav
+kn-13-noise10,kn,noise10,6096789901,mobile,"ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಆರು ಏಳು ಎಂಟು ಒಂಬತ್ತು ಒಂಬತ್ತು ಸೊನ್ನೆ ಒಂದು",kn-13-noise10.wav
+kn-13-phone,kn,phone,6096789901,mobile,"ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಆರು ಏಳು ಎಂಟು ಒಂಬತ್ತು ಒಂಬತ್ತು ಸೊನ್ನೆ ಒಂದು",kn-13-phone.wav
+kn-14-clean,kn,clean,634500424743,utr,"ಆರು ಮೂರು ನಾಲ್ಕು ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ ನಾಲ್ಕು ಎರಡು ನಾಲ್ಕು ಏಳು ನಾಲ್ಕು ಮೂರು",kn-14-clean.wav
+kn-14-noise10,kn,noise10,634500424743,utr,"ಆರು ಮೂರು ನಾಲ್ಕು ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ ನಾಲ್ಕು ಎರಡು ನಾಲ್ಕು ಏಳು ನಾಲ್ಕು ಮೂರು",kn-14-noise10.wav
+kn-14-phone,kn,phone,634500424743,utr,"ಆರು ಮೂರು ನಾಲ್ಕು ಐದು ಸೊನ್ನೆ ಸೊನ್ನೆ ನಾಲ್ಕು ಎರಡು ನಾಲ್ಕು ಏಳು ನಾಲ್ಕು ಮೂರು",kn-14-phone.wav
+kn-15-clean,kn,clean,8392426356,mobile,"ಎಂಟು ಮೂರು ಒಂಬತ್ತು ಎರಡು ನಾಲ್ಕು ಎರಡು ಆರು ಮೂರು ಐದು ಆರು",kn-15-clean.wav
+kn-15-noise10,kn,noise10,8392426356,mobile,"ಎಂಟು ಮೂರು ಒಂಬತ್ತು ಎರಡು ನಾಲ್ಕು ಎರಡು ಆರು ಮೂರು ಐದು ಆರು",kn-15-noise10.wav
+kn-15-phone,kn,phone,8392426356,mobile,"ಎಂಟು ಮೂರು ಒಂಬತ್ತು ಎರಡು ನಾಲ್ಕು ಎರಡು ಆರು ಮೂರು ಐದು ಆರು",kn-15-phone.wav
+kn-16-clean,kn,clean,111818168780,utr,"ಒಂದು ಒಂದು ಒಂದು ಎಂಟು ಒಂದು ಎಂಟು ಒಂದು ಆರು ಎಂಟು ಏಳು ಎಂಟು ಸೊನ್ನೆ",kn-16-clean.wav
+kn-16-noise10,kn,noise10,111818168780,utr,"ಒಂದು ಒಂದು ಒಂದು ಎಂಟು ಒಂದು ಎಂಟು ಒಂದು ಆರು ಎಂಟು ಏಳು ಎಂಟು ಸೊನ್ನೆ",kn-16-noise10.wav
+kn-16-phone,kn,phone,111818168780,utr,"ಒಂದು ಒಂದು ಒಂದು ಎಂಟು ಒಂದು ಎಂಟು ಒಂದು ಆರು ಎಂಟು ಏಳು ಎಂಟು ಸೊನ್ನೆ",kn-16-phone.wav
+kn-17-clean,kn,clean,6721308675,mobile,"ಆರು ಏಳು ಎರಡು ಒಂದು ಮೂರು ಸೊನ್ನೆ ಎಂಟು ಆರು ಏಳು ಐದು",kn-17-clean.wav
+kn-17-noise10,kn,noise10,6721308675,mobile,"ಆರು ಏಳು ಎರಡು ಒಂದು ಮೂರು ಸೊನ್ನೆ ಎಂಟು ಆರು ಏಳು ಐದು",kn-17-noise10.wav
+kn-17-phone,kn,phone,6721308675,mobile,"ಆರು ಏಳು ಎರಡು ಒಂದು ಮೂರು ಸೊನ್ನೆ ಎಂಟು ಆರು ಏಳು ಐದು",kn-17-phone.wav
+kn-18-clean,kn,clean,773722160598,utr,"ಏಳು ಏಳು ಮೂರು ಏಳು ಎರಡು ಎರಡು ಒಂದು ಆರು ಸೊನ್ನೆ ಐದು ಒಂಬತ್ತು ಎಂಟು",kn-18-clean.wav
+kn-18-noise10,kn,noise10,773722160598,utr,"ಏಳು ಏಳು ಮೂರು ಏಳು ಎರಡು ಎರಡು ಒಂದು ಆರು ಸೊನ್ನೆ ಐದು ಒಂಬತ್ತು ಎಂಟು",kn-18-noise10.wav
+kn-18-phone,kn,phone,773722160598,utr,"ಏಳು ಏಳು ಮೂರು ಏಳು ಎರಡು ಎರಡು ಒಂದು ಆರು ಸೊನ್ನೆ ಐದು ಒಂಬತ್ತು ಎಂಟು",kn-18-phone.wav
+kn-19-clean,kn,clean,8805729184,mobile,"ಎಂಟು ಎಂಟು ಸೊನ್ನೆ ಐದು ಏಳು ಎರಡು ಒಂಬತ್ತು ಒಂದು ಎಂಟು ನಾಲ್ಕು",kn-19-clean.wav
+kn-19-noise10,kn,noise10,8805729184,mobile,"ಎಂಟು ಎಂಟು ಸೊನ್ನೆ ಐದು ಏಳು ಎರಡು ಒಂಬತ್ತು ಒಂದು ಎಂಟು ನಾಲ್ಕು",kn-19-noise10.wav
+kn-19-phone,kn,phone,8805729184,mobile,"ಎಂಟು ಎಂಟು ಸೊನ್ನೆ ಐದು ಏಳು ಎರಡು ಒಂಬತ್ತು ಒಂದು ಎಂಟು ನಾಲ್ಕು",kn-19-phone.wav
+kn-20-clean,kn,clean,993440100955,utr,"ಒಂಬತ್ತು ಒಂಬತ್ತು ಮೂರು ನಾಲ್ಕು ನಾಲ್ಕು ಸೊನ್ನೆ ಒಂದು ಸೊನ್ನೆ ಸೊನ್ನೆ ಒಂಬತ್ತು ಐದು ಐದು",kn-20-clean.wav
+kn-20-noise10,kn,noise10,993440100955,utr,"ಒಂಬತ್ತು ಒಂಬತ್ತು ಮೂರು ನಾಲ್ಕು ನಾಲ್ಕು ಸೊನ್ನೆ ಒಂದು ಸೊನ್ನೆ ಸೊನ್ನೆ ಒಂಬತ್ತು ಐದು ಐದು",kn-20-noise10.wav
+kn-20-phone,kn,phone,993440100955,utr,"ಒಂಬತ್ತು ಒಂಬತ್ತು ಮೂರು ನಾಲ್ಕು ನಾಲ್ಕು ಸೊನ್ನೆ ಒಂದು ಸೊನ್ನೆ ಸೊನ್ನೆ ಒಂಬತ್ತು ಐದು ಐದು",kn-20-phone.wav
+kn-21-clean,kn,clean,6908204313,mobile,"ಆರು ಒಂಬತ್ತು ಸೊನ್ನೆ ಎಂಟು ಎರಡು ಸೊನ್ನೆ ನಾಲ್ಕು ಮೂರು ಒಂದು ಮೂರು",kn-21-clean.wav
+kn-21-noise10,kn,noise10,6908204313,mobile,"ಆರು ಒಂಬತ್ತು ಸೊನ್ನೆ ಎಂಟು ಎರಡು ಸೊನ್ನೆ ನಾಲ್ಕು ಮೂರು ಒಂದು ಮೂರು",kn-21-noise10.wav
+kn-21-phone,kn,phone,6908204313,mobile,"ಆರು ಒಂಬತ್ತು ಸೊನ್ನೆ ಎಂಟು ಎರಡು ಸೊನ್ನೆ ನಾಲ್ಕು ಮೂರು ಒಂದು ಮೂರು",kn-21-phone.wav
+kn-22-clean,kn,clean,285493552593,utr,"ಎರಡು ಎಂಟು ಐದು ನಾಲ್ಕು ಒಂಬತ್ತು ಮೂರು ಐದು ಐದು ಎರಡು ಐದು ಒಂಬತ್ತು ಮೂರು",kn-22-clean.wav
+kn-22-noise10,kn,noise10,285493552593,utr,"ಎರಡು ಎಂಟು ಐದು ನಾಲ್ಕು ಒಂಬತ್ತು ಮೂರು ಐದು ಐದು ಎರಡು ಐದು ಒಂಬತ್ತು ಮೂರು",kn-22-noise10.wav
+kn-22-phone,kn,phone,285493552593,utr,"ಎರಡು ಎಂಟು ಐದು ನಾಲ್ಕು ಒಂಬತ್ತು ಮೂರು ಐದು ಐದು ಎರಡು ಐದು ಒಂಬತ್ತು ಮೂರು",kn-22-phone.wav
+kn-23-clean,kn,clean,7412600712,mobile,"ಏಳು ನಾಲ್ಕು ಒಂದು ಎರಡು ಆರು ಸೊನ್ನೆ ಸೊನ್ನೆ ಏಳು ಒಂದು ಎರಡು",kn-23-clean.wav
+kn-23-noise10,kn,noise10,7412600712,mobile,"ಏಳು ನಾಲ್ಕು ಒಂದು ಎರಡು ಆರು ಸೊನ್ನೆ ಸೊನ್ನೆ ಏಳು ಒಂದು ಎರಡು",kn-23-noise10.wav
+kn-23-phone,kn,phone,7412600712,mobile,"ಏಳು ನಾಲ್ಕು ಒಂದು ಎರಡು ಆರು ಸೊನ್ನೆ ಸೊನ್ನೆ ಏಳು ಒಂದು ಎರಡು",kn-23-phone.wav
+kn-24-clean,kn,clean,476663793701,utr,"ನಾಲ್ಕು ಏಳು ಆರು ಆರು ಆರು ಮೂರು ಏಳು ಒಂಬತ್ತು ಮೂರು ಏಳು ಸೊನ್ನೆ ಒಂದು",kn-24-clean.wav
+kn-24-noise10,kn,noise10,476663793701,utr,"ನಾಲ್ಕು ಏಳು ಆರು ಆರು ಆರು ಮೂರು ಏಳು ಒಂಬತ್ತು ಮೂರು ಏಳು ಸೊನ್ನೆ ಒಂದು",kn-24-noise10.wav
+kn-24-phone,kn,phone,476663793701,utr,"ನಾಲ್ಕು ಏಳು ಆರು ಆರು ಆರು ಮೂರು ಏಳು ಒಂಬತ್ತು ಮೂರು ಏಳು ಸೊನ್ನೆ ಒಂದು",kn-24-phone.wav
+kn-25-clean,kn,clean,8609918375,mobile,"ಎಂಟು ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಒಂಬತ್ತು ಒಂದು ಎಂಟು ಮೂರು ಏಳು ಐದು",kn-25-clean.wav
+kn-25-noise10,kn,noise10,8609918375,mobile,"ಎಂಟು ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಒಂಬತ್ತು ಒಂದು ಎಂಟು ಮೂರು ಏಳು ಐದು",kn-25-noise10.wav
+kn-25-phone,kn,phone,8609918375,mobile,"ಎಂಟು ಆರು ಸೊನ್ನೆ ಒಂಬತ್ತು ಒಂಬತ್ತು ಒಂದು ಎಂಟು ಮೂರು ಏಳು ಐದು",kn-25-phone.wav
+kn-26-clean,kn,clean,894237707147,utr,"ಎಂಟು ಒಂಬತ್ತು ನಾಲ್ಕು ಎರಡು ಮೂರು ಏಳು ಏಳು ಸೊನ್ನೆ ಏಳು ಒಂದು ನಾಲ್ಕು ಏಳು",kn-26-clean.wav
+kn-26-noise10,kn,noise10,894237707147,utr,"ಎಂಟು ಒಂಬತ್ತು ನಾಲ್ಕು ಎರಡು ಮೂರು ಏಳು ಏಳು ಸೊನ್ನೆ ಏಳು ಒಂದು ನಾಲ್ಕು ಏಳು",kn-26-noise10.wav
+kn-26-phone,kn,phone,894237707147,utr,"ಎಂಟು ಒಂಬತ್ತು ನಾಲ್ಕು ಎರಡು ಮೂರು ಏಳು ಏಳು ಸೊನ್ನೆ ಏಳು ಒಂದು ನಾಲ್ಕು ಏಳು",kn-26-phone.wav
+kn-27-clean,kn,clean,7971010926,mobile,"ಏಳು ಒಂಬತ್ತು ಏಳು ಒಂದು ಸೊನ್ನೆ ಒಂದು ಸೊನ್ನೆ ಒಂಬತ್ತು ಎರಡು ಆರು",kn-27-clean.wav
+kn-27-noise10,kn,noise10,7971010926,mobile,"ಏಳು ಒಂಬತ್ತು ಏಳು ಒಂದು ಸೊನ್ನೆ ಒಂದು ಸೊನ್ನೆ ಒಂಬತ್ತು ಎರಡು ಆರು",kn-27-noise10.wav
+kn-27-phone,kn,phone,7971010926,mobile,"ಏಳು ಒಂಬತ್ತು ಏಳು ಒಂದು ಸೊನ್ನೆ ಒಂದು ಸೊನ್ನೆ ಒಂಬತ್ತು ಎರಡು ಆರು",kn-27-phone.wav
+kn-28-clean,kn,clean,337769585328,utr,"ಮೂರು ಮೂರು ಏಳು ಏಳು ಆರು ಒಂಬತ್ತು ಐದು ಎಂಟು ಐದು ಮೂರು ಎರಡು ಎಂಟು",kn-28-clean.wav
+kn-28-noise10,kn,noise10,337769585328,utr,"ಮೂರು ಮೂರು ಏಳು ಏಳು ಆರು ಒಂಬತ್ತು ಐದು ಎಂಟು ಐದು ಮೂರು ಎರಡು ಎಂಟು",kn-28-noise10.wav
+kn-28-phone,kn,phone,337769585328,utr,"ಮೂರು ಮೂರು ಏಳು ಏಳು ಆರು ಒಂಬತ್ತು ಐದು ಎಂಟು ಐದು ಮೂರು ಎರಡು ಎಂಟು",kn-28-phone.wav
+kn-29-clean,kn,clean,6546516230,mobile,"ಆರು ಐದು ನಾಲ್ಕು ಆರು ಐದು ಒಂದು ಆರು ಎರಡು ಮೂರು ಸೊನ್ನೆ",kn-29-clean.wav
+kn-29-noise10,kn,noise10,6546516230,mobile,"ಆರು ಐದು ನಾಲ್ಕು ಆರು ಐದು ಒಂದು ಆರು ಎರಡು ಮೂರು ಸೊನ್ನೆ",kn-29-noise10.wav
+kn-29-phone,kn,phone,6546516230,mobile,"ಆರು ಐದು ನಾಲ್ಕು ಆರು ಐದು ಒಂದು ಆರು ಎರಡು ಮೂರು ಸೊನ್ನೆ",kn-29-phone.wav
+te-00-clean,te,clean,556585056448,utr,"ఐదు ఐదు ఆరు ఐదు ఎనిమిది ఐదు సున్నా ఐదు ఆరు నాలుగు నాలుగు ఎనిమిది",te-00-clean.wav
+te-00-noise10,te,noise10,556585056448,utr,"ఐదు ఐదు ఆరు ఐదు ఎనిమిది ఐదు సున్నా ఐదు ఆరు నాలుగు నాలుగు ఎనిమిది",te-00-noise10.wav
+te-00-phone,te,phone,556585056448,utr,"ఐదు ఐదు ఆరు ఐదు ఎనిమిది ఐదు సున్నా ఐదు ఆరు నాలుగు నాలుగు ఎనిమిది",te-00-phone.wav
+te-01-clean,te,clean,7661123351,mobile,"ఏడు ఆరు ఆరు ఒకటి ఒకటి రెండు మూడు మూడు ఐదు ఒకటి",te-01-clean.wav
+te-01-noise10,te,noise10,7661123351,mobile,"ఏడు ఆరు ఆరు ఒకటి ఒకటి రెండు మూడు మూడు ఐదు ఒకటి",te-01-noise10.wav
+te-01-phone,te,phone,7661123351,mobile,"ఏడు ఆరు ఆరు ఒకటి ఒకటి రెండు మూడు మూడు ఐదు ఒకటి",te-01-phone.wav
+te-02-clean,te,clean,654887362079,utr,"ఆరు ఐదు నాలుగు ఎనిమిది ఎనిమిది ఏడు మూడు ఆరు రెండు సున్నా ఏడు తొమ్మిది",te-02-clean.wav
+te-02-noise10,te,noise10,654887362079,utr,"ఆరు ఐదు నాలుగు ఎనిమిది ఎనిమిది ఏడు మూడు ఆరు రెండు సున్నా ఏడు తొమ్మిది",te-02-noise10.wav
+te-02-phone,te,phone,654887362079,utr,"ఆరు ఐదు నాలుగు ఎనిమిది ఎనిమిది ఏడు మూడు ఆరు రెండు సున్నా ఏడు తొమ్మిది",te-02-phone.wav
+te-03-clean,te,clean,7173558188,mobile,"ఏడు ఒకటి ఏడు మూడు ఐదు ఐదు ఎనిమిది ఒకటి ఎనిమిది ఎనిమిది",te-03-clean.wav
+te-03-noise10,te,noise10,7173558188,mobile,"ఏడు ఒకటి ఏడు మూడు ఐదు ఐదు ఎనిమిది ఒకటి ఎనిమిది ఎనిమిది",te-03-noise10.wav
+te-03-phone,te,phone,7173558188,mobile,"ఏడు ఒకటి ఏడు మూడు ఐదు ఐదు ఎనిమిది ఒకటి ఎనిమిది ఎనిమిది",te-03-phone.wav
+te-04-clean,te,clean,400845257060,utr,"నాలుగు సున్నా సున్నా ఎనిమిది నాలుగు ఐదు రెండు ఐదు ఏడు సున్నా ఆరు సున్నా",te-04-clean.wav
+te-04-noise10,te,noise10,400845257060,utr,"నాలుగు సున్నా సున్నా ఎనిమిది నాలుగు ఐదు రెండు ఐదు ఏడు సున్నా ఆరు సున్నా",te-04-noise10.wav
+te-04-phone,te,phone,400845257060,utr,"నాలుగు సున్నా సున్నా ఎనిమిది నాలుగు ఐదు రెండు ఐదు ఏడు సున్నా ఆరు సున్నా",te-04-phone.wav
+te-05-clean,te,clean,7694430747,mobile,"ఏడు ఆరు తొమ్మిది నాలుగు నాలుగు మూడు సున్నా ఏడు నాలుగు ఏడు",te-05-clean.wav
+te-05-noise10,te,noise10,7694430747,mobile,"ఏడు ఆరు తొమ్మిది నాలుగు నాలుగు మూడు సున్నా ఏడు నాలుగు ఏడు",te-05-noise10.wav
+te-05-phone,te,phone,7694430747,mobile,"ఏడు ఆరు తొమ్మిది నాలుగు నాలుగు మూడు సున్నా ఏడు నాలుగు ఏడు",te-05-phone.wav
+te-06-clean,te,clean,353811661339,utr,"మూడు ఐదు మూడు ఎనిమిది ఒకటి ఒకటి ఆరు ఆరు ఒకటి మూడు మూడు తొమ్మిది",te-06-clean.wav
+te-06-noise10,te,noise10,353811661339,utr,"మూడు ఐదు మూడు ఎనిమిది ఒకటి ఒకటి ఆరు ఆరు ఒకటి మూడు మూడు తొమ్మిది",te-06-noise10.wav
+te-06-phone,te,phone,353811661339,utr,"మూడు ఐదు మూడు ఎనిమిది ఒకటి ఒకటి ఆరు ఆరు ఒకటి మూడు మూడు తొమ్మిది",te-06-phone.wav
+te-07-clean,te,clean,9649543508,mobile,"తొమ్మిది ఆరు నాలుగు తొమ్మిది ఐదు నాలుగు మూడు ఐదు సున్నా ఎనిమిది",te-07-clean.wav
+te-07-noise10,te,noise10,9649543508,mobile,"తొమ్మిది ఆరు నాలుగు తొమ్మిది ఐదు నాలుగు మూడు ఐదు సున్నా ఎనిమిది",te-07-noise10.wav
+te-07-phone,te,phone,9649543508,mobile,"తొమ్మిది ఆరు నాలుగు తొమ్మిది ఐదు నాలుగు మూడు ఐదు సున్నా ఎనిమిది",te-07-phone.wav
+te-08-clean,te,clean,341075515689,utr,"మూడు నాలుగు ఒకటి సున్నా ఏడు ఐదు ఐదు ఒకటి ఐదు ఆరు ఎనిమిది తొమ్మిది",te-08-clean.wav
+te-08-noise10,te,noise10,341075515689,utr,"మూడు నాలుగు ఒకటి సున్నా ఏడు ఐదు ఐదు ఒకటి ఐదు ఆరు ఎనిమిది తొమ్మిది",te-08-noise10.wav
+te-08-phone,te,phone,341075515689,utr,"మూడు నాలుగు ఒకటి సున్నా ఏడు ఐదు ఐదు ఒకటి ఐదు ఆరు ఎనిమిది తొమ్మిది",te-08-phone.wav
+te-09-clean,te,clean,8654066971,mobile,"ఎనిమిది ఆరు ఐదు నాలుగు సున్నా ఆరు ఆరు తొమ్మిది ఏడు ఒకటి",te-09-clean.wav
+te-09-noise10,te,noise10,8654066971,mobile,"ఎనిమిది ఆరు ఐదు నాలుగు సున్నా ఆరు ఆరు తొమ్మిది ఏడు ఒకటి",te-09-noise10.wav
+te-09-phone,te,phone,8654066971,mobile,"ఎనిమిది ఆరు ఐదు నాలుగు సున్నా ఆరు ఆరు తొమ్మిది ఏడు ఒకటి",te-09-phone.wav
+te-10-clean,te,clean,269393760264,utr,"రెండు ఆరు తొమ్మిది మూడు తొమ్మిది మూడు ఏడు ఆరు సున్నా రెండు ఆరు నాలుగు",te-10-clean.wav
+te-10-noise10,te,noise10,269393760264,utr,"రెండు ఆరు తొమ్మిది మూడు తొమ్మిది మూడు ఏడు ఆరు సున్నా రెండు ఆరు నాలుగు",te-10-noise10.wav
+te-10-phone,te,phone,269393760264,utr,"రెండు ఆరు తొమ్మిది మూడు తొమ్మిది మూడు ఏడు ఆరు సున్నా రెండు ఆరు నాలుగు",te-10-phone.wav
+te-11-clean,te,clean,8273053189,mobile,"ఎనిమిది రెండు ఏడు మూడు సున్నా ఐదు మూడు ఒకటి ఎనిమిది తొమ్మిది",te-11-clean.wav
+te-11-noise10,te,noise10,8273053189,mobile,"ఎనిమిది రెండు ఏడు మూడు సున్నా ఐదు మూడు ఒకటి ఎనిమిది తొమ్మిది",te-11-noise10.wav
+te-11-phone,te,phone,8273053189,mobile,"ఎనిమిది రెండు ఏడు మూడు సున్నా ఐదు మూడు ఒకటి ఎనిమిది తొమ్మిది",te-11-phone.wav
+te-12-clean,te,clean,704857604418,utr,"ఏడు సున్నా నాలుగు ఎనిమిది ఐదు ఏడు ఆరు సున్నా నాలుగు నాలుగు ఒకటి ఎనిమిది",te-12-clean.wav
+te-12-noise10,te,noise10,704857604418,utr,"ఏడు సున్నా నాలుగు ఎనిమిది ఐదు ఏడు ఆరు సున్నా నాలుగు నాలుగు ఒకటి ఎనిమిది",te-12-noise10.wav
+te-12-phone,te,phone,704857604418,utr,"ఏడు సున్నా నాలుగు ఎనిమిది ఐదు ఏడు ఆరు సున్నా నాలుగు నాలుగు ఒకటి ఎనిమిది",te-12-phone.wav
+te-13-clean,te,clean,6096789901,mobile,"ఆరు సున్నా తొమ్మిది ఆరు ఏడు ఎనిమిది తొమ్మిది తొమ్మిది సున్నా ఒకటి",te-13-clean.wav
+te-13-noise10,te,noise10,6096789901,mobile,"ఆరు సున్నా తొమ్మిది ఆరు ఏడు ఎనిమిది తొమ్మిది తొమ్మిది సున్నా ఒకటి",te-13-noise10.wav
+te-13-phone,te,phone,6096789901,mobile,"ఆరు సున్నా తొమ్మిది ఆరు ఏడు ఎనిమిది తొమ్మిది తొమ్మిది సున్నా ఒకటి",te-13-phone.wav
+te-14-clean,te,clean,634500424743,utr,"ఆరు మూడు నాలుగు ఐదు సున్నా సున్నా నాలుగు రెండు నాలుగు ఏడు నాలుగు మూడు",te-14-clean.wav
+te-14-noise10,te,noise10,634500424743,utr,"ఆరు మూడు నాలుగు ఐదు సున్నా సున్నా నాలుగు రెండు నాలుగు ఏడు నాలుగు మూడు",te-14-noise10.wav
+te-14-phone,te,phone,634500424743,utr,"ఆరు మూడు నాలుగు ఐదు సున్నా సున్నా నాలుగు రెండు నాలుగు ఏడు నాలుగు మూడు",te-14-phone.wav
+te-15-clean,te,clean,8392426356,mobile,"ఎనిమిది మూడు తొమ్మిది రెండు నాలుగు రెండు ఆరు మూడు ఐదు ఆరు",te-15-clean.wav
+te-15-noise10,te,noise10,8392426356,mobile,"ఎనిమిది మూడు తొమ్మిది రెండు నాలుగు రెండు ఆరు మూడు ఐదు ఆరు",te-15-noise10.wav
+te-15-phone,te,phone,8392426356,mobile,"ఎనిమిది మూడు తొమ్మిది రెండు నాలుగు రెండు ఆరు మూడు ఐదు ఆరు",te-15-phone.wav
+te-16-clean,te,clean,111818168780,utr,"ఒకటి ఒకటి ఒకటి ఎనిమిది ఒకటి ఎనిమిది ఒకటి ఆరు ఎనిమిది ఏడు ఎనిమిది సున్నా",te-16-clean.wav
+te-16-noise10,te,noise10,111818168780,utr,"ఒకటి ఒకటి ఒకటి ఎనిమిది ఒకటి ఎనిమిది ఒకటి ఆరు ఎనిమిది ఏడు ఎనిమిది సున్నా",te-16-noise10.wav
+te-16-phone,te,phone,111818168780,utr,"ఒకటి ఒకటి ఒకటి ఎనిమిది ఒకటి ఎనిమిది ఒకటి ఆరు ఎనిమిది ఏడు ఎనిమిది సున్నా",te-16-phone.wav
+te-17-clean,te,clean,6721308675,mobile,"ఆరు ఏడు రెండు ఒకటి మూడు సున్నా ఎనిమిది ఆరు ఏడు ఐదు",te-17-clean.wav
+te-17-noise10,te,noise10,6721308675,mobile,"ఆరు ఏడు రెండు ఒకటి మూడు సున్నా ఎనిమిది ఆరు ఏడు ఐదు",te-17-noise10.wav
+te-17-phone,te,phone,6721308675,mobile,"ఆరు ఏడు రెండు ఒకటి మూడు సున్నా ఎనిమిది ఆరు ఏడు ఐదు",te-17-phone.wav
+te-18-clean,te,clean,773722160598,utr,"ఏడు ఏడు మూడు ఏడు రెండు రెండు ఒకటి ఆరు సున్నా ఐదు తొమ్మిది ఎనిమిది",te-18-clean.wav
+te-18-noise10,te,noise10,773722160598,utr,"ఏడు ఏడు మూడు ఏడు రెండు రెండు ఒకటి ఆరు సున్నా ఐదు తొమ్మిది ఎనిమిది",te-18-noise10.wav
+te-18-phone,te,phone,773722160598,utr,"ఏడు ఏడు మూడు ఏడు రెండు రెండు ఒకటి ఆరు సున్నా ఐదు తొమ్మిది ఎనిమిది",te-18-phone.wav
+te-19-clean,te,clean,8805729184,mobile,"ఎనిమిది ఎనిమిది సున్నా ఐదు ఏడు రెండు తొమ్మిది ఒకటి ఎనిమిది నాలుగు",te-19-clean.wav
+te-19-noise10,te,noise10,8805729184,mobile,"ఎనిమిది ఎనిమిది సున్నా ఐదు ఏడు రెండు తొమ్మిది ఒకటి ఎనిమిది నాలుగు",te-19-noise10.wav
+te-19-phone,te,phone,8805729184,mobile,"ఎనిమిది ఎనిమిది సున్నా ఐదు ఏడు రెండు తొమ్మిది ఒకటి ఎనిమిది నాలుగు",te-19-phone.wav
+te-20-clean,te,clean,993440100955,utr,"తొమ్మిది తొమ్మిది మూడు నాలుగు నాలుగు సున్నా ఒకటి సున్నా సున్నా తొమ్మిది ఐదు ఐదు",te-20-clean.wav
+te-20-noise10,te,noise10,993440100955,utr,"తొమ్మిది తొమ్మిది మూడు నాలుగు నాలుగు సున్నా ఒకటి సున్నా సున్నా తొమ్మిది ఐదు ఐదు",te-20-noise10.wav
+te-20-phone,te,phone,993440100955,utr,"తొమ్మిది తొమ్మిది మూడు నాలుగు నాలుగు సున్నా ఒకటి సున్నా సున్నా తొమ్మిది ఐదు ఐదు",te-20-phone.wav
+te-21-clean,te,clean,6908204313,mobile,"ఆరు తొమ్మిది సున్నా ఎనిమిది రెండు సున్నా నాలుగు మూడు ఒకటి మూడు",te-21-clean.wav
+te-21-noise10,te,noise10,6908204313,mobile,"ఆరు తొమ్మిది సున్నా ఎనిమిది రెండు సున్నా నాలుగు మూడు ఒకటి మూడు",te-21-noise10.wav
+te-21-phone,te,phone,6908204313,mobile,"ఆరు తొమ్మిది సున్నా ఎనిమిది రెండు సున్నా నాలుగు మూడు ఒకటి మూడు",te-21-phone.wav
+te-22-clean,te,clean,285493552593,utr,"రెండు ఎనిమిది ఐదు నాలుగు తొమ్మిది మూడు ఐదు ఐదు రెండు ఐదు తొమ్మిది మూడు",te-22-clean.wav
+te-22-noise10,te,noise10,285493552593,utr,"రెండు ఎనిమిది ఐదు నాలుగు తొమ్మిది మూడు ఐదు ఐదు రెండు ఐదు తొమ్మిది మూడు",te-22-noise10.wav
+te-22-phone,te,phone,285493552593,utr,"రెండు ఎనిమిది ఐదు నాలుగు తొమ్మిది మూడు ఐదు ఐదు రెండు ఐదు తొమ్మిది మూడు",te-22-phone.wav
+te-23-clean,te,clean,7412600712,mobile,"ఏడు నాలుగు ఒకటి రెండు ఆరు సున్నా సున్నా ఏడు ఒకటి రెండు",te-23-clean.wav
+te-23-noise10,te,noise10,7412600712,mobile,"ఏడు నాలుగు ఒకటి రెండు ఆరు సున్నా సున్నా ఏడు ఒకటి రెండు",te-23-noise10.wav
+te-23-phone,te,phone,7412600712,mobile,"ఏడు నాలుగు ఒకటి రెండు ఆరు సున్నా సున్నా ఏడు ఒకటి రెండు",te-23-phone.wav
+te-24-clean,te,clean,476663793701,utr,"నాలుగు ఏడు ఆరు ఆరు ఆరు మూడు ఏడు తొమ్మిది మూడు ఏడు సున్నా ఒకటి",te-24-clean.wav
+te-24-noise10,te,noise10,476663793701,utr,"నాలుగు ఏడు ఆరు ఆరు ఆరు మూడు ఏడు తొమ్మిది మూడు ఏడు సున్నా ఒకటి",te-24-noise10.wav
+te-24-phone,te,phone,476663793701,utr,"నాలుగు ఏడు ఆరు ఆరు ఆరు మూడు ఏడు తొమ్మిది మూడు ఏడు సున్నా ఒకటి",te-24-phone.wav
+te-25-clean,te,clean,8609918375,mobile,"ఎనిమిది ఆరు సున్నా తొమ్మిది తొమ్మిది ఒకటి ఎనిమిది మూడు ఏడు ఐదు",te-25-clean.wav
+te-25-noise10,te,noise10,8609918375,mobile,"ఎనిమిది ఆరు సున్నా తొమ్మిది తొమ్మిది ఒకటి ఎనిమిది మూడు ఏడు ఐదు",te-25-noise10.wav
+te-25-phone,te,phone,8609918375,mobile,"ఎనిమిది ఆరు సున్నా తొమ్మిది తొమ్మిది ఒకటి ఎనిమిది మూడు ఏడు ఐదు",te-25-phone.wav
+te-26-clean,te,clean,894237707147,utr,"ఎనిమిది తొమ్మిది నాలుగు రెండు మూడు ఏడు ఏడు సున్నా ఏడు ఒకటి నాలుగు ఏడు",te-26-clean.wav
+te-26-noise10,te,noise10,894237707147,utr,"ఎనిమిది తొమ్మిది నాలుగు రెండు మూడు ఏడు ఏడు సున్నా ఏడు ఒకటి నాలుగు ఏడు",te-26-noise10.wav
+te-26-phone,te,phone,894237707147,utr,"ఎనిమిది తొమ్మిది నాలుగు రెండు మూడు ఏడు ఏడు సున్నా ఏడు ఒకటి నాలుగు ఏడు",te-26-phone.wav
+te-27-clean,te,clean,7971010926,mobile,"ఏడు తొమ్మిది ఏడు ఒకటి సున్నా ఒకటి సున్నా తొమ్మిది రెండు ఆరు",te-27-clean.wav
+te-27-noise10,te,noise10,7971010926,mobile,"ఏడు తొమ్మిది ఏడు ఒకటి సున్నా ఒకటి సున్నా తొమ్మిది రెండు ఆరు",te-27-noise10.wav
+te-27-phone,te,phone,7971010926,mobile,"ఏడు తొమ్మిది ఏడు ఒకటి సున్నా ఒకటి సున్నా తొమ్మిది రెండు ఆరు",te-27-phone.wav
+te-28-clean,te,clean,337769585328,utr,"మూడు మూడు ఏడు ఏడు ఆరు తొమ్మిది ఐదు ఎనిమిది ఐదు మూడు రెండు ఎనిమిది",te-28-clean.wav
+te-28-noise10,te,noise10,337769585328,utr,"మూడు మూడు ఏడు ఏడు ఆరు తొమ్మిది ఐదు ఎనిమిది ఐదు మూడు రెండు ఎనిమిది",te-28-noise10.wav
+te-28-phone,te,phone,337769585328,utr,"మూడు మూడు ఏడు ఏడు ఆరు తొమ్మిది ఐదు ఎనిమిది ఐదు మూడు రెండు ఎనిమిది",te-28-phone.wav
+te-29-clean,te,clean,6546516230,mobile,"ఆరు ఐదు నాలుగు ఆరు ఐదు ఒకటి ఆరు రెండు మూడు సున్నా",te-29-clean.wav
+te-29-noise10,te,noise10,6546516230,mobile,"ఆరు ఐదు నాలుగు ఆరు ఐదు ఒకటి ఆరు రెండు మూడు సున్నా",te-29-noise10.wav
+te-29-phone,te,phone,6546516230,mobile,"ఆరు ఐదు నాలుగు ఆరు ఐదు ఒకటి ఆరు రెండు మూడు సున్నా",te-29-phone.wav
+ta-00-clean,ta,clean,556585056448,utr,"ஐந்து ஐந்து ஆறு ஐந்து எட்டு ஐந்து பூஜ்ஜியம் ஐந்து ஆறு நான்கு நான்கு எட்டு",ta-00-clean.wav
+ta-00-noise10,ta,noise10,556585056448,utr,"ஐந்து ஐந்து ஆறு ஐந்து எட்டு ஐந்து பூஜ்ஜியம் ஐந்து ஆறு நான்கு நான்கு எட்டு",ta-00-noise10.wav
+ta-00-phone,ta,phone,556585056448,utr,"ஐந்து ஐந்து ஆறு ஐந்து எட்டு ஐந்து பூஜ்ஜியம் ஐந்து ஆறு நான்கு நான்கு எட்டு",ta-00-phone.wav
+ta-01-clean,ta,clean,7661123351,mobile,"ஏழு ஆறு ஆறு ஒன்று ஒன்று இரண்டு மூன்று மூன்று ஐந்து ஒன்று",ta-01-clean.wav
+ta-01-noise10,ta,noise10,7661123351,mobile,"ஏழு ஆறு ஆறு ஒன்று ஒன்று இரண்டு மூன்று மூன்று ஐந்து ஒன்று",ta-01-noise10.wav
+ta-01-phone,ta,phone,7661123351,mobile,"ஏழு ஆறு ஆறு ஒன்று ஒன்று இரண்டு மூன்று மூன்று ஐந்து ஒன்று",ta-01-phone.wav
+ta-02-clean,ta,clean,654887362079,utr,"ஆறு ஐந்து நான்கு எட்டு எட்டு ஏழு மூன்று ஆறு இரண்டு பூஜ்ஜியம் ஏழு ஒன்பது",ta-02-clean.wav
+ta-02-noise10,ta,noise10,654887362079,utr,"ஆறு ஐந்து நான்கு எட்டு எட்டு ஏழு மூன்று ஆறு இரண்டு பூஜ்ஜியம் ஏழு ஒன்பது",ta-02-noise10.wav
+ta-02-phone,ta,phone,654887362079,utr,"ஆறு ஐந்து நான்கு எட்டு எட்டு ஏழு மூன்று ஆறு இரண்டு பூஜ்ஜியம் ஏழு ஒன்பது",ta-02-phone.wav
+ta-03-clean,ta,clean,7173558188,mobile,"ஏழு ஒன்று ஏழு மூன்று ஐந்து ஐந்து எட்டு ஒன்று எட்டு எட்டு",ta-03-clean.wav
+ta-03-noise10,ta,noise10,7173558188,mobile,"ஏழு ஒன்று ஏழு மூன்று ஐந்து ஐந்து எட்டு ஒன்று எட்டு எட்டு",ta-03-noise10.wav
+ta-03-phone,ta,phone,7173558188,mobile,"ஏழு ஒன்று ஏழு மூன்று ஐந்து ஐந்து எட்டு ஒன்று எட்டு எட்டு",ta-03-phone.wav
+ta-04-clean,ta,clean,400845257060,utr,"நான்கு பூஜ்ஜியம் பூஜ்ஜியம் எட்டு நான்கு ஐந்து இரண்டு ஐந்து ஏழு பூஜ்ஜியம் ஆறு பூஜ்ஜியம்",ta-04-clean.wav
+ta-04-noise10,ta,noise10,400845257060,utr,"நான்கு பூஜ்ஜியம் பூஜ்ஜியம் எட்டு நான்கு ஐந்து இரண்டு ஐந்து ஏழு பூஜ்ஜியம் ஆறு பூஜ்ஜியம்",ta-04-noise10.wav
+ta-04-phone,ta,phone,400845257060,utr,"நான்கு பூஜ்ஜியம் பூஜ்ஜியம் எட்டு நான்கு ஐந்து இரண்டு ஐந்து ஏழு பூஜ்ஜியம் ஆறு பூஜ்ஜியம்",ta-04-phone.wav
+ta-05-clean,ta,clean,7694430747,mobile,"ஏழு ஆறு ஒன்பது நான்கு நான்கு மூன்று பூஜ்ஜியம் ஏழு நான்கு ஏழு",ta-05-clean.wav
+ta-05-noise10,ta,noise10,7694430747,mobile,"ஏழு ஆறு ஒன்பது நான்கு நான்கு மூன்று பூஜ்ஜியம் ஏழு நான்கு ஏழு",ta-05-noise10.wav
+ta-05-phone,ta,phone,7694430747,mobile,"ஏழு ஆறு ஒன்பது நான்கு நான்கு மூன்று பூஜ்ஜியம் ஏழு நான்கு ஏழு",ta-05-phone.wav
+ta-06-clean,ta,clean,353811661339,utr,"மூன்று ஐந்து மூன்று எட்டு ஒன்று ஒன்று ஆறு ஆறு ஒன்று மூன்று மூன்று ஒன்பது",ta-06-clean.wav
+ta-06-noise10,ta,noise10,353811661339,utr,"மூன்று ஐந்து மூன்று எட்டு ஒன்று ஒன்று ஆறு ஆறு ஒன்று மூன்று மூன்று ஒன்பது",ta-06-noise10.wav
+ta-06-phone,ta,phone,353811661339,utr,"மூன்று ஐந்து மூன்று எட்டு ஒன்று ஒன்று ஆறு ஆறு ஒன்று மூன்று மூன்று ஒன்பது",ta-06-phone.wav
+ta-07-clean,ta,clean,9649543508,mobile,"ஒன்பது ஆறு நான்கு ஒன்பது ஐந்து நான்கு மூன்று ஐந்து பூஜ்ஜியம் எட்டு",ta-07-clean.wav
+ta-07-noise10,ta,noise10,9649543508,mobile,"ஒன்பது ஆறு நான்கு ஒன்பது ஐந்து நான்கு மூன்று ஐந்து பூஜ்ஜியம் எட்டு",ta-07-noise10.wav
+ta-07-phone,ta,phone,9649543508,mobile,"ஒன்பது ஆறு நான்கு ஒன்பது ஐந்து நான்கு மூன்று ஐந்து பூஜ்ஜியம் எட்டு",ta-07-phone.wav
+ta-08-clean,ta,clean,341075515689,utr,"மூன்று நான்கு ஒன்று பூஜ்ஜியம் ஏழு ஐந்து ஐந்து ஒன்று ஐந்து ஆறு எட்டு ஒன்பது",ta-08-clean.wav
+ta-08-noise10,ta,noise10,341075515689,utr,"மூன்று நான்கு ஒன்று பூஜ்ஜியம் ஏழு ஐந்து ஐந்து ஒன்று ஐந்து ஆறு எட்டு ஒன்பது",ta-08-noise10.wav
+ta-08-phone,ta,phone,341075515689,utr,"மூன்று நான்கு ஒன்று பூஜ்ஜியம் ஏழு ஐந்து ஐந்து ஒன்று ஐந்து ஆறு எட்டு ஒன்பது",ta-08-phone.wav
+ta-09-clean,ta,clean,8654066971,mobile,"எட்டு ஆறு ஐந்து நான்கு பூஜ்ஜியம் ஆறு ஆறு ஒன்பது ஏழு ஒன்று",ta-09-clean.wav
+ta-09-noise10,ta,noise10,8654066971,mobile,"எட்டு ஆறு ஐந்து நான்கு பூஜ்ஜியம் ஆறு ஆறு ஒன்பது ஏழு ஒன்று",ta-09-noise10.wav
+ta-09-phone,ta,phone,8654066971,mobile,"எட்டு ஆறு ஐந்து நான்கு பூஜ்ஜியம் ஆறு ஆறு ஒன்பது ஏழு ஒன்று",ta-09-phone.wav
+ta-10-clean,ta,clean,269393760264,utr,"இரண்டு ஆறு ஒன்பது மூன்று ஒன்பது மூன்று ஏழு ஆறு பூஜ்ஜியம் இரண்டு ஆறு நான்கு",ta-10-clean.wav
+ta-10-noise10,ta,noise10,269393760264,utr,"இரண்டு ஆறு ஒன்பது மூன்று ஒன்பது மூன்று ஏழு ஆறு பூஜ்ஜியம் இரண்டு ஆறு நான்கு",ta-10-noise10.wav
+ta-10-phone,ta,phone,269393760264,utr,"இரண்டு ஆறு ஒன்பது மூன்று ஒன்பது மூன்று ஏழு ஆறு பூஜ்ஜியம் இரண்டு ஆறு நான்கு",ta-10-phone.wav
+ta-11-clean,ta,clean,8273053189,mobile,"எட்டு இரண்டு ஏழு மூன்று பூஜ்ஜியம் ஐந்து மூன்று ஒன்று எட்டு ஒன்பது",ta-11-clean.wav
+ta-11-noise10,ta,noise10,8273053189,mobile,"எட்டு இரண்டு ஏழு மூன்று பூஜ்ஜியம் ஐந்து மூன்று ஒன்று எட்டு ஒன்பது",ta-11-noise10.wav
+ta-11-phone,ta,phone,8273053189,mobile,"எட்டு இரண்டு ஏழு மூன்று பூஜ்ஜியம் ஐந்து மூன்று ஒன்று எட்டு ஒன்பது",ta-11-phone.wav
+ta-12-clean,ta,clean,704857604418,utr,"ஏழு பூஜ்ஜியம் நான்கு எட்டு ஐந்து ஏழு ஆறு பூஜ்ஜியம் நான்கு நான்கு ஒன்று எட்டு",ta-12-clean.wav
+ta-12-noise10,ta,noise10,704857604418,utr,"ஏழு பூஜ்ஜியம் நான்கு எட்டு ஐந்து ஏழு ஆறு பூஜ்ஜியம் நான்கு நான்கு ஒன்று எட்டு",ta-12-noise10.wav
+ta-12-phone,ta,phone,704857604418,utr,"ஏழு பூஜ்ஜியம் நான்கு எட்டு ஐந்து ஏழு ஆறு பூஜ்ஜியம் நான்கு நான்கு ஒன்று எட்டு",ta-12-phone.wav
+ta-13-clean,ta,clean,6096789901,mobile,"ஆறு பூஜ்ஜியம் ஒன்பது ஆறு ஏழு எட்டு ஒன்பது ஒன்பது பூஜ்ஜியம் ஒன்று",ta-13-clean.wav
+ta-13-noise10,ta,noise10,6096789901,mobile,"ஆறு பூஜ்ஜியம் ஒன்பது ஆறு ஏழு எட்டு ஒன்பது ஒன்பது பூஜ்ஜியம் ஒன்று",ta-13-noise10.wav
+ta-13-phone,ta,phone,6096789901,mobile,"ஆறு பூஜ்ஜியம் ஒன்பது ஆறு ஏழு எட்டு ஒன்பது ஒன்பது பூஜ்ஜியம் ஒன்று",ta-13-phone.wav
+ta-14-clean,ta,clean,634500424743,utr,"ஆறு மூன்று நான்கு ஐந்து பூஜ்ஜியம் பூஜ்ஜியம் நான்கு இரண்டு நான்கு ஏழு நான்கு மூன்று",ta-14-clean.wav
+ta-14-noise10,ta,noise10,634500424743,utr,"ஆறு மூன்று நான்கு ஐந்து பூஜ்ஜியம் பூஜ்ஜியம் நான்கு இரண்டு நான்கு ஏழு நான்கு மூன்று",ta-14-noise10.wav
+ta-14-phone,ta,phone,634500424743,utr,"ஆறு மூன்று நான்கு ஐந்து பூஜ்ஜியம் பூஜ்ஜியம் நான்கு இரண்டு நான்கு ஏழு நான்கு மூன்று",ta-14-phone.wav
+ta-15-clean,ta,clean,8392426356,mobile,"எட்டு மூன்று ஒன்பது இரண்டு நான்கு இரண்டு ஆறு மூன்று ஐந்து ஆறு",ta-15-clean.wav
+ta-15-noise10,ta,noise10,8392426356,mobile,"எட்டு மூன்று ஒன்பது இரண்டு நான்கு இரண்டு ஆறு மூன்று ஐந்து ஆறு",ta-15-noise10.wav
+ta-15-phone,ta,phone,8392426356,mobile,"எட்டு மூன்று ஒன்பது இரண்டு நான்கு இரண்டு ஆறு மூன்று ஐந்து ஆறு",ta-15-phone.wav
+ta-16-clean,ta,clean,111818168780,utr,"ஒன்று ஒன்று ஒன்று எட்டு ஒன்று எட்டு ஒன்று ஆறு எட்டு ஏழு எட்டு பூஜ்ஜியம்",ta-16-clean.wav
+ta-16-noise10,ta,noise10,111818168780,utr,"ஒன்று ஒன்று ஒன்று எட்டு ஒன்று எட்டு ஒன்று ஆறு எட்டு ஏழு எட்டு பூஜ்ஜியம்",ta-16-noise10.wav
+ta-16-phone,ta,phone,111818168780,utr,"ஒன்று ஒன்று ஒன்று எட்டு ஒன்று எட்டு ஒன்று ஆறு எட்டு ஏழு எட்டு பூஜ்ஜியம்",ta-16-phone.wav
+ta-17-clean,ta,clean,6721308675,mobile,"ஆறு ஏழு இரண்டு ஒன்று மூன்று பூஜ்ஜியம் எட்டு ஆறு ஏழு ஐந்து",ta-17-clean.wav
+ta-17-noise10,ta,noise10,6721308675,mobile,"ஆறு ஏழு இரண்டு ஒன்று மூன்று பூஜ்ஜியம் எட்டு ஆறு ஏழு ஐந்து",ta-17-noise10.wav
+ta-17-phone,ta,phone,6721308675,mobile,"ஆறு ஏழு இரண்டு ஒன்று மூன்று பூஜ்ஜியம் எட்டு ஆறு ஏழு ஐந்து",ta-17-phone.wav
+ta-18-clean,ta,clean,773722160598,utr,"ஏழு ஏழு மூன்று ஏழு இரண்டு இரண்டு ஒன்று ஆறு பூஜ்ஜியம் ஐந்து ஒன்பது எட்டு",ta-18-clean.wav
+ta-18-noise10,ta,noise10,773722160598,utr,"ஏழு ஏழு மூன்று ஏழு இரண்டு இரண்டு ஒன்று ஆறு பூஜ்ஜியம் ஐந்து ஒன்பது எட்டு",ta-18-noise10.wav
+ta-18-phone,ta,phone,773722160598,utr,"ஏழு ஏழு மூன்று ஏழு இரண்டு இரண்டு ஒன்று ஆறு பூஜ்ஜியம் ஐந்து ஒன்பது எட்டு",ta-18-phone.wav
+ta-19-clean,ta,clean,8805729184,mobile,"எட்டு எட்டு பூஜ்ஜியம் ஐந்து ஏழு இரண்டு ஒன்பது ஒன்று எட்டு நான்கு",ta-19-clean.wav
+ta-19-noise10,ta,noise10,8805729184,mobile,"எட்டு எட்டு பூஜ்ஜியம் ஐந்து ஏழு இரண்டு ஒன்பது ஒன்று எட்டு நான்கு",ta-19-noise10.wav
+ta-19-phone,ta,phone,8805729184,mobile,"எட்டு எட்டு பூஜ்ஜியம் ஐந்து ஏழு இரண்டு ஒன்பது ஒன்று எட்டு நான்கு",ta-19-phone.wav
+ta-20-clean,ta,clean,993440100955,utr,"ஒன்பது ஒன்பது மூன்று நான்கு நான்கு பூஜ்ஜியம் ஒன்று பூஜ்ஜியம் பூஜ்ஜியம் ஒன்பது ஐந்து ஐந்து",ta-20-clean.wav
+ta-20-noise10,ta,noise10,993440100955,utr,"ஒன்பது ஒன்பது மூன்று நான்கு நான்கு பூஜ்ஜியம் ஒன்று பூஜ்ஜியம் பூஜ்ஜியம் ஒன்பது ஐந்து ஐந்து",ta-20-noise10.wav
+ta-20-phone,ta,phone,993440100955,utr,"ஒன்பது ஒன்பது மூன்று நான்கு நான்கு பூஜ்ஜியம் ஒன்று பூஜ்ஜியம் பூஜ்ஜியம் ஒன்பது ஐந்து ஐந்து",ta-20-phone.wav
+ta-21-clean,ta,clean,6908204313,mobile,"ஆறு ஒன்பது பூஜ்ஜியம் எட்டு இரண்டு பூஜ்ஜியம் நான்கு மூன்று ஒன்று மூன்று",ta-21-clean.wav
+ta-21-noise10,ta,noise10,6908204313,mobile,"ஆறு ஒன்பது பூஜ்ஜியம் எட்டு இரண்டு பூஜ்ஜியம் நான்கு மூன்று ஒன்று மூன்று",ta-21-noise10.wav
+ta-21-phone,ta,phone,6908204313,mobile,"ஆறு ஒன்பது பூஜ்ஜியம் எட்டு இரண்டு பூஜ்ஜியம் நான்கு மூன்று ஒன்று மூன்று",ta-21-phone.wav
+ta-22-clean,ta,clean,285493552593,utr,"இரண்டு எட்டு ஐந்து நான்கு ஒன்பது மூன்று ஐந்து ஐந்து இரண்டு ஐந்து ஒன்பது மூன்று",ta-22-clean.wav
+ta-22-noise10,ta,noise10,285493552593,utr,"இரண்டு எட்டு ஐந்து நான்கு ஒன்பது மூன்று ஐந்து ஐந்து இரண்டு ஐந்து ஒன்பது மூன்று",ta-22-noise10.wav
+ta-22-phone,ta,phone,285493552593,utr,"இரண்டு எட்டு ஐந்து நான்கு ஒன்பது மூன்று ஐந்து ஐந்து இரண்டு ஐந்து ஒன்பது மூன்று",ta-22-phone.wav
+ta-23-clean,ta,clean,7412600712,mobile,"ஏழு நான்கு ஒன்று இரண்டு ஆறு பூஜ்ஜியம் பூஜ்ஜியம் ஏழு ஒன்று இரண்டு",ta-23-clean.wav
+ta-23-noise10,ta,noise10,7412600712,mobile,"ஏழு நான்கு ஒன்று இரண்டு ஆறு பூஜ்ஜியம் பூஜ்ஜியம் ஏழு ஒன்று இரண்டு",ta-23-noise10.wav
+ta-23-phone,ta,phone,7412600712,mobile,"ஏழு நான்கு ஒன்று இரண்டு ஆறு பூஜ்ஜியம் பூஜ்ஜியம் ஏழு ஒன்று இரண்டு",ta-23-phone.wav
+ta-24-clean,ta,clean,476663793701,utr,"நான்கு ஏழு ஆறு ஆறு ஆறு மூன்று ஏழு ஒன்பது மூன்று ஏழு பூஜ்ஜியம் ஒன்று",ta-24-clean.wav
+ta-24-noise10,ta,noise10,476663793701,utr,"நான்கு ஏழு ஆறு ஆறு ஆறு மூன்று ஏழு ஒன்பது மூன்று ஏழு பூஜ்ஜியம் ஒன்று",ta-24-noise10.wav
+ta-24-phone,ta,phone,476663793701,utr,"நான்கு ஏழு ஆறு ஆறு ஆறு மூன்று ஏழு ஒன்பது மூன்று ஏழு பூஜ்ஜியம் ஒன்று",ta-24-phone.wav
+ta-25-clean,ta,clean,8609918375,mobile,"எட்டு ஆறு பூஜ்ஜியம் ஒன்பது ஒன்பது ஒன்று எட்டு மூன்று ஏழு ஐந்து",ta-25-clean.wav
+ta-25-noise10,ta,noise10,8609918375,mobile,"எட்டு ஆறு பூஜ்ஜியம் ஒன்பது ஒன்பது ஒன்று எட்டு மூன்று ஏழு ஐந்து",ta-25-noise10.wav
+ta-25-phone,ta,phone,8609918375,mobile,"எட்டு ஆறு பூஜ்ஜியம் ஒன்பது ஒன்பது ஒன்று எட்டு மூன்று ஏழு ஐந்து",ta-25-phone.wav
+ta-26-clean,ta,clean,894237707147,utr,"எட்டு ஒன்பது நான்கு இரண்டு மூன்று ஏழு ஏழு பூஜ்ஜியம் ஏழு ஒன்று நான்கு ஏழு",ta-26-clean.wav
+ta-26-noise10,ta,noise10,894237707147,utr,"எட்டு ஒன்பது நான்கு இரண்டு மூன்று ஏழு ஏழு பூஜ்ஜியம் ஏழு ஒன்று நான்கு ஏழு",ta-26-noise10.wav
+ta-26-phone,ta,phone,894237707147,utr,"எட்டு ஒன்பது நான்கு இரண்டு மூன்று ஏழு ஏழு பூஜ்ஜியம் ஏழு ஒன்று நான்கு ஏழு",ta-26-phone.wav
+ta-27-clean,ta,clean,7971010926,mobile,"ஏழு ஒன்பது ஏழு ஒன்று பூஜ்ஜியம் ஒன்று பூஜ்ஜியம் ஒன்பது இரண்டு ஆறு",ta-27-clean.wav
+ta-27-noise10,ta,noise10,7971010926,mobile,"ஏழு ஒன்பது ஏழு ஒன்று பூஜ்ஜியம் ஒன்று பூஜ்ஜியம் ஒன்பது இரண்டு ஆறு",ta-27-noise10.wav
+ta-27-phone,ta,phone,7971010926,mobile,"ஏழு ஒன்பது ஏழு ஒன்று பூஜ்ஜியம் ஒன்று பூஜ்ஜியம் ஒன்பது இரண்டு ஆறு",ta-27-phone.wav
+ta-28-clean,ta,clean,337769585328,utr,"மூன்று மூன்று ஏழு ஏழு ஆறு ஒன்பது ஐந்து எட்டு ஐந்து மூன்று இரண்டு எட்டு",ta-28-clean.wav
+ta-28-noise10,ta,noise10,337769585328,utr,"மூன்று மூன்று ஏழு ஏழு ஆறு ஒன்பது ஐந்து எட்டு ஐந்து மூன்று இரண்டு எட்டு",ta-28-noise10.wav
+ta-28-phone,ta,phone,337769585328,utr,"மூன்று மூன்று ஏழு ஏழு ஆறு ஒன்பது ஐந்து எட்டு ஐந்து மூன்று இரண்டு எட்டு",ta-28-phone.wav
+ta-29-clean,ta,clean,6546516230,mobile,"ஆறு ஐந்து நான்கு ஆறு ஐந்து ஒன்று ஆறு இரண்டு மூன்று பூஜ்ஜியம்",ta-29-clean.wav
+ta-29-noise10,ta,noise10,6546516230,mobile,"ஆறு ஐந்து நான்கு ஆறு ஐந்து ஒன்று ஆறு இரண்டு மூன்று பூஜ்ஜியம்",ta-29-noise10.wav
+ta-29-phone,ta,phone,6546516230,mobile,"ஆறு ஐந்து நான்கு ஆறு ஐந்து ஒன்று ஆறு இரண்டு மூன்று பூஜ்ஜியம்",ta-29-phone.wav
+ml-00-clean,ml,clean,556585056448,utr,"അഞ്ച് അഞ്ച് ആറ് അഞ്ച് എട്ട് അഞ്ച് പൂജ്യം അഞ്ച് ആറ് നാല് നാല് എട്ട്",ml-00-clean.wav
+ml-00-noise10,ml,noise10,556585056448,utr,"അഞ്ച് അഞ്ച് ആറ് അഞ്ച് എട്ട് അഞ്ച് പൂജ്യം അഞ്ച് ആറ് നാല് നാല് എട്ട്",ml-00-noise10.wav
+ml-00-phone,ml,phone,556585056448,utr,"അഞ്ച് അഞ്ച് ആറ് അഞ്ച് എട്ട് അഞ്ച് പൂജ്യം അഞ്ച് ആറ് നാല് നാല് എട്ട്",ml-00-phone.wav
+ml-01-clean,ml,clean,7661123351,mobile,"ഏഴ് ആറ് ആറ് ഒന്ന് ഒന്ന് രണ്ട് മൂന്ന് മൂന്ന് അഞ്ച് ഒന്ന്",ml-01-clean.wav
+ml-01-noise10,ml,noise10,7661123351,mobile,"ഏഴ് ആറ് ആറ് ഒന്ന് ഒന്ന് രണ്ട് മൂന്ന് മൂന്ന് അഞ്ച് ഒന്ന്",ml-01-noise10.wav
+ml-01-phone,ml,phone,7661123351,mobile,"ഏഴ് ആറ് ആറ് ഒന്ന് ഒന്ന് രണ്ട് മൂന്ന് മൂന്ന് അഞ്ച് ഒന്ന്",ml-01-phone.wav
+ml-02-clean,ml,clean,654887362079,utr,"ആറ് അഞ്ച് നാല് എട്ട് എട്ട് ഏഴ് മൂന്ന് ആറ് രണ്ട് പൂജ്യം ഏഴ് ഒമ്പത്",ml-02-clean.wav
+ml-02-noise10,ml,noise10,654887362079,utr,"ആറ് അഞ്ച് നാല് എട്ട് എട്ട് ഏഴ് മൂന്ന് ആറ് രണ്ട് പൂജ്യം ഏഴ് ഒമ്പത്",ml-02-noise10.wav
+ml-02-phone,ml,phone,654887362079,utr,"ആറ് അഞ്ച് നാല് എട്ട് എട്ട് ഏഴ് മൂന്ന് ആറ് രണ്ട് പൂജ്യം ഏഴ് ഒമ്പത്",ml-02-phone.wav
+ml-03-clean,ml,clean,7173558188,mobile,"ഏഴ് ഒന്ന് ഏഴ് മൂന്ന് അഞ്ച് അഞ്ച് എട്ട് ഒന്ന് എട്ട് എട്ട്",ml-03-clean.wav
+ml-03-noise10,ml,noise10,7173558188,mobile,"ഏഴ് ഒന്ന് ഏഴ് മൂന്ന് അഞ്ച് അഞ്ച് എട്ട് ഒന്ന് എട്ട് എട്ട്",ml-03-noise10.wav
+ml-03-phone,ml,phone,7173558188,mobile,"ഏഴ് ഒന്ന് ഏഴ് മൂന്ന് അഞ്ച് അഞ്ച് എട്ട് ഒന്ന് എട്ട് എട്ട്",ml-03-phone.wav
+ml-04-clean,ml,clean,400845257060,utr,"നാല് പൂജ്യം പൂജ്യം എട്ട് നാല് അഞ്ച് രണ്ട് അഞ്ച് ഏഴ് പൂജ്യം ആറ് പൂജ്യം",ml-04-clean.wav
+ml-04-noise10,ml,noise10,400845257060,utr,"നാല് പൂജ്യം പൂജ്യം എട്ട് നാല് അഞ്ച് രണ്ട് അഞ്ച് ഏഴ് പൂജ്യം ആറ് പൂജ്യം",ml-04-noise10.wav
+ml-04-phone,ml,phone,400845257060,utr,"നാല് പൂജ്യം പൂജ്യം എട്ട് നാല് അഞ്ച് രണ്ട് അഞ്ച് ഏഴ് പൂജ്യം ആറ് പൂജ്യം",ml-04-phone.wav
+ml-05-clean,ml,clean,7694430747,mobile,"ഏഴ് ആറ് ഒമ്പത് നാല് നാല് മൂന്ന് പൂജ്യം ഏഴ് നാല് ഏഴ്",ml-05-clean.wav
+ml-05-noise10,ml,noise10,7694430747,mobile,"ഏഴ് ആറ് ഒമ്പത് നാല് നാല് മൂന്ന് പൂജ്യം ഏഴ് നാല് ഏഴ്",ml-05-noise10.wav
+ml-05-phone,ml,phone,7694430747,mobile,"ഏഴ് ആറ് ഒമ്പത് നാല് നാല് മൂന്ന് പൂജ്യം ഏഴ് നാല് ഏഴ്",ml-05-phone.wav
+ml-06-clean,ml,clean,353811661339,utr,"മൂന്ന് അഞ്ച് മൂന്ന് എട്ട് ഒന്ന് ഒന്ന് ആറ് ആറ് ഒന്ന് മൂന്ന് മൂന്ന് ഒമ്പത്",ml-06-clean.wav
+ml-06-noise10,ml,noise10,353811661339,utr,"മൂന്ന് അഞ്ച് മൂന്ന് എട്ട് ഒന്ന് ഒന്ന് ആറ് ആറ് ഒന്ന് മൂന്ന് മൂന്ന് ഒമ്പത്",ml-06-noise10.wav
+ml-06-phone,ml,phone,353811661339,utr,"മൂന്ന് അഞ്ച് മൂന്ന് എട്ട് ഒന്ന് ഒന്ന് ആറ് ആറ് ഒന്ന് മൂന്ന് മൂന്ന് ഒമ്പത്",ml-06-phone.wav
+ml-07-clean,ml,clean,9649543508,mobile,"ഒമ്പത് ആറ് നാല് ഒമ്പത് അഞ്ച് നാല് മൂന്ന് അഞ്ച് പൂജ്യം എട്ട്",ml-07-clean.wav
+ml-07-noise10,ml,noise10,9649543508,mobile,"ഒമ്പത് ആറ് നാല് ഒമ്പത് അഞ്ച് നാല് മൂന്ന് അഞ്ച് പൂജ്യം എട്ട്",ml-07-noise10.wav
+ml-07-phone,ml,phone,9649543508,mobile,"ഒമ്പത് ആറ് നാല് ഒമ്പത് അഞ്ച് നാല് മൂന്ന് അഞ്ച് പൂജ്യം എട്ട്",ml-07-phone.wav
+ml-08-clean,ml,clean,341075515689,utr,"മൂന്ന് നാല് ഒന്ന് പൂജ്യം ഏഴ് അഞ്ച് അഞ്ച് ഒന്ന് അഞ്ച് ആറ് എട്ട് ഒമ്പത്",ml-08-clean.wav
+ml-08-noise10,ml,noise10,341075515689,utr,"മൂന്ന് നാല് ഒന്ന് പൂജ്യം ഏഴ് അഞ്ച് അഞ്ച് ഒന്ന് അഞ്ച് ആറ് എട്ട് ഒമ്പത്",ml-08-noise10.wav
+ml-08-phone,ml,phone,341075515689,utr,"മൂന്ന് നാല് ഒന്ന് പൂജ്യം ഏഴ് അഞ്ച് അഞ്ച് ഒന്ന് അഞ്ച് ആറ് എട്ട് ഒമ്പത്",ml-08-phone.wav
+ml-09-clean,ml,clean,8654066971,mobile,"എട്ട് ആറ് അഞ്ച് നാല് പൂജ്യം ആറ് ആറ് ഒമ്പത് ഏഴ് ഒന്ന്",ml-09-clean.wav
+ml-09-noise10,ml,noise10,8654066971,mobile,"എട്ട് ആറ് അഞ്ച് നാല് പൂജ്യം ആറ് ആറ് ഒമ്പത് ഏഴ് ഒന്ന്",ml-09-noise10.wav
+ml-09-phone,ml,phone,8654066971,mobile,"എട്ട് ആറ് അഞ്ച് നാല് പൂജ്യം ആറ് ആറ് ഒമ്പത് ഏഴ് ഒന്ന്",ml-09-phone.wav
+ml-10-clean,ml,clean,269393760264,utr,"രണ്ട് ആറ് ഒമ്പത് മൂന്ന് ഒമ്പത് മൂന്ന് ഏഴ് ആറ് പൂജ്യം രണ്ട് ആറ് നാല്",ml-10-clean.wav
+ml-10-noise10,ml,noise10,269393760264,utr,"രണ്ട് ആറ് ഒമ്പത് മൂന്ന് ഒമ്പത് മൂന്ന് ഏഴ് ആറ് പൂജ്യം രണ്ട് ആറ് നാല്",ml-10-noise10.wav
+ml-10-phone,ml,phone,269393760264,utr,"രണ്ട് ആറ് ഒമ്പത് മൂന്ന് ഒമ്പത് മൂന്ന് ഏഴ് ആറ് പൂജ്യം രണ്ട് ആറ് നാല്",ml-10-phone.wav
+ml-11-clean,ml,clean,8273053189,mobile,"എട്ട് രണ്ട് ഏഴ് മൂന്ന് പൂജ്യം അഞ്ച് മൂന്ന് ഒന്ന് എട്ട് ഒമ്പത്",ml-11-clean.wav
+ml-11-noise10,ml,noise10,8273053189,mobile,"എട്ട് രണ്ട് ഏഴ് മൂന്ന് പൂജ്യം അഞ്ച് മൂന്ന് ഒന്ന് എട്ട് ഒമ്പത്",ml-11-noise10.wav
+ml-11-phone,ml,phone,8273053189,mobile,"എട്ട് രണ്ട് ഏഴ് മൂന്ന് പൂജ്യം അഞ്ച് മൂന്ന് ഒന്ന് എട്ട് ഒമ്പത്",ml-11-phone.wav
+ml-12-clean,ml,clean,704857604418,utr,"ഏഴ് പൂജ്യം നാല് എട്ട് അഞ്ച് ഏഴ് ആറ് പൂജ്യം നാല് നാല് ഒന്ന് എട്ട്",ml-12-clean.wav
+ml-12-noise10,ml,noise10,704857604418,utr,"ഏഴ് പൂജ്യം നാല് എട്ട് അഞ്ച് ഏഴ് ആറ് പൂജ്യം നാല് നാല് ഒന്ന് എട്ട്",ml-12-noise10.wav
+ml-12-phone,ml,phone,704857604418,utr,"ഏഴ് പൂജ്യം നാല് എട്ട് അഞ്ച് ഏഴ് ആറ് പൂജ്യം നാല് നാല് ഒന്ന് എട്ട്",ml-12-phone.wav
+ml-13-clean,ml,clean,6096789901,mobile,"ആറ് പൂജ്യം ഒമ്പത് ആറ് ഏഴ് എട്ട് ഒമ്പത് ഒമ്പത് പൂജ്യം ഒന്ന്",ml-13-clean.wav
+ml-13-noise10,ml,noise10,6096789901,mobile,"ആറ് പൂജ്യം ഒമ്പത് ആറ് ഏഴ് എട്ട് ഒമ്പത് ഒമ്പത് പൂജ്യം ഒന്ന്",ml-13-noise10.wav
+ml-13-phone,ml,phone,6096789901,mobile,"ആറ് പൂജ്യം ഒമ്പത് ആറ് ഏഴ് എട്ട് ഒമ്പത് ഒമ്പത് പൂജ്യം ഒന്ന്",ml-13-phone.wav
+ml-14-clean,ml,clean,634500424743,utr,"ആറ് മൂന്ന് നാല് അഞ്ച് പൂജ്യം പൂജ്യം നാല് രണ്ട് നാല് ഏഴ് നാല് മൂന്ന്",ml-14-clean.wav
+ml-14-noise10,ml,noise10,634500424743,utr,"ആറ് മൂന്ന് നാല് അഞ്ച് പൂജ്യം പൂജ്യം നാല് രണ്ട് നാല് ഏഴ് നാല് മൂന്ന്",ml-14-noise10.wav
+ml-14-phone,ml,phone,634500424743,utr,"ആറ് മൂന്ന് നാല് അഞ്ച് പൂജ്യം പൂജ്യം നാല് രണ്ട് നാല് ഏഴ് നാല് മൂന്ന്",ml-14-phone.wav
+ml-15-clean,ml,clean,8392426356,mobile,"എട്ട് മൂന്ന് ഒമ്പത് രണ്ട് നാല് രണ്ട് ആറ് മൂന്ന് അഞ്ച് ആറ്",ml-15-clean.wav
+ml-15-noise10,ml,noise10,8392426356,mobile,"എട്ട് മൂന്ന് ഒമ്പത് രണ്ട് നാല് രണ്ട് ആറ് മൂന്ന് അഞ്ച് ആറ്",ml-15-noise10.wav
+ml-15-phone,ml,phone,8392426356,mobile,"എട്ട് മൂന്ന് ഒമ്പത് രണ്ട് നാല് രണ്ട് ആറ് മൂന്ന് അഞ്ച് ആറ്",ml-15-phone.wav
+ml-16-clean,ml,clean,111818168780,utr,"ഒന്ന് ഒന്ന് ഒന്ന് എട്ട് ഒന്ന് എട്ട് ഒന്ന് ആറ് എട്ട് ഏഴ് എട്ട് പൂജ്യം",ml-16-clean.wav
+ml-16-noise10,ml,noise10,111818168780,utr,"ഒന്ന് ഒന്ന് ഒന്ന് എട്ട് ഒന്ന് എട്ട് ഒന്ന് ആറ് എട്ട് ഏഴ് എട്ട് പൂജ്യം",ml-16-noise10.wav
+ml-16-phone,ml,phone,111818168780,utr,"ഒന്ന് ഒന്ന് ഒന്ന് എട്ട് ഒന്ന് എട്ട് ഒന്ന് ആറ് എട്ട് ഏഴ് എട്ട് പൂജ്യം",ml-16-phone.wav
+ml-17-clean,ml,clean,6721308675,mobile,"ആറ് ഏഴ് രണ്ട് ഒന്ന് മൂന്ന് പൂജ്യം എട്ട് ആറ് ഏഴ് അഞ്ച്",ml-17-clean.wav
+ml-17-noise10,ml,noise10,6721308675,mobile,"ആറ് ഏഴ് രണ്ട് ഒന്ന് മൂന്ന് പൂജ്യം എട്ട് ആറ് ഏഴ് അഞ്ച്",ml-17-noise10.wav
+ml-17-phone,ml,phone,6721308675,mobile,"ആറ് ഏഴ് രണ്ട് ഒന്ന് മൂന്ന് പൂജ്യം എട്ട് ആറ് ഏഴ് അഞ്ച്",ml-17-phone.wav
+ml-18-clean,ml,clean,773722160598,utr,"ഏഴ് ഏഴ് മൂന്ന് ഏഴ് രണ്ട് രണ്ട് ഒന്ന് ആറ് പൂജ്യം അഞ്ച് ഒമ്പത് എട്ട്",ml-18-clean.wav
+ml-18-noise10,ml,noise10,773722160598,utr,"ഏഴ് ഏഴ് മൂന്ന് ഏഴ് രണ്ട് രണ്ട് ഒന്ന് ആറ് പൂജ്യം അഞ്ച് ഒമ്പത് എട്ട്",ml-18-noise10.wav
+ml-18-phone,ml,phone,773722160598,utr,"ഏഴ് ഏഴ് മൂന്ന് ഏഴ് രണ്ട് രണ്ട് ഒന്ന് ആറ് പൂജ്യം അഞ്ച് ഒമ്പത് എട്ട്",ml-18-phone.wav
+ml-19-clean,ml,clean,8805729184,mobile,"എട്ട് എട്ട് പൂജ്യം അഞ്ച് ഏഴ് രണ്ട് ഒമ്പത് ഒന്ന് എട്ട് നാല്",ml-19-clean.wav
+ml-19-noise10,ml,noise10,8805729184,mobile,"എട്ട് എട്ട് പൂജ്യം അഞ്ച് ഏഴ് രണ്ട് ഒമ്പത് ഒന്ന് എട്ട് നാല്",ml-19-noise10.wav
+ml-19-phone,ml,phone,8805729184,mobile,"എട്ട് എട്ട് പൂജ്യം അഞ്ച് ഏഴ് രണ്ട് ഒമ്പത് ഒന്ന് എട്ട് നാല്",ml-19-phone.wav
+ml-20-clean,ml,clean,993440100955,utr,"ഒമ്പത് ഒമ്പത് മൂന്ന് നാല് നാല് പൂജ്യം ഒന്ന് പൂജ്യം പൂജ്യം ഒമ്പത് അഞ്ച് അഞ്ച്",ml-20-clean.wav
+ml-20-noise10,ml,noise10,993440100955,utr,"ഒമ്പത് ഒമ്പത് മൂന്ന് നാല് നാല് പൂജ്യം ഒന്ന് പൂജ്യം പൂജ്യം ഒമ്പത് അഞ്ച് അഞ്ച്",ml-20-noise10.wav
+ml-20-phone,ml,phone,993440100955,utr,"ഒമ്പത് ഒമ്പത് മൂന്ന് നാല് നാല് പൂജ്യം ഒന്ന് പൂജ്യം പൂജ്യം ഒമ്പത് അഞ്ച് അഞ്ച്",ml-20-phone.wav
+ml-21-clean,ml,clean,6908204313,mobile,"ആറ് ഒമ്പത് പൂജ്യം എട്ട് രണ്ട് പൂജ്യം നാല് മൂന്ന് ഒന്ന് മൂന്ന്",ml-21-clean.wav
+ml-21-noise10,ml,noise10,6908204313,mobile,"ആറ് ഒമ്പത് പൂജ്യം എട്ട് രണ്ട് പൂജ്യം നാല് മൂന്ന് ഒന്ന് മൂന്ന്",ml-21-noise10.wav
+ml-21-phone,ml,phone,6908204313,mobile,"ആറ് ഒമ്പത് പൂജ്യം എട്ട് രണ്ട് പൂജ്യം നാല് മൂന്ന് ഒന്ന് മൂന്ന്",ml-21-phone.wav
+ml-22-clean,ml,clean,285493552593,utr,"രണ്ട് എട്ട് അഞ്ച് നാല് ഒമ്പത് മൂന്ന് അഞ്ച് അഞ്ച് രണ്ട് അഞ്ച് ഒമ്പത് മൂന്ന്",ml-22-clean.wav
+ml-22-noise10,ml,noise10,285493552593,utr,"രണ്ട് എട്ട് അഞ്ച് നാല് ഒമ്പത് മൂന്ന് അഞ്ച് അഞ്ച് രണ്ട് അഞ്ച് ഒമ്പത് മൂന്ന്",ml-22-noise10.wav
+ml-22-phone,ml,phone,285493552593,utr,"രണ്ട് എട്ട് അഞ്ച് നാല് ഒമ്പത് മൂന്ന് അഞ്ച് അഞ്ച് രണ്ട് അഞ്ച് ഒമ്പത് മൂന്ന്",ml-22-phone.wav
+ml-23-clean,ml,clean,7412600712,mobile,"ഏഴ് നാല് ഒന്ന് രണ്ട് ആറ് പൂജ്യം പൂജ്യം ഏഴ് ഒന്ന് രണ്ട്",ml-23-clean.wav
+ml-23-noise10,ml,noise10,7412600712,mobile,"ഏഴ് നാല് ഒന്ന് രണ്ട് ആറ് പൂജ്യം പൂജ്യം ഏഴ് ഒന്ന് രണ്ട്",ml-23-noise10.wav
+ml-23-phone,ml,phone,7412600712,mobile,"ഏഴ് നാല് ഒന്ന് രണ്ട് ആറ് പൂജ്യം പൂജ്യം ഏഴ് ഒന്ന് രണ്ട്",ml-23-phone.wav
+ml-24-clean,ml,clean,476663793701,utr,"നാല് ഏഴ് ആറ് ആറ് ആറ് മൂന്ന് ഏഴ് ഒമ്പത് മൂന്ന് ഏഴ് പൂജ്യം ഒന്ന്",ml-24-clean.wav
+ml-24-noise10,ml,noise10,476663793701,utr,"നാല് ഏഴ് ആറ് ആറ് ആറ് മൂന്ന് ഏഴ് ഒമ്പത് മൂന്ന് ഏഴ് പൂജ്യം ഒന്ന്",ml-24-noise10.wav
+ml-24-phone,ml,phone,476663793701,utr,"നാല് ഏഴ് ആറ് ആറ് ആറ് മൂന്ന് ഏഴ് ഒമ്പത് മൂന്ന് ഏഴ് പൂജ്യം ഒന്ന്",ml-24-phone.wav
+ml-25-clean,ml,clean,8609918375,mobile,"എട്ട് ആറ് പൂജ്യം ഒമ്പത് ഒമ്പത് ഒന്ന് എട്ട് മൂന്ന് ഏഴ് അഞ്ച്",ml-25-clean.wav
+ml-25-noise10,ml,noise10,8609918375,mobile,"എട്ട് ആറ് പൂജ്യം ഒമ്പത് ഒമ്പത് ഒന്ന് എട്ട് മൂന്ന് ഏഴ് അഞ്ച്",ml-25-noise10.wav
+ml-25-phone,ml,phone,8609918375,mobile,"എട്ട് ആറ് പൂജ്യം ഒമ്പത് ഒമ്പത് ഒന്ന് എട്ട് മൂന്ന് ഏഴ് അഞ്ച്",ml-25-phone.wav
+ml-26-clean,ml,clean,894237707147,utr,"എട്ട് ഒമ്പത് നാല് രണ്ട് മൂന്ന് ഏഴ് ഏഴ് പൂജ്യം ഏഴ് ഒന്ന് നാല് ഏഴ്",ml-26-clean.wav
+ml-26-noise10,ml,noise10,894237707147,utr,"എട്ട് ഒമ്പത് നാല് രണ്ട് മൂന്ന് ഏഴ് ഏഴ് പൂജ്യം ഏഴ് ഒന്ന് നാല് ഏഴ്",ml-26-noise10.wav
+ml-26-phone,ml,phone,894237707147,utr,"എട്ട് ഒമ്പത് നാല് രണ്ട് മൂന്ന് ഏഴ് ഏഴ് പൂജ്യം ഏഴ് ഒന്ന് നാല് ഏഴ്",ml-26-phone.wav
+ml-27-clean,ml,clean,7971010926,mobile,"ഏഴ് ഒമ്പത് ഏഴ് ഒന്ന് പൂജ്യം ഒന്ന് പൂജ്യം ഒമ്പത് രണ്ട് ആറ്",ml-27-clean.wav
+ml-27-noise10,ml,noise10,7971010926,mobile,"ഏഴ് ഒമ്പത് ഏഴ് ഒന്ന് പൂജ്യം ഒന്ന് പൂജ്യം ഒമ്പത് രണ്ട് ആറ്",ml-27-noise10.wav
+ml-27-phone,ml,phone,7971010926,mobile,"ഏഴ് ഒമ്പത് ഏഴ് ഒന്ന് പൂജ്യം ഒന്ന് പൂജ്യം ഒമ്പത് രണ്ട് ആറ്",ml-27-phone.wav
+ml-28-clean,ml,clean,337769585328,utr,"മൂന്ന് മൂന്ന് ഏഴ് ഏഴ് ആറ് ഒമ്പത് അഞ്ച് എട്ട് അഞ്ച് മൂന്ന് രണ്ട് എട്ട്",ml-28-clean.wav
+ml-28-noise10,ml,noise10,337769585328,utr,"മൂന്ന് മൂന്ന് ഏഴ് ഏഴ് ആറ് ഒമ്പത് അഞ്ച് എട്ട് അഞ്ച് മൂന്ന് രണ്ട് എട്ട്",ml-28-noise10.wav
+ml-28-phone,ml,phone,337769585328,utr,"മൂന്ന് മൂന്ന് ഏഴ് ഏഴ് ആറ് ഒമ്പത് അഞ്ച് എട്ട് അഞ്ച് മൂന്ന് രണ്ട് എട്ട്",ml-28-phone.wav
+ml-29-clean,ml,clean,6546516230,mobile,"ആറ് അഞ്ച് നാല് ആറ് അഞ്ച് ഒന്ന് ആറ് രണ്ട് മൂന്ന് പൂജ്യം",ml-29-clean.wav
+ml-29-noise10,ml,noise10,6546516230,mobile,"ആറ് അഞ്ച് നാല് ആറ് അഞ്ച് ഒന്ന് ആറ് രണ്ട് മൂന്ന് പൂജ്യം",ml-29-noise10.wav
+ml-29-phone,ml,phone,6546516230,mobile,"ആറ് അഞ്ച് നാല് ആറ് അഞ്ച് ഒന്ന് ആറ് രണ്ട് മൂന്ന് പൂജ്യം",ml-29-phone.wav
+bn-00-clean,bn,clean,556585056448,utr,"পাঁচ পাঁচ ছয় পাঁচ আট পাঁচ শূন্য পাঁচ ছয় চার চার আট",bn-00-clean.wav
+bn-00-noise10,bn,noise10,556585056448,utr,"পাঁচ পাঁচ ছয় পাঁচ আট পাঁচ শূন্য পাঁচ ছয় চার চার আট",bn-00-noise10.wav
+bn-00-phone,bn,phone,556585056448,utr,"পাঁচ পাঁচ ছয় পাঁচ আট পাঁচ শূন্য পাঁচ ছয় চার চার আট",bn-00-phone.wav
+bn-01-clean,bn,clean,7661123351,mobile,"সাত ছয় ছয় এক এক দুই তিন তিন পাঁচ এক",bn-01-clean.wav
+bn-01-noise10,bn,noise10,7661123351,mobile,"সাত ছয় ছয় এক এক দুই তিন তিন পাঁচ এক",bn-01-noise10.wav
+bn-01-phone,bn,phone,7661123351,mobile,"সাত ছয় ছয় এক এক দুই তিন তিন পাঁচ এক",bn-01-phone.wav
+bn-02-clean,bn,clean,654887362079,utr,"ছয় পাঁচ চার আট আট সাত তিন ছয় দুই শূন্য সাত নয়",bn-02-clean.wav
+bn-02-noise10,bn,noise10,654887362079,utr,"ছয় পাঁচ চার আট আট সাত তিন ছয় দুই শূন্য সাত নয়",bn-02-noise10.wav
+bn-02-phone,bn,phone,654887362079,utr,"ছয় পাঁচ চার আট আট সাত তিন ছয় দুই শূন্য সাত নয়",bn-02-phone.wav
+bn-03-clean,bn,clean,7173558188,mobile,"সাত এক সাত তিন পাঁচ পাঁচ আট এক আট আট",bn-03-clean.wav
+bn-03-noise10,bn,noise10,7173558188,mobile,"সাত এক সাত তিন পাঁচ পাঁচ আট এক আট আট",bn-03-noise10.wav
+bn-03-phone,bn,phone,7173558188,mobile,"সাত এক সাত তিন পাঁচ পাঁচ আট এক আট আট",bn-03-phone.wav
+bn-04-clean,bn,clean,400845257060,utr,"চার শূন্য শূন্য আট চার পাঁচ দুই পাঁচ সাত শূন্য ছয় শূন্য",bn-04-clean.wav
+bn-04-noise10,bn,noise10,400845257060,utr,"চার শূন্য শূন্য আট চার পাঁচ দুই পাঁচ সাত শূন্য ছয় শূন্য",bn-04-noise10.wav
+bn-04-phone,bn,phone,400845257060,utr,"চার শূন্য শূন্য আট চার পাঁচ দুই পাঁচ সাত শূন্য ছয় শূন্য",bn-04-phone.wav
+bn-05-clean,bn,clean,7694430747,mobile,"সাত ছয় নয় চার চার তিন শূন্য সাত চার সাত",bn-05-clean.wav
+bn-05-noise10,bn,noise10,7694430747,mobile,"সাত ছয় নয় চার চার তিন শূন্য সাত চার সাত",bn-05-noise10.wav
+bn-05-phone,bn,phone,7694430747,mobile,"সাত ছয় নয় চার চার তিন শূন্য সাত চার সাত",bn-05-phone.wav
+bn-06-clean,bn,clean,353811661339,utr,"তিন পাঁচ তিন আট এক এক ছয় ছয় এক তিন তিন নয়",bn-06-clean.wav
+bn-06-noise10,bn,noise10,353811661339,utr,"তিন পাঁচ তিন আট এক এক ছয় ছয় এক তিন তিন নয়",bn-06-noise10.wav
+bn-06-phone,bn,phone,353811661339,utr,"তিন পাঁচ তিন আট এক এক ছয় ছয় এক তিন তিন নয়",bn-06-phone.wav
+bn-07-clean,bn,clean,9649543508,mobile,"নয় ছয় চার নয় পাঁচ চার তিন পাঁচ শূন্য আট",bn-07-clean.wav
+bn-07-noise10,bn,noise10,9649543508,mobile,"নয় ছয় চার নয় পাঁচ চার তিন পাঁচ শূন্য আট",bn-07-noise10.wav
+bn-07-phone,bn,phone,9649543508,mobile,"নয় ছয় চার নয় পাঁচ চার তিন পাঁচ শূন্য আট",bn-07-phone.wav
+bn-08-clean,bn,clean,341075515689,utr,"তিন চার এক শূন্য সাত পাঁচ পাঁচ এক পাঁচ ছয় আট নয়",bn-08-clean.wav
+bn-08-noise10,bn,noise10,341075515689,utr,"তিন চার এক শূন্য সাত পাঁচ পাঁচ এক পাঁচ ছয় আট নয়",bn-08-noise10.wav
+bn-08-phone,bn,phone,341075515689,utr,"তিন চার এক শূন্য সাত পাঁচ পাঁচ এক পাঁচ ছয় আট নয়",bn-08-phone.wav
+bn-09-clean,bn,clean,8654066971,mobile,"আট ছয় পাঁচ চার শূন্য ছয় ছয় নয় সাত এক",bn-09-clean.wav
+bn-09-noise10,bn,noise10,8654066971,mobile,"আট ছয় পাঁচ চার শূন্য ছয় ছয় নয় সাত এক",bn-09-noise10.wav
+bn-09-phone,bn,phone,8654066971,mobile,"আট ছয় পাঁচ চার শূন্য ছয় ছয় নয় সাত এক",bn-09-phone.wav
+bn-10-clean,bn,clean,269393760264,utr,"দুই ছয় নয় তিন নয় তিন সাত ছয় শূন্য দুই ছয় চার",bn-10-clean.wav
+bn-10-noise10,bn,noise10,269393760264,utr,"দুই ছয় নয় তিন নয় তিন সাত ছয় শূন্য দুই ছয় চার",bn-10-noise10.wav
+bn-10-phone,bn,phone,269393760264,utr,"দুই ছয় নয় তিন নয় তিন সাত ছয় শূন্য দুই ছয় চার",bn-10-phone.wav
+bn-11-clean,bn,clean,8273053189,mobile,"আট দুই সাত তিন শূন্য পাঁচ তিন এক আট নয়",bn-11-clean.wav
+bn-11-noise10,bn,noise10,8273053189,mobile,"আট দুই সাত তিন শূন্য পাঁচ তিন এক আট নয়",bn-11-noise10.wav
+bn-11-phone,bn,phone,8273053189,mobile,"আট দুই সাত তিন শূন্য পাঁচ তিন এক আট নয়",bn-11-phone.wav
+bn-12-clean,bn,clean,704857604418,utr,"সাত শূন্য চার আট পাঁচ সাত ছয় শূন্য চার চার এক আট",bn-12-clean.wav
+bn-12-noise10,bn,noise10,704857604418,utr,"সাত শূন্য চার আট পাঁচ সাত ছয় শূন্য চার চার এক আট",bn-12-noise10.wav
+bn-12-phone,bn,phone,704857604418,utr,"সাত শূন্য চার আট পাঁচ সাত ছয় শূন্য চার চার এক আট",bn-12-phone.wav
+bn-13-clean,bn,clean,6096789901,mobile,"ছয় শূন্য নয় ছয় সাত আট নয় নয় শূন্য এক",bn-13-clean.wav
+bn-13-noise10,bn,noise10,6096789901,mobile,"ছয় শূন্য নয় ছয় সাত আট নয় নয় শূন্য এক",bn-13-noise10.wav
+bn-13-phone,bn,phone,6096789901,mobile,"ছয় শূন্য নয় ছয় সাত আট নয় নয় শূন্য এক",bn-13-phone.wav
+bn-14-clean,bn,clean,634500424743,utr,"ছয় তিন চার পাঁচ শূন্য শূন্য চার দুই চার সাত চার তিন",bn-14-clean.wav
+bn-14-noise10,bn,noise10,634500424743,utr,"ছয় তিন চার পাঁচ শূন্য শূন্য চার দুই চার সাত চার তিন",bn-14-noise10.wav
+bn-14-phone,bn,phone,634500424743,utr,"ছয় তিন চার পাঁচ শূন্য শূন্য চার দুই চার সাত চার তিন",bn-14-phone.wav
+bn-15-clean,bn,clean,8392426356,mobile,"আট তিন নয় দুই চার দুই ছয় তিন পাঁচ ছয়",bn-15-clean.wav
+bn-15-noise10,bn,noise10,8392426356,mobile,"আট তিন নয় দুই চার দুই ছয় তিন পাঁচ ছয়",bn-15-noise10.wav
+bn-15-phone,bn,phone,8392426356,mobile,"আট তিন নয় দুই চার দুই ছয় তিন পাঁচ ছয়",bn-15-phone.wav
+bn-16-clean,bn,clean,111818168780,utr,"এক এক এক আট এক আট এক ছয় আট সাত আট শূন্য",bn-16-clean.wav
+bn-16-noise10,bn,noise10,111818168780,utr,"এক এক এক আট এক আট এক ছয় আট সাত আট শূন্য",bn-16-noise10.wav
+bn-16-phone,bn,phone,111818168780,utr,"এক এক এক আট এক আট এক ছয় আট সাত আট শূন্য",bn-16-phone.wav
+bn-17-clean,bn,clean,6721308675,mobile,"ছয় সাত দুই এক তিন শূন্য আট ছয় সাত পাঁচ",bn-17-clean.wav
+bn-17-noise10,bn,noise10,6721308675,mobile,"ছয় সাত দুই এক তিন শূন্য আট ছয় সাত পাঁচ",bn-17-noise10.wav
+bn-17-phone,bn,phone,6721308675,mobile,"ছয় সাত দুই এক তিন শূন্য আট ছয় সাত পাঁচ",bn-17-phone.wav
+bn-18-clean,bn,clean,773722160598,utr,"সাত সাত তিন সাত দুই দুই এক ছয় শূন্য পাঁচ নয় আট",bn-18-clean.wav
+bn-18-noise10,bn,noise10,773722160598,utr,"সাত সাত তিন সাত দুই দুই এক ছয় শূন্য পাঁচ নয় আট",bn-18-noise10.wav
+bn-18-phone,bn,phone,773722160598,utr,"সাত সাত তিন সাত দুই দুই এক ছয় শূন্য পাঁচ নয় আট",bn-18-phone.wav
+bn-19-clean,bn,clean,8805729184,mobile,"আট আট শূন্য পাঁচ সাত দুই নয় এক আট চার",bn-19-clean.wav
+bn-19-noise10,bn,noise10,8805729184,mobile,"আট আট শূন্য পাঁচ সাত দুই নয় এক আট চার",bn-19-noise10.wav
+bn-19-phone,bn,phone,8805729184,mobile,"আট আট শূন্য পাঁচ সাত দুই নয় এক আট চার",bn-19-phone.wav
+bn-20-clean,bn,clean,993440100955,utr,"নয় নয় তিন চার চার শূন্য এক শূন্য শূন্য নয় পাঁচ পাঁচ",bn-20-clean.wav
+bn-20-noise10,bn,noise10,993440100955,utr,"নয় নয় তিন চার চার শূন্য এক শূন্য শূন্য নয় পাঁচ পাঁচ",bn-20-noise10.wav
+bn-20-phone,bn,phone,993440100955,utr,"নয় নয় তিন চার চার শূন্য এক শূন্য শূন্য নয় পাঁচ পাঁচ",bn-20-phone.wav
+bn-21-clean,bn,clean,6908204313,mobile,"ছয় নয় শূন্য আট দুই শূন্য চার তিন এক তিন",bn-21-clean.wav
+bn-21-noise10,bn,noise10,6908204313,mobile,"ছয় নয় শূন্য আট দুই শূন্য চার তিন এক তিন",bn-21-noise10.wav
+bn-21-phone,bn,phone,6908204313,mobile,"ছয় নয় শূন্য আট দুই শূন্য চার তিন এক তিন",bn-21-phone.wav
+bn-22-clean,bn,clean,285493552593,utr,"দুই আট পাঁচ চার নয় তিন পাঁচ পাঁচ দুই পাঁচ নয় তিন",bn-22-clean.wav
+bn-22-noise10,bn,noise10,285493552593,utr,"দুই আট পাঁচ চার নয় তিন পাঁচ পাঁচ দুই পাঁচ নয় তিন",bn-22-noise10.wav
+bn-22-phone,bn,phone,285493552593,utr,"দুই আট পাঁচ চার নয় তিন পাঁচ পাঁচ দুই পাঁচ নয় তিন",bn-22-phone.wav
+bn-23-clean,bn,clean,7412600712,mobile,"সাত চার এক দুই ছয় শূন্য শূন্য সাত এক দুই",bn-23-clean.wav
+bn-23-noise10,bn,noise10,7412600712,mobile,"সাত চার এক দুই ছয় শূন্য শূন্য সাত এক দুই",bn-23-noise10.wav
+bn-23-phone,bn,phone,7412600712,mobile,"সাত চার এক দুই ছয় শূন্য শূন্য সাত এক দুই",bn-23-phone.wav
+bn-24-clean,bn,clean,476663793701,utr,"চার সাত ছয় ছয় ছয় তিন সাত নয় তিন সাত শূন্য এক",bn-24-clean.wav
+bn-24-noise10,bn,noise10,476663793701,utr,"চার সাত ছয় ছয় ছয় তিন সাত নয় তিন সাত শূন্য এক",bn-24-noise10.wav
+bn-24-phone,bn,phone,476663793701,utr,"চার সাত ছয় ছয় ছয় তিন সাত নয় তিন সাত শূন্য এক",bn-24-phone.wav
+bn-25-clean,bn,clean,8609918375,mobile,"আট ছয় শূন্য নয় নয় এক আট তিন সাত পাঁচ",bn-25-clean.wav
+bn-25-noise10,bn,noise10,8609918375,mobile,"আট ছয় শূন্য নয় নয় এক আট তিন সাত পাঁচ",bn-25-noise10.wav
+bn-25-phone,bn,phone,8609918375,mobile,"আট ছয় শূন্য নয় নয় এক আট তিন সাত পাঁচ",bn-25-phone.wav
+bn-26-clean,bn,clean,894237707147,utr,"আট নয় চার দুই তিন সাত সাত শূন্য সাত এক চার সাত",bn-26-clean.wav
+bn-26-noise10,bn,noise10,894237707147,utr,"আট নয় চার দুই তিন সাত সাত শূন্য সাত এক চার সাত",bn-26-noise10.wav
+bn-26-phone,bn,phone,894237707147,utr,"আট নয় চার দুই তিন সাত সাত শূন্য সাত এক চার সাত",bn-26-phone.wav
+bn-27-clean,bn,clean,7971010926,mobile,"সাত নয় সাত এক শূন্য এক শূন্য নয় দুই ছয়",bn-27-clean.wav
+bn-27-noise10,bn,noise10,7971010926,mobile,"সাত নয় সাত এক শূন্য এক শূন্য নয় দুই ছয়",bn-27-noise10.wav
+bn-27-phone,bn,phone,7971010926,mobile,"সাত নয় সাত এক শূন্য এক শূন্য নয় দুই ছয়",bn-27-phone.wav
+bn-28-clean,bn,clean,337769585328,utr,"তিন তিন সাত সাত ছয় নয় পাঁচ আট পাঁচ তিন দুই আট",bn-28-clean.wav
+bn-28-noise10,bn,noise10,337769585328,utr,"তিন তিন সাত সাত ছয় নয় পাঁচ আট পাঁচ তিন দুই আট",bn-28-noise10.wav
+bn-28-phone,bn,phone,337769585328,utr,"তিন তিন সাত সাত ছয় নয় পাঁচ আট পাঁচ তিন দুই আট",bn-28-phone.wav
+bn-29-clean,bn,clean,6546516230,mobile,"ছয় পাঁচ চার ছয় পাঁচ এক ছয় দুই তিন শূন্য",bn-29-clean.wav
+bn-29-noise10,bn,noise10,6546516230,mobile,"ছয় পাঁচ চার ছয় পাঁচ এক ছয় দুই তিন শূন্য",bn-29-noise10.wav
+bn-29-phone,bn,phone,6546516230,mobile,"ছয় পাঁচ চার ছয় পাঁচ এক ছয় দুই তিন শূন্য",bn-29-phone.wav
+mr-00-clean,mr,clean,556585056448,utr,"पाच पाच सहा पाच आठ पाच शून्य पाच सहा चार चार आठ",mr-00-clean.wav
+mr-00-noise10,mr,noise10,556585056448,utr,"पाच पाच सहा पाच आठ पाच शून्य पाच सहा चार चार आठ",mr-00-noise10.wav
+mr-00-phone,mr,phone,556585056448,utr,"पाच पाच सहा पाच आठ पाच शून्य पाच सहा चार चार आठ",mr-00-phone.wav
+mr-01-clean,mr,clean,7661123351,mobile,"सात सहा सहा एक एक दोन तीन तीन पाच एक",mr-01-clean.wav
+mr-01-noise10,mr,noise10,7661123351,mobile,"सात सहा सहा एक एक दोन तीन तीन पाच एक",mr-01-noise10.wav
+mr-01-phone,mr,phone,7661123351,mobile,"सात सहा सहा एक एक दोन तीन तीन पाच एक",mr-01-phone.wav
+mr-02-clean,mr,clean,654887362079,utr,"सहा पाच चार आठ आठ सात तीन सहा दोन शून्य सात नऊ",mr-02-clean.wav
+mr-02-noise10,mr,noise10,654887362079,utr,"सहा पाच चार आठ आठ सात तीन सहा दोन शून्य सात नऊ",mr-02-noise10.wav
+mr-02-phone,mr,phone,654887362079,utr,"सहा पाच चार आठ आठ सात तीन सहा दोन शून्य सात नऊ",mr-02-phone.wav
+mr-03-clean,mr,clean,7173558188,mobile,"सात एक सात तीन पाच पाच आठ एक आठ आठ",mr-03-clean.wav
+mr-03-noise10,mr,noise10,7173558188,mobile,"सात एक सात तीन पाच पाच आठ एक आठ आठ",mr-03-noise10.wav
+mr-03-phone,mr,phone,7173558188,mobile,"सात एक सात तीन पाच पाच आठ एक आठ आठ",mr-03-phone.wav
+mr-04-clean,mr,clean,400845257060,utr,"चार शून्य शून्य आठ चार पाच दोन पाच सात शून्य सहा शून्य",mr-04-clean.wav
+mr-04-noise10,mr,noise10,400845257060,utr,"चार शून्य शून्य आठ चार पाच दोन पाच सात शून्य सहा शून्य",mr-04-noise10.wav
+mr-04-phone,mr,phone,400845257060,utr,"चार शून्य शून्य आठ चार पाच दोन पाच सात शून्य सहा शून्य",mr-04-phone.wav
+mr-05-clean,mr,clean,7694430747,mobile,"सात सहा नऊ चार चार तीन शून्य सात चार सात",mr-05-clean.wav
+mr-05-noise10,mr,noise10,7694430747,mobile,"सात सहा नऊ चार चार तीन शून्य सात चार सात",mr-05-noise10.wav
+mr-05-phone,mr,phone,7694430747,mobile,"सात सहा नऊ चार चार तीन शून्य सात चार सात",mr-05-phone.wav
+mr-06-clean,mr,clean,353811661339,utr,"तीन पाच तीन आठ एक एक सहा सहा एक तीन तीन नऊ",mr-06-clean.wav
+mr-06-noise10,mr,noise10,353811661339,utr,"तीन पाच तीन आठ एक एक सहा सहा एक तीन तीन नऊ",mr-06-noise10.wav
+mr-06-phone,mr,phone,353811661339,utr,"तीन पाच तीन आठ एक एक सहा सहा एक तीन तीन नऊ",mr-06-phone.wav
+mr-07-clean,mr,clean,9649543508,mobile,"नऊ सहा चार नऊ पाच चार तीन पाच शून्य आठ",mr-07-clean.wav
+mr-07-noise10,mr,noise10,9649543508,mobile,"नऊ सहा चार नऊ पाच चार तीन पाच शून्य आठ",mr-07-noise10.wav
+mr-07-phone,mr,phone,9649543508,mobile,"नऊ सहा चार नऊ पाच चार तीन पाच शून्य आठ",mr-07-phone.wav
+mr-08-clean,mr,clean,341075515689,utr,"तीन चार एक शून्य सात पाच पाच एक पाच सहा आठ नऊ",mr-08-clean.wav
+mr-08-noise10,mr,noise10,341075515689,utr,"तीन चार एक शून्य सात पाच पाच एक पाच सहा आठ नऊ",mr-08-noise10.wav
+mr-08-phone,mr,phone,341075515689,utr,"तीन चार एक शून्य सात पाच पाच एक पाच सहा आठ नऊ",mr-08-phone.wav
+mr-09-clean,mr,clean,8654066971,mobile,"आठ सहा पाच चार शून्य सहा सहा नऊ सात एक",mr-09-clean.wav
+mr-09-noise10,mr,noise10,8654066971,mobile,"आठ सहा पाच चार शून्य सहा सहा नऊ सात एक",mr-09-noise10.wav
+mr-09-phone,mr,phone,8654066971,mobile,"आठ सहा पाच चार शून्य सहा सहा नऊ सात एक",mr-09-phone.wav
+mr-10-clean,mr,clean,269393760264,utr,"दोन सहा नऊ तीन नऊ तीन सात सहा शून्य दोन सहा चार",mr-10-clean.wav
+mr-10-noise10,mr,noise10,269393760264,utr,"दोन सहा नऊ तीन नऊ तीन सात सहा शून्य दोन सहा चार",mr-10-noise10.wav
+mr-10-phone,mr,phone,269393760264,utr,"दोन सहा नऊ तीन नऊ तीन सात सहा शून्य दोन सहा चार",mr-10-phone.wav
+mr-11-clean,mr,clean,8273053189,mobile,"आठ दोन सात तीन शून्य पाच तीन एक आठ नऊ",mr-11-clean.wav
+mr-11-noise10,mr,noise10,8273053189,mobile,"आठ दोन सात तीन शून्य पाच तीन एक आठ नऊ",mr-11-noise10.wav
+mr-11-phone,mr,phone,8273053189,mobile,"आठ दोन सात तीन शून्य पाच तीन एक आठ नऊ",mr-11-phone.wav
+mr-12-clean,mr,clean,704857604418,utr,"सात शून्य चार आठ पाच सात सहा शून्य चार चार एक आठ",mr-12-clean.wav
+mr-12-noise10,mr,noise10,704857604418,utr,"सात शून्य चार आठ पाच सात सहा शून्य चार चार एक आठ",mr-12-noise10.wav
+mr-12-phone,mr,phone,704857604418,utr,"सात शून्य चार आठ पाच सात सहा शून्य चार चार एक आठ",mr-12-phone.wav
+mr-13-clean,mr,clean,6096789901,mobile,"सहा शून्य नऊ सहा सात आठ नऊ नऊ शून्य एक",mr-13-clean.wav
+mr-13-noise10,mr,noise10,6096789901,mobile,"सहा शून्य नऊ सहा सात आठ नऊ नऊ शून्य एक",mr-13-noise10.wav
+mr-13-phone,mr,phone,6096789901,mobile,"सहा शून्य नऊ सहा सात आठ नऊ नऊ शून्य एक",mr-13-phone.wav
+mr-14-clean,mr,clean,634500424743,utr,"सहा तीन चार पाच शून्य शून्य चार दोन चार सात चार तीन",mr-14-clean.wav
+mr-14-noise10,mr,noise10,634500424743,utr,"सहा तीन चार पाच शून्य शून्य चार दोन चार सात चार तीन",mr-14-noise10.wav
+mr-14-phone,mr,phone,634500424743,utr,"सहा तीन चार पाच शून्य शून्य चार दोन चार सात चार तीन",mr-14-phone.wav
+mr-15-clean,mr,clean,8392426356,mobile,"आठ तीन नऊ दोन चार दोन सहा तीन पाच सहा",mr-15-clean.wav
+mr-15-noise10,mr,noise10,8392426356,mobile,"आठ तीन नऊ दोन चार दोन सहा तीन पाच सहा",mr-15-noise10.wav
+mr-15-phone,mr,phone,8392426356,mobile,"आठ तीन नऊ दोन चार दोन सहा तीन पाच सहा",mr-15-phone.wav
+mr-16-clean,mr,clean,111818168780,utr,"एक एक एक आठ एक आठ एक सहा आठ सात आठ शून्य",mr-16-clean.wav
+mr-16-noise10,mr,noise10,111818168780,utr,"एक एक एक आठ एक आठ एक सहा आठ सात आठ शून्य",mr-16-noise10.wav
+mr-16-phone,mr,phone,111818168780,utr,"एक एक एक आठ एक आठ एक सहा आठ सात आठ शून्य",mr-16-phone.wav
+mr-17-clean,mr,clean,6721308675,mobile,"सहा सात दोन एक तीन शून्य आठ सहा सात पाच",mr-17-clean.wav
+mr-17-noise10,mr,noise10,6721308675,mobile,"सहा सात दोन एक तीन शून्य आठ सहा सात पाच",mr-17-noise10.wav
+mr-17-phone,mr,phone,6721308675,mobile,"सहा सात दोन एक तीन शून्य आठ सहा सात पाच",mr-17-phone.wav
+mr-18-clean,mr,clean,773722160598,utr,"सात सात तीन सात दोन दोन एक सहा शून्य पाच नऊ आठ",mr-18-clean.wav
+mr-18-noise10,mr,noise10,773722160598,utr,"सात सात तीन सात दोन दोन एक सहा शून्य पाच नऊ आठ",mr-18-noise10.wav
+mr-18-phone,mr,phone,773722160598,utr,"सात सात तीन सात दोन दोन एक सहा शून्य पाच नऊ आठ",mr-18-phone.wav
+mr-19-clean,mr,clean,8805729184,mobile,"आठ आठ शून्य पाच सात दोन नऊ एक आठ चार",mr-19-clean.wav
+mr-19-noise10,mr,noise10,8805729184,mobile,"आठ आठ शून्य पाच सात दोन नऊ एक आठ चार",mr-19-noise10.wav
+mr-19-phone,mr,phone,8805729184,mobile,"आठ आठ शून्य पाच सात दोन नऊ एक आठ चार",mr-19-phone.wav
+mr-20-clean,mr,clean,993440100955,utr,"नऊ नऊ तीन चार चार शून्य एक शून्य शून्य नऊ पाच पाच",mr-20-clean.wav
+mr-20-noise10,mr,noise10,993440100955,utr,"नऊ नऊ तीन चार चार शून्य एक शून्य शून्य नऊ पाच पाच",mr-20-noise10.wav
+mr-20-phone,mr,phone,993440100955,utr,"नऊ नऊ तीन चार चार शून्य एक शून्य शून्य नऊ पाच पाच",mr-20-phone.wav
+mr-21-clean,mr,clean,6908204313,mobile,"सहा नऊ शून्य आठ दोन शून्य चार तीन एक तीन",mr-21-clean.wav
+mr-21-noise10,mr,noise10,6908204313,mobile,"सहा नऊ शून्य आठ दोन शून्य चार तीन एक तीन",mr-21-noise10.wav
+mr-21-phone,mr,phone,6908204313,mobile,"सहा नऊ शून्य आठ दोन शून्य चार तीन एक तीन",mr-21-phone.wav
+mr-22-clean,mr,clean,285493552593,utr,"दोन आठ पाच चार नऊ तीन पाच पाच दोन पाच नऊ तीन",mr-22-clean.wav
+mr-22-noise10,mr,noise10,285493552593,utr,"दोन आठ पाच चार नऊ तीन पाच पाच दोन पाच नऊ तीन",mr-22-noise10.wav
+mr-22-phone,mr,phone,285493552593,utr,"दोन आठ पाच चार नऊ तीन पाच पाच दोन पाच नऊ तीन",mr-22-phone.wav
+mr-23-clean,mr,clean,7412600712,mobile,"सात चार एक दोन सहा शून्य शून्य सात एक दोन",mr-23-clean.wav
+mr-23-noise10,mr,noise10,7412600712,mobile,"सात चार एक दोन सहा शून्य शून्य सात एक दोन",mr-23-noise10.wav
+mr-23-phone,mr,phone,7412600712,mobile,"सात चार एक दोन सहा शून्य शून्य सात एक दोन",mr-23-phone.wav
+mr-24-clean,mr,clean,476663793701,utr,"चार सात सहा सहा सहा तीन सात नऊ तीन सात शून्य एक",mr-24-clean.wav
+mr-24-noise10,mr,noise10,476663793701,utr,"चार सात सहा सहा सहा तीन सात नऊ तीन सात शून्य एक",mr-24-noise10.wav
+mr-24-phone,mr,phone,476663793701,utr,"चार सात सहा सहा सहा तीन सात नऊ तीन सात शून्य एक",mr-24-phone.wav
+mr-25-clean,mr,clean,8609918375,mobile,"आठ सहा शून्य नऊ नऊ एक आठ तीन सात पाच",mr-25-clean.wav
+mr-25-noise10,mr,noise10,8609918375,mobile,"आठ सहा शून्य नऊ नऊ एक आठ तीन सात पाच",mr-25-noise10.wav
+mr-25-phone,mr,phone,8609918375,mobile,"आठ सहा शून्य नऊ नऊ एक आठ तीन सात पाच",mr-25-phone.wav
+mr-26-clean,mr,clean,894237707147,utr,"आठ नऊ चार दोन तीन सात सात शून्य सात एक चार सात",mr-26-clean.wav
+mr-26-noise10,mr,noise10,894237707147,utr,"आठ नऊ चार दोन तीन सात सात शून्य सात एक चार सात",mr-26-noise10.wav
+mr-26-phone,mr,phone,894237707147,utr,"आठ नऊ चार दोन तीन सात सात शून्य सात एक चार सात",mr-26-phone.wav
+mr-27-clean,mr,clean,7971010926,mobile,"सात नऊ सात एक शून्य एक शून्य नऊ दोन सहा",mr-27-clean.wav
+mr-27-noise10,mr,noise10,7971010926,mobile,"सात नऊ सात एक शून्य एक शून्य नऊ दोन सहा",mr-27-noise10.wav
+mr-27-phone,mr,phone,7971010926,mobile,"सात नऊ सात एक शून्य एक शून्य नऊ दोन सहा",mr-27-phone.wav
+mr-28-clean,mr,clean,337769585328,utr,"तीन तीन सात सात सहा नऊ पाच आठ पाच तीन दोन आठ",mr-28-clean.wav
+mr-28-noise10,mr,noise10,337769585328,utr,"तीन तीन सात सात सहा नऊ पाच आठ पाच तीन दोन आठ",mr-28-noise10.wav
+mr-28-phone,mr,phone,337769585328,utr,"तीन तीन सात सात सहा नऊ पाच आठ पाच तीन दोन आठ",mr-28-phone.wav
+mr-29-clean,mr,clean,6546516230,mobile,"सहा पाच चार सहा पाच एक सहा दोन तीन शून्य",mr-29-clean.wav
+mr-29-noise10,mr,noise10,6546516230,mobile,"सहा पाच चार सहा पाच एक सहा दोन तीन शून्य",mr-29-noise10.wav
+mr-29-phone,mr,phone,6546516230,mobile,"सहा पाच चार सहा पाच एक सहा दोन तीन शून्य",mr-29-phone.wav
+gu-00-clean,gu,clean,556585056448,utr,"પાંચ પાંચ છ પાંચ આઠ પાંચ શૂન્ય પાંચ છ ચાર ચાર આઠ",gu-00-clean.wav
+gu-00-noise10,gu,noise10,556585056448,utr,"પાંચ પાંચ છ પાંચ આઠ પાંચ શૂન્ય પાંચ છ ચાર ચાર આઠ",gu-00-noise10.wav
+gu-00-phone,gu,phone,556585056448,utr,"પાંચ પાંચ છ પાંચ આઠ પાંચ શૂન્ય પાંચ છ ચાર ચાર આઠ",gu-00-phone.wav
+gu-01-clean,gu,clean,7661123351,mobile,"સાત છ છ એક એક બે ત્રણ ત્રણ પાંચ એક",gu-01-clean.wav
+gu-01-noise10,gu,noise10,7661123351,mobile,"સાત છ છ એક એક બે ત્રણ ત્રણ પાંચ એક",gu-01-noise10.wav
+gu-01-phone,gu,phone,7661123351,mobile,"સાત છ છ એક એક બે ત્રણ ત્રણ પાંચ એક",gu-01-phone.wav
+gu-02-clean,gu,clean,654887362079,utr,"છ પાંચ ચાર આઠ આઠ સાત ત્રણ છ બે શૂન્ય સાત નવ",gu-02-clean.wav
+gu-02-noise10,gu,noise10,654887362079,utr,"છ પાંચ ચાર આઠ આઠ સાત ત્રણ છ બે શૂન્ય સાત નવ",gu-02-noise10.wav
+gu-02-phone,gu,phone,654887362079,utr,"છ પાંચ ચાર આઠ આઠ સાત ત્રણ છ બે શૂન્ય સાત નવ",gu-02-phone.wav
+gu-03-clean,gu,clean,7173558188,mobile,"સાત એક સાત ત્રણ પાંચ પાંચ આઠ એક આઠ આઠ",gu-03-clean.wav
+gu-03-noise10,gu,noise10,7173558188,mobile,"સાત એક સાત ત્રણ પાંચ પાંચ આઠ એક આઠ આઠ",gu-03-noise10.wav
+gu-03-phone,gu,phone,7173558188,mobile,"સાત એક સાત ત્રણ પાંચ પાંચ આઠ એક આઠ આઠ",gu-03-phone.wav
+gu-04-clean,gu,clean,400845257060,utr,"ચાર શૂન્ય શૂન્ય આઠ ચાર પાંચ બે પાંચ સાત શૂન્ય છ શૂન્ય",gu-04-clean.wav
+gu-04-noise10,gu,noise10,400845257060,utr,"ચાર શૂન્ય શૂન્ય આઠ ચાર પાંચ બે પાંચ સાત શૂન્ય છ શૂન્ય",gu-04-noise10.wav
+gu-04-phone,gu,phone,400845257060,utr,"ચાર શૂન્ય શૂન્ય આઠ ચાર પાંચ બે પાંચ સાત શૂન્ય છ શૂન્ય",gu-04-phone.wav
+gu-05-clean,gu,clean,7694430747,mobile,"સાત છ નવ ચાર ચાર ત્રણ શૂન્ય સાત ચાર સાત",gu-05-clean.wav
+gu-05-noise10,gu,noise10,7694430747,mobile,"સાત છ નવ ચાર ચાર ત્રણ શૂન્ય સાત ચાર સાત",gu-05-noise10.wav
+gu-05-phone,gu,phone,7694430747,mobile,"સાત છ નવ ચાર ચાર ત્રણ શૂન્ય સાત ચાર સાત",gu-05-phone.wav
+gu-06-clean,gu,clean,353811661339,utr,"ત્રણ પાંચ ત્રણ આઠ એક એક છ છ એક ત્રણ ત્રણ નવ",gu-06-clean.wav
+gu-06-noise10,gu,noise10,353811661339,utr,"ત્રણ પાંચ ત્રણ આઠ એક એક છ છ એક ત્રણ ત્રણ નવ",gu-06-noise10.wav
+gu-06-phone,gu,phone,353811661339,utr,"ત્રણ પાંચ ત્રણ આઠ એક એક છ છ એક ત્રણ ત્રણ નવ",gu-06-phone.wav
+gu-07-clean,gu,clean,9649543508,mobile,"નવ છ ચાર નવ પાંચ ચાર ત્રણ પાંચ શૂન્ય આઠ",gu-07-clean.wav
+gu-07-noise10,gu,noise10,9649543508,mobile,"નવ છ ચાર નવ પાંચ ચાર ત્રણ પાંચ શૂન્ય આઠ",gu-07-noise10.wav
+gu-07-phone,gu,phone,9649543508,mobile,"નવ છ ચાર નવ પાંચ ચાર ત્રણ પાંચ શૂન્ય આઠ",gu-07-phone.wav
+gu-08-clean,gu,clean,341075515689,utr,"ત્રણ ચાર એક શૂન્ય સાત પાંચ પાંચ એક પાંચ છ આઠ નવ",gu-08-clean.wav
+gu-08-noise10,gu,noise10,341075515689,utr,"ત્રણ ચાર એક શૂન્ય સાત પાંચ પાંચ એક પાંચ છ આઠ નવ",gu-08-noise10.wav
+gu-08-phone,gu,phone,341075515689,utr,"ત્રણ ચાર એક શૂન્ય સાત પાંચ પાંચ એક પાંચ છ આઠ નવ",gu-08-phone.wav
+gu-09-clean,gu,clean,8654066971,mobile,"આઠ છ પાંચ ચાર શૂન્ય છ છ નવ સાત એક",gu-09-clean.wav
+gu-09-noise10,gu,noise10,8654066971,mobile,"આઠ છ પાંચ ચાર શૂન્ય છ છ નવ સાત એક",gu-09-noise10.wav
+gu-09-phone,gu,phone,8654066971,mobile,"આઠ છ પાંચ ચાર શૂન્ય છ છ નવ સાત એક",gu-09-phone.wav
+gu-10-clean,gu,clean,269393760264,utr,"બે છ નવ ત્રણ નવ ત્રણ સાત છ શૂન્ય બે છ ચાર",gu-10-clean.wav
+gu-10-noise10,gu,noise10,269393760264,utr,"બે છ નવ ત્રણ નવ ત્રણ સાત છ શૂન્ય બે છ ચાર",gu-10-noise10.wav
+gu-10-phone,gu,phone,269393760264,utr,"બે છ નવ ત્રણ નવ ત્રણ સાત છ શૂન્ય બે છ ચાર",gu-10-phone.wav
+gu-11-clean,gu,clean,8273053189,mobile,"આઠ બે સાત ત્રણ શૂન્ય પાંચ ત્રણ એક આઠ નવ",gu-11-clean.wav
+gu-11-noise10,gu,noise10,8273053189,mobile,"આઠ બે સાત ત્રણ શૂન્ય પાંચ ત્રણ એક આઠ નવ",gu-11-noise10.wav
+gu-11-phone,gu,phone,8273053189,mobile,"આઠ બે સાત ત્રણ શૂન્ય પાંચ ત્રણ એક આઠ નવ",gu-11-phone.wav
+gu-12-clean,gu,clean,704857604418,utr,"સાત શૂન્ય ચાર આઠ પાંચ સાત છ શૂન્ય ચાર ચાર એક આઠ",gu-12-clean.wav
+gu-12-noise10,gu,noise10,704857604418,utr,"સાત શૂન્ય ચાર આઠ પાંચ સાત છ શૂન્ય ચાર ચાર એક આઠ",gu-12-noise10.wav
+gu-12-phone,gu,phone,704857604418,utr,"સાત શૂન્ય ચાર આઠ પાંચ સાત છ શૂન્ય ચાર ચાર એક આઠ",gu-12-phone.wav
+gu-13-clean,gu,clean,6096789901,mobile,"છ શૂન્ય નવ છ સાત આઠ નવ નવ શૂન્ય એક",gu-13-clean.wav
+gu-13-noise10,gu,noise10,6096789901,mobile,"છ શૂન્ય નવ છ સાત આઠ નવ નવ શૂન્ય એક",gu-13-noise10.wav
+gu-13-phone,gu,phone,6096789901,mobile,"છ શૂન્ય નવ છ સાત આઠ નવ નવ શૂન્ય એક",gu-13-phone.wav
+gu-14-clean,gu,clean,634500424743,utr,"છ ત્રણ ચાર પાંચ શૂન્ય શૂન્ય ચાર બે ચાર સાત ચાર ત્રણ",gu-14-clean.wav
+gu-14-noise10,gu,noise10,634500424743,utr,"છ ત્રણ ચાર પાંચ શૂન્ય શૂન્ય ચાર બે ચાર સાત ચાર ત્રણ",gu-14-noise10.wav
+gu-14-phone,gu,phone,634500424743,utr,"છ ત્રણ ચાર પાંચ શૂન્ય શૂન્ય ચાર બે ચાર સાત ચાર ત્રણ",gu-14-phone.wav
+gu-15-clean,gu,clean,8392426356,mobile,"આઠ ત્રણ નવ બે ચાર બે છ ત્રણ પાંચ છ",gu-15-clean.wav
+gu-15-noise10,gu,noise10,8392426356,mobile,"આઠ ત્રણ નવ બે ચાર બે છ ત્રણ પાંચ છ",gu-15-noise10.wav
+gu-15-phone,gu,phone,8392426356,mobile,"આઠ ત્રણ નવ બે ચાર બે છ ત્રણ પાંચ છ",gu-15-phone.wav
+gu-16-clean,gu,clean,111818168780,utr,"એક એક એક આઠ એક આઠ એક છ આઠ સાત આઠ શૂન્ય",gu-16-clean.wav
+gu-16-noise10,gu,noise10,111818168780,utr,"એક એક એક આઠ એક આઠ એક છ આઠ સાત આઠ શૂન્ય",gu-16-noise10.wav
+gu-16-phone,gu,phone,111818168780,utr,"એક એક એક આઠ એક આઠ એક છ આઠ સાત આઠ શૂન્ય",gu-16-phone.wav
+gu-17-clean,gu,clean,6721308675,mobile,"છ સાત બે એક ત્રણ શૂન્ય આઠ છ સાત પાંચ",gu-17-clean.wav
+gu-17-noise10,gu,noise10,6721308675,mobile,"છ સાત બે એક ત્રણ શૂન્ય આઠ છ સાત પાંચ",gu-17-noise10.wav
+gu-17-phone,gu,phone,6721308675,mobile,"છ સાત બે એક ત્રણ શૂન્ય આઠ છ સાત પાંચ",gu-17-phone.wav
+gu-18-clean,gu,clean,773722160598,utr,"સાત સાત ત્રણ સાત બે બે એક છ શૂન્ય પાંચ નવ આઠ",gu-18-clean.wav
+gu-18-noise10,gu,noise10,773722160598,utr,"સાત સાત ત્રણ સાત બે બે એક છ શૂન્ય પાંચ નવ આઠ",gu-18-noise10.wav
+gu-18-phone,gu,phone,773722160598,utr,"સાત સાત ત્રણ સાત બે બે એક છ શૂન્ય પાંચ નવ આઠ",gu-18-phone.wav
+gu-19-clean,gu,clean,8805729184,mobile,"આઠ આઠ શૂન્ય પાંચ સાત બે નવ એક આઠ ચાર",gu-19-clean.wav
+gu-19-noise10,gu,noise10,8805729184,mobile,"આઠ આઠ શૂન્ય પાંચ સાત બે નવ એક આઠ ચાર",gu-19-noise10.wav
+gu-19-phone,gu,phone,8805729184,mobile,"આઠ આઠ શૂન્ય પાંચ સાત બે નવ એક આઠ ચાર",gu-19-phone.wav
+gu-20-clean,gu,clean,993440100955,utr,"નવ નવ ત્રણ ચાર ચાર શૂન્ય એક શૂન્ય શૂન્ય નવ પાંચ પાંચ",gu-20-clean.wav
+gu-20-noise10,gu,noise10,993440100955,utr,"નવ નવ ત્રણ ચાર ચાર શૂન્ય એક શૂન્ય શૂન્ય નવ પાંચ પાંચ",gu-20-noise10.wav
+gu-20-phone,gu,phone,993440100955,utr,"નવ નવ ત્રણ ચાર ચાર શૂન્ય એક શૂન્ય શૂન્ય નવ પાંચ પાંચ",gu-20-phone.wav
+gu-21-clean,gu,clean,6908204313,mobile,"છ નવ શૂન્ય આઠ બે શૂન્ય ચાર ત્રણ એક ત્રણ",gu-21-clean.wav
+gu-21-noise10,gu,noise10,6908204313,mobile,"છ નવ શૂન્ય આઠ બે શૂન્ય ચાર ત્રણ એક ત્રણ",gu-21-noise10.wav
+gu-21-phone,gu,phone,6908204313,mobile,"છ નવ શૂન્ય આઠ બે શૂન્ય ચાર ત્રણ એક ત્રણ",gu-21-phone.wav
+gu-22-clean,gu,clean,285493552593,utr,"બે આઠ પાંચ ચાર નવ ત્રણ પાંચ પાંચ બે પાંચ નવ ત્રણ",gu-22-clean.wav
+gu-22-noise10,gu,noise10,285493552593,utr,"બે આઠ પાંચ ચાર નવ ત્રણ પાંચ પાંચ બે પાંચ નવ ત્રણ",gu-22-noise10.wav
+gu-22-phone,gu,phone,285493552593,utr,"બે આઠ પાંચ ચાર નવ ત્રણ પાંચ પાંચ બે પાંચ નવ ત્રણ",gu-22-phone.wav
+gu-23-clean,gu,clean,7412600712,mobile,"સાત ચાર એક બે છ શૂન્ય શૂન્ય સાત એક બે",gu-23-clean.wav
+gu-23-noise10,gu,noise10,7412600712,mobile,"સાત ચાર એક બે છ શૂન્ય શૂન્ય સાત એક બે",gu-23-noise10.wav
+gu-23-phone,gu,phone,7412600712,mobile,"સાત ચાર એક બે છ શૂન્ય શૂન્ય સાત એક બે",gu-23-phone.wav
+gu-24-clean,gu,clean,476663793701,utr,"ચાર સાત છ છ છ ત્રણ સાત નવ ત્રણ સાત શૂન્ય એક",gu-24-clean.wav
+gu-24-noise10,gu,noise10,476663793701,utr,"ચાર સાત છ છ છ ત્રણ સાત નવ ત્રણ સાત શૂન્ય એક",gu-24-noise10.wav
+gu-24-phone,gu,phone,476663793701,utr,"ચાર સાત છ છ છ ત્રણ સાત નવ ત્રણ સાત શૂન્ય એક",gu-24-phone.wav
+gu-25-clean,gu,clean,8609918375,mobile,"આઠ છ શૂન્ય નવ નવ એક આઠ ત્રણ સાત પાંચ",gu-25-clean.wav
+gu-25-noise10,gu,noise10,8609918375,mobile,"આઠ છ શૂન્ય નવ નવ એક આઠ ત્રણ સાત પાંચ",gu-25-noise10.wav
+gu-25-phone,gu,phone,8609918375,mobile,"આઠ છ શૂન્ય નવ નવ એક આઠ ત્રણ સાત પાંચ",gu-25-phone.wav
+gu-26-clean,gu,clean,894237707147,utr,"આઠ નવ ચાર બે ત્રણ સાત સાત શૂન્ય સાત એક ચાર સાત",gu-26-clean.wav
+gu-26-noise10,gu,noise10,894237707147,utr,"આઠ નવ ચાર બે ત્રણ સાત સાત શૂન્ય સાત એક ચાર સાત",gu-26-noise10.wav
+gu-26-phone,gu,phone,894237707147,utr,"આઠ નવ ચાર બે ત્રણ સાત સાત શૂન્ય સાત એક ચાર સાત",gu-26-phone.wav
+gu-27-clean,gu,clean,7971010926,mobile,"સાત નવ સાત એક શૂન્ય એક શૂન્ય નવ બે છ",gu-27-clean.wav
+gu-27-noise10,gu,noise10,7971010926,mobile,"સાત નવ સાત એક શૂન્ય એક શૂન્ય નવ બે છ",gu-27-noise10.wav
+gu-27-phone,gu,phone,7971010926,mobile,"સાત નવ સાત એક શૂન્ય એક શૂન્ય નવ બે છ",gu-27-phone.wav
+gu-28-clean,gu,clean,337769585328,utr,"ત્રણ ત્રણ સાત સાત છ નવ પાંચ આઠ પાંચ ત્રણ બે આઠ",gu-28-clean.wav
+gu-28-noise10,gu,noise10,337769585328,utr,"ત્રણ ત્રણ સાત સાત છ નવ પાંચ આઠ પાંચ ત્રણ બે આઠ",gu-28-noise10.wav
+gu-28-phone,gu,phone,337769585328,utr,"ત્રણ ત્રણ સાત સાત છ નવ પાંચ આઠ પાંચ ત્રણ બે આઠ",gu-28-phone.wav
+gu-29-clean,gu,clean,6546516230,mobile,"છ પાંચ ચાર છ પાંચ એક છ બે ત્રણ શૂન્ય",gu-29-clean.wav
+gu-29-noise10,gu,noise10,6546516230,mobile,"છ પાંચ ચાર છ પાંચ એક છ બે ત્રણ શૂન્ય",gu-29-noise10.wav
+gu-29-phone,gu,phone,6546516230,mobile,"છ પાંચ ચાર છ પાંચ એક છ બે ત્રણ શૂન્ય",gu-29-phone.wav
+pa-00-clean,pa,clean,556585056448,utr,"ਪੰਜ ਪੰਜ ਛੇ ਪੰਜ ਅੱਠ ਪੰਜ ਸਿਫ਼ਰ ਪੰਜ ਛੇ ਚਾਰ ਚਾਰ ਅੱਠ",pa-00-clean.wav
+pa-00-noise10,pa,noise10,556585056448,utr,"ਪੰਜ ਪੰਜ ਛੇ ਪੰਜ ਅੱਠ ਪੰਜ ਸਿਫ਼ਰ ਪੰਜ ਛੇ ਚਾਰ ਚਾਰ ਅੱਠ",pa-00-noise10.wav
+pa-00-phone,pa,phone,556585056448,utr,"ਪੰਜ ਪੰਜ ਛੇ ਪੰਜ ਅੱਠ ਪੰਜ ਸਿਫ਼ਰ ਪੰਜ ਛੇ ਚਾਰ ਚਾਰ ਅੱਠ",pa-00-phone.wav
+pa-01-clean,pa,clean,7661123351,mobile,"ਸੱਤ ਛੇ ਛੇ ਇੱਕ ਇੱਕ ਦੋ ਤਿੰਨ ਤਿੰਨ ਪੰਜ ਇੱਕ",pa-01-clean.wav
+pa-01-noise10,pa,noise10,7661123351,mobile,"ਸੱਤ ਛੇ ਛੇ ਇੱਕ ਇੱਕ ਦੋ ਤਿੰਨ ਤਿੰਨ ਪੰਜ ਇੱਕ",pa-01-noise10.wav
+pa-01-phone,pa,phone,7661123351,mobile,"ਸੱਤ ਛੇ ਛੇ ਇੱਕ ਇੱਕ ਦੋ ਤਿੰਨ ਤਿੰਨ ਪੰਜ ਇੱਕ",pa-01-phone.wav
+pa-02-clean,pa,clean,654887362079,utr,"ਛੇ ਪੰਜ ਚਾਰ ਅੱਠ ਅੱਠ ਸੱਤ ਤਿੰਨ ਛੇ ਦੋ ਸਿਫ਼ਰ ਸੱਤ ਨੌਂ",pa-02-clean.wav
+pa-02-noise10,pa,noise10,654887362079,utr,"ਛੇ ਪੰਜ ਚਾਰ ਅੱਠ ਅੱਠ ਸੱਤ ਤਿੰਨ ਛੇ ਦੋ ਸਿਫ਼ਰ ਸੱਤ ਨੌਂ",pa-02-noise10.wav
+pa-02-phone,pa,phone,654887362079,utr,"ਛੇ ਪੰਜ ਚਾਰ ਅੱਠ ਅੱਠ ਸੱਤ ਤਿੰਨ ਛੇ ਦੋ ਸਿਫ਼ਰ ਸੱਤ ਨੌਂ",pa-02-phone.wav
+pa-03-clean,pa,clean,7173558188,mobile,"ਸੱਤ ਇੱਕ ਸੱਤ ਤਿੰਨ ਪੰਜ ਪੰਜ ਅੱਠ ਇੱਕ ਅੱਠ ਅੱਠ",pa-03-clean.wav
+pa-03-noise10,pa,noise10,7173558188,mobile,"ਸੱਤ ਇੱਕ ਸੱਤ ਤਿੰਨ ਪੰਜ ਪੰਜ ਅੱਠ ਇੱਕ ਅੱਠ ਅੱਠ",pa-03-noise10.wav
+pa-03-phone,pa,phone,7173558188,mobile,"ਸੱਤ ਇੱਕ ਸੱਤ ਤਿੰਨ ਪੰਜ ਪੰਜ ਅੱਠ ਇੱਕ ਅੱਠ ਅੱਠ",pa-03-phone.wav
+pa-04-clean,pa,clean,400845257060,utr,"ਚਾਰ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਅੱਠ ਚਾਰ ਪੰਜ ਦੋ ਪੰਜ ਸੱਤ ਸਿਫ਼ਰ ਛੇ ਸਿਫ਼ਰ",pa-04-clean.wav
+pa-04-noise10,pa,noise10,400845257060,utr,"ਚਾਰ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਅੱਠ ਚਾਰ ਪੰਜ ਦੋ ਪੰਜ ਸੱਤ ਸਿਫ਼ਰ ਛੇ ਸਿਫ਼ਰ",pa-04-noise10.wav
+pa-04-phone,pa,phone,400845257060,utr,"ਚਾਰ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਅੱਠ ਚਾਰ ਪੰਜ ਦੋ ਪੰਜ ਸੱਤ ਸਿਫ਼ਰ ਛੇ ਸਿਫ਼ਰ",pa-04-phone.wav
+pa-05-clean,pa,clean,7694430747,mobile,"ਸੱਤ ਛੇ ਨੌਂ ਚਾਰ ਚਾਰ ਤਿੰਨ ਸਿਫ਼ਰ ਸੱਤ ਚਾਰ ਸੱਤ",pa-05-clean.wav
+pa-05-noise10,pa,noise10,7694430747,mobile,"ਸੱਤ ਛੇ ਨੌਂ ਚਾਰ ਚਾਰ ਤਿੰਨ ਸਿਫ਼ਰ ਸੱਤ ਚਾਰ ਸੱਤ",pa-05-noise10.wav
+pa-05-phone,pa,phone,7694430747,mobile,"ਸੱਤ ਛੇ ਨੌਂ ਚਾਰ ਚਾਰ ਤਿੰਨ ਸਿਫ਼ਰ ਸੱਤ ਚਾਰ ਸੱਤ",pa-05-phone.wav
+pa-06-clean,pa,clean,353811661339,utr,"ਤਿੰਨ ਪੰਜ ਤਿੰਨ ਅੱਠ ਇੱਕ ਇੱਕ ਛੇ ਛੇ ਇੱਕ ਤਿੰਨ ਤਿੰਨ ਨੌਂ",pa-06-clean.wav
+pa-06-noise10,pa,noise10,353811661339,utr,"ਤਿੰਨ ਪੰਜ ਤਿੰਨ ਅੱਠ ਇੱਕ ਇੱਕ ਛੇ ਛੇ ਇੱਕ ਤਿੰਨ ਤਿੰਨ ਨੌਂ",pa-06-noise10.wav
+pa-06-phone,pa,phone,353811661339,utr,"ਤਿੰਨ ਪੰਜ ਤਿੰਨ ਅੱਠ ਇੱਕ ਇੱਕ ਛੇ ਛੇ ਇੱਕ ਤਿੰਨ ਤਿੰਨ ਨੌਂ",pa-06-phone.wav
+pa-07-clean,pa,clean,9649543508,mobile,"ਨੌਂ ਛੇ ਚਾਰ ਨੌਂ ਪੰਜ ਚਾਰ ਤਿੰਨ ਪੰਜ ਸਿਫ਼ਰ ਅੱਠ",pa-07-clean.wav
+pa-07-noise10,pa,noise10,9649543508,mobile,"ਨੌਂ ਛੇ ਚਾਰ ਨੌਂ ਪੰਜ ਚਾਰ ਤਿੰਨ ਪੰਜ ਸਿਫ਼ਰ ਅੱਠ",pa-07-noise10.wav
+pa-07-phone,pa,phone,9649543508,mobile,"ਨੌਂ ਛੇ ਚਾਰ ਨੌਂ ਪੰਜ ਚਾਰ ਤਿੰਨ ਪੰਜ ਸਿਫ਼ਰ ਅੱਠ",pa-07-phone.wav
+pa-08-clean,pa,clean,341075515689,utr,"ਤਿੰਨ ਚਾਰ ਇੱਕ ਸਿਫ਼ਰ ਸੱਤ ਪੰਜ ਪੰਜ ਇੱਕ ਪੰਜ ਛੇ ਅੱਠ ਨੌਂ",pa-08-clean.wav
+pa-08-noise10,pa,noise10,341075515689,utr,"ਤਿੰਨ ਚਾਰ ਇੱਕ ਸਿਫ਼ਰ ਸੱਤ ਪੰਜ ਪੰਜ ਇੱਕ ਪੰਜ ਛੇ ਅੱਠ ਨੌਂ",pa-08-noise10.wav
+pa-08-phone,pa,phone,341075515689,utr,"ਤਿੰਨ ਚਾਰ ਇੱਕ ਸਿਫ਼ਰ ਸੱਤ ਪੰਜ ਪੰਜ ਇੱਕ ਪੰਜ ਛੇ ਅੱਠ ਨੌਂ",pa-08-phone.wav
+pa-09-clean,pa,clean,8654066971,mobile,"ਅੱਠ ਛੇ ਪੰਜ ਚਾਰ ਸਿਫ਼ਰ ਛੇ ਛੇ ਨੌਂ ਸੱਤ ਇੱਕ",pa-09-clean.wav
+pa-09-noise10,pa,noise10,8654066971,mobile,"ਅੱਠ ਛੇ ਪੰਜ ਚਾਰ ਸਿਫ਼ਰ ਛੇ ਛੇ ਨੌਂ ਸੱਤ ਇੱਕ",pa-09-noise10.wav
+pa-09-phone,pa,phone,8654066971,mobile,"ਅੱਠ ਛੇ ਪੰਜ ਚਾਰ ਸਿਫ਼ਰ ਛੇ ਛੇ ਨੌਂ ਸੱਤ ਇੱਕ",pa-09-phone.wav
+pa-10-clean,pa,clean,269393760264,utr,"ਦੋ ਛੇ ਨੌਂ ਤਿੰਨ ਨੌਂ ਤਿੰਨ ਸੱਤ ਛੇ ਸਿਫ਼ਰ ਦੋ ਛੇ ਚਾਰ",pa-10-clean.wav
+pa-10-noise10,pa,noise10,269393760264,utr,"ਦੋ ਛੇ ਨੌਂ ਤਿੰਨ ਨੌਂ ਤਿੰਨ ਸੱਤ ਛੇ ਸਿਫ਼ਰ ਦੋ ਛੇ ਚਾਰ",pa-10-noise10.wav
+pa-10-phone,pa,phone,269393760264,utr,"ਦੋ ਛੇ ਨੌਂ ਤਿੰਨ ਨੌਂ ਤਿੰਨ ਸੱਤ ਛੇ ਸਿਫ਼ਰ ਦੋ ਛੇ ਚਾਰ",pa-10-phone.wav
+pa-11-clean,pa,clean,8273053189,mobile,"ਅੱਠ ਦੋ ਸੱਤ ਤਿੰਨ ਸਿਫ਼ਰ ਪੰਜ ਤਿੰਨ ਇੱਕ ਅੱਠ ਨੌਂ",pa-11-clean.wav
+pa-11-noise10,pa,noise10,8273053189,mobile,"ਅੱਠ ਦੋ ਸੱਤ ਤਿੰਨ ਸਿਫ਼ਰ ਪੰਜ ਤਿੰਨ ਇੱਕ ਅੱਠ ਨੌਂ",pa-11-noise10.wav
+pa-11-phone,pa,phone,8273053189,mobile,"ਅੱਠ ਦੋ ਸੱਤ ਤਿੰਨ ਸਿਫ਼ਰ ਪੰਜ ਤਿੰਨ ਇੱਕ ਅੱਠ ਨੌਂ",pa-11-phone.wav
+pa-12-clean,pa,clean,704857604418,utr,"ਸੱਤ ਸਿਫ਼ਰ ਚਾਰ ਅੱਠ ਪੰਜ ਸੱਤ ਛੇ ਸਿਫ਼ਰ ਚਾਰ ਚਾਰ ਇੱਕ ਅੱਠ",pa-12-clean.wav
+pa-12-noise10,pa,noise10,704857604418,utr,"ਸੱਤ ਸਿਫ਼ਰ ਚਾਰ ਅੱਠ ਪੰਜ ਸੱਤ ਛੇ ਸਿਫ਼ਰ ਚਾਰ ਚਾਰ ਇੱਕ ਅੱਠ",pa-12-noise10.wav
+pa-12-phone,pa,phone,704857604418,utr,"ਸੱਤ ਸਿਫ਼ਰ ਚਾਰ ਅੱਠ ਪੰਜ ਸੱਤ ਛੇ ਸਿਫ਼ਰ ਚਾਰ ਚਾਰ ਇੱਕ ਅੱਠ",pa-12-phone.wav
+pa-13-clean,pa,clean,6096789901,mobile,"ਛੇ ਸਿਫ਼ਰ ਨੌਂ ਛੇ ਸੱਤ ਅੱਠ ਨੌਂ ਨੌਂ ਸਿਫ਼ਰ ਇੱਕ",pa-13-clean.wav
+pa-13-noise10,pa,noise10,6096789901,mobile,"ਛੇ ਸਿਫ਼ਰ ਨੌਂ ਛੇ ਸੱਤ ਅੱਠ ਨੌਂ ਨੌਂ ਸਿਫ਼ਰ ਇੱਕ",pa-13-noise10.wav
+pa-13-phone,pa,phone,6096789901,mobile,"ਛੇ ਸਿਫ਼ਰ ਨੌਂ ਛੇ ਸੱਤ ਅੱਠ ਨੌਂ ਨੌਂ ਸਿਫ਼ਰ ਇੱਕ",pa-13-phone.wav
+pa-14-clean,pa,clean,634500424743,utr,"ਛੇ ਤਿੰਨ ਚਾਰ ਪੰਜ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਚਾਰ ਦੋ ਚਾਰ ਸੱਤ ਚਾਰ ਤਿੰਨ",pa-14-clean.wav
+pa-14-noise10,pa,noise10,634500424743,utr,"ਛੇ ਤਿੰਨ ਚਾਰ ਪੰਜ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਚਾਰ ਦੋ ਚਾਰ ਸੱਤ ਚਾਰ ਤਿੰਨ",pa-14-noise10.wav
+pa-14-phone,pa,phone,634500424743,utr,"ਛੇ ਤਿੰਨ ਚਾਰ ਪੰਜ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਚਾਰ ਦੋ ਚਾਰ ਸੱਤ ਚਾਰ ਤਿੰਨ",pa-14-phone.wav
+pa-15-clean,pa,clean,8392426356,mobile,"ਅੱਠ ਤਿੰਨ ਨੌਂ ਦੋ ਚਾਰ ਦੋ ਛੇ ਤਿੰਨ ਪੰਜ ਛੇ",pa-15-clean.wav
+pa-15-noise10,pa,noise10,8392426356,mobile,"ਅੱਠ ਤਿੰਨ ਨੌਂ ਦੋ ਚਾਰ ਦੋ ਛੇ ਤਿੰਨ ਪੰਜ ਛੇ",pa-15-noise10.wav
+pa-15-phone,pa,phone,8392426356,mobile,"ਅੱਠ ਤਿੰਨ ਨੌਂ ਦੋ ਚਾਰ ਦੋ ਛੇ ਤਿੰਨ ਪੰਜ ਛੇ",pa-15-phone.wav
+pa-16-clean,pa,clean,111818168780,utr,"ਇੱਕ ਇੱਕ ਇੱਕ ਅੱਠ ਇੱਕ ਅੱਠ ਇੱਕ ਛੇ ਅੱਠ ਸੱਤ ਅੱਠ ਸਿਫ਼ਰ",pa-16-clean.wav
+pa-16-noise10,pa,noise10,111818168780,utr,"ਇੱਕ ਇੱਕ ਇੱਕ ਅੱਠ ਇੱਕ ਅੱਠ ਇੱਕ ਛੇ ਅੱਠ ਸੱਤ ਅੱਠ ਸਿਫ਼ਰ",pa-16-noise10.wav
+pa-16-phone,pa,phone,111818168780,utr,"ਇੱਕ ਇੱਕ ਇੱਕ ਅੱਠ ਇੱਕ ਅੱਠ ਇੱਕ ਛੇ ਅੱਠ ਸੱਤ ਅੱਠ ਸਿਫ਼ਰ",pa-16-phone.wav
+pa-17-clean,pa,clean,6721308675,mobile,"ਛੇ ਸੱਤ ਦੋ ਇੱਕ ਤਿੰਨ ਸਿਫ਼ਰ ਅੱਠ ਛੇ ਸੱਤ ਪੰਜ",pa-17-clean.wav
+pa-17-noise10,pa,noise10,6721308675,mobile,"ਛੇ ਸੱਤ ਦੋ ਇੱਕ ਤਿੰਨ ਸਿਫ਼ਰ ਅੱਠ ਛੇ ਸੱਤ ਪੰਜ",pa-17-noise10.wav
+pa-17-phone,pa,phone,6721308675,mobile,"ਛੇ ਸੱਤ ਦੋ ਇੱਕ ਤਿੰਨ ਸਿਫ਼ਰ ਅੱਠ ਛੇ ਸੱਤ ਪੰਜ",pa-17-phone.wav
+pa-18-clean,pa,clean,773722160598,utr,"ਸੱਤ ਸੱਤ ਤਿੰਨ ਸੱਤ ਦੋ ਦੋ ਇੱਕ ਛੇ ਸਿਫ਼ਰ ਪੰਜ ਨੌਂ ਅੱਠ",pa-18-clean.wav
+pa-18-noise10,pa,noise10,773722160598,utr,"ਸੱਤ ਸੱਤ ਤਿੰਨ ਸੱਤ ਦੋ ਦੋ ਇੱਕ ਛੇ ਸਿਫ਼ਰ ਪੰਜ ਨੌਂ ਅੱਠ",pa-18-noise10.wav
+pa-18-phone,pa,phone,773722160598,utr,"ਸੱਤ ਸੱਤ ਤਿੰਨ ਸੱਤ ਦੋ ਦੋ ਇੱਕ ਛੇ ਸਿਫ਼ਰ ਪੰਜ ਨੌਂ ਅੱਠ",pa-18-phone.wav
+pa-19-clean,pa,clean,8805729184,mobile,"ਅੱਠ ਅੱਠ ਸਿਫ਼ਰ ਪੰਜ ਸੱਤ ਦੋ ਨੌਂ ਇੱਕ ਅੱਠ ਚਾਰ",pa-19-clean.wav
+pa-19-noise10,pa,noise10,8805729184,mobile,"ਅੱਠ ਅੱਠ ਸਿਫ਼ਰ ਪੰਜ ਸੱਤ ਦੋ ਨੌਂ ਇੱਕ ਅੱਠ ਚਾਰ",pa-19-noise10.wav
+pa-19-phone,pa,phone,8805729184,mobile,"ਅੱਠ ਅੱਠ ਸਿਫ਼ਰ ਪੰਜ ਸੱਤ ਦੋ ਨੌਂ ਇੱਕ ਅੱਠ ਚਾਰ",pa-19-phone.wav
+pa-20-clean,pa,clean,993440100955,utr,"ਨੌਂ ਨੌਂ ਤਿੰਨ ਚਾਰ ਚਾਰ ਸਿਫ਼ਰ ਇੱਕ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਨੌਂ ਪੰਜ ਪੰਜ",pa-20-clean.wav
+pa-20-noise10,pa,noise10,993440100955,utr,"ਨੌਂ ਨੌਂ ਤਿੰਨ ਚਾਰ ਚਾਰ ਸਿਫ਼ਰ ਇੱਕ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਨੌਂ ਪੰਜ ਪੰਜ",pa-20-noise10.wav
+pa-20-phone,pa,phone,993440100955,utr,"ਨੌਂ ਨੌਂ ਤਿੰਨ ਚਾਰ ਚਾਰ ਸਿਫ਼ਰ ਇੱਕ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਨੌਂ ਪੰਜ ਪੰਜ",pa-20-phone.wav
+pa-21-clean,pa,clean,6908204313,mobile,"ਛੇ ਨੌਂ ਸਿਫ਼ਰ ਅੱਠ ਦੋ ਸਿਫ਼ਰ ਚਾਰ ਤਿੰਨ ਇੱਕ ਤਿੰਨ",pa-21-clean.wav
+pa-21-noise10,pa,noise10,6908204313,mobile,"ਛੇ ਨੌਂ ਸਿਫ਼ਰ ਅੱਠ ਦੋ ਸਿਫ਼ਰ ਚਾਰ ਤਿੰਨ ਇੱਕ ਤਿੰਨ",pa-21-noise10.wav
+pa-21-phone,pa,phone,6908204313,mobile,"ਛੇ ਨੌਂ ਸਿਫ਼ਰ ਅੱਠ ਦੋ ਸਿਫ਼ਰ ਚਾਰ ਤਿੰਨ ਇੱਕ ਤਿੰਨ",pa-21-phone.wav
+pa-22-clean,pa,clean,285493552593,utr,"ਦੋ ਅੱਠ ਪੰਜ ਚਾਰ ਨੌਂ ਤਿੰਨ ਪੰਜ ਪੰਜ ਦੋ ਪੰਜ ਨੌਂ ਤਿੰਨ",pa-22-clean.wav
+pa-22-noise10,pa,noise10,285493552593,utr,"ਦੋ ਅੱਠ ਪੰਜ ਚਾਰ ਨੌਂ ਤਿੰਨ ਪੰਜ ਪੰਜ ਦੋ ਪੰਜ ਨੌਂ ਤਿੰਨ",pa-22-noise10.wav
+pa-22-phone,pa,phone,285493552593,utr,"ਦੋ ਅੱਠ ਪੰਜ ਚਾਰ ਨੌਂ ਤਿੰਨ ਪੰਜ ਪੰਜ ਦੋ ਪੰਜ ਨੌਂ ਤਿੰਨ",pa-22-phone.wav
+pa-23-clean,pa,clean,7412600712,mobile,"ਸੱਤ ਚਾਰ ਇੱਕ ਦੋ ਛੇ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਸੱਤ ਇੱਕ ਦੋ",pa-23-clean.wav
+pa-23-noise10,pa,noise10,7412600712,mobile,"ਸੱਤ ਚਾਰ ਇੱਕ ਦੋ ਛੇ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਸੱਤ ਇੱਕ ਦੋ",pa-23-noise10.wav
+pa-23-phone,pa,phone,7412600712,mobile,"ਸੱਤ ਚਾਰ ਇੱਕ ਦੋ ਛੇ ਸਿਫ਼ਰ ਸਿਫ਼ਰ ਸੱਤ ਇੱਕ ਦੋ",pa-23-phone.wav
+pa-24-clean,pa,clean,476663793701,utr,"ਚਾਰ ਸੱਤ ਛੇ ਛੇ ਛੇ ਤਿੰਨ ਸੱਤ ਨੌਂ ਤਿੰਨ ਸੱਤ ਸਿਫ਼ਰ ਇੱਕ",pa-24-clean.wav
+pa-24-noise10,pa,noise10,476663793701,utr,"ਚਾਰ ਸੱਤ ਛੇ ਛੇ ਛੇ ਤਿੰਨ ਸੱਤ ਨੌਂ ਤਿੰਨ ਸੱਤ ਸਿਫ਼ਰ ਇੱਕ",pa-24-noise10.wav
+pa-24-phone,pa,phone,476663793701,utr,"ਚਾਰ ਸੱਤ ਛੇ ਛੇ ਛੇ ਤਿੰਨ ਸੱਤ ਨੌਂ ਤਿੰਨ ਸੱਤ ਸਿਫ਼ਰ ਇੱਕ",pa-24-phone.wav
+pa-25-clean,pa,clean,8609918375,mobile,"ਅੱਠ ਛੇ ਸਿਫ਼ਰ ਨੌਂ ਨੌਂ ਇੱਕ ਅੱਠ ਤਿੰਨ ਸੱਤ ਪੰਜ",pa-25-clean.wav
+pa-25-noise10,pa,noise10,8609918375,mobile,"ਅੱਠ ਛੇ ਸਿਫ਼ਰ ਨੌਂ ਨੌਂ ਇੱਕ ਅੱਠ ਤਿੰਨ ਸੱਤ ਪੰਜ",pa-25-noise10.wav
+pa-25-phone,pa,phone,8609918375,mobile,"ਅੱਠ ਛੇ ਸਿਫ਼ਰ ਨੌਂ ਨੌਂ ਇੱਕ ਅੱਠ ਤਿੰਨ ਸੱਤ ਪੰਜ",pa-25-phone.wav
+pa-26-clean,pa,clean,894237707147,utr,"ਅੱਠ ਨੌਂ ਚਾਰ ਦੋ ਤਿੰਨ ਸੱਤ ਸੱਤ ਸਿਫ਼ਰ ਸੱਤ ਇੱਕ ਚਾਰ ਸੱਤ",pa-26-clean.wav
+pa-26-noise10,pa,noise10,894237707147,utr,"ਅੱਠ ਨੌਂ ਚਾਰ ਦੋ ਤਿੰਨ ਸੱਤ ਸੱਤ ਸਿਫ਼ਰ ਸੱਤ ਇੱਕ ਚਾਰ ਸੱਤ",pa-26-noise10.wav
+pa-26-phone,pa,phone,894237707147,utr,"ਅੱਠ ਨੌਂ ਚਾਰ ਦੋ ਤਿੰਨ ਸੱਤ ਸੱਤ ਸਿਫ਼ਰ ਸੱਤ ਇੱਕ ਚਾਰ ਸੱਤ",pa-26-phone.wav
+pa-27-clean,pa,clean,7971010926,mobile,"ਸੱਤ ਨੌਂ ਸੱਤ ਇੱਕ ਸਿਫ਼ਰ ਇੱਕ ਸਿਫ਼ਰ ਨੌਂ ਦੋ ਛੇ",pa-27-clean.wav
+pa-27-noise10,pa,noise10,7971010926,mobile,"ਸੱਤ ਨੌਂ ਸੱਤ ਇੱਕ ਸਿਫ਼ਰ ਇੱਕ ਸਿਫ਼ਰ ਨੌਂ ਦੋ ਛੇ",pa-27-noise10.wav
+pa-27-phone,pa,phone,7971010926,mobile,"ਸੱਤ ਨੌਂ ਸੱਤ ਇੱਕ ਸਿਫ਼ਰ ਇੱਕ ਸਿਫ਼ਰ ਨੌਂ ਦੋ ਛੇ",pa-27-phone.wav
+pa-28-clean,pa,clean,337769585328,utr,"ਤਿੰਨ ਤਿੰਨ ਸੱਤ ਸੱਤ ਛੇ ਨੌਂ ਪੰਜ ਅੱਠ ਪੰਜ ਤਿੰਨ ਦੋ ਅੱਠ",pa-28-clean.wav
+pa-28-noise10,pa,noise10,337769585328,utr,"ਤਿੰਨ ਤਿੰਨ ਸੱਤ ਸੱਤ ਛੇ ਨੌਂ ਪੰਜ ਅੱਠ ਪੰਜ ਤਿੰਨ ਦੋ ਅੱਠ",pa-28-noise10.wav
+pa-28-phone,pa,phone,337769585328,utr,"ਤਿੰਨ ਤਿੰਨ ਸੱਤ ਸੱਤ ਛੇ ਨੌਂ ਪੰਜ ਅੱਠ ਪੰਜ ਤਿੰਨ ਦੋ ਅੱਠ",pa-28-phone.wav
+pa-29-clean,pa,clean,6546516230,mobile,"ਛੇ ਪੰਜ ਚਾਰ ਛੇ ਪੰਜ ਇੱਕ ਛੇ ਦੋ ਤਿੰਨ ਸਿਫ਼ਰ",pa-29-clean.wav
+pa-29-noise10,pa,noise10,6546516230,mobile,"ਛੇ ਪੰਜ ਚਾਰ ਛੇ ਪੰਜ ਇੱਕ ਛੇ ਦੋ ਤਿੰਨ ਸਿਫ਼ਰ",pa-29-noise10.wav
+pa-29-phone,pa,phone,6546516230,mobile,"ਛੇ ਪੰਜ ਚਾਰ ਛੇ ਪੰਜ ਇੱਕ ਛੇ ਦੋ ਤਿੰਨ ਸਿਫ਼ਰ",pa-29-phone.wav
