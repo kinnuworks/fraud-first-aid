@@ -5,7 +5,7 @@ import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint, hydrate, persist } from '@/lib/complaint/store';
 import { addFlag } from '@/lib/complaint/session';
-import { guardShortcut } from '@/lib/complaint/redflags';
+import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
@@ -37,8 +37,7 @@ export const POST = createLlmRoute({
   onReply: (session, spoken, lastUser) => {
     const c = getComplaint(session);
     // only a reply that tells them to hang up counts as a warning (not an answer to a question)
-    const HANGUP = /hang up|cut the call|काट|కట్|ಕಟ್|துண்டி|കട്ട്|কেটে|કાપી|ਕੱਟ|phone cut|kaat/i;
-    if (c.phase === 'guard' && c.flags.length === 0 && HANGUP.test(spoken)) addFlag(c, 'suspicious_call', 'pressed the user on the call; UTR Pakka warned', lastUser);
+    if (c.phase === 'guard' && c.flags.length === 0 && saysHangUp(spoken)) addFlag(c, 'suspicious_call', 'pressed the user on the call; UTR Pakka warned', lastUser);
   },
   onMarker: (session, id, detail, lastUser) => {
     addFlag(getComplaint(session), id, detail, lastUser);

@@ -135,3 +135,24 @@ describe('LOSS: only money that has left', () => {
     ]) expect(isLoss(t), t).toBe(true);
   });
 });
+
+// From the guard break test rerun, 20 Nov: the model warned in Telugu with "ఫోన్ పెట్టేయండి" (put
+// the phone down) and no marker, so the card showed nothing. Every way of saying hang up counts.
+describe('saysHangUp: a spoken warning without a marker still reaches the card', () => {
+  it.each([
+    'This is a scam call. Hang up now.',
+    'ఇది నకిలీ కాల్. వెంటనే ఫోన్ పెట్టేయండి.',
+    'ఇది మోసపూరిత కాల్. వెంటనే ఫోన్ కట్ చేయండి.',
+    'यह धोखा है, अभी फ़ोन रख दीजिए।',
+    'यह धोखाधड़ी वाली कॉल है। अभी फ़ोन काट दीजिए।',
+    'ಇದು ವಂಚನೆಯ ಕರೆ. ಈಗಲೇ ಫೋನ್ ಕಟ್ ಮಾಡಿ.',
+    'இது ஒரு மோசடி அழைப்பு. உடனே அழைப்பைத் துண்டியுங்கள்.',
+  ])('%s', async (t) => {
+    const { saysHangUp } = await import('./redflags');
+    expect(saysHangUp(t)).toBe(true);
+  });
+  it('not an ordinary answer', async () => {
+    const { saysHangUp } = await import('./redflags');
+    expect(saysHangUp('I am listening. Tell me if you need help.')).toBe(false);
+  });
+});

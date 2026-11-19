@@ -35,6 +35,10 @@ export const LOSS = new RegExp(`${PAID}|${GONE}|${DEBITED}|${SENT}|${INDIC}`, 'i
 const STRONG = new RegExp(`${PAID}|${GONE}|${DEBITED}|${INDIC}`, 'i');
 export const isLoss = (t: string) => (detectRedFlag(t) ? STRONG.test(t) : LOSS.test(t));
 
+// A reply that tells them to put the phone down, in any of our languages: the guard warned.
+const HANGUP = /hang up|cut the call|phone cut|kaat|काट|रख (दो|दीजिए|दें)|फ़?ोन रखिए|కట్|పెట్టేయ|పెట్టండి|ಕಟ್|ಇಟ್ಟುಬಿಡಿ|துண்டி|வைத்துவிடு|കട്ട്|কেটে|કાપી|ਕੱਟ/i;
+export const saysHangUp = (spoken: string) => HANGUP.test(spoken);
+
 export type RedFlag = { scam: string; ask: string };
 
 export function detectRedFlag(text: string): RedFlag | null {
