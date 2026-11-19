@@ -39,17 +39,19 @@ export function SampleScamCall() {
   }
 
   return (
-    <div className="rounded-lg border border-dashed border-yellow-600/60 p-3 text-xs" data-testid="sample-scam-call">
-      <p className="text-yellow-200">No scam call to hand? Play a sample (an illustration made with a generated voice, not a real call).</p>
-      <button
-        type="button"
-        onClick={play}
-        disabled={state === 'playing'}
-        className="mt-2 rounded border border-yellow-600/60 px-2 py-1 text-yellow-100 disabled:opacity-60"
-      >
+    <div
+      className="flex flex-wrap items-center justify-between gap-3 rounded-[var(--r-card)] border border-dashed p-4"
+      style={{ borderColor: 'var(--warn)' }}
+      data-testid="sample-scam-call"
+    >
+      <p className="max-w-[34rem] text-[0.9375rem]" style={{ color: 'var(--ink-2)' }}>
+        <span className="up-sample-tag mr-2">Illustration</span>
+        No scam call to hand? Play a sample (an illustration made with a generated voice, not a real call).
+      </p>
+      <button type="button" onClick={play} disabled={state === 'playing'} className="up-btn up-btn--sm up-btn--ghost">
         {state === 'playing' ? 'Playing the sample scam call…' : state === 'done' ? 'Play it again' : 'Play a sample scam call'}
       </button>
-      {state === 'error' && <p className="mt-1 text-destructive">Couldn&apos;t play the sample.</p>}
+      {state === 'error' && <p className="w-full text-[0.875rem]" style={{ color: 'var(--bad)' }}>Couldn&apos;t play the sample.</p>}
     </div>
   );
 }

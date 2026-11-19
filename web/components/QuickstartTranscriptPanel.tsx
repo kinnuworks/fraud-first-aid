@@ -45,14 +45,12 @@ export function QuickstartTranscriptPanel({
 
   return (
     <section
-      className="flex h-full min-h-0 w-full flex-col overflow-hidden rounded-2xl border border-border bg-card/20"
+      className="up-transcript"
       aria-label="Transcription panel"
     >
-      <div className="flex h-14 shrink-0 items-center justify-between border-b border-border px-4">
-        <div>
-          <h2 className="text-sm font-semibold text-foreground">Transcript</h2>
-          <p className="text-xs text-muted-foreground">Live voice turns</p>
-        </div>
+      <div className="flex shrink-0 items-baseline justify-between gap-3 border-b px-4 py-3" style={{ borderColor: 'var(--rule)' }}>
+        <h2 className="text-[1rem] font-semibold">Transcript</h2>
+        <p className="text-[0.8125rem]" style={{ color: 'var(--ink-3)' }}>Live voice turns</p>
       </div>
 
       <div
@@ -60,7 +58,7 @@ export function QuickstartTranscriptPanel({
         className="flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-4 py-4"
       >
         {messages.length === 0 ? (
-          <div className="flex h-full items-center justify-center text-center text-sm text-muted-foreground">
+          <div className="flex h-full items-center justify-center text-center text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
             Start speaking to see the live transcript here.
           </div>
         ) : (
@@ -75,16 +73,12 @@ export function QuickstartTranscriptPanel({
                 key={`${message.turn_id ?? message.uid}-${index}`}
                 className={`flex flex-col ${isAgent ? 'items-start' : 'items-end'}`}
               >
-                <div className="mb-1 flex items-center gap-2 px-1 text-xs font-semibold text-muted-foreground">
+                <div className="mb-1 flex items-center gap-2 px-1 text-[0.8125rem] font-semibold" style={{ color: 'var(--ink-3)' }}>
                   <span>{label}</span>
                   {time && <span className="font-normal">{time}</span>}
                 </div>
                 <div
-                  className={`max-w-full whitespace-pre-wrap rounded-xl border px-3 py-2 text-sm leading-6 ${
-                    isAgent
-                      ? 'border-[#2f2f2f] bg-[#212121] text-[#e7e7e7]'
-                      : 'border-[#d7d7d7] bg-[#fdfcfb] text-black'
-                  }`}
+                  className={`up-bubble ${isAgent ? 'up-bubble--agent' : 'up-bubble--you'}`}
                 >
                   {text || '...'}
                 </div>

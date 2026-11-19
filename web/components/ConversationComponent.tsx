@@ -492,10 +492,10 @@ export default function ConversationComponent({
       }
       pipelineMetrics={<QuickstartPipelineMetrics metrics={agentMetrics} />}
       transcriptPanel={
-        <div className="flex flex-col gap-4">
+        <>
           {typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'guard' && (
             <>
-              <p className="rounded-lg bg-muted p-3 text-sm" role="status">
+              <p className="up-note text-[1rem]" role="status">
                 On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the
                 moment the caller asks for an OTP, a PIN, a QR scan, an app install or money.
               </p>
@@ -503,16 +503,18 @@ export default function ConversationComponent({
             </>
           )}
           <ComplaintCard session={agoraData.channel} />
-          <QuickstartTranscriptPanel
-            messageList={messageList}
-            currentInProgressMessage={currentInProgressMessage}
-            agentUID={agentUID}
-          />
-        </div>
+        </>
+      }
+      transcript={
+        <QuickstartTranscriptPanel
+          messageList={messageList}
+          currentInProgressMessage={currentInProgressMessage}
+          agentUID={agentUID}
+        />
       }
       visualizer={
         <div
-          className="relative flex h-full min-h-[20rem] w-full max-w-4xl items-center justify-center"
+          className="relative flex h-full min-h-[16rem] w-full items-center justify-center"
           role="region"
           aria-label="AI agent status visualization"
         >
@@ -526,7 +528,8 @@ export default function ConversationComponent({
       }
       controls={
         <div
-          className="mx-auto flex w-fit items-center gap-3 rounded-full border border-border bg-card/80 px-4 py-2 backdrop-blur-md"
+          className="mx-auto flex w-fit items-center gap-3 rounded-full border px-4 py-2"
+          style={{ borderColor: 'var(--rule)', background: 'var(--sheet)' }}
           role="group"
           aria-label="Audio controls"
         >

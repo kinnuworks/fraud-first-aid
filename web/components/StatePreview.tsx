@@ -1,6 +1,7 @@
 'use client';
 // ?state=<name> shows one screen state with labelled sample data, for design and screenshots.
 // It never runs inside a real call and says on screen that the data is a sample.
+import { Logo } from './design/Logo';
 import { ComplaintCardView, type ComplaintView } from './ComplaintCard';
 import { newComplaint } from '@/lib/complaint/session';
 import { buildPack } from '@/lib/complaint/pack';
@@ -47,12 +48,26 @@ export function StatePreview({ state }: { state: string }) {
   if (!(state in STATES)) {
     return <p className="p-6">Unknown state. Try: {Object.keys(STATES).join(', ')}</p>;
   }
+  const guard = state.startsWith('guard');
   return (
-    <main className="mx-auto max-w-xl space-y-4 p-6">
-      <p role="note" className="rounded bg-yellow-100 px-3 py-2 text-xs text-yellow-900">
-        Preview of the “{state}” screen with sample data, not a real complaint.
-      </p>
-      <ComplaintCardView data={STATES[state]} />
-    </main>
+    <div className="up-page">
+      <div className="up-wrap">
+        <header className="up-callbar">
+          <Logo />
+          <p role="note" className="up-sample-tag" style={{ textTransform: 'none', letterSpacing: 0 }}>
+            Preview of the “{state}” screen with sample data, not a real complaint.
+          </p>
+        </header>
+        <main className="flex max-w-[52rem] flex-col gap-4 py-6">
+          {guard && (
+            <p className="up-note text-[1rem]">
+              On guard: put the suspicious call on speaker near this device. UTR Pakka stays quiet and speaks up the moment the
+              caller asks for an OTP, a PIN, a QR scan, an app install or money.
+            </p>
+          )}
+          <ComplaintCardView data={STATES[state]} />
+        </main>
+      </div>
+    </div>
   );
 }
