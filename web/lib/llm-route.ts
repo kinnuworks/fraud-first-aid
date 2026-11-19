@@ -108,7 +108,15 @@ export function createLlmRoute({
         : streamTextImpl({
             model,
             system: typeof system === "function" ? system(session) : system,
-            messages: msgs.filter((m) => m.role !== "system") as never,
+            // An empty assistant turn is a silent reply: say so, or the model reads the gap as a
+            // pattern to keep and stays silent through a clear scam ask (ICFD validation, 20 Nov).
+            messages: msgs
+              .filter((m) => m.role !== "system")
+              .map((m) =>
+                m.role === "assistant" && (m.content == null || (typeof m.content === "string" && !m.content.trim()))
+                  ? { ...m, content: SILENT }
+                  : m,
+              ) as never,
             ...(tools
               ? { tools: tools(session, lastUser), stopWhen: stepCountIs(6) }
               : {}),

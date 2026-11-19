@@ -94,3 +94,44 @@ describe('LOSS: "paid" only as a payment the caller made', () => {
     expect(isLoss('paid ₹5000 on the link')).toBe(true);
   });
 });
+
+// From the ICFD validation split, 20 Nov: 542 of 4,474 fraud calls had a line that read as money
+// lost ("I've already said no", "you should already have my details", "letters got lost"), which
+// switched the guard to the complaint in the middle of a live scam. A loss needs money in it.
+describe('LOSS: only money that has left', () => {
+  it('ignores "already", "lost" and "gone" with no money in the line', async () => {
+    const { isLoss } = await import('./redflags');
+    for (const t of [
+      "I've already said no. Don't call me again.",
+      'You should already have my details if you are from the bank.',
+      "it seems like our letters might have gotten lost",
+      'Hello? I think we lost the connection.',
+      'Maine toh already online apply kiya tha.',
+      'Aapka account details aapke email par bhej diya gaya hai.',
+      'Sir, the offer will be gone by tonight.',
+      'मैंने पहले ही मना कर दिया है।',
+      "Can't it be deducted from the loan amount?",
+      'The fee will be deducted from the loan amount later.',
+      'You should have paid the duty, ma\'am.',
+      'Sir, I think we got cut off. Hello?',
+      "You'll be paid 500 rupees per hour.",
+      'Many of my customers have paid through this link, sir.',
+    ]) expect(isLoss(t), t).toBe(false);
+  });
+  it('still hears money that has gone', async () => {
+    const { isLoss } = await import('./redflags');
+    for (const t of [
+      'I lost 25,000 rupees to a fake KYC call',
+      'my money is gone',
+      '₹5000 got debited from my account',
+      'Rs 40,000 was deducted just now',
+      'the money got deducted from my account',
+      'mere paise chale gaye',
+      'maine 10,000 bhej diye',
+      'I already sent him the money',
+      'we transferred 2 lakh yesterday',
+      'मेरे पैसे कट गए',
+      'नेने ఇప్పటికే ఇరవై ఐదు వేల రూపాయలు పంపేశాను',
+    ]) expect(isLoss(t), t).toBe(true);
+  });
+});

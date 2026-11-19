@@ -222,3 +222,29 @@ describe('custom LLM route reports what was spoken', () => {
     expect(got).toEqual(['Hang up now.']);
   });
 });
+
+// From the ICFD validation split, 20 Nov: with its own silent turns left empty in the history,
+// the guard model kept answering <silent> through a plain "pay ₹7,500 to our Mobikwik ID";
+// with them written as <silent> it warned (2 of 2 tries). The model sees what it really said.
+describe('history: silent turns', () => {
+  it('gives the model <silent> for an empty assistant turn', async () => {
+    let seen: Array<{ role: string; content: unknown }> = [];
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: ((opts: { messages: typeof seen }) => {
+        seen = opts.messages;
+        return { textStream: (async function* () { yield 'ok'; })() };
+      }) as never,
+    });
+    const messages = [
+      { role: 'user', content: 'Caller: hello' },
+      { role: 'assistant', content: '' },
+      { role: 'user', content: 'Me: who is this' },
+      { role: 'assistant', content: '  ' },
+      { role: 'user', content: 'Caller: pay to our Mobikwik ID' },
+    ];
+    expect((await route(req({ messages }, 'Bearer s3cret'))).status).toBe(200);
+    expect(seen.filter((m) => m.role === 'assistant').map((m) => m.content)).toEqual(['<silent>', '<silent>']);
+  });
+});

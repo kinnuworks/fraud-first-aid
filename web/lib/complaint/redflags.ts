@@ -17,13 +17,23 @@ const ARREST = /digital arrest|\barrest|डिजिटल अरेस्ट|�
 const KYC = /\bkyc\b|केवाईसी|కేవైసీ|ಕೆವೈಸಿ|கேஒய்சி|കെവൈസി/i;
 
 // Words that say the money has already gone: the caller is telling their story, not on a live
-// scam call, so the model should switch to the complaint instead of warning.
-export const LOSS = /already|\b(i|we|i've|i have|maine|humne|have|has|had|just|already)\s+paid\b|\bpaid\s+(him|her|them|it|rs|inr|₹|\d|kar|kiya|ho)|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
+// scam call, so the model should switch to the complaint instead of warning. A loss needs money in
+// the line: "already", "lost" or "gone" alone come up all the time in a live scam call ("I've already
+// said no", "our letters got lost"; 542 of 4,474 fraud calls in the ICFD validation split).
+const MONEY = String.raw`(money|amount|rs\.?|inr|₹|rupees?|rupay\w*|paise|paisa|lakh|thousand|hazaar|\d)`;
+const PAID = String.raw`\b(i|we|i've|we've|i have|we have|maine|humne)\s+(just\s+|already\s+)?paid\b|\b(just|already)\s+paid\b|(?<!be )\bpaid\s+(him|her|them|it|rs|inr|₹|\d|kar|kiya|ho)`;
+const GONE = String.raw`\b${MONEY}[^.?!]{0,40}\b(gone|lost|taken|chale? gay\w*|chala gaya|kat gay\w*|bhej (diya|diye|di))\b`;
+// "Debited" and "deducted" only once it has happened ("was deducted", "debited from my account"),
+// not "it will be deducted from the loan amount".
+const DEBITED = String.raw`\b(got|was|were|been|just|already)\s+(debited|deducted|cut)\b(?! off)|\b(debited|deducted)\s+from\s+(my|our)\b`;
+const SENT = String.raw`\b(i|we|i've|i have|maine|humne|already)\b[^.?!]{0,20}\b(sent|transferred|lost)\b[^.?!]{0,30}${MONEY}`;
+const INDIC = 'పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|भेज दिए|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು';
+export const LOSS = new RegExp(`${PAID}|${GONE}|${DEBITED}|${SENT}|${INDIC}`, 'i');
 
-// "Already" on its own (any language) is not a loss when the same line carries a red flag: a
-// scammer says "the user has already approved this" (guard break test, 19 Nov).
-const ALREADY = /already|ఇప్పటికే|पहले ही|ಈಗಾಗಲೇ/gi;
-export const isLoss = (t: string) => LOSS.test(t) && (!detectRedFlag(t) || LOSS.test(t.replace(ALREADY, ' ')));
+// A scammer's line with a red flag ("we sent the OTP to your phone to credit the amount") is a
+// warning, not a loss, unless the money words are first person and past.
+const STRONG = new RegExp(`${PAID}|${GONE}|${DEBITED}|${INDIC}`, 'i');
+export const isLoss = (t: string) => (detectRedFlag(t) ? STRONG.test(t) : LOSS.test(t));
 
 export type RedFlag = { scam: string; ask: string };
 
