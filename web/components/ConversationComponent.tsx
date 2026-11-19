@@ -530,6 +530,7 @@ export default function ConversationComponent({
             messageList={messageList}
             currentInProgressMessage={currentInProgressMessage}
             agentUID={agentUID}
+            userLabel={typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'guard' ? 'On the call' : 'You'}
           />
           <TypeInstead agentUid={agentUID} />
         </>

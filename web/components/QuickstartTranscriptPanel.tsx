@@ -13,6 +13,8 @@ type QuickstartTranscriptPanelProps = {
   messageList: TranscriptMessage[];
   currentInProgressMessage: TranscriptMessage | null;
   agentUID: string;
+  // On guard the microphone hears the whole call on speaker, so a line is "On the call", not "You".
+  userLabel?: string;
 };
 
 function formatMessageTime(createdAt?: number) {
@@ -27,6 +29,7 @@ export function QuickstartTranscriptPanel({
   messageList,
   currentInProgressMessage,
   agentUID,
+  userLabel = 'You',
 }: QuickstartTranscriptPanelProps) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const messages = useMemo(
@@ -65,7 +68,7 @@ export function QuickstartTranscriptPanel({
               <article key={`${message.turn_id ?? message.uid}-${index}`} className="tr-row" data-agent={isAgent ? '' : undefined}>
                 <span className="tr-time">{time ?? ''}</span>
                 <span>
-                  <span className="tr-who">{isAgent ? 'UTR Pakka' : 'You'}</span>
+                  <span className="tr-who">{isAgent ? 'UTR Pakka' : userLabel}</span>
                   <span className="tr-text up-bubble">{text || '...'}</span>
                 </span>
               </article>
