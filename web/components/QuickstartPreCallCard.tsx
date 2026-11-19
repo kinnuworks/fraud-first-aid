@@ -183,6 +183,7 @@ function FirstScreen(p: QuickstartPreCallCardProps) {
         <section className="dy-hero">
           <div>
             <p className="up-label">UTR Pakka · UPI fraud complaint, spoken</p>
+            <p className="up-label" style={{ opacity: 0.7 }}>UTR = the 12-digit payment reference. Pakka = for sure.</p>
             <h1 className="up-display" style={{ marginTop: 20 }}>
               Lost money to a UPI scam? <span className="dy-grey">Tell me what happened.</span>
             </h1>

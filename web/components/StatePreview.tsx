@@ -11,6 +11,7 @@ import { compareWithScreenshot, type Shot } from '@/lib/complaint/screenshot';
 function view(lang: 'te' | 'en', fields: ReturnType<typeof newComplaint>['fields'], shot?: Shot): ComplaintView {
   const c = { ...newComplaint(lang), fields, shot };
   return {
+    lang,
     fields: c.fields,
     missing: missingFields(c),
     deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,

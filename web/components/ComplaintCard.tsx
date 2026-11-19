@@ -4,6 +4,7 @@
 import { useEffect, useState } from 'react';
 import { minutesSince } from '@/lib/complaint/pack';
 import { scamById } from '@/lib/complaint/scams';
+import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
 
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
@@ -12,6 +13,7 @@ type Pack =
 type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
 export type ComplaintView = {
+  lang?: keyof typeof LANG_LABEL;
   phase?: 'guard' | 'complaint';
   flags?: Flag[];
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
@@ -141,6 +143,9 @@ export function ComplaintCardView({ data, onScreenshot }: { data: ComplaintView 
       {flags.length > 0 && (
         <div className="up-alarm" data-motion-in="" data-testid="red-flags">
           <h2 className="up-alarm__kicker">Scam warning given</h2>
+          <p className="up-alarm__body">
+            Said aloud{data.lang && LANG_LABEL[data.lang] ? ` in ${LANG_LABEL[data.lang]}` : ''}: hang up now, never share a code, scan or pay.
+          </p>
           <ul className="space-y-4">
             {flags.map((f, i) => {
               const s = scamById(f.scam);
@@ -257,7 +262,7 @@ function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
           Call 1930 now
         </a>
         <a href="https://cybercrime.gov.in/" target="_blank" rel="noopener noreferrer" className="up-btn up-btn--ghost">
-          File on cybercrime.gov.in
+          Open cybercrime.gov.in to file yourself
         </a>
       </div>
       <p className="text-[1.0625rem]">
@@ -277,7 +282,7 @@ function PackView({ pack }: { pack: Extract<Pack, { ok: true }> }) {
         className="up-btn up-btn--ghost w-fit"
         data-testid="reminders"
       >
-        4. Add 2 reminders to my calendar (bank deadline and refund date)
+        4. Add 2 reminders to my calendar (the bank deadline and the RBI 10-working-day credit date)
       </a>
     </div>
   );
