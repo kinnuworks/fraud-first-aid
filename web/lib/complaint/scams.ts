@@ -16,6 +16,7 @@ export const SCAMS: Scam[] = [
   { id: 'job_task', name: 'Part-time job / task scam', asks: 'pay a fee, "load money" to unlock tasks or earnings', official: 'Always remember that a genuine company offering job will never ask for money.', source: 'RBI BE(A)WARE booklet', url: BEAWARE },
   { id: 'sim_swap', name: 'SIM swap', asks: '"free 4G upgrade", SIM details', official: 'Never share credentials pertaining to SIM card.', source: 'RBI BE(A)WARE booklet', url: BEAWARE },
   { id: 'lottery', name: 'Lottery / prize', asks: 'pay tax, shipping or processing fee to claim a prize', official: 'Do not make payments or share secure credentials for lottery calls / emails.', source: 'RBI BE(A)WARE booklet', url: BEAWARE },
+  { id: 'suspicious_call', name: 'Suspicious call', asks: 'pressure to act on the call: a code, an app, a payment or a transfer', official: 'Bank officials / financial institutions / any genuine entity never ask customers to share confidential information such as username / password / card details / CVV / OTP.', source: 'RBI BE(A)WARE booklet', url: BEAWARE },
   { id: 'impersonation', name: 'Friend or relative asking for urgent money', asks: 'urgent money from a new number or profile', official: 'Always verify genuineness of fund request with the friend / relative or confirm by a phone call / physical meeting.', source: 'RBI BE(A)WARE booklet', url: BEAWARE },
 ];
 

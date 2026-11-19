@@ -55,3 +55,13 @@ describe('complaint session', () => {
     expect(deadlines('2026-11-19')).toEqual({ zeroLiabilityBy: '2026-11-23', boardPolicyAfter: '2026-11-27' });
   });
 });
+
+describe('addFlag fallback for a warning the model gave under another name', () => {
+  it('records an unknown scam id as a suspicious call, once', async () => {
+    const { addFlag, newComplaint } = await import('./session');
+    const c = newComplaint('en', 'guard');
+    expect(addFlag(c, 'fake_rbi_investigation', 'asked to move money to a "safe" account', 'move your money')).toBe(true);
+    expect(c.flags[0].scam).toBe('suspicious_call');
+    expect(addFlag(c, 'another_unknown', 'x', 'y')).toBe(false);
+  });
+});

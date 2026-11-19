@@ -18,6 +18,11 @@ const KYC = /\bkyc\b|केवाईसी|కేవైసీ|ಕೆವೈಸಿ
 // scam call, so the model should switch to the complaint instead of warning.
 export const LOSS = /already|paid|lost|debited|deducted|gone|chale? gay|chala gaya|bhej diya|kat gaye|ఇప్పటికే|పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|पहले ही|भेज दिए|चले गए|कट गए|ಈಗಾಗಲೇ|ಕಳೆದು|ಹೋಯಿತು/i;
 
+// "Already" on its own (any language) is not a loss when the same line carries a red flag: a
+// scammer says "the user has already approved this" (guard break test, 19 Nov).
+const ALREADY = /already|ఇప్పటికే|पहले ही|ಈಗಾಗಲೇ/gi;
+export const isLoss = (t: string) => LOSS.test(t) && (!detectRedFlag(t) || LOSS.test(t.replace(ALREADY, ' ')));
+
 export type RedFlag = { scam: string; ask: string };
 
 export function detectRedFlag(text: string): RedFlag | null {
@@ -47,7 +52,7 @@ const WARNING: Record<ReadbackLang, string> = {
 
 // The fixed warning to speak now, or null to let the model answer.
 export function guardShortcut(c: Complaint, lastUser: string): string | null {
-  if (c.phase !== 'guard' || LOSS.test(lastUser)) return null;
+  if (c.phase !== 'guard' || isLoss(lastUser)) return null;
   const f = detectRedFlag(lastUser);
   if (!f || !addFlag(c, f.scam, f.ask, lastUser)) return null;
   return WARNING[c.lang];

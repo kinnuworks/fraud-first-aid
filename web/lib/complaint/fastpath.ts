@@ -6,7 +6,7 @@ import { spokenToDigits, readbackText, type ReadbackLang } from '../entities/num
 import { isUtr, isMobile } from './fields';
 import { REQUIRED, recordNumber, recordDigits, recordUpi, recordText, confirmField, deadlines, type Complaint, type FieldName } from './session';
 import { istToday } from './today';
-import { LOSS } from './redflags';
+import { isLoss } from './redflags';
 import { parseAmount } from './fields';
 import { scriptLang } from '../entities/script';
 
@@ -103,7 +103,7 @@ const SORRY: Record<Lang, string> = {
 // On guard, "the money has already gone" switches to the complaint in code (the hand-off must not
 // depend on the model), keeps their words and any amount, and asks for the UTR.
 export function guardHandover(c: Complaint, lastUser: string): string | null {
-  if (c.phase !== 'guard' || !LOSS.test(lastUser)) return null;
+  if (c.phase !== 'guard' || !isLoss(lastUser)) return null;
   c.phase = 'complaint';
   c.story = { en: c.story?.en ?? 'Caller says money has already left their account.', words: lastUser.slice(0, 500) };
   const amt = parseAmount(lastUser);

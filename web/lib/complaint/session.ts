@@ -156,7 +156,9 @@ export function takeFromShot(c: Complaint, field: 'utr' | 'amount' | 'payee'): R
 
 // One flag per scam type; unknown ids are ignored.
 export function addFlag(c: Complaint, scam: string, red_flag: string, heard: string): boolean {
-  if (!scamById(scam) || c.flags.some((f) => f.scam === scam)) return false;
+  // A warning the model gave under a name not in our list still reaches the card, once.
+  if (!scamById(scam)) scam = 'suspicious_call';
+  if (c.flags.some((f) => f.scam === scam)) return false;
   c.flags.push({ scam, red_flag, heard: heard.slice(0, 300) });
   return true;
 }
