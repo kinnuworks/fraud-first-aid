@@ -172,3 +172,12 @@ describe('payee out of order', () => {
     expect(c.fields.payee?.value).toBe('ramesh@okaxis');
   });
 });
+
+describe('bank out of order', () => {
+  it('takes a named bank whenever the bank is still missing', () => {
+    const c = newComplaint('te');
+    c.fields.utr = { value: '402177889910', confirmed: true };
+    complaintShortcut(c, 'నా బ్యాంక్ స్టేట్ బ్యాంక్ ఆఫ్ ఇండియా.');
+    expect(c.fields.victim_bank?.value).toBe('State Bank of India');
+  });
+});

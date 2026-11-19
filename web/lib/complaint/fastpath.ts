@@ -138,7 +138,7 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
     if (isMobile(d) && recordDigits(c, 'payee', d).ok) return say(c, 'payee', lang);
   }
   // The caller's bank, when it is next: a major bank named in any script.
-  if (needed === 'victim_bank' && c.fields.utr?.confirmed) {
+  if (!c.fields.victim_bank && c.fields.utr?.confirmed) {
     const b = matchBank(t);
     if (b && recordText(c, 'victim_bank', b).ok) return say(c, 'victim_bank', lang);
   }
