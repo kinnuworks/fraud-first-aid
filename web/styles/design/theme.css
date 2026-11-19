@@ -1574,10 +1574,13 @@ html[data-large] {
   min-height: 1.4em;
 }
 .rc-card .up-utr__g {
-  transition: background 0.25s ease, border-color 0.25s ease, opacity 0.25s ease;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
 }
 .rc-card .up-utr__g[data-state='empty'] {
-  opacity: 0.25;
+  background: var(--sheet);
+  border-style: dashed;
+  border-color: var(--rule-strong);
+  color: var(--ink-2); /* on the grey sheet, ink-3 fell under AA (axe, 19 Nov) */
 }
 
 /* who this happens to: a mosaic of faces with sourced numbers on a white card */
