@@ -274,7 +274,7 @@ function Below() {
       <section id="sources" className="up-wrap" style={{ paddingTop: 72, paddingBottom: 96 }}>
         <h2 className="up-label">Sources for the numbers on this page</h2>
         <ul className="mt-3 space-y-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
-          <li>Reported lost since 2021, and refunded: about ₹64,447 crore and about ₹323 crore. Home Ministry officials' briefing to the Prime Minister, reported by Pratidin Time, 9 Jul 2026, and the Indian Express.</li>
+          <li>Reported lost since 2021, and refunded: about ₹64,447 crore and about ₹323 crore. Home Ministry officials briefing the Prime Minister, reported by Pratidin Time, 9 Jul 2026, and the Indian Express.</li>
           {FACTS.map(([k, v, s]) => (
             <li key={k}>
               {k}: {v}. {s}.
