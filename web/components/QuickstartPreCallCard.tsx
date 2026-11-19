@@ -274,7 +274,7 @@ function Below() {
       <section id="sources" className="up-wrap" style={{ paddingTop: 72, paddingBottom: 96 }}>
         <h2 className="up-label">Sources for the numbers on this page</h2>
         <ul className="mt-3 space-y-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
-          <li>Reported lost since 2021, and refunded: about ₹64,447 crore and about ₹323 crore. MHA review, reported by the Indian Express, 14 Jul 2026.</li>
+          <li>Reported lost since 2021, and refunded: about ₹64,447 crore and about ₹323 crore. Home Ministry officials' briefing to the Prime Minister, reported by Pratidin Time, 9 Jul 2026, and the Indian Express.</li>
           {FACTS.map(([k, v, s]) => (
             <li key={k}>
               {k}: {v}. {s}.
@@ -351,7 +351,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
             </h1>
             <p className="rc-stakes">
               About ₹64,447 crore reported lost since 2021; about ₹323 crore refunded. The first hour decides it.
-              <span className="rc-src"> MHA review, reported by the Indian Express, 14 Jul 2026</span>
+              <span className="rc-src"> Home Ministry officials, reported by Pratidin Time, 9 Jul 2026</span>
             </p>
             <p className="up-lead" style={{ marginTop: 14, maxWidth: '34rem' }}>
               <strong className="rc-h1-accent">UTR Pakka is the calm voice beside you in that hour, in your language.</strong>

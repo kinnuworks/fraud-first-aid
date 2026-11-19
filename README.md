@@ -1,10 +1,19 @@
 # UTR Pakka
 
-**Your UPI fraud complaint, spoken.**
+**Get your money frozen in the first hour.** *Your UPI fraud complaint, spoken.*
 
-UTR Pakka is a voice agent for someone who has just lost money in a UPI scam. They talk in any of ten languages (Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati, Punjabi or English); it gets every number right (the 12-digit UTR, the amount, who was paid) and hands them a complaint ready for the 1930 helpline and their bank.
+Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, and about ₹323 crore of it has been refunded (Home Ministry officials briefing the Prime Minister, [reported by Pratidin Time, 9 Jul 2026](https://www.pratidintime.com/national/rs-25000-cr-saved-via-e-zero-firs-pm-modi-briefed-12149338), and by the Indian Express). Money can still be frozen if 1930 hears fast and gets every detail exact. That has to happen in the first hour, when the victim is at their worst and may not think in English. UTR Pakka is a voice agent that stays with them through that hour, in Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati, Punjabi or English.
 
-It runs on Agora's Conversational AI Engine because the job is a live conversation with a frightened person. Agora runs the real-time loop: speech-to-text in the caller's language, our model with its complaint tools, and a Murf Falcon voice that reads each number back. It also handles interruptions and turn-taking.
+What it does for you:
+
+1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (It caught 40 of 40 scam requests in our own guard break test, after three fixes.)
+2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (295 of 300 spoken numbers exact in noise in our own break test; 207 of 330 on public speech against 114 for the speech-to-text alone.)
+3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
+4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, two calendar reminders, and the Ombudsman and Chakshu steps. It emails the pack once you say yes, and your family can listen to the call live.
+
+A fast report is what gets the money back. A 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru got ₹14 lakh back, both because 1930 heard within hours ([cases below](#why-this-matters)).
+
+It runs on Agora's Conversational AI Engine because the job is a live conversation with a frightened person: Sarvam speech-to-text in the caller's language, our model with its complaint tools, and a Murf Falcon voice that reads each number back, with Agora handling interruptions and turn-taking.
 
 **Live:** https://utr-pakka.vercel.app
 
@@ -54,7 +63,7 @@ What it already runs on:
 
 What one complaint costs (an estimate, not an observed result, from each vendor's published price on 19 Nov 2026): our scripted live run took 3 min 43 s, so take a 4-minute call. Agora's Conversational AI Engine is US$0.10 a minute, the same with our own speech, model and voice keys ([Agora pricing](https://docs.agora.io/en/ai/reference/pricing)): US$0.40. Sarvam speech-to-text is ₹0.49 a minute ([Sarvam pricing](https://www.sarvam.ai/api-pricing)): ₹1.96. Murf Falcon is 1 cent per 1,000 characters ([Murf](https://murf.ai/api/docs/text-to-speech-models/falcon-2-1)): about 2 cents, assuming 2,000 characters spoken. The AI model adds about 1 cent, assuming 25 turns of about 4,000 tokens. In total, about US$0.43 plus ₹2 per complaint, almost all of it the real-time voice minutes. Assumptions: call length from one run; characters and tokens estimated, not measured.
 
-What a real deployment would still need: a shared store instead of the server's memory, an Indian phone number, and a filing API from the cybercrime portal, which has none public today.
+What a real deployment would still need: an Indian phone number, and a filing API from the cybercrime portal, which has none public today. Calls already share state through a Redis store (Upstash), so any server instance can answer any turn.
 
 ## How it works
 
@@ -131,7 +140,7 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 - It can't get money back, and it never asks for an OTP, PIN, password or card number.
 - The phone line isn't reliable yet. The agent can place a call through Agora's telephony and a Twilio SIP trunk, and it has rung a test phone, but in our tests only 2 of about 14 calls left Agora's SIP gateway. For now you talk to it in the browser.
 - Emailing the pack runs on Resend's test sender, which only delivers to our own address until a sending domain is verified. You can copy everything from the screen.
-- A call's complaint lives in the server's memory for the length of the call; nothing is stored afterwards.
+- A call's complaint is kept in a shared store (Upstash Redis) for two hours so any server instance can answer it, then it expires; nothing is kept afterwards.
 - The number tests use synthetic Murf voices and public read speech, not real callers on noisy phone lines.
 
 ## Run it locally
