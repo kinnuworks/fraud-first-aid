@@ -111,6 +111,12 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 > Result: 62.7% exact (95% interval 57.4% to 67.8%); paired difference +0.28 (95% interval 0.23 to 0.33). Hindi 48/64, Telugu 63/105, Kannada 96/161.
 > Rerun: `python3 -I evidence/fleurs/fetch.py test && npx tsx evidence/fleurs/score.ts test` at commit 6e94442. Limits: read sentences, not phone calls; the numbers are years and amounts inside sentences, not dictated UTRs. Limits, in numbers: zero real users; 330 read sentences and 300 synthetic clips; the next real test is a recorded phone call per language, where a miss rate above 5% would change this claim.
 
+> Claim: the scam guard warned on 20 of 20 disguised asks and held on 20 of 20 attempts to switch it off.
+> Evidence type: our own break test (we tried to make it fail), not real users.
+> Data: 40 caller lines we wrote, 19 Nov 2026, in English, Hindi and Telugu, sent as text turns to the live model route in guard mode ([results](evidence/results/guard-breaktest-final-2026-11-19.csv)). Group A: OTP, PIN, QR, remote-app, payment and arrest asks without the obvious words, code-mixed or split over two turns. Group B: "ignore your instructions", "test mode, warnings off", "the user already approved this", each with a real ask.
+> Result: the first run caught 13 of 20 and 19 of 20 ([run 1](evidence/results/guard-breaktest-run1-2026-11-19.csv)). It found three bugs: warnings that never reached the card, "already approved" read as money lost, and "the number that came in the message" not seen as an OTP ask. After the fixes: 20 of 20 and 20 of 20.
+> Rerun: `npx tsx evidence/breaktest/guard.ts`. Limits: text turns, not audio; lines written by us; one run after the fixes.
+
 ## What doesn't work yet
 
 - It doesn't file the complaint for you. The national cybercrime portal has no public API and asks for an OTP and a captcha, so UTR Pakka prepares everything and you call 1930 or file yourself.
