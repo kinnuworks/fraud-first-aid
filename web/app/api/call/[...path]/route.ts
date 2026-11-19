@@ -8,6 +8,7 @@ import { POST as screenshot } from '@/lib/handlers/screenshot';
 import { POST as stop } from '@/lib/handlers/stop';
 import { POST as email } from '@/lib/handlers/email';
 import { POST as phone } from '@/lib/handlers/phone';
+import { POST as twilioDial } from '@/lib/handlers/twilio-dial';
 
 type Ctx = { params: Promise<{ path: string[] }> };
 const notFound = () => NextResponse.json({ error: 'not found' }, { status: 404 });
@@ -20,6 +21,7 @@ export async function POST(request: NextRequest, { params }: Ctx) {
   if (path === 'stop') return stop(request);
   if (path === 'email') return email(request);
   if (path === 'phone') return phone(request);
+  if (path === 'twilio-dial') return twilioDial(request);
   return notFound();
 }
 
