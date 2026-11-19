@@ -6,12 +6,14 @@ Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, an
 
 What it does for you:
 
-1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (It caught 40 of 40 scam requests in our own guard break test, after three fixes.)
-2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (295 of 300 spoken numbers exact in noise in our own break test; 207 of 330 on public speech against 114 for the speech-to-text alone.)
+1. **During the scam**, it listens to the call on speaker and tells you to hang up before you lose anything. (In our own test it caught all 40 scam requests we wrote, including ones that tried to talk it out of warning.)
+2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot. (On public recordings of Hindi, Telugu and Kannada read aloud, it got the exact numbers in 63% of sentences, against 35% for the speech-to-text alone.)
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
 4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?), an RBI Ombudsman complaint ready for that day, and the Chakshu step. It emails the pack once you say yes, and your family can listen to the call live.
 
 A fast report is what gets the money back. A 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru got ₹14 lakh back, both because 1930 heard within hours ([cases below](#why-this-matters)).
+
+It does not replace 1930 or file the complaint for you, and it can't recover money itself. It gets you to 1930 and your bank within minutes, with every number already right.
 
 It runs on Agora's Conversational AI Engine because the job is a live conversation with a frightened person: Sarvam speech-to-text in the caller's language, our model with its complaint tools, and a Murf Falcon voice that reads each number back, with Agora handling interruptions and turn-taking.
 
@@ -51,7 +53,7 @@ Each of these is a test in the repo or a result file you can open.
 
 - Indians reported losing Rs 22,845.73 crore to cyber fraud in 2024, across 36,37,288 financial-fraud incidents (Lok Sabha reply, Ministry of Home Affairs, 22 July 2025, [reported by The Week](https://www.theweek.in/wire-updates/business/2025/07/22/del23-lsq-cyber-fraud.html)).
 - UPI-related frauds alone came to Rs 981 crore in FY 2024-25, in 12.64 lakh incidents (Lok Sabha reply, Ministry of Finance, 15 Dec 2025, [reported by IANS](https://ianslive.in/upi-frauds-worth-rs-805-crore-witnessed-this-fiscal-so-far-minister--20251215175703)).
-- Money can only be held while it is still in the system, which takes a fast report with exact details. The 1930 system had "saved" (held, not yet returned) more than Rs 11,158 crore in more than 32.80 lakh complaints by 30 June 2026 (Lok Sabha reply, [reported August 2026](https://www.newkerala.com/news/a/cyber-fraud-crackdown-centre-blocks-over-3700-mobile-550.htm)).
+- Money can only be held while it is still in the system, which takes a fast report with exact details. Held money is frozen in the receiving account and not yet returned to the victim, so the held figure is much larger than the refunded one. The 1930 system had "saved" (held, not yet returned) more than Rs 11,158 crore in more than 32.80 lakh complaints by 30 June 2026 (Lok Sabha reply, [reported August 2026](https://www.newkerala.com/news/a/cyber-fraud-crackdown-centre-blocks-over-3700-mobile-550.htm)).
 - On 17 June 2026 the Home Minister reviewed the 1930 helpline and asked it to integrate AI tools and add multilingual support, noting that language barriers stop victims from reporting promptly ([reported by Devdiscourse](https://www.devdiscourse.com/article/headlines/3936185-hm-shah-reviews-functioning-of-national-cybercrime-helpline-asks-to-revamp-system-to-improve-efficiency)).
 - Under RBI circular RBI/2017-18/15, a customer has zero liability for a third-party breach reported to the bank within three working days. After seven working days, the bank's own policy decides ([circular reproduced by Taxguru](https://taxguru.in/?p=618226)).
 
