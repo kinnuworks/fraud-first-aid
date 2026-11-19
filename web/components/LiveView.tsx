@@ -126,13 +126,13 @@ export function OperatorView({ session, viewKey }: { session: string; viewKey: s
   );
 }
 
-export function FamilyView({ session, viewKey }: { session: string; viewKey: string }) {
+export function FamilyView({ session, viewKey, phone = false }: { session: string; viewKey: string; phone?: boolean }) {
   const { data, gone } = useLive(session, viewKey);
   if (gone) return <p className="up-lead p-6">This call has ended or the link is not valid.</p>;
   return (
     <main className="up-page" data-testid="family-view">
       <div className="up-wrap flex flex-col gap-4 py-8">
-        <p className="up-label">Live view for family · read only</p>
+        <p className="up-label">{phone ? 'Your phone call · live · answer your phone and speak' : 'Live view for family · read only'}</p>
         <ComplaintCardView data={data} />
       </div>
     </main>
