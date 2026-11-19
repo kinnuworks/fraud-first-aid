@@ -50,6 +50,18 @@ async function tw(method: string, url: string, form?: Record<string, string>) {
   const onTrunk = await tw('GET', `https://trunking.twilio.com/v1/Trunks/${trunk.sid}/PhoneNumbers`);
   if (!(onTrunk.phone_numbers ?? []).some((p: any) => p.sid === pn.sid)) await tw('POST', `https://trunking.twilio.com/v1/Trunks/${trunk.sid}/PhoneNumbers`, { PhoneNumberSid: pn.sid });
   console.log('number attached to trunk');
+  // Agora's SIP gateways must be on an IP access list, or Twilio drops the INVITE without a log entry
+  // (Agora docs, Set up SIP trunk: "Without correct IP whitelisting, your SIP trunk blocks Agora traffic").
+  // All regions' outgoing IPs, since Agora picks the gateway by region.
+  const AGORA_SIP_IPS = ['49.51.250.59', '49.51.250.76', '43.157.157.7', '43.157.180.46', '43.157.154.150', '43.157.147.39', '43.157.160.149', '43.157.170.160', '43.157.176.50', '43.157.182.24', '43.157.150.207', '43.157.146.198', '43.157.186.243', '43.157.149.172'];
+  const acls = await tw('GET', `https://api.twilio.com/2010-04-01/Accounts/${SID}/SIP/IpAccessControlLists.json`);
+  let acl = (acls.ip_access_control_lists ?? []).find((a: any) => a.friendly_name === 'agora-us-sip');
+  if (!acl) acl = await tw('POST', `https://api.twilio.com/2010-04-01/Accounts/${SID}/SIP/IpAccessControlLists.json`, { FriendlyName: 'agora-us-sip' });
+  const have = await tw('GET', `https://api.twilio.com/2010-04-01/Accounts/${SID}/SIP/IpAccessControlLists/${acl.sid}/IpAddresses.json?PageSize=100`);
+  for (const ip of AGORA_SIP_IPS) if (!(have.ip_addresses ?? []).some((x: any) => x.ip_address === ip)) await tw('POST', `https://api.twilio.com/2010-04-01/Accounts/${SID}/SIP/IpAccessControlLists/${acl.sid}/IpAddresses.json`, { FriendlyName: `agora-${ip}`, IpAddress: ip });
+  const trunkAcls = await tw('GET', `https://trunking.twilio.com/v1/Trunks/${trunk.sid}/IpAccessControlLists`);
+  if (!(trunkAcls.ip_access_control_lists ?? []).some((a: any) => a.sid === acl.sid)) await tw('POST', `https://trunking.twilio.com/v1/Trunks/${trunk.sid}/IpAccessControlLists`, { IpAccessControlListSid: acl.sid });
+  console.log('agora IP access list attached');
   // Agora: register the number for outbound calls through the trunk
   const appId = env('NEXT_PUBLIC_AGORA_APP_ID'), appCertificate = env('NEXT_AGORA_APP_CERTIFICATE');
   const agora = new AgoraClient({ area: Area.US, appId, appCertificate, customerId: env('AGORA_CUSTOMER_ID'), customerSecret: env('AGORA_CUSTOMER_SECRET') });
@@ -57,7 +69,7 @@ async function tw(method: string, url: string, form?: Record<string, string>) {
   console.log('agora numbers before:', JSON.stringify(existing).slice(0, 200).replace(/[A-Za-z0-9]{16,}:[^@"]+@/g, '***@'));
   const has = Array.isArray(existing) ? existing.some((n: any) => n.phone_number === NUMBER) : JSON.stringify(existing).includes(NUMBER);
   if (!has) {
-    const r = await (agora as any).phoneNumbers.add({ provider: 'byo', phone_number: NUMBER, label: 'utr-pakka', inbound: false, outbound: true, inbound_config: { allowed_addresses: TWILIO_SIGNALING }, outbound_config: { address: `${user}:${pass}@${trunk.domain_name}`, transport: 'tcp' } });
+    const r = await (agora as any).phoneNumbers.add({ provider: 'byo', phone_number: NUMBER, label: 'utr-pakka', inbound: false, outbound: true, inbound_config: { allowed_addresses: TWILIO_SIGNALING }, outbound_config: { address: `${user}:${pass}@${trunk.domain_name}`, transport: 'udp' } });
     console.log('agora number added:', JSON.stringify(r).replace(/:[^:@"]+@/g, ':***@').slice(0, 200));
   } else console.log('agora number already registered');
 })().catch((e) => { console.error('SETUP FAILED:', String(e.message ?? e).replace(/:[^:@"\s]+@/g, ':***@')); process.exit(1); });
