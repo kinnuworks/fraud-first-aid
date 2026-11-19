@@ -249,7 +249,7 @@ export default function LandingPage() {
       </div>
 
       {/* Persistent attribution footer for the pre-call and in-call views. */}
-      <footer className={`${showConversation ? 'fixed bottom-0 right-0 pr-4 md:pr-6' : 'up-wrap pb-8'} z-40 py-4`}>
+      <footer className={`up-wrap z-40 shrink-0 ${showConversation ? 'py-2' : 'py-4 pb-8'}`}>
         <div className="flex items-center justify-end gap-2" style={{ color: 'var(--ink-3)' }}>
           <span className="text-[0.8125rem] font-medium">
             Powered by
