@@ -137,6 +137,8 @@ Confirmations and numbers skip the model: our route answers them from the compla
 
 ## Evidence
 
+The methods, every result, the bugs the tests found and the limits are written up in a short [technical report](docs/technical-report.md).
+
 Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) against the speech-to-text's own numerals, the same back-test through a phone codec, planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md), and our own break test of the main claim (spoken numbers in noise). Each one reruns from the repo with one command.
 
 > Claim: UTR Pakka reads spoken 10- and 12-digit numbers exactly in 295 of 300 noisy clips.
