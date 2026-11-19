@@ -46,6 +46,8 @@ What it already runs on:
 - The 1930 operator and the family each get a read-only live view of the call by link (`/watch?as=operator`, `/watch?as=family`).
 - The same agent is wired to call out over a phone line (Agora telephony through a SIP trunk, [`phone.ts`](web/lib/handlers/phone.ts)) for a victim without a smartphone, or a callback before the bank's deadline. It isn't reliable yet (see the limits below).
 
+What one complaint costs (an estimate, not an observed result, from each vendor's published price on 19 Nov 2026): our scripted live run took 3 min 43 s, so take a 4-minute call. Agora's Conversational AI Engine is US$0.10 a minute, the same with our own speech, model and voice keys ([Agora pricing](https://docs.agora.io/en/ai/reference/pricing)): US$0.40. Sarvam speech-to-text is ₹0.49 a minute ([Sarvam pricing](https://www.sarvam.ai/api-pricing)): ₹1.96. Murf Falcon is 1 cent per 1,000 characters ([Murf](https://murf.ai/api/docs/text-to-speech-models/falcon-2-1)): about 2 cents, assuming 2,000 characters spoken. The AI model adds about 1 cent, assuming 25 turns of about 4,000 tokens. In total, about US$0.43 plus ₹2 per complaint, almost all of it the real-time voice minutes. Assumptions: call length from one run; characters and tokens estimated, not measured.
+
 What a real deployment would still need: a shared store instead of the server's memory, an Indian phone number, and a filing API from the cybercrime portal, which has none public today.
 
 ## How it works
