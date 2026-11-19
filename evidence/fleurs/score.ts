@@ -10,13 +10,18 @@ import { join } from 'path';
 import { spokenToDigits } from '../../web/lib/entities/numbers';
 
 const split = process.argv[2] ?? 'dev';
+// 'phone': the phone-band copies (third claim); 'six': ta, ml, bn, mr, gu, pa (fourth claim)
+const variant = process.argv[3] ?? '';
 const KEY = process.env.SARVAM_API_KEY;
 if (!KEY) throw new Error('SARVAM_API_KEY must be set');
 const ROOT = join(__dirname, '..', '.cache', 'fleurs');
-const LANGS: Record<string, string> = { hi_in: 'hi-IN', te_in: 'te-IN', kn_in: 'kn-IN' };
+const LANGS: Record<string, string> = variant === 'six'
+  ? { ta_in: 'ta-IN', ml_in: 'ml-IN', bn_in: 'bn-IN', mr_in: 'mr-IN', gu_in: 'gu-IN', pa_in: 'pa-IN' }
+  : { hi_in: 'hi-IN', te_in: 'te-IN', kn_in: 'kn-IN' };
+const dirOf = (lang: string) => (variant === 'phone' ? `${split}-phone` : split);
 
 const NUM: Record<string, string> = {};
-['०१२३४५६७८९', '౦౧౨౩౪౫౬౭౮౯', '೦೧೨೩೪೫೬೭೮೯'].forEach((s) => [...s].forEach((c, i) => (NUM[c] = String(i))));
+['०१२३४५६७८९', '౦౧౨౩౪౫౬౭౮౯', '೦೧೨೩೪೫೬೭೮೯', '௦௧௨௩௪௫௬௭௮௯', '൦൧൨൩൪൫൬൭൮൯', '০১২৩৪৫৬৭৮৯', '૦૧૨૩૪૫૬૭૮૯', '੦੧੨੩੪੫੬੭੮੯'].forEach((s) => [...s].forEach((c, i) => (NUM[c] = String(i))));
 const SKIP = '__over_30_seconds__';
 const numerals = (t: string) => [...t].map((c) => (/[0-9]/.test(c) ? c : NUM[c] ?? '')).join('');
 
@@ -36,7 +41,7 @@ async function transcribe(path: string, lang: string): Promise<string> {
 (async () => {
   const rows = ['lang,id,reference,baseline_digits,ours_digits,baseline,ours'];
   for (const [dir, code] of Object.entries(LANGS)) {
-    const base = join(ROOT, dir, split);
+    const base = join(ROOT, dir, dirOf(dir));
     const cachePath = join(base, 'transcripts.json');
     const cache: Record<string, string> = existsSync(cachePath) ? JSON.parse(readFileSync(cachePath, 'utf8')) : {};
     const items = readFileSync(join(base, 'items.tsv'), 'utf8').trim().split('\n').map((l) => l.split('\t'));
@@ -63,5 +68,5 @@ async function transcribe(path: string, lang: string): Promise<string> {
     const n = items.length - skipped;
     console.log(`${dir} ${split}: ours ${ok}/${n}, baseline ${okBase}/${n} (${skipped} over 30 s left out)`);
   }
-  writeFileSync(join(ROOT, `results-${split}.csv`), rows.join('\n') + '\n');
+  writeFileSync(join(ROOT, `results-${split}${variant ? '-' + variant : ''}.csv`), rows.join('\n') + '\n');
 })();

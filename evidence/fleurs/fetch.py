@@ -4,21 +4,23 @@ utterances whose raw transcription contains a numeral. Writes evidence/.cache/fl
 
   python3 -I evidence/fleurs/fetch.py dev      # building slice
   python3 -I evidence/fleurs/fetch.py test     # test slice: run once, after the build freezes
+  python3 -I evidence/fleurs/fetch.py test six # the other six languages (fourth claim)
 """
 import csv, io, os, re, sys, tarfile, urllib.request
 
 REV = "70bb2e84b976b7e960aa89f1c648e09c59f894dd"
-LANGS = ["hi_in", "te_in", "kn_in"]
-NUMERAL = re.compile(r"[0-9०-९౦-౯೦-೯]")
+THREE = ["hi_in", "te_in", "kn_in"]
+SIX = ["ta_in", "ml_in", "bn_in", "mr_in", "gu_in", "pa_in"]  # fourth claim, EVAL_PLAN.md
+NUMERAL = re.compile(r"[0-9०-९౦-౯೦-೯௦-௯൦-൯০-৯૦-૯੦-੯]")
 ROOT = os.path.join(os.path.dirname(__file__), "..", ".cache", "fleurs")
 
 def get(url):
     with urllib.request.urlopen(url, timeout=600) as r:
         return r.read()
 
-def main(split):
+def main(split, langs):
     assert split in ("dev", "test"), "split is dev or test"
-    for lang in LANGS:
+    for lang in langs:
         out = os.path.join(ROOT, lang, split)
         os.makedirs(out, exist_ok=True)
         base = f"https://huggingface.co/datasets/google/fleurs/resolve/{REV}/data/{lang}"
@@ -41,4 +43,4 @@ def main(split):
         print(f"{lang} {split}: {len(keep)} utterances with numerals")
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "dev")
+    main(sys.argv[1] if len(sys.argv) > 1 else "dev", SIX if (len(sys.argv) > 2 and sys.argv[2] == "six") else THREE)
