@@ -33,7 +33,7 @@ It does not replace 1930 or file the complaint for you, and it can't recover mon
 ### Try it in 30 seconds
 
 1. Open https://fraudfirstaid.vercel.app on a laptop or phone and press **Watch it catch a scam call (30 s)**: no microphone needed. A sample scam call (an illustration with a generated voice) plays into the call; it stays silent through the small talk and warns in Hindi the moment the caller pushes.
-2. Or pick a language, press **Start talking**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
+2. Or pick a language, press **Lost money? Report it by voice**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
 3. Say "the second group is wrong" when it reads the UTR back, and correct it. When all five details are confirmed, the pack appears.
 
 To see every screen without talking: [`?state=complaint-done`](https://fraudfirstaid.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://fraudfirstaid.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://fraudfirstaid.vercel.app/demo/full-flow.mp4) shows one whole call (sample voices, no audio track).

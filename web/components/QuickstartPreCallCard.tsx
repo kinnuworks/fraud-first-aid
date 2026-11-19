@@ -151,7 +151,7 @@ function StartButton({ isLoading, onStartConversation, arrow }: Actions) {
           Connecting… keep your bank SMS open.
         </>
       ) : (
-        <>Start talking{arrow ? ' →' : ''}</>
+        <>Lost money? Report it by voice{arrow ? ' →' : ''}</>
       )}
     </button>
   );
@@ -388,11 +388,11 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
               <span className="rc-src"> Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
             </p>
             <p className="up-lead" style={{ marginTop: 14, maxWidth: '36rem' }}>
-              Like first aid, it has to be fast. It listens to the scam call on speaker and warns you in your language. If the money&apos;s gone, it takes your
-              complaint by voice, reads every number back until you confirm it, and gets 1930 and your bank what they need
-              within minutes.
+              Like first aid, it has to be fast. Put the scam call on speaker next to this phone or laptop: it listens and
+              warns you in your language. If the money&apos;s gone, tell it what happened. It reads every number back until you
+              confirm it, then hands you a script to read to 1930, an English card for the operator and a letter for your bank.
             </p>
-            <p className="rc-tech">Agora Conversational AI · Murf Falcon voices · Sarvam speech-to-text · 10 Indian languages</p>
+            <p className="rc-tech">Agora Conversational AI runs the live call · Sarvam hears 10 Indian languages · Murf Falcon speaks back</p>
             <div className="mt-6 flex flex-wrap items-center gap-3">
               <WatchButton {...p} />
               <StartButton {...p} />
