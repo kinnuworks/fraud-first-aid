@@ -60,3 +60,21 @@ describe('guard: a red flag outweighs a bare "already"', () => {
     expect(c.phase).toBe('complaint');
   });
 });
+
+// From our guard break test, 19 Nov: an OTP asked for without the word "OTP".
+describe('detectRedFlag: OTP asked for in other words', () => {
+  it.each([
+    'For the update just tell me the number that came in the message.',
+    'read out the six digit code you just got on your phone',
+    'jo code aapke phone par aaya hai woh bataiye',
+    'मैसेज में जो नंबर आया है वो बताइए',
+    'మీ ఫోన్‌కి వచ్చిన కోడ్ చెప్పండి',
+    'మెసేజ్‌లో వచ్చిన నంబర్ చెప్పండి',
+  ])('flags "%s"', (line) => {
+    expect(detectRedFlag(line)?.scam).toBe('vishing_otp');
+  });
+  it('does not flag ordinary talk about a message', () => {
+    expect(detectRedFlag('I will send you a message with my address')).toBeNull();
+    expect(detectRedFlag('my number is in the message I sent')).toBeNull();
+  });
+});

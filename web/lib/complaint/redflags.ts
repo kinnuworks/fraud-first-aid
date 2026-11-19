@@ -5,6 +5,8 @@ import type { ReadbackLang } from '../entities/numbers';
 import { addFlag, type Complaint } from './session';
 
 const OTP = /\botp\b|ओटीपी|ఓటీపీ|ఓటిపి|ಒಟಿಪಿ|ಓಟಿಪಿ|ஓடிபி|ഒടിപി|ওটিপি|ઓટીપી|ਓਟੀਪੀ/i;
+// An OTP asked for without the word: "the code that came on your phone", "the number in the message".
+const OTP_WORDS = /\b(code|number)\b.{0,30}\b(phone|message|sms|mobile)\b.{0,20}\b(aaya|aayi|came)\b|(code|number|digits)\b.{0,40}\b(came|got|received|aaya|aayi)\b.{0,30}\b(phone|message|sms|mobile)|\b(tell|read|say|bata|bol)\w*\b.{0,30}\b(code|number)\b.{0,25}\b(came|got|aaya)\b|(मैसेज|एसएमएस|फोन|फ़ोन).{0,25}(आया|आए).{0,20}(नंबर|कोड)|(मैसेज|एसएमएस).{0,10}में.{0,15}(नंबर|कोड)|(वच्चिन|వచ్చిన).{0,15}(కోడ్|నంబర్)/i;
 const CVV = /\bcvv\b|सीवीवी|సీవీవీ|ಸಿವಿವಿ/i;
 // Tamil "பின்" also means "after", so Tamil PIN is left to the model.
 const PIN = /\bm?pin\b|पिन|పిన్|ಪಿನ್|പിൻ|পিন|પિન|ਪਿੰਨ/i;
@@ -30,8 +32,8 @@ export function detectRedFlag(text: string): RedFlag | null {
   if (QR.test(text)) return { scam: 'qr_scan', ask: 'asked to scan a QR code' };
   if (PIN.test(text) && RECEIVE.test(text)) return { scam: 'pin_to_receive', ask: 'asked for a PIN to "receive" money' };
   if (ARREST.test(text)) return { scam: 'digital_arrest', ask: 'threatened arrest' };
-  if (OTP.test(text) || CVV.test(text) || PIN.test(text)) {
-    const ask = OTP.test(text) ? 'asked for the OTP' : CVV.test(text) ? 'asked for the CVV' : 'asked for the PIN';
+  if (OTP.test(text) || OTP_WORDS.test(text) || CVV.test(text) || PIN.test(text)) {
+    const ask = OTP.test(text) || OTP_WORDS.test(text) ? 'asked for the OTP' : CVV.test(text) ? 'asked for the CVV' : 'asked for the PIN';
     return { scam: KYC.test(text) ? 'fake_kyc' : 'vishing_otp', ask };
   }
   return null;
