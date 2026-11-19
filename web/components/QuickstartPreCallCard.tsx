@@ -4,7 +4,7 @@
 import { Loader2 } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { PhoneCallStart } from './PhoneCallStart';
-import { UtrGroups, when } from './ComplaintCard';
+import { when } from './ComplaintCard';
 import { STATES } from './StatePreview';
 import { Logo } from './design/Logo';
 import Image from 'next/image';
@@ -45,6 +45,77 @@ function LanguageChips() {
         </button>
       ))}
     </div>
+  );
+}
+
+// "Speak slowly": a slower voice for older callers (?slow=1, read by the call start) and larger text.
+function SlowToggle() {
+  const [on, setOn] = useState(false);
+  useEffect(() => {
+    const q = new URLSearchParams(window.location.search).get('slow') === '1';
+    setOn(q);
+    if (q) document.documentElement.dataset.large = '';
+  }, []);
+  function toggle() {
+    const next = !on;
+    const url = new URL(window.location.href);
+    if (next) url.searchParams.set('slow', '1');
+    else url.searchParams.delete('slow');
+    window.history.replaceState(null, '', url);
+    if (next) document.documentElement.dataset.large = '';
+    else delete document.documentElement.dataset.large;
+    setOn(next);
+  }
+  return (
+    <button type="button" role="switch" aria-checked={on} onClick={toggle} className="up-switch" data-testid="slow-toggle">
+      <span className="up-switch__track" aria-hidden="true" />
+      Speak slowly, bigger text
+    </button>
+  );
+}
+
+// The sample card plays the read-back: each group of four is said back, then all three are confirmed.
+function ReadBack() {
+  const groups = ['4021', '7788', '9910'];
+  const [step, setStep] = useState(4);
+  useEffect(() => {
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    let t: ReturnType<typeof setTimeout>;
+    const seq = [0, 1, 2, 3, 4];
+    const wait = [700, 900, 900, 900, 3600];
+    let i = 0;
+    const run = () => {
+      setStep(seq[i]);
+      t = setTimeout(() => {
+        i = (i + 1) % seq.length;
+        run();
+      }, wait[i]);
+    };
+    t = setTimeout(run, 2200);
+    return () => clearTimeout(t);
+  }, []);
+  return (
+    <>
+      <div className="mt-2">
+        <span className="up-utr" aria-label="4021 7788 9910">
+          {groups.map((g, i) => (
+            <span key={g} className="up-utr__g" data-state={step === 4 ? 'ok' : i < step ? 'pending' : 'empty'}>
+              {g}
+            </span>
+          ))}
+        </span>
+      </div>
+      <p className="mt-2 rc-reading" aria-hidden={step === 4}>
+        {step === 4 ? (
+          <>
+            <span className="up-tick" style={{ marginLeft: 0 }}>✓ confirmed</span>
+            <span className="up-tick">(screenshot ✓)</span>
+          </>
+        ) : (
+          'Reading back in groups of four…'
+        )}
+      </p>
+    </>
   );
 }
 
@@ -235,6 +306,9 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
             <div className="mt-7">
               <LanguageChips />
             </div>
+            <div className="mt-3">
+              <SlowToggle />
+            </div>
             <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-3">
               <StartButton {...p} />
               <ListenButton {...p} link />
@@ -310,13 +384,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                 <span className="up-sample-tag">Sample</span>
               </div>
               <p className="mt-4 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>UTR (transaction reference)</p>
-              <div className="mt-2">
-                <UtrGroups value="402177889910" state="ok" />
-              </div>
-              <p className="mt-2">
-                <span className="up-tick" style={{ marginLeft: 0 }}>✓ confirmed</span>
-                <span className="up-tick">(screenshot ✓)</span>
-              </p>
+              <ReadBack />
               <p className="mt-4 border-t pt-4 text-[1rem]" style={{ borderColor: 'var(--rule)' }}>
                 Tell your bank by <strong>{DEADLINE}</strong> for zero liability (RBI, 3 working days).
               </p>
