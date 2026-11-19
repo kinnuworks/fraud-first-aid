@@ -578,26 +578,28 @@ function PackView({
 function PackItem({ n, title, text, open = false }: { n: number; title: string; text: string; open?: boolean }) {
   const [copied, setCopied] = useState(false);
   return (
-    <details className="pk-item" open={open}>
-      <summary>
-        <span className="pk-num">{n}</span>
-        <strong>{title}</strong>
-        <span className="pk-show" aria-hidden="true" />
-        <button
-          type="button"
-          className="up-btn up-btn--ghost up-btn--sm"
-          onClick={(e) => {
-            e.preventDefault();
-            navigator.clipboard?.writeText(text);
-            setCopied(true);
-            setTimeout(() => setCopied(false), 1500);
-          }}
-        >
-          {copied ? 'Copied' : 'Copy'}
-        </button>
-      </summary>
-      <pre className="up-pre">{text}</pre>
-    </details>
+    <div className="pk-row">
+      <details className="pk-item" open={open}>
+        <summary>
+          <span className="pk-num">{n}</span>
+          <strong>{title}</strong>
+          <span className="pk-show" aria-hidden="true" />
+        </summary>
+        <pre className="up-pre">{text}</pre>
+      </details>
+      <button
+        type="button"
+        className="up-btn up-btn--ghost up-btn--sm pk-copy"
+        aria-label={`Copy ${title}`}
+        onClick={() => {
+          navigator.clipboard?.writeText(text);
+          setCopied(true);
+          setTimeout(() => setCopied(false), 1500);
+        }}
+      >
+        {copied ? 'Copied' : 'Copy'}
+      </button>
+    </div>
   );
 }
 

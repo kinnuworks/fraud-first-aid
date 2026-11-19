@@ -31,6 +31,19 @@ No account, no sign-up. To see every screen without talking: [`?state=complaint-
 
 The links go to news reports of the parliamentary replies; we couldn't open the government pages themselves.
 
+## Who would run it, and how it grows
+
+The people who take these reports today are the 1930 helpline, state cyber cells and bank fraud desks, mostly by phone. In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support ([Devdiscourse](https://www.devdiscourse.com/article/headlines/3936185-hm-shah-reviews-functioning-of-national-cybercrime-helpline-asks-to-revamp-system-to-improve-efficiency)). UTR Pakka is built for that hand-off: the victim speaks their own language, and the operator gets an English card with every number confirmed. That these teams would adopt it is our assumption; none of them has said so.
+
+What it already runs on:
+
+- Every call is its own Agora agent with its own capability key, so calls don't share state, and a busy hour means more agents rather than a bigger server.
+- A new language is configuration: a Sarvam language code and a Murf Falcon voice in [`agent-config.ts`](web/lib/agent-config.ts), plus the number words in [`numbers.ts`](web/lib/entities/numbers.ts), with tests.
+- The 1930 operator and the family each get a read-only live view of the call by link (`/watch?as=operator`, `/watch?as=family`).
+- The same agent is wired to call out over a phone line (Agora telephony through a SIP trunk, [`phone.ts`](web/lib/handlers/phone.ts)) for a victim without a smartphone, or a callback before the bank's deadline. It isn't reliable yet (see the limits below).
+
+What a real deployment would still need: a shared store instead of the server's memory, an Indian phone number, and a filing API from the cybercrime portal, which has none public today.
+
 ## How it works
 
 ```
@@ -86,8 +99,8 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 
 - It doesn't file the complaint for you. The national cybercrime portal has no public API and asks for an OTP and a captcha, so UTR Pakka prepares everything and you call 1930 or file yourself.
 - It can't get money back, and it never asks for an OTP, PIN, password or card number.
-- No phone number yet: you talk to it in the browser. A phone line and a callback before the bank's deadline are next.
-- Emailing the pack to you isn't switched on yet; you copy it from the screen.
+- The phone line isn't reliable yet. The agent can place a call through Agora's telephony and a Twilio SIP trunk, and it has rung a test phone, but in our tests only 2 of about 14 calls left Agora's SIP gateway. For now you talk to it in the browser.
+- Emailing the pack runs on Resend's test sender, which only delivers to our own address until a sending domain is verified. You can copy everything from the screen.
 - A call's complaint lives in the server's memory for the length of the call; nothing is stored afterwards.
 - The number tests use synthetic Murf voices and public read speech, not real callers on noisy phone lines.
 

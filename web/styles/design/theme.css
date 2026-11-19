@@ -1232,7 +1232,7 @@ body {
   overflow-wrap: anywhere;
 }
 .cd-muted {
-  color: #8a90ab;
+  color: #676d8c; /* 5.1:1 on white (AA) */
   font-weight: 500;
 }
 .cd-shot {
@@ -1270,8 +1270,9 @@ body {
   min-height: 60px;
   padding: 0 30px;
   font-size: 1.25rem;
-  background: var(--ok-ui);
-  border-color: var(--ok-ui);
+  /* darker than --ok-ui so white text passes WCAG AA (5.2:1) */
+  background: #0d7d3e;
+  border-color: #0d7d3e;
   color: #fff;
 }
 .pk-list {
@@ -1423,4 +1424,17 @@ body {
 }
 .cs-pipe .up-pipe .step b {
   color: var(--on-navy-2);
+}
+
+/* The copy button sits beside the summary, not inside it (a button inside <summary> is a nested control). */
+.pk-row {
+  position: relative;
+}
+.pk-row > .pk-item summary {
+  padding-right: 92px;
+}
+.pk-row > .pk-copy {
+  position: absolute;
+  right: 0;
+  top: 12px;
 }
