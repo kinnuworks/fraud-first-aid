@@ -406,7 +406,13 @@ export function ComplaintCardView({
                   <span>UPI ID or number</span>
                   {f.payee && <Status f={f.payee} />}
                 </p>
-                <p className={`cd-bigv${f.payee ? '' : ' cd-muted'}`}>{f.payee ? String(f.payee.value) : '—'}</p>
+                <p className={`cd-bigv cd-bigv--id${f.payee ? '' : ' cd-muted'}`}>
+                  {f.payee
+                    ? String(f.payee.value)
+                        .split('@')
+                        .flatMap((part, i) => (i === 0 ? [part] : [<wbr key={i} />, `@${part}`]))
+                    : '—'}
+                </p>
                 <CheckNote c={data.check?.payee} k="payee" />
               </div>
               <div className="cd-row">
@@ -535,8 +541,7 @@ function PackView({
         <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
         <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
         <PackItem n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
-        <div className="flex items-center gap-[14px] py-[14px]">
-          <span className="pk-num">4</span>
+        <div className="py-[14px]">
           <a
             href={`data:text/calendar;charset=utf-8,${encodeURIComponent(pack.reminders)}`}
             download="utr-pakka-reminders.ics"

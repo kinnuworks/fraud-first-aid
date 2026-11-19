@@ -1231,6 +1231,11 @@ body {
   line-height: 1.05;
   overflow-wrap: anywhere;
 }
+.cd-bigv--id {
+  font-size: clamp(1.375rem, 1rem + 0.9vw, 1.875rem);
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
 .cd-muted {
   color: #676d8c; /* 5.1:1 on white (AA) */
   font-weight: 500;
