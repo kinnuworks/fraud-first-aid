@@ -840,7 +840,9 @@ body {
 .cs-orb {
   border-radius: 18px;
   background: var(--navy-2);
-  min-height: 15rem;
+  height: 15rem;
+  overflow: hidden;
+  contain: layout size;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1217,4 +1219,12 @@ body {
 }
 .pk-docs > .pk-doc:last-child:nth-child(odd) {
   grid-column: 1 / -1;
+}
+
+.cs-controls {
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  contain: layout size;
 }

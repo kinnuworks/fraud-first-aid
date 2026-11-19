@@ -518,7 +518,7 @@ export default function ConversationComponent({
       }
       visualizer={
         <div
-          className="relative flex h-full min-h-[15rem] w-full items-center justify-center"
+          className="relative flex h-full w-full items-center justify-center"
           role="region"
           aria-label="AI agent status visualization"
         >

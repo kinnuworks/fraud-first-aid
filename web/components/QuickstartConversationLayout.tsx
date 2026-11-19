@@ -51,7 +51,7 @@ export function QuickstartConversationLayout({
         <aside className="cs-side" aria-label="Call">
           <span className="up-label">Live call</span>
           <div className="cs-orb">{visualizer}</div>
-          <div>{controls}</div>
+          <div className="cs-controls">{controls}</div>
           {side}
         </aside>
         <main className="cs-main">{transcriptPanel}</main>
