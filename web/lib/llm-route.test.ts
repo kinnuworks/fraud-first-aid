@@ -211,3 +211,14 @@ describe('custom LLM route with a shared store', () => {
     expect(saved).toEqual({ session: 'up-1', seen: 'hello my UTR is' });
   });
 });
+
+describe('custom LLM route reports what was spoken', () => {
+  it('passes the spoken text to onReply, and nothing for a silent turn', async () => {
+    const got: string[] = [];
+    const mk = (parts: string[]) => createLlmRoute({ secret: 's3cret', model: {} as never, streamTextImpl: fakeStream(parts), onReply: (_s, t) => { got.push(t); } });
+    const call = (r: ReturnType<typeof mk>) => r(new NextRequest('http://localhost/api/chat/completions?session=up-2', { method: 'POST', body: JSON.stringify({ messages: [{ role: 'user', content: 'x' }] }), headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' } })).then((res) => res.text());
+    await call(mk(['[[flag:x|y]] Hang', ' up now.']));
+    await call(mk(['<silent>']));
+    expect(got).toEqual(['Hang up now.']);
+  });
+});

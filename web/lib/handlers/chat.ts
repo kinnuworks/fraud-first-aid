@@ -33,6 +33,13 @@ export const POST = createLlmRoute({
   },
   load: (session) => hydrate(session),
   save: (session, seen) => persist(session, seen),
+  // The guard warned aloud but wrote no marker: the warning still goes on the card (guard break test, 19 Nov).
+  onReply: (session, spoken, lastUser) => {
+    const c = getComplaint(session);
+    // only a reply that tells them to hang up counts as a warning (not an answer to a question)
+    const HANGUP = /hang up|cut the call|काट|కట్|ಕಟ್|துண்டி|കട്ട്|কেটে|કાપી|ਕੱਟ|phone cut|kaat/i;
+    if (c.phase === 'guard' && c.flags.length === 0 && HANGUP.test(spoken)) addFlag(c, 'suspicious_call', 'pressed the user on the call; UTR Pakka warned', lastUser);
+  },
   onMarker: (session, id, detail, lastUser) => {
     addFlag(getComplaint(session), id, detail, lastUser);
   },

@@ -33,6 +33,8 @@ type Deps = {
   shortcut?: (session: string, lastUser: string) => string | null;
   // Shared store across server instances: load the call (returns the user text already seen)
   // before anything else, and save it once the reply has finished.
+  // Called once with what was actually spoken (markers removed), when the turn wasn't silent.
+  onReply?: (session: string, spoken: string, lastUser: string) => void;
   load?: (session: string) => Promise<string | undefined>;
   save?: (session: string, seen: string) => Promise<void>;
 };
@@ -63,6 +65,7 @@ export function createLlmRoute({
   shortcut,
   load,
   save,
+  onReply,
 }: Deps) {
   return async function POST(request: NextRequest) {
     if (!authorized(request.headers.get("authorization"), secret)) {
@@ -138,8 +141,12 @@ export function createLlmRoute({
           const plain = (t: string) =>
             t.replace(/[*_`]+/g, "").replace(/(^|\n|\. )#+\s*/g, "$1");
           let pending = "";
+          let spoken = "";
           const say = (t: string) => {
-            if (t) controller.enqueue(chunk({ content: plain(t) }));
+            if (t) {
+              spoken += plain(t);
+              controller.enqueue(chunk({ content: plain(t) }));
+            }
           };
           const feed = (t: string, end = false) => {
             pending += t;
@@ -190,6 +197,7 @@ export function createLlmRoute({
           if (decided === null && head && !head.trimStart().startsWith(SILENT))
             feed(head);
           if (decided !== "silent") feed("", true);
+          if (decided !== "silent" && spoken.trim()) onReply?.(session, spoken.trim(), lastUser);
           await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
           controller.enqueue(chunk({}, "stop"));
           controller.enqueue(enc.encode("data: [DONE]\n\n"));
