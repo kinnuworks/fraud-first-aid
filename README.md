@@ -4,7 +4,7 @@
 
 It's for the person on the phone when it happens: the parent who gets a "KYC" call, the senior citizens who lost ₹4,005 crore to cyber fraud in 2025 (Rajya Sabha reply, 5 Aug 2026), anyone who doesn't think in English in the first panicked hour. And when they call 1930, it speaks to the operator for them.
 
-It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person: an agent per call with our own model route and tools, silent turns while it listens, Agora's speak API to cut in, a second agent on the same call as the 1930 interpreter, RTC for family to listen, and RTM for every step on screen. Sarvam hears ten Indian languages; Murf Falcon speaks them with Murf's own recommended Indian voices and reads every number back.
+It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person: an agent per call with our own model route and tools, silent turns while it listens, Agora's speak API to cut in, a second agent on the same call as the 1930 interpreter, RTC for family to listen, and RTM for the live transcript and the agent's state. Sarvam hears ten Indian languages; Murf Falcon speaks them with Murf's own recommended Indian voices and reads every number back.
 
 **Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds. **Check it yourself: https://fraudfirstaid.vercel.app/proof**: try to fool the scam guard with your own lines, or say a UTR any way you like.
 

@@ -9,6 +9,7 @@ import { agentUidFor } from '@/lib/agora';
 import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
+import { act } from '@/lib/complaint/session';
 import { checkCap } from '@/lib/capability';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
@@ -75,6 +76,10 @@ export async function POST(request: NextRequest) {
     const mode = (body as unknown as { mode?: string }).mode === 'guard' ? 'guard' : 'complaint';
     startComplaint(channel_name, lang, mode);
     if (langArg === 'auto') getComplaint(channel_name).autoLang = true;
+    // the first step on screen says what is listening, so the Agora part is visible from the start
+    act(getComplaint(channel_name), 'heard', mode === 'guard'
+      ? 'Listening through an Agora voice agent that stays silent until the caller asks for a code, a scan or money'
+      : 'An Agora voice agent joined the call to take your report, in your language');
     await persist(channel_name);
 
     // --- 2. Build and start the agent ---

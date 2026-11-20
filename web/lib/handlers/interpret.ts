@@ -92,7 +92,7 @@ export async function POST(request: NextRequest) {
     }
     setAgent(channel, agentId);
     c.agentId = agentId;
-    act(c, 'tool', 'Started the 1930 interpreter: a new agent that hears English, Hindi and your language');
+    act(c, 'tool', 'Started the 1930 interpreter: a second Agora agent on this call, hearing English, Hindi and your language');
     await persist(channel);
     return NextResponse.json({ agent_id: agentId, state: 'RUNNING', phase: 'interpret' });
   } catch (error) {
