@@ -10,6 +10,7 @@ import { POST as stop } from '@/lib/handlers/stop';
 import { POST as email } from '@/lib/handlers/email';
 import { POST as phone } from '@/lib/handlers/phone';
 import { POST as interpret } from '@/lib/handlers/interpret';
+import { POST as tryGuard } from '@/lib/handlers/try-guard';
 
 type Ctx = { params: Promise<{ path: string[] }> };
 const notFound = () => NextResponse.json({ error: 'not found' }, { status: 404 });
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest, { params }: Ctx) {
   if (path === 'email') return email(request);
   if (path === 'phone') return phone(request);
   if (path === 'interpret') return interpret(request);
+  if (path === 'try-guard') return tryGuard(request);
   return notFound();
 }
 

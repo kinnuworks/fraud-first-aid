@@ -263,6 +263,11 @@ const JOURNEY: Array<[string, string, string]> = [
     'A 1930 script, an English card, a bank letter and reminders.',
     'Plus a timestamped record of the call with the red flags marked. One tap brings family onto the call.',
   ],
+  [
+    'On the 1930 call',
+    'It speaks to the operator for you, and tells you what they ask.',
+    'English to the operator, your language to you. Every number it gives them comes from your confirmed complaint, never from the AI model.',
+  ],
 ];
 
 function Journey() {
@@ -463,6 +468,15 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
       </div>
       <Journey />
       <Cases />
+      <section className="ck up-wrap" aria-label="Check it yourself">
+        <div className="ck-card">
+          <div>
+            <p className="ck-title">Don&apos;t take our word for it.</p>
+            <p className="ck-text">Try to fool the scam guard, say a UTR any way you like, and see every result with the file behind it.</p>
+          </div>
+          <a href="/proof" className="up-btn ck-btn" data-testid="open-proof">Check it yourself</a>
+        </div>
+      </section>
       <div className="up-wrap">
         <MoreWays />
       </div>
