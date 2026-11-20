@@ -1637,94 +1637,56 @@ html[data-large] {
   color: var(--ink-2); /* on the grey sheet, ink-3 fell under AA (axe, 19 Nov) */
 }
 
-/* who this happens to: a mosaic of faces with sourced numbers on a white card */
+/* who this happens to: three sourced numbers on a navy band */
 .im {
-  position: relative;
-  margin-top: 72px;
-  min-height: 620px;
-  overflow: hidden;
+  margin-top: 96px;
+  padding: 72px 0 80px;
   background: var(--navy);
-  display: flex;
-  align-items: center;
+  color: var(--on-navy);
 }
-.im-mosaic {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(64px, 1fr));
-  grid-auto-rows: 64px;
-  gap: 2px;
-  opacity: 0.92;
-}
-.im-mosaic img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  background: var(--navy-2);
-}
-.im::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse 60% 55% at 50% 50%, rgb(32 41 76 / 0.55), rgb(32 41 76 / 0.15));
-  pointer-events: none;
-}
-.im-inner {
-  position: relative;
-  z-index: 2;
-  padding: 72px 0 88px;
-}
-.im-card {
-  max-width: 1040px;
-  margin-inline: auto;
-  padding: 32px 36px 36px;
-  border-radius: 28px;
-  background: var(--sheet);
-  box-shadow: 0 24px 60px -20px rgb(0 0 0 / 0.45);
+.im-title {
+  color: var(--on-navy-2);
 }
 .im-stats {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: 28px;
-  margin-top: 18px;
+  gap: 32px;
+  margin-top: 24px;
 }
 @media (max-width: 860px) {
   .im-stats {
     grid-template-columns: 1fr;
-    gap: 22px;
-  }
-  .im-card {
-    padding: 24px;
+    gap: 24px;
   }
 }
 .im-stat + .im-stat {
-  border-left: 1px solid #eef0f5;
-  padding-left: 28px;
+  border-left: 1px solid rgb(255 255 255 / 0.16);
+  padding-left: 32px;
 }
 @media (max-width: 860px) {
   .im-stat + .im-stat {
     border-left: 0;
     padding-left: 0;
-    border-top: 1px solid #eef0f5;
-    padding-top: 22px;
+    border-top: 1px solid rgb(255 255 255 / 0.16);
+    padding-top: 24px;
   }
 }
 .im-num {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: clamp(2.25rem, 1.5rem + 2vw, 3.25rem);
+  font-size: clamp(2.5rem, 1.6rem + 2.4vw, 3.75rem);
   letter-spacing: -0.03em;
   line-height: 1;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
 }
 .im-unit {
-  font-size: 0.5em;
+  font-size: 0.45em;
   letter-spacing: -0.01em;
   font-weight: 700;
 }
 .im-label {
-  margin-top: 10px;
+  margin-top: 12px;
   font-size: 1.125rem;
   font-weight: 600;
   line-height: 1.35;
@@ -1732,58 +1694,7 @@ html[data-large] {
 .im-src {
   margin-top: 8px;
   font-size: 0.875rem;
-  color: var(--ink-3);
-}
-.im-caption {
-  position: absolute;
-  z-index: 3;
-  left: 16px;
-  bottom: 16px;
-  max-width: calc(100% - 32px);
-  padding: 6px 12px;
-  border-radius: 8px;
-  background: var(--sheet);
-  color: var(--ink-2);
-  font-size: 0.8125rem;
-}
-.im-caption a {
-  color: var(--link);
-  text-decoration: underline;
-}
-.im-case {
-  padding: 80px 0 8px;
-  text-align: center;
-}
-.im-case__text {
-  font-family: var(--font-display);
-  font-weight: 700;
-  font-size: clamp(1.5rem, 1.1rem + 1.4vw, 2.25rem);
-  letter-spacing: -0.02em;
-  line-height: 1.2;
-  max-width: 30ch;
-  margin-inline: auto;
-}
-.im-credits {
-  padding-bottom: 48px;
-  font-size: 0.875rem;
-  color: var(--ink-3);
-}
-.im-credits summary {
-  cursor: pointer;
-  color: var(--link);
-  font-weight: 600;
-}
-.im-credits ul {
-  margin-top: 12px;
-  columns: 4 12rem;
-  column-gap: 24px;
-}
-.im-credits li {
-  break-inside: avoid;
-  padding: 2px 0;
-}
-.im-credits a {
-  color: var(--ink-2);
+  color: var(--on-navy-2);
 }
 
 /* hero headline: longer, so a step smaller than the display size */
@@ -1794,23 +1705,48 @@ html[data-large] {
 .rc-h1-accent {
   color: #1a5fc2; /* 6:1 on white; the light accent blue is under 3:1 */
 }
-/* more ways to try, under the hero */
+/* try it on your phone: the QR code, a call to your number, and the recording */
 .mw {
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
   align-items: center;
-  gap: 16px 32px;
-  padding: 22px 26px;
+  gap: 8px 24px;
+  margin-top: 20px;
+  padding: 24px 28px;
   border-radius: 24px;
   background: #f4f5f8;
 }
-.mw > div {
-  margin-top: 0;
+.mw .fd-qr {
+  padding: 0;
+  background: none;
+  grid-row: span 2;
 }
-.mw-why {
-  flex: 1 1 18rem;
-  font-size: 0.9375rem;
+.mw-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.375rem;
+  letter-spacing: -0.015em;
+}
+.mw-sub {
+  margin: 4px 0 12px;
+  font-size: 1rem;
   color: var(--ink-2);
+}
+.mw-rec {
+  grid-column: 2;
+  font-size: 0.9375rem;
+}
+@media (max-width: 560px) {
+  .mw {
+    grid-template-columns: 1fr;
+    padding: 22px;
+  }
+  .mw .fd-qr {
+    grid-row: auto;
+  }
+  .mw-rec {
+    grid-column: 1;
+  }
 }
 /* 1930 alone vs with UTR Pakka */
 .cmp {
@@ -1822,6 +1758,7 @@ html[data-large] {
 .cmp-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: start;
   gap: 20px;
   margin-top: 32px;
 }
@@ -1876,9 +1813,7 @@ html[data-large] {
   color: #fff;
 }
 .cmp-proof {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 20px;
+  max-width: 44rem;
   margin-top: 20px;
   font-size: 0.9375rem;
   color: var(--ink-2);
@@ -1908,7 +1843,7 @@ html[data-large] {
 
 /* hero: the stakes in one line */
 .rc-stakes {
-  margin-top: 20px;
+  margin-top: 24px;
   max-width: 34rem;
   font-size: 1.25rem;
   line-height: 1.45;
@@ -1925,7 +1860,7 @@ html[data-large] {
 
 /* the journey: four steps, outcome first */
 .jr {
-  padding-top: 96px;
+  padding-top: 72px;
 }
 .jr-grid {
   display: grid;
@@ -1951,18 +1886,10 @@ html[data-large] {
   border-radius: 24px;
   background: #f4f5f8;
 }
-.jr-step:nth-child(2) {
-  background: var(--navy);
-  color: var(--on-navy);
-}
-.jr-step:nth-child(2) .jr-k,
-.jr-step:nth-child(2) .jr-proof {
-  color: var(--on-navy-2);
-}
 .jr-n {
   font-family: var(--font-display);
   font-weight: 800;
-  font-size: 4rem;
+  font-size: 2.75rem;
   line-height: 0.9;
   letter-spacing: -0.04em;
 }
@@ -2038,8 +1965,126 @@ html[data-large] {
 .up-langpick { display: inline-flex; align-items: center; gap: 10px; }
 .up-select { min-height: 40px; padding: 0 36px 0 12px; border: 1px solid var(--rule); border-radius: var(--r-control); background: var(--sheet); color: var(--ink); font: inherit; font-size: 1rem; }
 .up-select:focus-visible { outline: 3px solid var(--focus, #2f5bea); outline-offset: 2px; }
-/* the complaint card sits below the phone's warning strip, not over it */
+/* hero, 20 Nov cleanup: headline, stakes, one lead, two buttons, one quiet row of settings */
+.rc-hero .up-display {
+  font-size: clamp(2.75rem, 1.6rem + 3.4vw, 4.5rem);
+}
+.rc-lead {
+  margin-top: 16px;
+  max-width: 34rem;
+  font-size: 1.1875rem;
+}
+.rc-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  margin-top: 28px;
+}
+.rc-ctas .up-btn {
+  padding: 0 20px;
+  font-size: 1rem;
+}
+.rc-listen {
+  margin-top: 14px;
+}
+.rc-listen .up-link {
+  font-size: 1rem !important;
+}
+.rc-prefs {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--rule);
+}
+.rc-prefs .up-select {
+  font-size: 0.9375rem;
+  padding-right: 28px;
+}
+.rc-tech {
+  margin-top: 20px;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.rc-guard__head {
+  flex-wrap: wrap;
+}
+.rc-guard__tag {
+  margin-left: auto;
+  font-size: 0.6875rem;
+  padding: 2px 7px;
+}
+/* the phone's chat starts at the top, like a real chat */
+.rc-body.rc-guard {
+  justify-content: flex-start;
+  padding-top: 18px;
+}
 @media (min-width: 981px) {
-  .rc-card { bottom: -64px; width: min(360px, 72%); }
-  .rc-hero { padding-bottom: 72px; }
+  .rc-hero {
+    align-items: start;
+    padding: 24px 0 40px;
+  }
+  .rc-stage {
+    min-height: 0;
+    padding-bottom: 8px;
+  }
+  .rc-phone {
+    width: 280px;
+    margin-left: 0;
+  }
+  .rc-card {
+    top: auto;
+    bottom: 64px;
+    right: 0;
+    width: 300px;
+    padding: 20px;
+  }
+}
+.fd-pill--1930 {
+  background: var(--bad);
+  border-color: var(--bad);
+  color: var(--on-bad);
+}
+@media (max-width: 560px) {
+  .up-logo__tag {
+    display: none;
+  }
+}
+/* sources: the promise in view, the list one click away */
+.src {
+  padding-top: 64px;
+  padding-bottom: 72px;
+}
+.src-never {
+  max-width: 44rem;
+  font-size: 1rem;
+  color: var(--ink-2);
+}
+.src-list {
+  margin-top: 16px;
+  font-size: 0.9375rem;
+  color: var(--ink-3);
+}
+.src-list summary {
+  cursor: pointer;
+  color: var(--link);
+  font-weight: 600;
+}
+.src-list ul {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+@media (max-width: 560px) {
+  .mw .fd-qr {
+    display: none;
+  }
+  .rc-ctas .up-btn {
+    width: 100%;
+  }
 }

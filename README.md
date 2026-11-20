@@ -4,7 +4,7 @@
 
 It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person, in ten Indian languages, with a Murf Falcon voice that reads every number back.
 
-**Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds.
+**Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam (30 s)**: one click, no microphone, the warning in about 20 seconds.
 
 ![The live app, sped up: the scam warning, the UTR read back, the screenshot catching a wrong group, and the pack ready for 1930](docs/core-loop.gif)
 
@@ -32,7 +32,7 @@ It does not replace 1930 or file the complaint for you, and it can't recover mon
 
 ### Try it in 30 seconds
 
-1. Open https://fraudfirstaid.vercel.app on a laptop or phone and press **Watch it catch a scam call (30 s)**: no microphone needed. A sample scam call (an illustration with a generated voice) plays into the call; it stays silent through the small talk and warns in Hindi the moment the caller pushes.
+1. Open https://fraudfirstaid.vercel.app on a laptop or phone and press **Watch it catch a scam (30 s)**: no microphone needed. A sample scam call (an illustration with a generated voice) plays into the call; it stays silent through the small talk and warns in Hindi the moment the caller pushes.
 2. Or pick a language, press **Lost money? Report it by voice**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
 3. Say "the second group is wrong" when it reads the UTR back, and correct it. When all five details are confirmed, the pack appears.
 

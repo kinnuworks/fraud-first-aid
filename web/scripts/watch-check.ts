@@ -1,5 +1,5 @@
 // Live check of the first screen's one-click demo: a browser with NO microphone permission presses
-// "Watch it catch a scam call"; the sample scam call plays by itself and the warning card appears.
+// "Watch it catch a scam (30 s)"; the sample scam call plays by itself and the warning card appears.
 // Also records the screen (evidence/.cache/watch-video/) for the README GIF.
 // Run: npx -y tsx@4.20.6 scripts/watch-check.ts [base]
 import { chromium } from 'playwright';

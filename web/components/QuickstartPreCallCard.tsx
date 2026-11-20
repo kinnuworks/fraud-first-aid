@@ -7,7 +7,7 @@ import { PhoneCallStart } from './PhoneCallStart';
 import { when } from './ComplaintCard';
 import { STATES } from './StatePreview';
 import { Logo } from './design/Logo';
-import { ImpactBand, PhotoCredits } from './ImpactBand';
+import { ImpactBand } from './ImpactBand';
 import Image from 'next/image';
 
 const LANGS = [
@@ -40,7 +40,7 @@ function LanguageChips() {
   }, []);
   return (
     <label className="up-langpick" id="langs">
-      <span className="up-label">Your language</span>
+      <span className="up-label">Language</span>
       <select value={lang} onChange={(e) => pick(e.target.value)} className="up-select" aria-label="Language">
         {LANGS.map(([code, label]) => (
           <option key={code} value={code}>
@@ -182,7 +182,7 @@ function WatchButton({ isLoading, onStartConversation }: Actions) {
           Starting the sample call…
         </>
       ) : (
-        <>▶ Watch it catch a scam call (30 s)</>
+        <>▶ Watch it catch a scam (30 s)</>
       )}
     </button>
   );
@@ -207,23 +207,28 @@ function ListenButton({ isLoading, onStartConversation, link = false }: Actions 
   );
 }
 
-const WHY = 'Live voice by Agora Conversational AI, with Sarvam speech-to-text and Murf Falcon voices in ten Indian languages.';
-
-// Two more ways in, under the start controls: a recording of the whole flow, and a call to the caller's phone.
+// Two more ways in: open it on a phone (QR), or let it ring the caller's phone; plus a recording of the whole flow.
 function MoreWays() {
   return (
-    <div className="mt-5 flex flex-col items-start gap-3">
-      <PhoneCallStart />
+    <section className="mw" aria-labelledby="mw-title">
+      <span className="fd-qr">
+        <Image src="/design/qr-live.svg" alt="QR code to open Fraud First Aid on your phone" width={76} height={76} unoptimized />
+      </span>
+      <div className="mw-body">
+        <h2 id="mw-title" className="mw-title">Try it on your phone</h2>
+        <p className="mw-sub">Scan the code, or give your number and it calls you.</p>
+        <PhoneCallStart />
+      </div>
       <a
-        className="up-link text-left text-[0.9375rem]"
+        className="up-link mw-rec"
         href="/demo/full-flow.mp4"
         target="_blank"
         rel="noopener noreferrer"
         data-testid="watch-recording"
       >
-        Watch it work: a 4-minute screen recording (sample voices, no audio)
+        Or watch a 4-minute screen recording (sample voices, no audio)
       </a>
-    </div>
+    </section>
   );
 }
 
@@ -239,23 +244,23 @@ const FACTS: Array<[string, string, string]> = [
 const JOURNEY: Array<[string, string, string]> = [
   [
     'During the scam',
-    'It hears the call and tells you to hang up before you lose anything.',
-    'Warned in 133 of 200 public scam calls it never saw (ICFD-31k back-test; keyword rules: 5). Names a UPI ID from an earlier complaint at once.',
+    'It hears the call and tells you to hang up.',
+    'Warned in 133 of 200 public scam calls it never saw (ICFD-31k back-test; keyword rules: 5). It knows a UPI ID from an earlier complaint.',
   ],
   [
     "If money's gone",
-    'It takes your complaint by voice, in your language, every detail right.',
-    'Checked against your payment screenshot; 295 of 300 numbers exact in noise in our own break test.',
+    'It takes your complaint by voice and gets every number right.',
+    'Each number is read back and checked against your payment screenshot. 295 of 300 exact in noise in our own break test.',
   ],
   [
     'It acts',
-    "It finds your bank and branch, your bank's own fraud line, and your RBI deadline.",
+    "It finds your bank's own fraud line and your RBI deadline.",
     'Zero liability if your bank hears within 3 working days (RBI circular RBI/2017-18/15).',
   ],
   [
     'It hands you everything',
-    'The 1930 script in your language, an English card for the operator, the bank letter and reminders. One tap brings family onto the call.',
-    'Plus what the scammer said, timestamped with the red flags marked, and the RBI Ombudsman complaint ready for day 30.',
+    'A 1930 script, an English card, a bank letter and reminders.',
+    'Plus a timestamped record of the call with the red flags marked. One tap brings family onto the call.',
   ],
 ];
 
@@ -304,10 +309,14 @@ function Cases() {
 
 function Below() {
   return (
-    <>
-      <section id="sources" className="up-wrap" style={{ paddingTop: 72, paddingBottom: 96 }}>
-        <h2 className="up-label">Sources for the numbers on this page</h2>
-        <ul className="mt-3 space-y-1 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
+    <section id="sources" className="up-wrap src" aria-label="Sources">
+      <p className="src-never">
+        Fraud First Aid never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
+        cannot recover money.
+      </p>
+      <details className="src-list">
+        <summary>Sources for every number on this page</summary>
+        <ul>
           <li>Reported lost since 2021, and refunded: about ₹64,447 crore and about ₹323 crore. Home Ministry officials briefing the Prime Minister, reported by Pratidin Time, 9 Jul 2026, and the Indian Express.</li>
           {FACTS.map(([k, v, s]) => (
             <li key={k}>
@@ -316,12 +325,8 @@ function Below() {
           ))}
           <li>Guard and number break tests: our own tests, described with their data in the README.</li>
         </ul>
-        <p className="mt-6 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>
-          Fraud First Aid never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
-          cannot recover money.
-        </p>
-      </section>
-    </>
+      </details>
+    </section>
   );
 }
 
@@ -374,37 +379,33 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
           <nav className="up-nav">
             <a href="#how" className="fd-pill">How it works</a>
             <a href="#sources" className="fd-pill">Sources</a>
-            <a href="tel:1930" className="fd-pill">Call 1930</a>
+            <a href="tel:1930" className="fd-pill fd-pill--1930">Call 1930</a>
           </nav>
         </header>
         <section className="rc-hero">
           <div>
-            <p className="up-label">First aid for a UPI fraud: fast, and in your language</p>
-            <h1 className="up-display" style={{ marginTop: 16 }}>
-              Hang up before you pay. Get it frozen if you did.
-            </h1>
+            <h1 className="up-display">Hang up before you pay. Get it frozen if you did.</h1>
             <p className="rc-stakes">
               Karnataka lost <strong>₹5,474 crore</strong> to cyber fraud in three years. Only <strong>₹627 crore</strong> came back.
-              <span className="rc-src"> Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
+              <span className="rc-src">Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
             </p>
-            <p className="up-lead" style={{ marginTop: 14, maxWidth: '36rem' }}>
-              Like first aid, it has to be fast. Put the scam call on speaker next to this phone or laptop: it listens and
-              warns you in your language. If the money&apos;s gone, tell it what happened. It reads every number back until you
-              confirm it, then hands you a script to read to 1930, an English card for the operator and a letter for your bank.
+            <p className="up-lead rc-lead">
+              Like first aid, it has to be fast. Put a scam call on speaker next to this phone or laptop and it warns you in your language. If the
+              money&apos;s gone, it takes your complaint by voice and gets every number right for 1930 and your bank.
             </p>
-            <p className="rc-tech">Agora Conversational AI runs the live call · Sarvam hears 10 Indian languages · Murf Falcon speaks back</p>
-            <div className="mt-6 flex flex-wrap items-center gap-3">
+            <div className="rc-ctas">
               <WatchButton {...p} />
               <StartButton {...p} />
             </div>
-            <div className="mt-3">
+            <div className="rc-listen">
               <ListenButton {...p} link />
             </div>
-            <div className="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <div className="rc-prefs">
               <LanguageChips />
               <SlowToggle />
             </div>
             {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
+            <p className="rc-tech">Agora Conversational AI runs the live call · Sarvam hears 10 Indian languages · Murf Falcon speaks back</p>
           </div>
           <div className="rc-stage">
             <div className="rc-phone" aria-label="Sample: the agent hears a fake KYC call ask for an OTP and tells the user to hang up">
@@ -422,11 +423,9 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                   </svg>
                 </div>
                 <div className="rc-body rc-guard">
-                  <p className="text-center">
-                    <span className="up-sample-tag">Sample</span>
-                  </p>
                   <p className="rc-guard__head">
-                    <span className="rc-guard__dot" aria-hidden="true" /> Listening to the call on speaker
+                    <span className="rc-guard__dot" aria-hidden="true" /> Listening on speaker
+                    <span className="up-sample-tag rc-guard__tag">Sample</span>
                   </p>
                   <p className="rc-bubble">
                     <span className="rc-bubble__who">Caller</span>
@@ -437,7 +436,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                     An OTP has come on your phone. Tell it to me now.
                   </p>
                   <p className="rc-bubble rc-bubble--agent">
-                    <span className="rc-bubble__who">It speaks up, in your language</span>
+                    <span className="rc-bubble__who">It warns you, in your language</span>
                     यह धोखाधड़ी वाली कॉल है। अभी फ़ोन काट दीजिए।
                     <span className="rc-bubble__en">This is a scam call. Hang up now.</span>
                   </p>
@@ -463,25 +462,13 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
       <Journey />
       <Cases />
       <div className="up-wrap">
-        <section className="mw" aria-label="More ways to try it">
-          <MoreWays />
-          <span className="fd-qr">
-            <Image src="/design/qr-live.svg" alt="QR code to open Fraud First Aid on your phone" width={76} height={76} unoptimized />
-            <span>
-              Scan to try it
-              <br />
-              on your phone
-            </span>
-          </span>
-          <p className="mw-why">{WHY}</p>
-        </section>
+        <MoreWays />
       </div>
       <ImpactBand />
       <div className="up-wrap">
         <Compare />
       </div>
       <Below />
-      <PhotoCredits />
     </div>
   );
 }
