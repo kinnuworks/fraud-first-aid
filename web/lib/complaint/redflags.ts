@@ -59,7 +59,7 @@ export const isLoss = (t: string) => !YOURS.test(t) && (detectRedFlag(t) ? STRON
 // A reply that tells them to put the phone down, in any of our languages: the guard warned.
 // The phone word comes first, so "pay the bill" (బిల్లు కట్టండి) or "write it down" doesn't count,
 // and "don't" in front of it (मत काटिए, don't hang up) cancels it.
-const HANGUP = /hang up|cut the call|phone cut|(phone|fon|फ़ोन|फोन|ఫోన్|ಫೋನ್|ഫോൺ|ফোন|ફોન|ਫ਼ੋਨ|ਫੋਨ)\s*(kaat|काट|रख|कट|కట్ చే|పెట్టేయ|ಕಟ್ ಮಾಡಿ|കട്ട് ചെയ്യ|কেটে|કાપી|ਕੱਟ)|அழைப்பைத் துண்டி/i;
+const HANGUP = /hang up|cut the call|phone cut|\b(call|phone|fone)\s+(cut|kaat|kaatt?)\s*(kar|kardo|karo|karein|karen|kariye|dijiye|do|den|dein)|\b(abhi|turant)\s+(call|phone)\s+(band|kaat|cut)|(phone|fon|फ़ोन|फोन|ఫోన్|ಫೋನ್|ഫോൺ|ফোন|ફોન|ਫ਼ੋਨ|ਫੋਨ)\s*(kaat|काट|रख|कट|కట్ చే|పెట్టేయ|ಕಟ್ ಮಾಡಿ|കട്ട് ചെയ്യ|কেটে|કાપી|ਕੱਟ)|அழைப்பைத் துண்டி/i;
 const DONT = /\b(don'?t|do not|never|mat)\b|मत|వద్దు|ಬೇಡ/i;
 const nearDont = (t: string) => {
   const m = t.match(HANGUP);
