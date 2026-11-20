@@ -90,8 +90,8 @@ export function Hero(p: StartProps) {
           Catches the scam on the call. <span className="ta-h1__2">Chases the money if it&apos;s gone.</span>
         </h1>
         <p className="ta-sub">
-          Put the call on speaker and it warns you in your language. Lost money? Tell it what happened and it gets every number right for
-          the 1930 helpline and your bank.
+          Open this page on another phone or laptop, put the scam call on speaker next to it, and it warns you in your language. Lost
+          money? Tell it what happened and it gets every number right for the 1930 helpline and your bank.
         </p>
         <LangStrip />
         <div className="ta-ctas">
