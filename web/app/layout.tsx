@@ -36,7 +36,17 @@ export const viewport: Viewport = {
 export const metadata: Metadata = {
   title: 'Fraud First Aid: the first hour of a UPI fraud, in your language',
   description:
-    'Tell a voice agent what happened in Telugu, Hindi, Kannada or seven more languages. It reads your 12-digit UTR back in groups of four and builds the 1930 script and bank letter.',
+    "Catches the scam on the call. Chases the money if it's gone. A voice agent in ten Indian languages: it warns you during a scam call, takes your complaint with every number right, and speaks to 1930 for you.",
+  metadataBase: new URL('https://fraudfirstaid.vercel.app'),
+  manifest: '/site.webmanifest',
+  openGraph: {
+    title: "Fraud First Aid: catches the scam on the call, chases the money if it's gone",
+    description: 'A voice agent in ten Indian languages, built on Agora Conversational AI and Murf Falcon.',
+    url: 'https://fraudfirstaid.vercel.app',
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Fraud First Aid: a phone catching a fake KYC call and warning in Hindi, beside the complaint card reading the UTR back in groups of four' }],
+    type: 'website',
+  },
+  twitter: { card: 'summary_large_image', images: ['/og.png'] },
   icons: {
     icon: [
       { url: '/favicon.ico' },

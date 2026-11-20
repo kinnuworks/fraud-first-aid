@@ -39,7 +39,9 @@ async function idle(page: Page, ms = 45000) {
 }
 const play = async (page: Page, clip: string) => {
   log(`play ${clip}`);
-  await page.evaluate((u) => (window as unknown as { __utrPakkaPlay: (u: string) => Promise<void> }).__utrPakkaPlay(u), `/demo/${clip}.wav`);
+  const go = () => page.evaluate((u) => (window as unknown as { __utrPakkaPlay: (u: string) => Promise<void> }).__utrPakkaPlay(u), `/demo/${clip}.wav`);
+  // a clip that fails to download (our network, not the app) is fetched once more
+  await go().catch(async (e) => { log(`  clip fetch failed (${String(e).slice(0, 80)}); retrying`); await page.waitForTimeout(1500); await go(); });
   await idle(page);
   // Agora's live pipeline metrics for this turn, as shown in the call screen's pipeline bar
   const bar = (await page.locator('.up-pipe').first().innerText().catch(() => '')) || '';
