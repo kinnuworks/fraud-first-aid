@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { AgoraClient, Area } from 'agora-agents';
 import { checkCap } from '@/lib/capability';
 import { agentFor } from '@/lib/handlers/agents';
+import { hydrate, peekComplaint } from '@/lib/complaint/store';
 
 function isAgentAlreadyStoppingOrStopped(error: unknown): boolean {
   if (!error || typeof error !== 'object') return false;
@@ -30,7 +31,12 @@ export async function POST(request: Request) {
     if (!body.channel || !checkCap(body.channel, body.cap)) {
       return NextResponse.json({ error: 'not your call' }, { status: 403 });
     }
-    const agent_id = agentFor(body.channel);
+    // the agent may have been started by another server instance: the call store remembers it
+    let agent_id = agentFor(body.channel);
+    if (!agent_id) {
+      await hydrate(body.channel).catch(() => undefined);
+      agent_id = peekComplaint(body.channel)?.agentId;
+    }
     if (!agent_id) return NextResponse.json({ success: true, state: 'no-agent' });
 
     const appId = process.env.NEXT_PUBLIC_AGORA_APP_ID;

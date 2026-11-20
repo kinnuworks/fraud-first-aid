@@ -3,7 +3,9 @@
 // channel name is not enough to join, read, upload to, start or stop someone else's call.
 import { createHmac, randomBytes, timingSafeEqual } from 'crypto';
 
-const secret = () => process.env.LLM_SHARED_SECRET || '';
+// Its own secret (CAP_SECRET), apart from the model route's bearer secret that Agora holds in every
+// agent's config; falls back to that one where CAP_SECRET isn't set (local runs).
+const secret = () => process.env.CAP_SECRET || process.env.LLM_SHARED_SECRET || '';
 
 export const newChannel = () => `up-${randomBytes(16).toString('hex')}`;
 

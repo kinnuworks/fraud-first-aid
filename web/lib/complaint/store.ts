@@ -66,6 +66,30 @@ export async function persist(id: string, seenText?: string): Promise<void> {
   // The screenshot and email requests run beside the voice turns; keep what they stored even if
   // this instance loaded the call before they finished.
   const now = (await shared.get(id))?.c as Partial<Complaint> | undefined;
-  if (now) for (const k of ['shot', 'email', 'emailSent'] as const) if (c[k] === undefined && now[k] !== undefined) (c as Record<string, unknown>)[k] = now[k];
+  if (now) mergeNewer(c, now);
   await shared.put(id, c, seen.get(id));
+}
+
+const PHASE_ORDER = { guard: 0, complaint: 1, interpret: 2 } as const;
+// Another instance may have saved the call after this one loaded it (two turns overlapping, the
+// screenshot or email request, the interpreter starting). Keep what it added: the later phase, a
+// confirmed field over an unconfirmed or missing one, every flag and step, and the request-made fields.
+export function mergeNewer(c: Complaint, now: Partial<Complaint>): void {
+  for (const k of ['shot', 'email', 'emailSent', 'ack1930', 'story', 'agentId'] as const) {
+    if (c[k] === undefined && now[k] !== undefined) (c as Record<string, unknown>)[k] = now[k];
+  }
+  if (now.phase && PHASE_ORDER[now.phase] > PHASE_ORDER[c.phase]) c.phase = now.phase;
+  if (now.startedOnGuard) c.startedOnGuard = true;
+  for (const [k, f] of Object.entries(now.fields ?? {}) as Array<[keyof Complaint['fields'], { value: never; confirmed: boolean }]>) {
+    const mine = c.fields[k];
+    if (!mine || (f.confirmed && !mine.confirmed)) (c.fields as Record<string, unknown>)[k] = f;
+  }
+  for (const fl of now.flags ?? []) if (!c.flags.some((x) => x.scam === fl.scam)) c.flags.push(fl);
+  if (now.actions?.length) {
+    const have = new Set((c.actions ?? []).map((a) => `${a.at}|${a.text}`));
+    const add = now.actions.filter((a) => !have.has(`${a.at}|${a.text}`));
+    if (add.length) c.actions = [...(c.actions ?? []), ...add].sort((a, b) => a.at.localeCompare(b.at)).slice(-40);
+  }
+  if ((now.heard?.length ?? 0) > (c.heard?.length ?? 0)) c.heard = now.heard;
+  if (now.reportedPayee) c.reportedPayee = true;
 }

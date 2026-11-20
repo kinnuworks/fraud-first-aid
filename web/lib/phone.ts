@@ -9,13 +9,15 @@ export function indianMobile(input: string): string | null {
 }
 
 export class CallLimiter {
-  private live = new Set<string>();
+  // a number counts as live until its call ends or the agent's 20-minute limit has passed
+  private live = new Map<string, number>();
   private starts: number[] = [];
   constructor(private perHour = 20) {}
   take(number: string, now = Date.now()): boolean {
     this.starts = this.starts.filter((t) => now - t < 3_600_000);
-    if (this.live.has(number) || this.starts.length >= this.perHour) return false;
-    this.live.add(number);
+    const until = this.live.get(number);
+    if ((until !== undefined && until > now) || this.starts.length >= this.perHour) return false;
+    this.live.set(number, now + 20 * 60_000);
     this.starts.push(now);
     return true;
   }

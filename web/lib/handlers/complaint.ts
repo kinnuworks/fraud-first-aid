@@ -6,8 +6,13 @@ import { buildPack } from '@/lib/complaint/pack';
 import { istToday } from '@/lib/complaint/today';
 import { canView } from '@/lib/capability';
 import { compareWithScreenshot } from '@/lib/complaint/screenshot';
+import { allowInMemory, clientAddress } from '@/lib/ratelimit';
 
 export async function GET(request: NextRequest) {
+  // the card polls once a second; anything far beyond that from one address is a loop, not a person
+  if (!allowInMemory(`poll:${clientAddress(request.headers)}`, 600)) {
+    return NextResponse.json({ error: 'too many requests' }, { status: 429 });
+  }
   const id = request.nextUrl.searchParams.get('session') ?? '';
   if (!/^[\w-]{1,64}$/.test(id)) return NextResponse.json({ error: 'bad session' }, { status: 400 });
   if (!canView(id, request.nextUrl.searchParams.get('cap'))) return NextResponse.json({ error: 'not your call' }, { status: 403 });
@@ -26,7 +31,7 @@ export async function GET(request: NextRequest) {
     flags: c.flags,
     fields: c.fields,
     missing: missingFields(c),
-    deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,
+    deadlines: c.fields.when && /^\d{4}-\d{2}-\d{2}/.test(c.fields.when.value) ? deadlines(c.fields.when.value.slice(0, 10)) : null,
     check: c.shot ? compareWithScreenshot(c, c.shot) : null,
     pack: buildPack(c, istToday()),
   });

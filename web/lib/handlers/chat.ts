@@ -5,7 +5,7 @@ import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint, hydrate, persist, hold, release } from '@/lib/complaint/store';
 import { act, addFlag, logHeard } from '@/lib/complaint/session';
-import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
+import { guardShortcut, saysHangUp, detectRedFlag } from '@/lib/complaint/redflags';
 import { guardReported, reportOnce } from '@/lib/complaint/reported';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
 import { ackLine, canInterpret, interpretLine } from '@/lib/complaint/interpret';
@@ -25,7 +25,9 @@ export const POST = createLlmRoute({
     // Interpreting a 1930 call: two languages on one speaker, so every turn goes to the model, and
     // the caller's language stays fixed.
     if (c.phase === 'interpret') return null;
-    followLanguage(c, lastUser);
+    // On guard the warning is for the user: a red-flag line is usually the scammer's, so it doesn't
+    // move the reply language (Any-language mode).
+    if (!(c.phase === 'guard' && detectRedFlag(lastUser))) followLanguage(c, lastUser);
     // on guard, keep the scam call itself as evidence for the pack
     logHeard(c, lastUser);
     const before = `${c.phase}/${c.pending ?? '-'}/buf${(c.digitBuffer ?? '').length}`;

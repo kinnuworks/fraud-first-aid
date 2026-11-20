@@ -24,6 +24,11 @@ export function agoraRestClient(appId: string, appCertificate: string) {
 }
 
 export async function POST(request: NextRequest) {
+  // Off unless PHONE_CALLS_ENABLED=1: calling a number someone types lets them ring any mobile, and
+  // the line reaches the trunk on only a few calls today (security pass, 20 Nov).
+  if (process.env.PHONE_CALLS_ENABLED !== '1') {
+    return NextResponse.json({ error: 'Calls to your phone are paused for now. Open this page on your phone instead: it works the same in the browser.' }, { status: 503 });
+  }
   const channel = request.nextUrl.searchParams.get('session') ?? '';
   if (!/^[\w-]{1,64}$/.test(channel) || !checkCap(channel, request.nextUrl.searchParams.get('cap'))) {
     return NextResponse.json({ error: 'not your call' }, { status: 403 });
@@ -45,7 +50,8 @@ export async function POST(request: NextRequest) {
   }
   const langArg = body.lang ?? 'te';
   const lang: ReadbackLang = (READBACK_LANGS as readonly string[]).includes(langArg) ? (langArg as ReadbackLang) : 'en';
-  const mode = body.mode === 'guard' ? 'guard' : 'complaint';
+  // always the complaint, which greets the person it rings; a silent guard on a stranger's phone is never allowed
+  const mode = 'complaint' as const;
   startComplaint(channel, lang, mode);
   if (langArg === 'auto') getComplaint(channel).autoLang = true;
   await persist(channel);

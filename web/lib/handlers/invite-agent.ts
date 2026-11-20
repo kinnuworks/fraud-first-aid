@@ -26,11 +26,6 @@ function requireEnv(name: string): string {
 
 export async function POST(request: NextRequest) {
   try {
-    // A paid agent starts below: limit how often one address (and the whole app) can start calls.
-    if (!(await allowStart(clientAddress(request.headers)))) {
-      return NextResponse.json({ error: 'Too many calls started from here. Please wait a few minutes and try again, or call 1930 directly.' }, { status: 429 });
-    }
-
     // --- 1. Parse request ---
 
     const body: ClientStartRequest = await request.json();
@@ -69,6 +64,11 @@ export async function POST(request: NextRequest) {
     // Only the holder of this call's capability can start its agent, and only one agent per call.
     if (!checkCap(channel_name, (body as unknown as { cap?: string }).cap)) {
       return NextResponse.json({ error: 'not your call' }, { status: 403 });
+    }
+    // A paid agent starts below: limit how often one address (and the whole app) can start calls,
+    // counting only requests for a call the requester really holds.
+    if (!(await allowStart(clientAddress(request.headers)))) {
+      return NextResponse.json({ error: 'Too many calls started from here. Please wait a few minutes and try again, or call 1930 directly.' }, { status: 429 });
     }
     if (!claimChannel(channel_name)) {
       return NextResponse.json({ error: 'an agent is already running for this call' }, { status: 409 });

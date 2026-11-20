@@ -21,13 +21,14 @@ const gone = (e: unknown) => {
 
 export async function POST(request: NextRequest) {
   try {
-    if (!(await allowStart(clientAddress(request.headers)))) {
-      return NextResponse.json({ error: 'Too many calls started from here. Please wait a few minutes.' }, { status: 429 });
-    }
     const body = (await request.json().catch(() => ({}))) as { channel?: string; cap?: string; uid?: string | number };
     const channel = body.channel ?? '';
     if (!/^[\w-]{1,64}$/.test(channel) || !checkCap(channel, body.cap)) {
       return NextResponse.json({ error: 'not your call' }, { status: 403 });
+    }
+    // counted only once the call is known to be theirs, so empty requests can't use up the limit
+    if (!(await allowStart(clientAddress(request.headers)))) {
+      return NextResponse.json({ error: 'Too many calls started from here. Please wait a few minutes.' }, { status: 429 });
     }
     const llmUrl = process.env.LLM_PUBLIC_URL;
     const appId = process.env.NEXT_PUBLIC_AGORA_APP_ID;
@@ -55,9 +56,6 @@ export async function POST(request: NextRequest) {
     releaseChannel(channel);
     claimChannel(channel);
 
-    c.phase = 'interpret';
-    act(c, 'tool', 'Started the 1930 interpreter: a new agent that hears English, Hindi and your language');
-    await persist(channel);
 
     const agent = buildAgent({
       client,
@@ -80,15 +78,21 @@ export async function POST(request: NextRequest) {
       expiresIn: ExpiresIn.minutes(20),
       debug: false,
     });
+    // the call becomes the interpreter's only once its agent has really started; the model route
+    // also sees mode=interpret on its URL, so its first turn finds the right phase either way
+    c.phase = 'interpret';
     let agentId: string;
     try {
       agentId = await session.start();
     } catch (e) {
+      c.phase = 'complaint';
+      await persist(channel).catch(() => {});
       releaseChannel(channel);
       throw e;
     }
     setAgent(channel, agentId);
     c.agentId = agentId;
+    act(c, 'tool', 'Started the 1930 interpreter: a new agent that hears English, Hindi and your language');
     await persist(channel);
     return NextResponse.json({ agent_id: agentId, state: 'RUNNING', phase: 'interpret' });
   } catch (error) {

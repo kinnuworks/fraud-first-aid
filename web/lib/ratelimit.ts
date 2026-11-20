@@ -29,7 +29,8 @@ const incr: Incr = shared
       if (memory.size > 5000) memory.delete(memory.keys().next().value as string);
       return n;
     };
-export const allowStart = createLimiter({ incr });
+// 40 starts per address every ten minutes: a hackathon venue (or a mobile carrier) shares one address.
+export const allowStart = createLimiter({ incr, perAddress: 40 });
 // The 'Try to fool the guard' box on /proof: each try is a few model calls, so 30 tries per address
 // every ten minutes and 600 an hour for the whole app.
 export const allowTry = createLimiter({ incr, perAddress: 30, perHour: 600, prefix: 'rl:try' });
@@ -42,3 +43,18 @@ export const clientAddress = (h: Headers) => {
   const parts = ip.split('::')[0].split(':').filter(Boolean);
   return `${parts.slice(0, 4).join(':')}::/64`;
 };
+
+// Cheap per-instance limits for free, frequent requests (token mints, the card's poll), kept in
+// memory so they cost no store commands. Fixed one-minute windows per address.
+const windows = new Map<string, { n: number; until: number }>();
+export function allowInMemory(key: string, perMinute: number): boolean {
+  const now = Date.now();
+  const w = windows.get(key);
+  if (!w || w.until < now) {
+    windows.set(key, { n: 1, until: now + 60_000 });
+    if (windows.size > 20_000) windows.delete(windows.keys().next().value as string);
+    return true;
+  }
+  w.n += 1;
+  return w.n <= perMinute;
+}

@@ -26,7 +26,7 @@ export function createReported({ secret, incr, get }: Deps) {
 const memory = new Map<string, number>();
 const TTL = 90 * 24 * 3600;
 export const reported = createReported({
-  secret: process.env.LLM_SHARED_SECRET || 'local-dev',
+  secret: process.env.CAP_SECRET || process.env.LLM_SHARED_SECRET || 'local-dev',
   incr: shared ? (k) => shared!.incr(k, TTL) : async (k) => { const n = (memory.get(k) ?? 0) + 1; memory.set(k, n); return n; },
   get: shared ? (k) => shared!.count(k) : async (k) => memory.get(k) ?? 0,
 });

@@ -1,6 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { RtcTokenBuilder, RtcRole } from 'agora-token';
 import { newChannel, capFor, checkCap, viewCapFor, talkCapFor } from '@/lib/capability';
+import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { allowInMemory, clientAddress } from '@/lib/ratelimit';
+
+// The agent, the phone line and the family links have their own uids; nobody else may sign in as them.
+const RESERVED = (uid: number) => uid === Number(DEFAULT_AGENT_UID) || uid === 7001 || (uid >= 80000 && uid < 100000);
 
 const EXPIRATION_TIME_IN_SECONDS = 3600;
 
@@ -16,12 +21,20 @@ export async function GET(request: NextRequest) {
     );
   }
 
+  // free to call, so a cheap per-instance limit (no store commands)
+  if (!allowInMemory(`tok:${clientAddress(request.headers)}`, 60)) {
+    return NextResponse.json({ error: 'Too many requests from here. Please wait a minute.' }, { status: 429 });
+  }
   const { searchParams } = new URL(request.url);
   const uidStr = searchParams.get('uid');
   const parsedUid = uidStr ? parseInt(uidStr, 10) : Number.NaN;
-  const uid = Number.isNaN(parsedUid) || parsedUid <= 0
+  if (!Number.isNaN(parsedUid) && RESERVED(parsedUid)) {
+    return NextResponse.json({ error: 'that uid is reserved' }, { status: 400 });
+  }
+  let uid = Number.isNaN(parsedUid) || parsedUid <= 0
     ? Math.floor(Math.random() * 9_999_000) + 1000
     : parsedUid;
+  while (RESERVED(uid)) uid = Math.floor(Math.random() * 9_999_000) + 100_000;
   // A new call gets a server-made channel; renewing a token for an existing one needs its capability.
   const asked = searchParams.get('channel');
   if (asked && !checkCap(asked, searchParams.get('cap'))) {

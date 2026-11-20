@@ -13,6 +13,7 @@ export function isBankHoliday(d: Date, holidays: string[] = []): boolean {
 
 export function addBankWorkingDays(start: string, n: number, holidays: string[] = []): string {
   const d = new Date(`${start}T00:00:00Z`);
+  if (Number.isNaN(d.getTime())) throw new RangeError(`not a date: ${start}`);
   let left = n;
   while (left > 0) {
     d.setUTCDate(d.getUTCDate() + 1);
