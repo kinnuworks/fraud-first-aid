@@ -3,8 +3,9 @@
 // on guard the agent must stay silent.
 const ONE_MOMENT: Record<string, string[]> = {
   en: ['One moment.', 'Let me check that.'],
-  hi: ['एक सेकंड।', 'ज़रा रुकिए, देख रही हूँ।'],
-  te: ['ఒక్క నిమిషం.', 'చూస్తున్నాను, ఒక్క క్షణం.'],
+  // Agora's phone-call API refuses a phrase in an Indian script longer than 20 characters
+  hi: ['एक सेकंड।', 'ज़रा रुकिए।'],
+  te: ['ఒక్క నిమిషం.', 'ఒక్క క్షణం.'],
   kn: ['ಒಂದು ನಿಮಿಷ.', 'ಒಂದು ಕ್ಷಣ.'],
   ta: ['ஒரு நிமிடம்.', 'ஒரு கணம்.'],
   ml: ['ഒരു നിമിഷം.'],
