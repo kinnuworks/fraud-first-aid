@@ -73,8 +73,8 @@ export const POST = createLlmRoute({
       if (process.env.DEBUG_TURNS === '1')
         (c.trace ??= []).push(`interpret ack marked${(detail.match(/\d/g) ?? []).length} heard${spokenToDigits(lastUser).length}/${spokenToDigits(recent).length} kept${got?.ack.length ?? 0}`);
       if (!got) return;
+      if (got.ack !== c.ack1930) act(c, 'done', `Saved the 1930 acknowledgement number: ${got.ack}`);
       c.ack1930 = got.ack;
-      act(c, 'done', `Saved the 1930 acknowledgement number: ${got.ack}`);
       return got.say;
     }
     addFlag(c, id, detail, lastUser);

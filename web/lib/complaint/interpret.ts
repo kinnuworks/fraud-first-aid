@@ -142,6 +142,10 @@ export function ackLine(c: Complaint, markerDetail: string, lastUser: string, re
     ? marked
     : runs.filter((r) => r.length >= 6 && r.length <= 30).sort((a, b) => b.length - a.length)[0] ?? marked;
   if (!ack) return null;
+  // The operator confirmed the number already read back (no digits in their turn): thank them once.
+  // A second full read-back took half a minute on the live call (21 Nov). Digits said again are
+  // read back, so a repeated mishearing is still heard.
+  if (ack === c.ack1930 && runs.length === 0) return { ack, say: 'Thank you, I have saved that number.' };
   // read back to the operator first, as every number is: a misheard digit gets corrected on the call
   // (the model marks the corrected number again and this runs once more)
   const toOperator = `Let me read that back: ${spokenCode(ack, 'en')}. Please tell me if any digit is wrong.`;
