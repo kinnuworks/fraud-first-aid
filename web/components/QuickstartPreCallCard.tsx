@@ -182,7 +182,7 @@ function WatchButton({ isLoading, onStartConversation }: Actions) {
           Starting the sample call…
         </>
       ) : (
-        <>▶ Watch it catch a scam (30 s)</>
+        <>▶ Watch it catch a scam call</>
       )}
     </button>
   );

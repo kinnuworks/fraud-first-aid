@@ -106,7 +106,7 @@ export default function ConversationComponent({
     if (typeof window === 'undefined' || new URLSearchParams(window.location.search).get('demo') !== '1') return;
     (window as unknown as { __utrPakkaPlay?: (u: string) => Promise<void> }).__utrPakkaPlay = (u) => playClipIntoCall(client, u);
   }, [client]);
-  // ?watch=1: "Watch it catch a scam (30 s)" from the first screen. No microphone is opened; once the
+  // ?watch=1: "Watch it catch a scam call" from the first screen. No microphone is opened; once the
   // agent is listening, the labelled sample scam call plays into the call by itself.
   const [watch] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('watch') === '1');
   const watchPlayed = useRef(false);
