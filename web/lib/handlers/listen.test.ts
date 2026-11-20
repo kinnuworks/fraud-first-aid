@@ -6,6 +6,13 @@ beforeAll(() => {
   process.env.NEXT_AGORA_APP_CERTIFICATE = 'b'.repeat(32);
   process.env.LLM_SHARED_SECRET ??= 'test-secret-for-caps';
 });
+// Load the handler once before the tests, with its own time limit: on a busy machine the first
+// import took longer than a test's 5 s and failed a test that never ran (21 Nov, load ~40). Each
+// test keeps its own 5 s for what it checks.
+beforeAll(async () => {
+  await import('./listen');
+  await import('../capability');
+}, 60_000);
 
 describe('listen: a read-only RTC token for family', () => {
   it('refuses without the view key', async () => {

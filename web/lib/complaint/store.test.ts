@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 
 // A shared store held in this test's memory, standing in for Upstash.
 const db = new Map<string, string>();
@@ -13,6 +13,12 @@ vi.mock('./shared', () => ({
 // poll loaded the call from the store over this instance's copy. A model turn takes 3 to 8 s, so a
 // poll in the middle replaced the object its tools were writing to, and the payee, the time and
 // the screenshot choice were lost. A poll must never undo a turn that is still running.
+// Load the store once before the tests, with its own time limit: on a busy machine the first import
+// took longer than a test's 5 s (21 Nov, load ~40). Each test keeps its own 5 s.
+beforeAll(async () => {
+  await import('./store');
+}, 60_000);
+
 describe('store: a poll during a turn', () => {
   it('keeps what the running turn wrote', async () => {
     const { hydrate, persist, getComplaint, hold, release, peekComplaint } = await import('./store');
