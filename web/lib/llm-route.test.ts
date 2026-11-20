@@ -154,6 +154,32 @@ describe('inline markers', () => {
     expect(text).toBe('Your number is three one five one.');
     expect(seen).toEqual([['m2', 'ack', '3151 2511 2001 23']]);
   });
+  it('gives onMarker the last two user turns, so a number read out over two turns can be checked against both', async () => {
+    let recent = '';
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: fakeStream(['[[ack:31512511200123]]']),
+      onMarker: (...a: unknown[]) => {
+        recent = String(a[4] ?? '');
+        return 'Read back by code.';
+      },
+    });
+    const r = new NextRequest('http://localhost/api/chat/completions?session=m4', {
+      method: 'POST',
+      body: JSON.stringify({
+        messages: [
+          { role: 'user', content: 'the acknowledgement number: three one five one,' },
+          { role: 'assistant', content: '' },
+          { role: 'user', content: [{ type: 'text', text: 'two five one one, two zero zero one, two three.' }] },
+        ],
+      }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    await (await route(r)).text();
+    expect(recent).toContain('three one five one,');
+    expect(recent).toContain('two zero zero one, two three.');
+  });
   it('speaks the line onMarker returns instead of the rest of the model reply (numbers read back by code)', async () => {
     const route = createLlmRoute({
       secret: 's3cret',

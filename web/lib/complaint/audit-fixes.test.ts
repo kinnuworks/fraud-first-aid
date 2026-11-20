@@ -208,6 +208,19 @@ describe('rate limits and the stored transcript', () => {
   });
 });
 
+describe('an acknowledgement number read out over two turns (the operator paused between groups)', () => {
+  const first = 'Your complaint is registered. Please note the acknowledgement number: three one five one,';
+  const rest = 'two five one one, two zero zero one, two three.';
+  it('keeps the whole number the model marked when the last two turns hold it', () => {
+    const c = full('te');
+    expect(ackLine(c, '31512511200123', rest, `${first} | ${rest}`)!.ack).toBe('31512511200123');
+  });
+  it('still never keeps a number nobody said', () => {
+    const c = full('te');
+    expect(ackLine(c, '31512511200129', rest, `${first} | ${rest}`)!.ack).toBe('2511200123');
+  });
+});
+
 describe('the acknowledgement number is read back to the operator (a live run misheard it, 20 Nov)', () => {
   it('reads it back in English first so the operator can correct it, then tells the caller', () => {
     const c = full('te');
