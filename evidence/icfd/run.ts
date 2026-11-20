@@ -7,9 +7,13 @@ import { execFileSync } from 'child_process';
 import { existsSync, mkdirSync, writeFileSync, readFileSync } from 'fs';
 import { join } from 'path';
 import { capFor } from '../../web/lib/capability';
-import { detectRedFlag } from '../../web/lib/complaint/redflags';
+import { detectRedFlag, saysHangUp } from '../../web/lib/complaint/redflags';
 
 const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
+// Eleventh claim (`--eleventh`): a fresh run of our guard scored with the same text rule as the general
+// assistant (evidence/icfd/generic.ts), results kept apart from the seventh claim's.
+const ELEVENTH = process.argv.includes('--eleventh');
+const NAMES_SCAM = /\b(scam|scammer|fraud|fraudulent|fake call)\b|धोखा|फ्रॉड|ठगी|स्कैम/i;
 const SECRET = process.env.LLM_SHARED_SECRET;
 if (!SECRET) throw new Error('LLM_SHARED_SECRET must be set');
 const REV = 'e91937a718b4cec97b8c06820225a9bdc30dd84a';
@@ -56,18 +60,19 @@ async function one(c: Conv, idx: number) {
     msgs.push({ role: 'assistant', content: said });
     const k = await card(session);
     if (k === null) unavailable = true;
-    if ((k?.flags?.length ?? 0) > 0 || (k === null && HANGUP.test(said))) { warnTurn = i; break; }
+    const textWarn = ELEVENTH && said.trim() !== '' && said.trim() !== '<silent>' && (saysHangUp(said) || NAMES_SCAM.test(said));
+    if ((k?.flags?.length ?? 0) > 0 || (k === null && HANGUP.test(said)) || textWarn) { warnTurn = i; break; }
     if (k?.phase === 'complaint') { handover = i; break; }
   }
   return { uid: c.release_metadata.conversation_uid, verdict: c.final_verdict, type: c.scenario.case_type, turns: c.transcript.length, labelTurn, warnTurn, baseTurn, handover, unavailable };
 }
 
 (async () => {
-  const out = join(CACHE, 'results.jsonl');
+  const out = join(CACHE, ELEVENTH ? 'ours-eleventh-results.jsonl' : 'results.jsonl');
   const done = new Map<string, unknown>(existsSync(out) ? readFileSync(out, 'utf8').trim().split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return [r.uid, r]; }) : []);
   const todo = sample.map((c, i) => [c, i] as const).filter(([c]) => !done.has(c.release_metadata.conversation_uid));
   let next = 0;
-  await Promise.all(Array.from({ length: 1 }, async () => {
+  await Promise.all(Array.from({ length: ELEVENTH ? 6 : 1 }, async () => {
     while (next < todo.length) {
       const [c, i] = todo[next++];
       const r = await one(c, i).catch((e) => ({ uid: c.release_metadata.conversation_uid, error: String(e) }));
@@ -77,7 +82,8 @@ async function one(c: Conv, idx: number) {
   }));
   const rows = readFileSync(out, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((r) => !r.error);
   const csv = ['uid,verdict,type,turns,label_turn,warn_turn,baseline_turn,handover_turn,ours,baseline,early', ...rows.map((r) => [r.uid, r.verdict, r.type, r.turns, r.labelTurn, r.warnTurn, r.baseTurn, r.handover, +(r.warnTurn >= 0), +(r.baseTurn >= 0), +(r.warnTurn >= 0 && r.labelTurn >= 0 && r.warnTurn <= r.labelTurn)].join(','))];
-  writeFileSync(join(CACHE, 'results.csv'), csv.join('\n') + '\n');
+  writeFileSync(join(CACHE, ELEVENTH ? 'ours-eleventh-results.csv' : 'results.csv'), csv.join('\n') + '\n');
+  if (ELEVENTH) writeFileSync(join(__dirname, '..', 'results', `icfd-ours-eleventh-${new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10)}.csv`), csv.join('\n') + '\n');
   const f = rows.filter((r) => r.verdict === 'YES'), n = rows.filter((r) => r.verdict === 'NO');
   const warned = f.filter((r) => r.warnTurn >= 0);
   const med = warned.map((r) => r.warnTurn + 1).sort((a, b) => a - b)[Math.floor(warned.length / 2)];
