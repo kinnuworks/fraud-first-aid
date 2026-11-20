@@ -24,7 +24,11 @@ export const POST = createLlmRoute({
     const c = getComplaint(session);
     // Interpreting a 1930 call: two languages on one speaker, so every turn goes to the model, and
     // the caller's language stays fixed.
-    if (c.phase === 'interpret') return null;
+    if (c.phase === 'interpret') {
+      // turn shapes for debugging, only with DEBUG_TURNS=1; never the words
+      if (process.env.DEBUG_TURNS === '1') (c.trace ??= []).push(`interpret len${lastUser.length} digits${spokenToDigits(lastUser).length}`);
+      return null;
+    }
     // On guard the warning is for the user: a red-flag line is usually the scammer's, so it doesn't
     // move the reply language (Any-language mode).
     if (!(c.phase === 'guard' && detectRedFlag(lastUser))) followLanguage(c, lastUser);
@@ -60,12 +64,14 @@ export const POST = createLlmRoute({
     // only a reply that tells them to hang up counts as a warning (not an answer to a question)
     if (c.phase === 'guard' && c.flags.length === 0 && saysHangUp(spoken)) addFlag(c, 'suspicious_call', 'pushed for action on the call, and Fraud First Aid told the user to hang up', lastUser);
   },
-  onMarker: (session, id, detail, lastUser) => {
+  onMarker: (session, id, detail, lastUser, recent) => {
     const c = getComplaint(session);
     // the interpreter's introduction and the UTR, spoken by code when the model marks the moment
     if (id === 'intro' || id === 'utr') return interpretLine(c, id) ?? undefined;
     if (id === 'ack') {
-      const got = c.phase === 'interpret' ? ackLine(c, detail, lastUser) : null;
+      const got = c.phase === 'interpret' ? ackLine(c, detail, lastUser, recent) : null;
+      if (process.env.DEBUG_TURNS === '1')
+        (c.trace ??= []).push(`interpret ack marked${(detail.match(/\d/g) ?? []).length} heard${spokenToDigits(lastUser).length}/${spokenToDigits(recent).length} kept${got?.ack.length ?? 0}`);
       if (!got) return;
       c.ack1930 = got.ack;
       act(c, 'done', `Saved the 1930 acknowledgement number: ${got.ack}`);

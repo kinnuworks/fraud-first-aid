@@ -1,8 +1,8 @@
 // One agent definition for every way in: the web call and the phone call share the same
 // pipeline (Sarvam speech-to-text, our model route with complaint tools, Murf Falcon voice).
 import { Agent, SarvamSTT, MurfTTS, OpenAI, type AgoraClient } from 'agora-agents';
-import { fillerWords, SILENCE_PROMPT } from '@/lib/filler';
-import { prototypeInstructions, type LangPreset } from '@/lib/agent-config';
+import { fillerWords, SILENCE_PROMPT } from './filler';
+import { prototypeInstructions, type LangPreset } from './agent-config';
 
 function requireEnv(name: string): string {
   const value = process.env[name];
@@ -52,8 +52,10 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
           end_of_speech: {
             mode: 'vad',
             vad_config: {
-              // ms of silence before the turn ends; slow mode waits longer, for callers who pause mid-sentence
-              silence_duration_ms: slow ? 900 : 480,
+              // ms of silence before the turn ends; slow mode waits longer, for callers who pause
+              // mid-sentence, and so does the 1930 interpreter, for an operator reading out a number
+              // in groups (a live run split the acknowledgement number at a pause, 20 Nov)
+              silence_duration_ms: slow ? 900 : mode === 'interpret' ? 800 : 480,
             },
           },
         },

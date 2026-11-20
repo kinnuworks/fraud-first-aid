@@ -131,12 +131,13 @@ function digitRuns(text: string): string[] {
   return runs;
 }
 
-// The acknowledgement number: the one the model marked, when the operator's own words hold it;
-// otherwise the longest run of digits they said (6 to 30 long). Read back to the caller by code.
-export function ackLine(c: Complaint, markerDetail: string, lastUser: string): { ack: string; say: string } | null {
+// The acknowledgement number: the one the model marked, when the operator's own words hold it (in
+// this turn, or across this and the turn before, when a pause between groups ended the first);
+// otherwise the longest run of digits they said in this turn (6 to 30 long). Read back by code.
+export function ackLine(c: Complaint, markerDetail: string, lastUser: string, recent = lastUser): { ack: string; say: string } | null {
   const marked = ackFrom(markerDetail);
   const runs = digitRuns(lastUser);
-  const heardAll = runs.join('');
+  const heardAll = `${runs.join('')} ${digitRuns(recent).join('')}`;
   const ack = marked && /^\d+$/.test(marked) && heardAll.includes(marked)
     ? marked
     : runs.filter((r) => r.length >= 6 && r.length <= 30).sort((a, b) => b.length - a.length)[0] ?? marked;

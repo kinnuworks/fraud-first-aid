@@ -25,11 +25,14 @@ type Deps = {
   // removed from the spoken text and reported here (saves a tool round-trip).
   // It may return a line to speak instead of the rest of the model's reply (a number read back by
   // code, never by the model).
+  // recent: the last two user turns as heard, so a number read out over two turns (a pause between
+  // groups ended the first) can be checked against both.
   onMarker?: (
     session: string,
     id: string,
     detail: string,
     lastUser: string,
+    recent: string,
   ) => string | void;
   // A fixed reply to speak at once instead of calling the model (the guard's red-flag rules).
   shortcut?: (session: string, lastUser: string) => string | null | Promise<string | null>;
@@ -126,6 +129,12 @@ export function createLlmRoute({
     const msgs = body.messages ?? [];
     const last = [...msgs].reverse().find((m) => m.role === "user")?.content;
     const whole = typeof last === "string" ? last : "";
+    // the last two user turns as text (Agora may send a turn as text parts)
+    const recent = forModel(msgs)
+      .filter((m) => m.role === "user")
+      .slice(-2)
+      .map((m) => m.content)
+      .join(" | ");
     // After a silent reply Agora appends the next utterance to the same user message, so pass on
     // only the words this session hasn't seen yet.
     const prev = seenUser.get(session) ?? "";
@@ -225,12 +234,12 @@ export function createLlmRoute({
               const m = pending
                 .slice(2, close)
                 .match(/^flag:([a-z_]+)\|([\s\S]*)$/);
-              if (m) onMarker?.(session, m[1], m[2].trim(), lastUser);
+              if (m) onMarker?.(session, m[1], m[2].trim(), lastUser, recent);
               // [[ack:<number>]]: the 1930 acknowledgement number heard while interpreting;
               // [[intro]] / [[utr]]: the interpreter's introduction and the UTR, spoken by code
               const ack = pending.slice(2, close).match(/^ack:([\s\S]{1,60})$/);
               const bare = pending.slice(2, close).trim().match(/^(intro|utr)$/);
-              const instead = ack ? onMarker?.(session, 'ack', ack[1].trim(), lastUser) : bare ? onMarker?.(session, bare[1], '', lastUser) : undefined;
+              const instead = ack ? onMarker?.(session, 'ack', ack[1].trim(), lastUser, recent) : bare ? onMarker?.(session, bare[1], '', lastUser, recent) : undefined;
               if (typeof instead === "string") {
                 // code speaks the number; the model's own wording of it is dropped
                 say(instead);
