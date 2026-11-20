@@ -40,6 +40,8 @@ export type Complaint = {
   actions?: Action[];
   // The acknowledgement number the 1930 operator gave, heard during interpret.
   ack1930?: string;
+  // The interpreter has introduced the case to the operator.
+  interpIntro?: boolean;
   // The payee was counted in the reported-payees registry (once per call).
   reportedPayee?: boolean;
   fields: Partial<{

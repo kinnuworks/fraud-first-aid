@@ -2,7 +2,7 @@
 // operator the confirmed details in English (or Hindi), and tells the caller in their own language
 // what the operator asks and says. Facts come only from the confirmed complaint, never from the model.
 import type { Complaint } from './session';
-import type { ReadbackLang } from '../entities/numbers';
+import { readbackText, spokenToDigits, type ReadbackLang } from '../entities/numbers';
 import { buildPack, LANG_NAME } from './pack';
 import { istToday } from './today';
 
@@ -29,18 +29,22 @@ export function interpretSystem(c: Complaint, today = istToday()): string {
   const pack = buildPack(c, today);
   const lang = LANG_NAME[c.lang];
   const facts = pack.ok ? pack.operatorCard : 'No confirmed details.';
+  const k = factsOf(c);
+  const spoken = k ? [`UTR: "${k.utr}"`, `Amount: "${k.amount}"`, `When: "${k.when}"`, `Paid to: "${k.payee}"`].join('\n') : '';
   return `You are Fraud First Aid, an AI interpreter on a phone call to India's cyber fraud helpline, 1930. The caller has put their 1930 call on speaker next to you, so you hear everyone as one stream of text: the 1930 operator (or the helpline's recorded menu), who speaks English or Hindi, and the caller, who speaks ${lang}. Tell who is speaking from the language and from what they say. You speak aloud to both of them.
 
 The caller's confirmed details (the only facts you may give; never add, guess or change one):
 ${facts}
-
+${spoken ? `Spoken forms, to copy word for word whenever you say one of these (never work out a number yourself):
+${spoken}
+` : ''}
 What to do on each turn:
 1. Ringing, hold music, a recorded menu or anything not meant for you: if a recorded menu lists options, tell the caller in ${lang} in one sentence which option is for a financial or UPI fraud complaint; otherwise answer with exactly <silent>.
-2. The first time a live operator speaks: in English, say you are Fraud First Aid, an AI assistant helping this caller report a UPI fraud, that the caller speaks ${lang} and you will interpret, and then give the short version: the amount, when it was debited, the UTR and who it was paid to.
+2. Your introduction to the operator and the UTR, when they ask for it, are spoken for you. If the operator asks to hear a detail again, copy its spoken form exactly.
 3. The operator asks for something in the details above: answer the operator directly, in English (in Hindi if the operator spoke Hindi). Read every number digit by digit in groups: the UTR in three groups of four ("four zero two one, seven seven eight eight, nine nine one zero"), a UPI ID letter by letter where it helps. Then tell the caller in one short ${lang} sentence what you told them.
 4. The operator asks for something not in the details (the caller's name, address, mobile number, account number, the last digits of a card): ask the caller in ${lang}, in one short question, and wait.
 5. The caller speaks in ${lang}: give it to the operator in English, starting with "The caller says", faithfully and briefly. If they gave a number, read it digit by digit.
-6. The operator tells the caller something (an instruction, what happens next, a complaint or acknowledgement number): tell the caller in ${lang}. Read any number twice, slowly, digit by digit. If it is the complaint or acknowledgement number, start your reply with the marker [[ack:<the digits and letters only>]]; it is removed before speaking.
+6. The operator tells the caller something (an instruction, what happens next, a complaint or acknowledgement number): tell the caller in ${lang}. Read any number twice, slowly, digit by digit. If it is the complaint or acknowledgement number, reply with only the marker [[ack:<the digits and letters only>]]: the number is then read back to the caller for you.
 Never give or ask for an OTP, UPI PIN, password, CVV or full card number. If anyone asks for one, tell the caller in ${lang} not to share it: 1930 never needs it.
 Never pretend to be the caller or a person. If you did not catch something, ask for it to be repeated, in that person's language.
 Every reply is spoken: at most three short sentences per language, no lists, no markdown, no asterisks.`;
@@ -50,4 +54,90 @@ Every reply is spoken: at most three short sentences per language, no lists, no 
 export function ackFrom(detail: string): string | null {
   const v = detail.replace(/[^A-Za-z0-9]/g, '').toUpperCase();
   return v.length >= 6 && v.length <= 30 ? v : null;
+}
+
+
+// --- Numbers are never written by the model: code builds every reply that carries one. ---
+
+const inr = (n: number) => n.toLocaleString('en-IN');
+const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+// "2026-11-19T14:30" -> "19 November 2026 at 2:30 pm"
+export function spokenWhen(v: string): string {
+  const m = v.match(/^(\d{4})-(\d{2})-(\d{2})(?:T(\d{2}):(\d{2}))?/);
+  if (!m) return v;
+  const day = `${Number(m[3])} ${MONTHS[Number(m[2]) - 1]} ${m[1]}`;
+  if (!m[4]) return day;
+  const h = Number(m[4]);
+  return `${day} at ${h % 12 || 12}:${m[5]} ${h < 12 ? 'am' : 'pm'}`;
+}
+// "ramesh@okaxis" -> "r a m e s h at o k a x i s"
+export const spelled = (id: string) =>
+  [...id.toLowerCase()].map((ch) => (ch === '@' ? 'at' : ch === '.' ? 'dot' : /\d/.test(ch) ? readbackText(ch, 'en') : ch)).join(' ').replace(/ +/g, ' ');
+const spokenCode = (code: string, lang: ReadbackLang) =>
+  /^\d+$/.test(code) ? readbackText(code, lang) : [...code].map((ch) => (/\d/.test(ch) ? readbackText(ch, lang) : ch)).join(' ');
+
+type CallerLines = { told: string; gaveUtr: string; ack: (r: string) => string };
+export const TO_CALLER: Record<ReadbackLang, CallerLines> = {
+  en: { told: "I've told the operator what happened, with your UTR and amount.", gaveUtr: "I've given the operator your UTR and the amount.", ack: (r) => `Your complaint is registered. The acknowledgement number is ${r}. Once more: ${r}. It's saved on your screen.` },
+  hi: { told: 'मैंने ऑपरेटर को बता दिया कि क्या हुआ, आपका UTR और रकम भी।', gaveUtr: 'मैंने ऑपरेटर को आपका UTR और रकम बता दी है।', ack: (r) => `आपकी शिकायत दर्ज हो गई है। एक्नॉलेजमेंट नंबर है ${r}। फिर से: ${r}। यह आपकी स्क्रीन पर सेव है।` },
+  te: { told: 'ఏం జరిగిందో, మీ UTR, మొత్తం ఆపరేటర్‌కి చెప్పాను.', gaveUtr: 'ఆపరేటర్‌కి మీ UTR, మొత్తం చెప్పాను.', ack: (r) => `మీ ఫిర్యాదు నమోదైంది. అక్నాలెడ్జ్‌మెంట్ నంబర్ ${r}. మళ్ళీ చెబుతాను: ${r}. ఇది మీ స్క్రీన్ మీద సేవ్ అయింది.` },
+  kn: { told: 'ಏನಾಯಿತು ಎಂದು, ನಿಮ್ಮ UTR ಮತ್ತು ಮೊತ್ತವನ್ನು ಆಪರೇಟರ್‌ಗೆ ಹೇಳಿದ್ದೇನೆ.', gaveUtr: 'ಆಪರೇಟರ್‌ಗೆ ನಿಮ್ಮ UTR ಮತ್ತು ಮೊತ್ತ ಹೇಳಿದ್ದೇನೆ.', ack: (r) => `ನಿಮ್ಮ ದೂರು ದಾಖಲಾಗಿದೆ. ಅಕ್ನಾಲೆಡ್ಜ್‌ಮೆಂಟ್ ಸಂಖ್ಯೆ ${r}. ಮತ್ತೊಮ್ಮೆ: ${r}. ಇದು ನಿಮ್ಮ ಸ್ಕ್ರೀನ್ ಮೇಲೆ ಉಳಿದಿದೆ.` },
+  ta: { told: 'என்ன நடந்தது என்பதையும், உங்கள் UTR மற்றும் தொகையையும் ஆபரேட்டரிடம் சொல்லிவிட்டேன்.', gaveUtr: 'ஆபரேட்டரிடம் உங்கள் UTR மற்றும் தொகையைச் சொல்லிவிட்டேன்.', ack: (r) => `உங்கள் புகார் பதிவாகிவிட்டது. ஒப்புகை எண் ${r}. மீண்டும்: ${r}. இது உங்கள் திரையில் சேமிக்கப்பட்டுள்ளது.` },
+  ml: { told: 'എന്താണ് സംഭവിച്ചതെന്നും നിങ്ങളുടെ UTR-ഉം തുകയും ഓപ്പറേറ്ററോട് പറഞ്ഞു.', gaveUtr: 'ഓപ്പറേറ്ററോട് നിങ്ങളുടെ UTR-ഉം തുകയും പറഞ്ഞു.', ack: (r) => `നിങ്ങളുടെ പരാതി രജിസ്റ്റർ ചെയ്തു. അക്നോളജ്മെന്റ് നമ്പർ ${r}. ഒരിക്കൽ കൂടി: ${r}. ഇത് നിങ്ങളുടെ സ്ക്രീനിൽ സേവ് ചെയ്തിട്ടുണ്ട്.` },
+  mr: { told: 'काय झालं ते, तुमचा UTR आणि रक्कम मी ऑपरेटरला सांगितली आहे.', gaveUtr: 'मी ऑपरेटरला तुमचा UTR आणि रक्कम सांगितली आहे.', ack: (r) => `तुमची तक्रार नोंदवली गेली आहे. ॲक्नॉलेजमेंट नंबर आहे ${r}. पुन्हा एकदा: ${r}. तो तुमच्या स्क्रीनवर सेव्ह आहे.` },
+  bn: { told: 'কী হয়েছে, আপনার UTR আর টাকার পরিমাণ অপারেটরকে জানিয়ে দিয়েছি।', gaveUtr: 'অপারেটরকে আপনার UTR আর টাকার পরিমাণ বলে দিয়েছি।', ack: (r) => `আপনার অভিযোগ নথিভুক্ত হয়েছে। অ্যাকনলেজমেন্ট নম্বর ${r}। আবার বলছি: ${r}। এটা আপনার স্ক্রিনে সেভ করা আছে।` },
+  gu: { told: 'શું થયું તે, તમારો UTR અને રકમ મેં ઑપરેટરને કહી દીધાં છે.', gaveUtr: 'મેં ઑપરેટરને તમારો UTR અને રકમ કહી દીધાં છે.', ack: (r) => `તમારી ફરિયાદ નોંધાઈ ગઈ છે. એક્નોલેજમેન્ટ નંબર છે ${r}. ફરી એક વાર: ${r}. તે તમારી સ્ક્રીન પર સેવ છે.` },
+  pa: { told: 'ਕੀ ਹੋਇਆ, ਤੁਹਾਡਾ UTR ਅਤੇ ਰਕਮ ਮੈਂ ਆਪਰੇਟਰ ਨੂੰ ਦੱਸ ਦਿੱਤੀ ਹੈ।', gaveUtr: 'ਮੈਂ ਆਪਰੇਟਰ ਨੂੰ ਤੁਹਾਡਾ UTR ਅਤੇ ਰਕਮ ਦੱਸ ਦਿੱਤੀ ਹੈ।', ack: (r) => `ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਹੋ ਗਈ ਹੈ। ਐਕਨੌਲੇਜਮੈਂਟ ਨੰਬਰ ਹੈ ${r}। ਇੱਕ ਵਾਰ ਫਿਰ: ${r}। ਇਹ ਤੁਹਾਡੀ ਸਕ੍ਰੀਨ ਤੇ ਸੇਵ ਹੈ।` },
+};
+
+// The operator's lines come in English or Hindi; the caller's in their own script. A line in Latin
+// script (or Devanagari, for a caller who doesn't speak Hindi) is the operator's.
+function fromOperator(c: Complaint, text: string): boolean {
+  const letters = text.replace(/[^\p{L}]/gu, '');
+  if (!letters) return false;
+  const latin = (letters.match(/[A-Za-z]/g) ?? []).length / letters.length;
+  const deva = (letters.match(/[ऀ-ॿ]/g) ?? []).length / letters.length;
+  const keyword = /\b(1930|helpline|cyber|complaint|how can i help|transaction|utr)\b|हेल्पलाइन|साइबर|शिकायत/i.test(text);
+  if (c.lang === 'en') return keyword;
+  if (c.lang === 'hi') return latin > 0.6 || keyword;
+  return latin > 0.6 || deva > 0.6 || keyword;
+}
+const ASKS_UTR = /\butr\b|u\s?t\s?r\b|transaction (id|number|reference|ref)|reference number|यूटीआर|ट्रांजैक्शन|रेफरेंस/i;
+
+function factsOf(c: Complaint) {
+  const f = c.fields;
+  if (!f.utr || !f.amount || !f.when || !f.payee) return null;
+  const payee = /^\d{10}$/.test(f.payee.value) ? `mobile number ${readbackText(f.payee.value, 'en')}` : spelled(f.payee.value);
+  return {
+    utr: `The UTR is ${readbackText(f.utr.value, 'en')}.`,
+    amount: `The amount is Rs ${inr(f.amount.value)}.`,
+    when: spokenWhen(f.when.value),
+    payee,
+  };
+}
+
+// The interpreter's fixed replies: its first words to the operator, and the UTR when asked for it.
+// Everything else goes to the model, which has no numbers of its own to say (see interpretSystem).
+export function interpretShortcut(c: Complaint, lastUser: string): string | null {
+  if (c.phase !== 'interpret' || !canInterpret(c)) return null;
+  const t = lastUser.trim();
+  if (!t || !fromOperator(c, t)) return null;
+  const k = factsOf(c);
+  if (!k) return null;
+  const toCaller = c.lang === 'en' ? '' : ` ${TO_CALLER[c.lang].told}`;
+  if (!c.interpIntro) {
+    c.interpIntro = true;
+    return `Hello, I'm Fraud First Aid, an AI assistant helping this caller report a UPI fraud. The caller speaks ${LANG_NAME[c.lang]}, and I'll interpret. Rs ${inr(c.fields.amount!.value)} was debited on ${k.when}, paid to ${k.payee}. ${k.utr}${toCaller}`;
+  }
+  if (ASKS_UTR.test(t)) return `${k.utr} ${k.amount}${c.lang === 'en' ? '' : ` ${TO_CALLER[c.lang].gaveUtr}`}`;
+  return null;
+}
+
+// The acknowledgement number, from the operator's own words when they hold one (the model's marker
+// only says that one was given), and the line that reads it back to the caller.
+export function ackLine(c: Complaint, markerDetail: string, lastUser: string): { ack: string; say: string } | null {
+  const heard = spokenToDigits(lastUser);
+  const ack = heard.length >= 6 && heard.length <= 30 ? heard : ackFrom(markerDetail);
+  if (!ack) return null;
+  return { ack, say: TO_CALLER[c.lang].ack(spokenCode(ack, c.lang)) };
 }

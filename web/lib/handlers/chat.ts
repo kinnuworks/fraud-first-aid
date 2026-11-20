@@ -8,7 +8,7 @@ import { act, addFlag, logHeard } from '@/lib/complaint/session';
 import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
 import { guardReported, reportOnce } from '@/lib/complaint/reported';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
-import { ackFrom, canInterpret } from '@/lib/complaint/interpret';
+import { ackLine, canInterpret, interpretShortcut } from '@/lib/complaint/interpret';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -24,7 +24,7 @@ export const POST = createLlmRoute({
     const c = getComplaint(session);
     // Interpreting a 1930 call: two languages on one speaker, so every turn goes to the model, and
     // the caller's language stays fixed.
-    if (c.phase === 'interpret') return null;
+    if (c.phase === 'interpret') return interpretShortcut(c, lastUser);
     followLanguage(c, lastUser);
     // on guard, keep the scam call itself as evidence for the pack
     logHeard(c, lastUser);
@@ -61,12 +61,11 @@ export const POST = createLlmRoute({
   onMarker: (session, id, detail, lastUser) => {
     const c = getComplaint(session);
     if (id === 'ack') {
-      const ack = c.phase === 'interpret' ? ackFrom(detail) : null;
-      if (ack) {
-        c.ack1930 = ack;
-        act(c, 'done', `Saved the 1930 acknowledgement number: ${ack}`);
-      }
-      return;
+      const got = c.phase === 'interpret' ? ackLine(c, detail, lastUser) : null;
+      if (!got) return;
+      c.ack1930 = got.ack;
+      act(c, 'done', `Saved the 1930 acknowledgement number: ${got.ack}`);
+      return got.say;
     }
     addFlag(c, id, detail, lastUser);
   },

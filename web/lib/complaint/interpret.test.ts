@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint, type Complaint } from './session';
-import { canInterpret, interpretSystem, ackFrom, INTERPRET_GREETING } from './interpret';
+import { canInterpret, interpretSystem, ackFrom, INTERPRET_GREETING, interpretShortcut, ackLine, spokenWhen, spelled } from './interpret';
 import { buildPack } from './pack';
 import { READBACK_LANGS } from '../entities/numbers';
 
@@ -50,5 +50,38 @@ describe('1930 interpreter', () => {
     const p = buildPack(c, '2026-11-19');
     if (!p.ok) throw new Error('expected a pack');
     expect(p.operatorCard).toContain('1930 acknowledgement number: 31512511200123');
+  });
+
+  it('introduces the case to the operator from code: the right date, the payee spelled, the UTR in words', () => {
+    const c = full('te');
+    c.phase = 'interpret';
+    expect(interpretShortcut(c, 'నమస్కారం')).toBeNull(); // the caller, not the operator
+    const intro = interpretShortcut(c, 'Hello, this is the national cyber crime helpline, 1930. How can I help you?')!;
+    expect(intro).toContain('19 November 2026 at 2:30 pm');
+    expect(intro).toContain('r a m e s h at o k a x i s');
+    expect(intro).toContain('The UTR is four zero two one, seven seven eight eight, nine nine one zero.');
+    expect(intro).toContain('Rs 25,000');
+    expect(intro).toContain('ఆపరేటర్‌కి');
+  });
+
+  it('answers the UTR question from code, and leaves other questions to the model', () => {
+    const c = full('te');
+    c.phase = 'interpret';
+    c.interpIntro = true;
+    c.fields.utr!.value = '402177869910';
+    expect(interpretShortcut(c, 'Please tell me the UTR number of the transaction and the amount.')).toMatch(/^The UTR is four zero two one, seven seven eight six, nine nine one zero\. The amount is Rs 25,000\./);
+    expect(interpretShortcut(c, 'What is the full name of the person who lost the money?')).toBeNull();
+  });
+
+  it("reads the acknowledgement number back in the caller's language from the operator's own words", () => {
+    const c = full('te');
+    const got = ackLine(c, '3151 2511 2001 23', 'Your complaint is registered. Note the acknowledgement number: three one five one, two five one one, two zero zero one, two three.')!;
+    expect(got.ack).toBe('31512511200123');
+    expect(got.say).toContain('మూడు ఒకటి ఐదు ఒకటి, రెండు ఐదు ఒకటి ఒకటి, రెండు సున్నా సున్నా ఒకటి, రెండు మూడు');
+  });
+
+  it('speaks dates and IDs plainly', () => {
+    expect(spokenWhen('2026-11-19T09:05')).toBe('19 November 2026 at 9:05 am');
+    expect(spelled('ram.k1@ybl')).toBe('r a m dot k one at y b l');
   });
 });

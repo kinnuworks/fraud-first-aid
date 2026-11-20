@@ -23,12 +23,14 @@ type Deps = {
   init?: (session: string, params: URLSearchParams) => void;
   // Inline markers the model writes before speaking, e.g. [[flag:fake_kyc|asked for the OTP]]:
   // removed from the spoken text and reported here (saves a tool round-trip).
+  // It may return a line to speak instead of the rest of the model's reply (a number read back by
+  // code, never by the model).
   onMarker?: (
     session: string,
     id: string,
     detail: string,
     lastUser: string,
-  ) => void;
+  ) => string | void;
   // A fixed reply to speak at once instead of calling the model (the guard's red-flag rules).
   shortcut?: (session: string, lastUser: string) => string | null | Promise<string | null>;
   // Shared store across server instances: load the call (returns the user text already seen)
@@ -171,7 +173,9 @@ export function createLlmRoute({
               controller.enqueue(chunk({ content: plain(t) }));
             }
           };
+          let replaced = false;
           const feed = (t: string, end = false) => {
+            if (replaced) return;
             pending += t;
             for (;;) {
               const open = pending.indexOf("[[");
@@ -198,7 +202,14 @@ export function createLlmRoute({
               if (m) onMarker?.(session, m[1], m[2].trim(), lastUser);
               // [[ack:<number>]]: the 1930 acknowledgement number heard while interpreting
               const ack = pending.slice(2, close).match(/^ack:([\s\S]{1,60})$/);
-              if (ack) onMarker?.(session, 'ack', ack[1].trim(), lastUser);
+              const instead = ack ? onMarker?.(session, 'ack', ack[1].trim(), lastUser) : undefined;
+              if (typeof instead === "string") {
+                // code speaks the number; the model's own wording of it is dropped
+                say(instead);
+                replaced = true;
+                pending = "";
+                return;
+              }
               pending = pending.slice(close + 2).replace(/^\s+/, "");
             }
           };
