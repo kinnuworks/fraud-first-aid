@@ -1,7 +1,8 @@
 'use client';
 // The first screen, on Tines' system (tines.com): a two-part pill, the headline and serif lead, the
 // ten languages where Tines has its logo strip, two pill buttons, then the product in a lilac window
-// with a playback bar marking the red flag, and our own Indian flowers bursting from behind it.
+// with a playback bar marking the red flag, and our own first-aid and UPI-safety illustration
+// (in Tines' hand, where Tines draws flowers) bursting from behind it.
 // Every word comes from the design brief; the sample call is labelled as a sample.
 import { Logo } from './design/Logo';
 import {
@@ -115,7 +116,12 @@ export function Hero(p: StartProps) {
                 <i />
               </span>
               <span className="ta-win__track">
-                <span className="ta-win__played" />
+                {/* the call drawn as a heart-monitor line: flat while the caller talks, a red spike at the ask */}
+                <svg className="ta-ecg" viewBox="0 0 1000 40" preserveAspectRatio="none">
+                  <path className="ta-ecg__base" d="M0 24H190l8-5 8 10 8-5H420l8-7 8 13 8-6H600l8-4 8 8 8-4H1000" />
+                  <path className="ta-ecg__played" d="M0 24H190l8-5 8 10 8-5H420l8-7 8 13 8-6H600l8-4 8 8 8-4H770" />
+                  <path className="ta-ecg__spike" d="M770 24l8-6 7 14 9-30 9 38 8-22 6 6H840" />
+                </svg>
                 <span className="ta-win__mark">Red flag</span>
               </span>
               <span className="ta-win__time">0:15 / 0:19</span>

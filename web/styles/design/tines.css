@@ -1,7 +1,8 @@
 /* Fraud First Aid on Tines' system (tines.com, measured 20 Nov 2026, design/refs/tines): Roobert to
    Instrument Sans, Reckless to Young Serif, Roobert Mono to DM Mono; pill buttons and labels in mono
    caps; hairline cards with 14-16px corners and no shadows; the product shown in a lilac window with a
-   playback bar; flat Indian flowers (our own, drawn in Tines' hand). Colours are the owner's clearer
+   playback bar; a dense flat illustration of first-aid and UPI-safety things (our own, drawn in
+   Tines' hand, where Tines draws flowers). Colours are the owner's clearer
    set (theme.css): deep ink for text, purple for what the product does, red for the scam, green for
    confirmed, amber for checking and deadlines. */
 
@@ -79,7 +80,7 @@
 /* ===================================================================== */
 /* A: Tines (tines.com). Cream page, purple ink, Roobert -> Instrument Sans, */
 /* Reckless -> Young Serif, Roobert Mono -> DM Mono; hairline coloured cards */
-/* with 14px corners, no shadows; pill buttons in mono caps; flat flowers.  */
+/* with 14px corners, no shadows; pill buttons in mono caps; flat illustration. */
 /* ===================================================================== */
 
 .ta-nav {
@@ -298,13 +299,13 @@
   position: absolute;
   z-index: 0;
   pointer-events: none;
-  background: url('/design/bloom.webp') no-repeat center bottom / contain;
+  background: url('/design/aid.webp') no-repeat center bottom / contain;
 }
 .ta-bloom--r {
-  right: -110px;
-  top: -205px;
-  width: 600px;
-  height: 258px;
+  right: -100px;
+  top: -176px;
+  width: 560px;
+  height: 241px;
 }
 .ta-bloom--l {
   left: -64px;
@@ -345,36 +346,49 @@
 .ta-win__track {
   position: relative;
   flex: 1;
-  height: 4px;
-  border-radius: 999px;
-  background: repeating-linear-gradient(90deg, var(--rule-pill) 0 calc(16% - 3px), transparent calc(16% - 3px) 16%);
+  height: 30px;
 }
-.ta-win__played {
+.ta-ecg {
   position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 79%;
-  border-radius: 999px;
-  background: var(--act);
-  transform-origin: left;
-  animation: ta-play 2s cubic-bezier(0.3, 0.6, 0.3, 1) 0.2s both;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vector-effect: non-scaling-stroke;
 }
-.ta-win__played::after {
-  content: '';
-  position: absolute;
-  right: -6px;
-  top: -4px;
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  background: var(--bad);
-  border: 2px solid var(--sheet);
+.ta-ecg path {
+  vector-effect: non-scaling-stroke;
+}
+.ta-ecg__base {
+  stroke: var(--rule-pill);
+  stroke-width: 2;
+}
+.ta-ecg__played {
+  stroke: var(--act);
+  stroke-width: 2.5;
+  stroke-dasharray: 1200;
+  stroke-dashoffset: 1200;
+  animation: ta-trace 2s cubic-bezier(0.3, 0.6, 0.3, 1) 0.2s forwards;
+}
+.ta-ecg__spike {
+  stroke: var(--bad);
+  stroke-width: 3;
+  stroke-dasharray: 200;
+  stroke-dashoffset: 200;
+  animation: ta-trace 0.45s ease-out 2.15s forwards;
+}
+@keyframes ta-trace {
+  to {
+    stroke-dashoffset: 0;
+  }
 }
 .ta-win__mark {
   position: absolute;
-  left: 79%;
-  bottom: 16px;
+  left: 79.4%;
+  bottom: calc(100% + 4px);
   transform: translateX(-50%);
   padding: 4px 10px;
   border-radius: 999px;
@@ -401,11 +415,6 @@
   font-family: var(--font-face-mono), ui-monospace, monospace;
   font-size: 0.875rem;
   color: var(--ink);
-}
-@keyframes ta-play {
-  from {
-    transform: scaleX(0.05);
-  }
 }
 @keyframes ta-pop {
   from {
@@ -617,7 +626,8 @@
 
 /* A, inside: the call screen as Tines' product window. A lilac frame holds white panes; the call
    panel is the light lilac sidebar; cards are white with a purple hairline and 16px corners;
-   labels and buttons in mono caps; Indian flowers spill along the bottom of the call panel. */
+   labels and buttons in mono caps; the first-aid and UPI-safety pile sits along the bottom of the
+   call panel. */
 .cs-side {
   --foreground: 257 40% 30%;
   --muted-foreground: 257 25% 42%;
@@ -636,7 +646,7 @@
   right: -20px;
   bottom: -6px;
   height: 120px;
-  background: url('/design/bloom.webp') no-repeat center bottom / 120% auto;
+  background: url('/design/aid.webp') no-repeat center bottom / 120% auto;
   pointer-events: none;
 }
 .cs-top {
@@ -730,8 +740,8 @@
 
 /* A, below the hero: our sections on Tines' own section patterns. The journey as outlined cards,
    one colour each (Build / Deploy / Operationalize); the reported cases as tinted cards with serif
-   text; the numbers on the lilac band with flowers along its edge; the 1930 comparison under a
-   centred serif statement with the number drawn in flowers. */
+   text; the numbers on the lilac band with the first-aid pile along its edge; the 1930 comparison
+   under a centred serif statement with the number filled with the same illustration. */
 .jr-grid {
   gap: 20px;
 }
@@ -830,7 +840,7 @@
   right: 0;
   bottom: -8px;
   height: 150px;
-  background: url('/design/bloom.webp') repeat-x center bottom / auto 150px;
+  background: url('/design/aid.webp') repeat-x center bottom / auto 150px;
   pointer-events: none;
 }
 .im .up-wrap {
@@ -863,9 +873,10 @@
   line-height: 0.85;
   letter-spacing: -0.04em;
   color: transparent;
-  background: url('/design/bloom.webp') repeat center 78% / auto 260%;
+  background: url('/design/aid.webp') repeat-x center 92% / auto 150%, var(--panel-2);
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-stroke: 3px var(--ink-display);
 }
 .cmp .up-h2 {
   max-width: 24ch;
@@ -1163,15 +1174,19 @@ html[data-motion='reduce'] *::after {
 /* ---------- reduced motion: the hero holds still ---------- */
 @media (prefers-reduced-motion: reduce) {
   .ta-langs__row,
-  .ta-win__played,
+  .ta-ecg__played,
+  .ta-ecg__spike,
   .ta-win__mark {
     animation: none !important;
+    stroke-dashoffset: 0 !important;
   }
 }
 html[data-motion='reduce'] .ta-langs__row,
-html[data-motion='reduce'] .ta-win__played,
+html[data-motion='reduce'] .ta-ecg__played,
+html[data-motion='reduce'] .ta-ecg__spike,
 html[data-motion='reduce'] .ta-win__mark {
   animation: none !important;
+  stroke-dashoffset: 0 !important;
 }
 
 
