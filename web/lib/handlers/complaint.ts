@@ -17,6 +17,7 @@ export async function GET(request: NextRequest) {
   return NextResponse.json({
     lang: c.lang,
     phase: c.phase,
+    ack1930: c.ack1930 ?? null,
     hasEmail: Boolean(c.email),
     story: c.story ?? null,
     emailSent: c.emailSent ?? null,

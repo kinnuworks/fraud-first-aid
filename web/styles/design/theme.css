@@ -2123,3 +2123,25 @@ html[data-large] {
   margin-top: 16px;
   text-align: center;
 }
+
+/* 1930 interpreter, in the pack: the call to 1930 on speaker, Fraud First Aid speaking for the caller */
+.pk-interp {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px 20px;
+  margin: 16px 0 4px;
+  padding: 16px 18px;
+  border: 1px solid var(--rule);
+  border-left: 4px solid var(--navy);
+  border-radius: 14px;
+  background: var(--panel);
+}
+.pk-interp > div { flex: 1 1 18rem; }
+.pk-interp__title { font-weight: 800; font-size: 1.0625rem; color: var(--ink); }
+.pk-interp__text { margin-top: 4px; font-size: 0.9375rem; color: var(--ink-2, #3b4160); }
+.pk-interp__btn { background: var(--navy); color: #fff; }
+.pk-interp--on { display: block; border-left-color: var(--good, #1e7a46); }
+.pk-interp__ack { margin-top: 8px; font-size: 1rem; }
+.pk-interp__ack strong { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }

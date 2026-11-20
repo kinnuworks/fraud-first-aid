@@ -196,6 +196,9 @@ export function createLlmRoute({
                 .slice(2, close)
                 .match(/^flag:([a-z_]+)\|([\s\S]*)$/);
               if (m) onMarker?.(session, m[1], m[2].trim(), lastUser);
+              // [[ack:<number>]]: the 1930 acknowledgement number heard while interpreting
+              const ack = pending.slice(2, close).match(/^ack:([\s\S]{1,60})$/);
+              if (ack) onMarker?.(session, 'ack', ack[1].trim(), lastUser);
               pending = pending.slice(close + 2).replace(/^\s+/, "");
             }
           };

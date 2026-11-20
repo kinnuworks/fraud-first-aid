@@ -15,7 +15,9 @@ export type BuildOpts = {
   preset: LangPreset;
   lang: string;
   langArg?: string;
-  mode: 'guard' | 'complaint';
+  mode: 'guard' | 'complaint' | 'interpret';
+  // Overrides the preset's greeting (the interpreter's 'call 1930 now' line).
+  greeting?: string;
   channel: string;
   llmUrl?: string;
   surface: 'web' | 'phone';
@@ -23,14 +25,15 @@ export type BuildOpts = {
   slow?: boolean;
 };
 
-export function buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface, slow = false }: BuildOpts) {
+export function buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface, slow = false, greeting: greetingOverride }: BuildOpts) {
+  const greeting = mode === 'guard' ? undefined : (greetingOverride ?? preset.greeting);
     // Pipeline: Sarvam speech-to-text (caller's language) → our model route with complaint
     // tools (or Agora's managed model before deploy) → Murf Falcon voice for that language.
   return new Agent({
       client,
       // With our route, the system prompt is built per turn server-side (lib/complaint/prompt.ts).
       instructions: llmUrl ? '' : prototypeInstructions(preset),
-      greeting: mode === 'guard' ? undefined : preset.greeting,
+      greeting,
       failureMessage: 'Please wait a moment.',
       maxHistory: 50,
       // Complaint mode only: "one moment" in the caller's language while the model thinks (guard stays silent).
@@ -81,7 +84,7 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
               apiKey: requireEnv('LLM_SHARED_SECRET'),
               model: 'custom',
               // On guard the agent stays quiet until it hears a red flag.
-              greetingMessage: mode === 'guard' ? undefined : preset.greeting,
+              greetingMessage: greeting,
               failureMessage: 'Please wait a moment.',
               maxHistory: 30,
             })

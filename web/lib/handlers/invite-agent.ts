@@ -108,6 +108,9 @@ export async function POST(request: NextRequest) {
       throw e;
     }
     setAgent(channel_name, agentId);
+    // remembered in the shared store, so the interpreter can replace this agent from any instance
+    getComplaint(channel_name).agentId = agentId;
+    await persist(channel_name);
 
     return NextResponse.json({
       agent_id: agentId,

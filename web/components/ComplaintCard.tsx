@@ -1,7 +1,7 @@
 'use client';
 // The complaint as it is captured during the call: each field, whether the caller confirmed
 // it, the RBI deadlines, and the finished pack.
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { minutesSince } from '@/lib/complaint/pack';
 import { scamById } from '@/lib/complaint/scams';
@@ -18,7 +18,8 @@ export type ComplaintView = {
   lang?: keyof typeof LANG_LABEL;
   hasEmail?: boolean;
   emailSent?: EmailState;
-  phase?: 'guard' | 'complaint';
+  phase?: 'guard' | 'complaint' | 'interpret';
+  ack1930?: string | null;
   flags?: Flag[];
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
   check?: Partial<Record<'utr' | 'amount' | 'payee' | 'when', Check>> | null;
@@ -253,10 +254,12 @@ export function ComplaintCardView({
   data,
   onScreenshot,
   onEmail,
+  onInterpret,
 }: {
   data: ComplaintView | null;
   onScreenshot?: (f: File) => void;
   onEmail?: (email: string) => Promise<void>;
+  onInterpret?: () => Promise<string | null>;
 }) {
   if (!data)
     return (
@@ -341,7 +344,7 @@ export function ComplaintCardView({
               <SinceDebit when={f.when?.value} />
             </span>
           </div>
-          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} />}
+          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} interpreter={<Interpreter data={data} onInterpret={onInterpret} />} />}
           {mismatches.map((k) => (
             <Mismatch key={k} k={k} said={f[k]!.value} c={data.check![k]!} />
           ))}
@@ -513,10 +516,12 @@ function PackView({
   pack,
   emailSent,
   onEmail,
+  interpreter,
 }: {
   pack: Extract<Pack, { ok: true }>;
   emailSent: EmailState;
   onEmail?: (e: string) => Promise<void>;
+  interpreter?: ReactNode;
 }) {
   return (
     <div className="cd-card" data-testid="pack" id="pack">
@@ -552,6 +557,7 @@ function PackView({
           Call 1930 now
         </a>
       </div>
+      {interpreter}
       <div className="pk-list">
         <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
         <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
@@ -601,6 +607,53 @@ function PackView({
   );
 }
 
+// The 1930 interpreter: the caller's 1930 call on speaker, Fraud First Aid speaking to the operator.
+function Interpreter({ data, onInterpret }: { data: ComplaintView; onInterpret?: () => Promise<string | null> }) {
+  const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState<string | null>(null);
+  const lang = data.lang && LANG_LABEL[data.lang] ? LANG_LABEL[data.lang] : 'your language';
+  if (data.phase === 'interpret') {
+    return (
+      <div className="pk-interp pk-interp--on" data-testid="interpreter-on" role="status">
+        <p className="pk-interp__title">Interpreter on: speaking to 1930 for you</p>
+        <p className="pk-interp__text">
+          Keep the 1930 call on speaker next to this screen. It gives the operator your details and tells you in {lang} what they ask.
+        </p>
+        {data.ack1930 && (
+          <p className="pk-interp__ack" data-testid="ack-1930">
+            1930 acknowledgement number: <strong>{data.ack1930}</strong>
+          </p>
+        )}
+      </div>
+    );
+  }
+  if (!onInterpret) return null;
+  return (
+    <div className="pk-interp">
+      <div>
+        <p className="pk-interp__title">Calling 1930 in English or Hindi is hard?</p>
+        <p className="pk-interp__text">
+          Call 1930 on your phone and put it on speaker next to this screen. Fraud First Aid gives the operator your details, digit by digit, and tells you in {lang} what they ask.
+        </p>
+        {problem && <p className="pk-interp__text" role="alert" style={{ color: 'var(--bad)' }}>{problem}</p>}
+      </div>
+      <button
+        type="button"
+        className="up-btn pk-interp__btn"
+        data-testid="interpret-1930"
+        disabled={busy}
+        onClick={async () => {
+          setBusy(true);
+          setProblem(await onInterpret());
+          setBusy(false);
+        }}
+      >
+        {busy ? 'Starting…' : 'Speak to 1930 for me'}
+      </button>
+    </div>
+  );
+}
+
 function PackItem({ n, title, text, open = false }: { n: number; title: string; text: string; open?: boolean }) {
   const [copied, setCopied] = useState(false);
   return (
@@ -629,7 +682,7 @@ function PackItem({ n, title, text, open = false }: { n: number; title: string; 
   );
 }
 
-export function ComplaintCard({ session, cap }: { session: string; cap: string }) {
+export function ComplaintCard({ session, cap, uid }: { session: string; cap: string; uid?: string | number }) {
   const [data, setData] = useState<ComplaintView | null>(null);
   useEffect(() => {
     let live = true;
@@ -658,6 +711,16 @@ export function ComplaintCard({ session, cap }: { session: string; cap: string }
       <ComplaintCardView
         data={data}
         onScreenshot={upload}
+        onInterpret={async () => {
+          const r = await fetch('/api/call/interpret', {
+            method: 'POST',
+            headers: { 'content-type': 'application/json' },
+            body: JSON.stringify({ channel: session, cap, uid }),
+          });
+          if (r.ok) return null;
+          const j = await r.json().catch(() => ({}));
+          return j.error ?? 'Could not start the interpreter. Read the script below to the operator instead.';
+        }}
         onEmail={async (email) => {
           await fetch(`/api/call/email?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, {
             method: 'POST',

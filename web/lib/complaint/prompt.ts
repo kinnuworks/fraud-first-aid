@@ -5,6 +5,7 @@ import { compareWithScreenshot } from './screenshot';
 import { LANG_NAME as LANG } from './pack';
 import { scamList } from './scams';
 import { istNow, istToday } from './today';
+import { interpretSystem } from './interpret';
 
 
 const GUARD = (lang: string) => `You are Fraud First Aid, on guard. The user has put a phone call they are receiving on speaker, and you hear both sides as one stream of text. Stay silent: answer with exactly <silent> and nothing else, unless one of these happens.
@@ -17,6 +18,7 @@ Never answer the scammer; you speak only to the user. Every reply is spoken alou
 export function complaintSystem(session: string, today = istToday()): string {
   const c = getComplaint(session);
   if (c.phase === 'guard') return GUARD(LANG[c.lang]);
+  if (c.phase === 'interpret') return interpretSystem(c, today);
   const have = Object.entries(c.fields)
     .map(([k, f]) => `${k}=${f!.value}${f!.confirmed ? ' (confirmed)' : ' (NOT confirmed)'}`)
     .join('; ');

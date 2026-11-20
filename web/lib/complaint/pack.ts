@@ -101,6 +101,7 @@ I am also reporting this to the National Cybercrime Helpline, 1930.`;
     : '';
   const operatorCard = [
     'UPI fraud report, prepared by voice (Fraud First Aid)',
+    ...(c.ack1930 ? [`1930 acknowledgement number: ${c.ack1930}`] : []),
     `Caller language: ${LANG_NAME[c.lang]}`,
     `UTR: ${f.utr.value.replace(/(\d{4})(?=\d)/g, '$1 ')} (confirmed by caller${c.shot?.utr === f.utr.value ? ', matches payment screenshot' : ''})`,
     `Amount: Rs ${inr(f.amount.value)}`,

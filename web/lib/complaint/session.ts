@@ -9,11 +9,12 @@ export type FieldName = 'utr' | 'amount' | 'when' | 'payee' | 'victim_bank';
 export const REQUIRED: FieldName[] = ['utr', 'amount', 'when', 'payee', 'victim_bank'];
 
 type Field<T> = { value: T; confirmed: boolean };
-export type Phase = 'guard' | 'complaint';
+export type Phase = 'guard' | 'complaint' | 'interpret';
 export type Flag = { red_flag: string; scam: string; heard: string };
 export type Complaint = {
   lang: ReadbackLang;
-  // guard: listening to a suspicious call on speaker; complaint: taking the report.
+  // guard: listening to a suspicious call on speaker; complaint: taking the report;
+  // interpret: on the caller's 1930 call (on speaker), speaking to the operator for them.
   phase: Phase;
   flags: Flag[];
   // The field most recently read back and waiting for the caller's yes or no.
@@ -33,6 +34,10 @@ export type Complaint = {
   shot?: import('./screenshot').Shot;
   // On guard: each line heard on the speakerphone, with its India time, as evidence of the scam.
   heard?: Array<{ at: string; text: string }>;
+  // The agent running this call now (so a new agent can replace it, on any server instance).
+  agentId?: string;
+  // The acknowledgement number the 1930 operator gave, heard during interpret.
+  ack1930?: string;
   // The payee was counted in the reported-payees registry (once per call).
   reportedPayee?: boolean;
   fields: Partial<{

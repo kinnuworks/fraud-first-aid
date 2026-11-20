@@ -129,6 +129,27 @@ describe('inline markers', () => {
     expect(text).toBe('This is a fake KYC call. Hang up.');
     expect(seen).toEqual([['m1', 'fake_kyc', 'asked for the OTP']]);
   });
+  it('pulls an [[ack:...]] marker (the 1930 acknowledgement number) out of the spoken text and reports it', async () => {
+    const seen: Array<[string, string, string]> = [];
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: fakeStream(['[[ack:3151 2511', ' 2001 23]]Your number is ', 'three one five one.']),
+      onMarker: (session, id, detail) => seen.push([session, id, detail]),
+    });
+    const r = new NextRequest('http://localhost/api/chat/completions?session=m2', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'x' }] }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    const text = (await (await route(r)).text())
+      .split('\n\n')
+      .filter((l) => l.startsWith('data: {'))
+      .map((l) => JSON.parse(l.slice(6)).choices[0].delta.content ?? '')
+      .join('');
+    expect(text).toBe('Your number is three one five one.');
+    expect(seen).toEqual([['m2', 'ack', '3151 2511 2001 23']]);
+  });
 });
 
 describe('shortcut replies', () => {

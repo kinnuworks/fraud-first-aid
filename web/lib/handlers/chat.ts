@@ -8,6 +8,7 @@ import { addFlag, logHeard } from '@/lib/complaint/session';
 import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
 import { guardReported, reportOnce } from '@/lib/complaint/reported';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
+import { ackFrom } from '@/lib/complaint/interpret';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -16,10 +17,14 @@ export const POST = createLlmRoute({
   secret: process.env.LLM_SHARED_SECRET,
   model: anthropic(process.env.LLM_MODEL ?? 'claude-haiku-5-5'),
   streamTextImpl: streamText,
-  tools: complaintTools,
+  // The interpreter only speaks from the confirmed complaint: no tools can change it.
+  tools: (session, lastUser) => (getComplaint(session).phase === 'interpret' ? {} : complaintTools(session, lastUser)),
   system: (session) => complaintSystem(session),
   shortcut: async (session, lastUser) => {
     const c = getComplaint(session);
+    // Interpreting a 1930 call: two languages on one speaker, so every turn goes to the model, and
+    // the caller's language stays fixed.
+    if (c.phase === 'interpret') return null;
     followLanguage(c, lastUser);
     // on guard, keep the scam call itself as evidence for the pack
     logHeard(c, lastUser);
@@ -54,7 +59,13 @@ export const POST = createLlmRoute({
     if (c.phase === 'guard' && c.flags.length === 0 && saysHangUp(spoken)) addFlag(c, 'suspicious_call', 'pushed for action on the call, and Fraud First Aid told the user to hang up', lastUser);
   },
   onMarker: (session, id, detail, lastUser) => {
-    addFlag(getComplaint(session), id, detail, lastUser);
+    const c = getComplaint(session);
+    if (id === 'ack') {
+      const ack = c.phase === 'interpret' ? ackFrom(detail) : null;
+      if (ack) c.ack1930 = ack;
+      return;
+    }
+    addFlag(c, id, detail, lastUser);
   },
   // lang and mode ride on the URL Agora calls, so a restarted instance rebuilds the session right.
   init: (session, q) => {
@@ -62,7 +73,7 @@ export const POST = createLlmRoute({
     const c = getComplaint(
       session,
       (READBACK_LANGS as readonly string[]).includes(lang) ? (lang as ReadbackLang) : 'en',
-      q.get('mode') === 'guard' ? 'guard' : 'complaint',
+      q.get('mode') === 'guard' ? 'guard' : q.get('mode') === 'interpret' ? 'interpret' : 'complaint',
     );
     if (lang === 'auto') c.autoLang = true;
   },
