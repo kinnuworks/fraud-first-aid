@@ -1,7 +1,8 @@
 // Interpreter check: the full complaint with labelled sample voices (as in demo-full.ts), then
 // 'Speak to 1930 for me' and a sample 1930 operator (English) on the same call. Passes when the
 // interpreter gives the operator the confirmed UTR, relays the caller's Telugu answer in English,
-// and keeps the acknowledgement number. Spends real credits.
+// reads the acknowledgement number back, and keeps it exactly once the operator has confirmed or
+// corrected the read-back (the first hearing is logged too). Spends real credits.
 // Run: npx -y tsx@4.20.6 scripts/interpret-check.ts [https://fraudfirstaid.vercel.app]
 // (Original demo-full notes follow.)
 // Records the whole story in one call, with labelled sample voices (no human speaking):
@@ -125,6 +126,24 @@ const play = async (page: Page, clip: string) => {
   }
   log(heard ? `acknowledgement number saved: ${heard}` : 'no acknowledgement number after 2 minutes');
   await idle(page, 60000);
+  // The operator answers the read-back as a real one would: confirms a right number, corrects a
+  // wrong one. Live speech recognition slipped a digit in three runs on 20 Nov, and the read-back
+  // is how the product catches that, so the check passes only if the number kept in the end is
+  // exact. The first hearing is logged either way.
+  const EXPECTED = '3151251120012' + '3';
+  const first = heard;
+  if (first) {
+    await play(page, first === EXPECTED ? 'operator-5-confirm' : 'operator-5-correct');
+    if (first !== EXPECTED) {
+      const by = Date.now() + 90000;
+      while (Date.now() < by) {
+        const now = String((await (await fetch(`${BASE}/api/call/complaint?session=${session}&cap=${cap}`)).json().catch(() => ({}))).ack1930 ?? '');
+        if (now && now !== first) break;
+        await page.waitForTimeout(2000);
+      }
+    }
+    await idle(page, 60000);
+  }
   await page.waitForTimeout(3000);
   await page.screenshot({ path: `${OUT}interp-final.png`, fullPage: true });
   const all = await agentText();
@@ -143,11 +162,12 @@ const play = async (page: Page, clip: string) => {
   for (const t of (st.trace ?? []).filter((x: string) => x.startsWith('interpret'))) log(`  turn: ${t}`);
   log(`screenshot cut-in spoken (Agora speak): ${steps.some((a) => /Agora speak/.test(a.text))}`);
   log(`phase ${st.phase}; UTR ${utr}; gave UTR to operator: ${gaveUtr}; relayed the name: ${relayedName}; ack: ${ack}`);
+  log(`acknowledgement number: first hearing ${first || 'none'} (${first === EXPECTED ? 'exact' : 'misheard'}); kept after the operator's answer: ${ack}`);
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});
   await ctx.close();
   log(`video: ${await page.video()?.path()}`);
   await browser.close();
-  const ok = st.phase === 'interpret' && gaveUtr && relayedName && ack === '3151251120012' + '3';
+  const ok = st.phase === 'interpret' && gaveUtr && relayedName && ack === EXPECTED;
   log(ok ? 'INTERPRETER PASS' : 'INTERPRETER FAIL');
   process.exit(ok ? 0 : 1);
 })();
