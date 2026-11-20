@@ -25,6 +25,9 @@ Why it matters in Karnataka: the state lost ₹5,473.97 crore to cyber fraud in 
 2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot.
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
 4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?) and an RBI Ombudsman complaint ready for that day. It emails the pack once you say yes. One tap brings a family member onto the call: they hear it, and they can talk to you while the agent keeps working.
+5. **It speaks to 1930 for you.** Call 1930, put it on speaker and press **Speak to 1930 for me**. Fraud First Aid gives the operator every detail in English, digit by digit, tells you in your language what they ask, passes your answers back, and keeps the acknowledgement number they give you.
+
+All the while, a **What it's doing** list on the call screen shows each step as it happens: what it heard, what it checked, which service it called, what it asked you first.
 
 Since 2021 Indians have reported losing about ₹64,447 crore to cyber fraud, and about ₹323 crore of it has been refunded (Home Ministry officials briefing the Prime Minister, [reported by Pratidin Time, 9 Jul 2026](https://www.pratidintime.com/national/rs-25000-cr-saved-via-e-zero-firs-pm-modi-briefed-12149338), and by the Indian Express).
 
@@ -118,6 +121,7 @@ screen ◀── complaint card (polls the same session) ◀── payment scree
 4. Confirm. Every number is read back in groups of four in the caller's language. "The second group is wrong" re-asks only that group. Nothing counts until the caller says yes. Code: [`web/lib/complaint/session.ts`](web/lib/complaint/session.ts).
 5. Second source. The caller can add the payment screenshot. An AI model reads the UTR, amount, payee and time from it, and each field is compared with what they said; a mismatch is read back with the exact group that differs. Code: [`web/lib/complaint/screenshot.ts`](web/lib/complaint/screenshot.ts), [`web/lib/complaint/vision.ts`](web/lib/complaint/vision.ts).
 6. Act. The IFSC code is looked up on the public Razorpay IFSC API; the RBI 3- and 7-working-day deadlines are computed (Sundays and 2nd/4th Saturdays skipped); the pack is built: a script for the 1930 call in the caller's language, a dispute letter for the bank, an English card for the 1930 operator, three calendar reminders (two from the RBI rules, and day 30 to check the bank replied) with the RBI Ombudsman complaint ready, a one-tap Call 1930, and buttons to send the pack to family on WhatsApp or email the letter to the bank. Code: [`web/lib/complaint/ifsc.ts`](web/lib/complaint/ifsc.ts), [`web/lib/complaint/deadline.ts`](web/lib/complaint/deadline.ts), [`web/lib/complaint/pack.ts`](web/lib/complaint/pack.ts).
+7. Speak to 1930. Once every detail is confirmed, **Speak to 1930 for me** starts an interpreter on the same call: it hears English, Hindi and the caller's language, answers the operator only from the confirmed details (numbers digit by digit), relays each side in the other's language, and keeps the acknowledgement number (an `[[ack:...]]` marker in its reply, removed before speaking). It has no tools, so it can't change the complaint. Code: [`web/lib/complaint/interpret.ts`](web/lib/complaint/interpret.ts).
 
 ### How fast it answers
 
@@ -142,13 +146,16 @@ Confirmations and numbers skip the model: our route answers them from the compla
 | Turn control | on guard the agent answers with a silent turn until it hears a red flag, then interrupts the call; a UTR said in pieces is held across turns until all 12 digits arrive | [`llm-route.ts`](web/lib/llm-route.ts), [`fastpath.ts`](web/lib/complaint/fastpath.ts) |
 | Tool calling on our endpoint | record, read back, correct one group, confirm, take a value from the screenshot, switch from guard to complaint | [`tools.ts`](web/lib/complaint/tools.ts) |
 | Agent metrics | speech-to-text, model and voice latency shown live in the call screen's pipeline bar | [`QuickstartPipelineMetrics.tsx`](web/components/QuickstartPipelineMetrics.tsx) |
-| Murf Falcon TTS | the agent's voice per language: native voices for Hindi, Kannada, Tamil, Malayalam, Bengali, Marathi, Gujarati and Punjabi, and en-IN-anisha speaking Telugu and English | [`agent-config.ts`](web/lib/agent-config.ts) |
+| Murf Falcon TTS | the agent's voice per language, from Murf's own recommended Indian voices: Pooja for Hindi, Telugu, Kannada and Tamil, Diya for Malayalam, Marathi and Gujarati, Debarati, Harpreet and Anisha for Bengali, Punjabi and English; Rachna, who speaks English and all nine Indian languages, for "any language" and the 1930 interpreter. Each language is checked by a round trip: Falcon speaks the greeting and Sarvam must hear the right language back ([`voice-roundtrip.ts`](web/scripts/voice-roundtrip.ts)) | [`agent-config.ts`](web/lib/agent-config.ts) |
+| Agora speak API | things that happen on screen are said aloud at once, in the caller's language: a payment screenshot that disagrees interrupts the agent (priority INTERRUPT) to name the group that differs; an emailed pack is confirmed when it finishes speaking (APPEND) | [`announce.ts`](web/lib/complaint/announce.ts) |
+| A second agent on the same call | the 1930 interpreter: Agora can't change a running agent's speech recognition, so the call's agent is stopped and an interpreter starts on the same channel, hearing any language, with only the confirmed complaint to speak from | [`interpret.ts`](web/lib/handlers/interpret.ts), [`complaint/interpret.ts`](web/lib/complaint/interpret.ts) |
+| Cloud proxy | `?proxy=1` sends the call (RTC, TCP/TLS 443) and its messages (RTM) through Agora's cloud proxy, for networks that block UDP | [`LandingPage.tsx`](web/components/LandingPage.tsx) |
 
 Where to look, line by line:
 - The agent starts per call with `session.start()`: [`invite-agent.ts#L105`](web/lib/handlers/invite-agent.ts#L105), listening only to the caller (`remoteUids`, [#L97](web/lib/handlers/invite-agent.ts#L97)).
-- The pipeline is built in [`agent-builder.ts#L29`](web/lib/agent-builder.ts#L29): Sarvam speech-to-text in the caller's language, our model URL with tools, and Murf Falcon as the voice: `new MurfTTS({ voiceId, locale, model: 'FALCON' })` at [#L97](web/lib/agent-builder.ts#L97), slower with `rate: -20` for older callers.
-- Turn detection and the tools/RTM switches: [#L39](web/lib/agent-builder.ts#L39) and [#L59](web/lib/agent-builder.ts#L59).
-- The Murf Falcon voice per language (hi-IN-namrita, kn-IN-harshitha, en-IN-anisha for Telugu and English, and the rest): [`agent-config.ts`](web/lib/agent-config.ts#L12).
+- The pipeline is built in [`agent-builder.ts#L28`](web/lib/agent-builder.ts#L28): Sarvam speech-to-text in the caller's language, our model URL with tools, and Murf Falcon as the voice: `new MurfTTS({ voiceId, locale, model: 'FALCON' })` at [#L101](web/lib/agent-builder.ts#L101), slower with `rate: -20` for older callers.
+- Turn detection (slow mode waits 900 ms of silence instead of 480 before taking its turn) and the tools/RTM switches: [#L42](web/lib/agent-builder.ts#L42) and [#L63](web/lib/agent-builder.ts#L63).
+- The Murf Falcon voice per language: [`agent-config.ts`](web/lib/agent-config.ts#L14).
 
 ## Check it yourself
 
@@ -206,6 +213,7 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 - Emailing the pack runs on Resend's test sender, which only delivers to our own address until a sending domain is verified. You can copy everything from the screen.
 - A call's complaint is kept in a shared store (Upstash Redis) for two hours so any server instance can answer it, then it expires; nothing is kept afterwards.
 - The number tests use synthetic Murf voices and public read speech, not real callers on noisy phone lines.
+- The 1930 interpreter has been tested with sample voices playing the operator, not on a real 1930 call. Its spoken lines in eight of the ten languages were written by us and not yet checked by native speakers.
 
 ## Run it locally
 

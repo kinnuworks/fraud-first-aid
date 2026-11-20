@@ -4,7 +4,7 @@
 // other languages) goes to the model.
 import { spokenToDigits, readbackText, type ReadbackLang } from '../entities/numbers';
 import { isUtr, isMobile } from './fields';
-import { REQUIRED, recordNumber, recordDigits, recordUpi, recordText, confirmField, deadlines, type Complaint, type FieldName, redactCodes } from './session';
+import { act, REQUIRED, recordNumber, recordDigits, recordUpi, recordText, confirmField, deadlines, type Complaint, type FieldName, redactCodes } from './session';
 import { istToday } from './today';
 import { isLoss, isFraudLoss } from './redflags';
 import { parseAmount } from './fields';
@@ -107,9 +107,13 @@ export function guardHandover(c: Complaint, lastUser: string): string | null {
   // a payment alone is everyday life; hand over once there is a sign of fraud
   if (c.flags.length === 0 && !isFraudLoss(lastUser)) return null;
   c.phase = 'complaint';
+  act(c, 'tool', 'You said money has gone: switched from listening to taking your report');
   c.story = { en: c.story?.en ?? 'Caller says money has already left their account.', words: redactCodes(lastUser).slice(0, 500) };
   const amt = parseAmount(lastUser);
-  if (amt && amt >= 1) c.fields.amount = { value: amt, confirmed: false };
+  if (amt && amt >= 1) {
+    c.fields.amount = { value: amt, confirmed: false };
+    act(c, 'heard', `Heard the amount: Rs ${amt.toLocaleString('en-IN')}`);
+  }
   if (!FAST.includes(c.lang as Lang)) return null;
   const lang = c.lang as Lang;
   c.pending = undefined;

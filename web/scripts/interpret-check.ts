@@ -86,13 +86,18 @@ const play = async (page: Page, clip: string) => {
     for (const t of st.trace ?? []) log(`  turn: ${t}`);
   }
   if (!packed) { log('FAIL: no pack, so no interpreter'); await browser.close(); process.exit(1); }
-  const agentText = async () => (await page.locator('[data-testid="transcript"], .up-transcript, main').first().innerText().catch(() => '')) || '';
+  const agentText = async () => {
+    await page.evaluate(() => window.scrollTo(0, 0));
+    return (await page.locator('.up-transcript').first().innerText().catch(() => '')) || '';
+  };
   await page.getByTestId('interpret-1930').click();
   await page.getByTestId('interpreter-on').waitFor({ timeout: 30000 });
   log('interpreter on; waiting for its greeting');
   await idle(page, 30000);
   await page.waitForTimeout(1500);
   await play(page, 'operator-1-hello');
+  await agentText();
+  await page.screenshot({ path: `${OUT}interp-hello.png` });
   await play(page, 'operator-2-utr');
   await page.screenshot({ path: `${OUT}interp-utr.png`, fullPage: true });
   const afterUtr = await agentText();
@@ -102,6 +107,8 @@ const play = async (page: Page, clip: string) => {
   await page.waitForTimeout(3000);
   await page.screenshot({ path: `${OUT}interp-final.png`, fullPage: true });
   const all = await agentText();
+  await page.screenshot({ path: `${OUT}interp-transcript.png` });
+  (await import('fs')).writeFileSync(`${OUT}transcript.txt`, all);
   const st = await (await fetch(`${BASE}/api/call/complaint?session=${session}&cap=${cap}`)).json();
   const utr = String(st.fields?.utr?.value ?? '');
   const words = ['zero','one','two','three','four','five','six','seven','eight','nine'];
