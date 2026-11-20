@@ -8,6 +8,7 @@ import { PRESETS } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { hydrate, peekComplaint, persist } from '@/lib/complaint/store';
 import { canInterpret, INTERPRET_GREETING } from '@/lib/complaint/interpret';
+import { act } from '@/lib/complaint/session';
 import { checkCap } from '@/lib/capability';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
 import { agentFor, claimChannel, releaseChannel, setAgent } from '@/lib/handlers/agents';
@@ -55,6 +56,7 @@ export async function POST(request: NextRequest) {
     claimChannel(channel);
 
     c.phase = 'interpret';
+    act(c, 'tool', 'Started the 1930 interpreter: a new agent that hears English, Hindi and your language');
     await persist(channel);
 
     const agent = buildAgent({

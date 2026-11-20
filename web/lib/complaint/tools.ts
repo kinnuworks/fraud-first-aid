@@ -4,7 +4,7 @@ import { tool, type ToolSet } from 'ai';
 import { z } from 'zod';
 import { getComplaint } from './store';
 import type { Complaint } from './session';
-import { recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
+import { act, recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
 import { YES, NO } from './fastpath';
 import { sendPack } from './send';
@@ -26,6 +26,7 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       inputSchema: z.object({}),
       execute: async () => {
         c.phase = 'complaint';
+        act(c, 'tool', 'Switched from listening to taking your report');
         return { ok: true };
       },
     }),
@@ -61,6 +62,7 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
         const v = bank_or_ifsc.replace(/\s+/g, '').toUpperCase();
         if (isIfsc(v)) {
           const b = await lookupIfsc(v);
+          act(c, 'tool', b ? `Looked up IFSC ${v} (Razorpay IFSC API): ${b.bank}, ${b.branch}` : `Looked up IFSC ${v}: no such branch, asked again`);
           if (!b) return { ok: false, problem: 'no bank branch has that IFSC; ask again' };
           return { ...recordText(c, 'victim_bank', `${b.bank}, ${b.branch} (${b.ifsc})`), branch: b };
         }
@@ -83,6 +85,7 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       execute: async ({ summary_en }) => {
         // the caller's first telling is kept; later calls refine only the English summary
         c.story = { en: summary_en, words: c.story?.words || lastUser.slice(0, 500) };
+        act(c, 'heard', `Understood what happened: ${summary_en}`);
         return { ok: true };
       },
     }),
@@ -97,8 +100,13 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       // A critical action: only on the caller's own yes in this turn, never on the model's word alone.
       execute: async () => {
         const t = lastUser.trim().replace(/^[\s,.!।]+/, '');
-        if (!YES.test(t) || NO.test(t)) return { needs_yes: true, say: 'Ask the caller: shall I email the pack to the address on screen? Send only after they say yes.' };
-        return sendPack(c);
+        if (!YES.test(t) || NO.test(t)) {
+          act(c, 'ask', 'Asked for your yes before emailing the pack');
+          return { needs_yes: true, say: 'Ask the caller: shall I email the pack to the address on screen? Send only after they say yes.' };
+        }
+        const sent = await sendPack(c);
+        act(c, sent.ok ? 'done' : 'check', sent.ok ? 'You said yes: emailed the pack with the calendar reminders' : `Could not email the pack: ${String(sent.problem ?? 'error')}`);
+        return sent;
       },
     }),
     status: tool({

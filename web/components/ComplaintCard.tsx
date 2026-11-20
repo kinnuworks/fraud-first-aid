@@ -20,6 +20,7 @@ export type ComplaintView = {
   emailSent?: EmailState;
   phase?: 'guard' | 'complaint' | 'interpret';
   ack1930?: string | null;
+  actions?: Array<{ at: string; kind: 'heard' | 'check' | 'tool' | 'ask' | 'done' | 'flag'; text: string }>;
   flags?: Flag[];
   fields: Partial<Record<'utr' | 'amount' | 'when' | 'payee' | 'victim_bank', Field>>;
   check?: Partial<Record<'utr' | 'amount' | 'payee' | 'when', Check>> | null;
@@ -332,6 +333,7 @@ export function ComplaintCardView({
           </ul>
         </div>
       )}
+      <AgentSteps actions={data.actions} />
       {data.phase === 'guard' ? null : (
         <>
           <CalendarSlot data={data} />
@@ -607,12 +609,42 @@ function PackView({
   );
 }
 
+// What the agent has done on this call, newest last: each step it heard, checked, looked up, asked
+// or finished, logged by the server as it happens (lib/complaint/session.ts act()).
+const STEP_ICON: Record<NonNullable<ComplaintView['actions']>[number]['kind'], string> = {
+  heard: '●', check: '◆', tool: '⚙', ask: '?', done: '✓', flag: '!',
+};
+function AgentSteps({ actions }: { actions?: ComplaintView['actions'] }) {
+  if (!actions?.length) return null;
+  const recent = actions.slice(-7);
+  return (
+    <section className="cd-card as-card" aria-label="What Fraud First Aid is doing" data-testid="agent-steps">
+      <div className="as-head">
+        <span className="up-label">What it&apos;s doing</span>
+        <span className="as-live" aria-hidden="true">live</span>
+      </div>
+      <ol className="as-list" aria-live="polite">
+        {recent.map((a, i) => (
+          <li key={`${a.at}-${i}`} className={`as-step as-step--${a.kind}`}>
+            <span className="as-icon" aria-hidden="true">{STEP_ICON[a.kind]}</span>
+            <span className="as-text">{a.text}</span>
+            <time className="as-at">{a.at}</time>
+          </li>
+        ))}
+      </ol>
+      {actions.length > recent.length && <p className="as-more">{actions.length - recent.length} earlier steps in the pack&apos;s record</p>}
+    </section>
+  );
+}
+
 // The 1930 interpreter: the caller's 1930 call on speaker, Fraud First Aid speaking to the operator.
 function Interpreter({ data, onInterpret }: { data: ComplaintView; onInterpret?: () => Promise<string | null> }) {
   const [busy, setBusy] = useState(false);
   const [problem, setProblem] = useState<string | null>(null);
+  // the server said the interpreter started: show it at once, before the next poll catches up
+  const [started, setStarted] = useState(false);
   const lang = data.lang && LANG_LABEL[data.lang] ? LANG_LABEL[data.lang] : 'your language';
-  if (data.phase === 'interpret') {
+  if (data.phase === 'interpret' || started) {
     return (
       <div className="pk-interp pk-interp--on" data-testid="interpreter-on" role="status">
         <p className="pk-interp__title">Interpreter on: speaking to 1930 for you</p>
@@ -644,7 +676,9 @@ function Interpreter({ data, onInterpret }: { data: ComplaintView; onInterpret?:
         disabled={busy}
         onClick={async () => {
           setBusy(true);
-          setProblem(await onInterpret());
+          const err = await onInterpret();
+          setProblem(err);
+          setStarted(err === null);
           setBusy(false);
         }}
       >

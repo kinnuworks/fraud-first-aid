@@ -52,7 +52,8 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
           end_of_speech: {
             mode: 'vad',
             vad_config: {
-              silence_duration_ms: 480, // ms of silence before turn ends
+              // ms of silence before the turn ends; slow mode waits longer, for callers who pause mid-sentence
+              silence_duration_ms: slow ? 900 : 480,
             },
           },
         },

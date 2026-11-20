@@ -4,11 +4,11 @@ import { createLlmRoute } from '@/lib/llm-route';
 import { complaintTools } from '@/lib/complaint/tools';
 import { complaintSystem } from '@/lib/complaint/prompt';
 import { getComplaint, hydrate, persist, hold, release } from '@/lib/complaint/store';
-import { addFlag, logHeard } from '@/lib/complaint/session';
+import { act, addFlag, logHeard } from '@/lib/complaint/session';
 import { guardShortcut, saysHangUp } from '@/lib/complaint/redflags';
 import { guardReported, reportOnce } from '@/lib/complaint/reported';
 import { complaintShortcut, guardHandover, followLanguage } from '@/lib/complaint/fastpath';
-import { ackFrom } from '@/lib/complaint/interpret';
+import { ackFrom, canInterpret } from '@/lib/complaint/interpret';
 import { READBACK_LANGS, spokenToDigits, type ReadbackLang } from '@/lib/entities/numbers';
 
 const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
@@ -62,7 +62,10 @@ export const POST = createLlmRoute({
     const c = getComplaint(session);
     if (id === 'ack') {
       const ack = c.phase === 'interpret' ? ackFrom(detail) : null;
-      if (ack) c.ack1930 = ack;
+      if (ack) {
+        c.ack1930 = ack;
+        act(c, 'done', `Saved the 1930 acknowledgement number: ${ack}`);
+      }
       return;
     }
     addFlag(c, id, detail, lastUser);
@@ -76,5 +79,8 @@ export const POST = createLlmRoute({
       q.get('mode') === 'guard' ? 'guard' : q.get('mode') === 'interpret' ? 'interpret' : 'complaint',
     );
     if (lang === 'auto') c.autoLang = true;
+    // The interpreter's own requests (mode=interpret on its URL) keep the call in interpret, even if
+    // the replaced agent's last turn saved the call after the switch.
+    if (q.get('mode') === 'interpret' && c.phase !== 'interpret' && canInterpret(c)) c.phase = 'interpret';
   },
 });

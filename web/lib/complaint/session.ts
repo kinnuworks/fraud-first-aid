@@ -36,6 +36,8 @@ export type Complaint = {
   heard?: Array<{ at: string; text: string }>;
   // The agent running this call now (so a new agent can replace it, on any server instance).
   agentId?: string;
+  // What the agent did, step by step, for the call screen's 'What it's doing' list (India time).
+  actions?: Action[];
   // The acknowledgement number the 1930 operator gave, heard during interpret.
   ack1930?: string;
   // The payee was counted in the reported-payees registry (once per call).
@@ -50,6 +52,19 @@ export type Complaint = {
 };
 
 export type Result = { ok: boolean; problem?: string; [k: string]: unknown };
+
+// One step the agent took: heard something, checked it, called a service, asked, or finished.
+export type Action = { at: string; kind: 'heard' | 'check' | 'tool' | 'ask' | 'done' | 'flag'; text: string };
+export function act(c: Complaint, kind: Action['kind'], text: string, now: Date = new Date()): void {
+  const at = new Date(now.getTime() + 330 * 60000).toISOString().slice(11, 19);
+  const list = (c.actions ??= []);
+  // the same step twice in a row (a repeated read-back) shows once
+  if (list.length && list[list.length - 1].text === text) return;
+  list.push({ at, kind, text });
+  if (list.length > 40) list.splice(0, list.length - 40);
+}
+const LABEL: Record<FieldName, string> = { utr: 'UTR', amount: 'amount', when: 'time of payment', payee: 'payee', victim_bank: 'your bank' };
+const spaced = (d: string) => groupForReadback(d).join(' ');
 
 export const newComplaint = (lang: ReadbackLang, phase: Phase = 'complaint'): Complaint => ({ lang, phase, flags: [], fields: {} });
 
@@ -115,6 +130,7 @@ export function recordNumber(c: Complaint, field: NumberField, spoken: string): 
   }
   c.fields[field] = { value: digits, confirmed: false };
   c.pending = field;
+  act(c, 'heard', `Heard the ${LABEL[field]} and read it back: ${spaced(digits)}`);
   return numberResult(c, digits);
 }
 
@@ -123,6 +139,7 @@ export function recordDigits(c: Complaint, field: NumberField, digits: string): 
   if (!NUMBER_RULES[field].check(digits)) return { ok: false, problem: `${digits.length} digits` };
   c.fields[field] = { value: digits, confirmed: false };
   c.pending = field;
+  act(c, 'heard', `Heard the ${LABEL[field]} and read it back: ${spaced(digits)}`);
   return numberResult(c, digits);
 }
 
@@ -139,6 +156,7 @@ export function correctGroup(c: Complaint, field: NumberField, group: number, sp
   groups[group - 1] = digits;
   c.fields[field] = { value: groups.join(''), confirmed: false };
   c.pending = field;
+  act(c, 'check', `Corrected group ${group} of the ${LABEL[field]}: now ${groups.join(' ')}`);
   return numberResult(c, groups.join(''));
 }
 
@@ -147,6 +165,8 @@ export function confirmField(c: Complaint, field: FieldName): Result {
   if (!f) return { ok: false, problem: `${field} not recorded yet` };
   f.confirmed = true;
   if (c.pending === field) c.pending = undefined;
+  act(c, 'done', `You confirmed the ${LABEL[field]}`);
+  if (missingFields(c).length === 0) act(c, 'done', 'Every detail confirmed: 1930 script, bank letter and reminders built');
   return { ok: true };
 }
 
@@ -156,6 +176,7 @@ export function recordUpi(c: Complaint, spoken: string): Result {
   if (!id) return recordNumber(c, 'payee', spoken);
   c.fields.payee = { value: id, confirmed: false };
   c.pending = 'payee';
+  act(c, 'heard', `Heard the payee's UPI ID: ${id}`);
   return { ok: true, value: id };
 }
 
@@ -164,6 +185,7 @@ export function recordAmount(c: Complaint, spoken: string): Result {
   if (n === null || n <= 0) return { ok: false, problem: 'no amount heard; ask for it digit by digit' };
   c.fields.amount = { value: n, confirmed: false };
   c.pending = 'amount';
+  act(c, 'heard', `Heard the amount: Rs ${n.toLocaleString('en-IN')}`);
   return { ok: true, value: n };
 }
 
@@ -172,6 +194,7 @@ export function recordText(c: Complaint, field: 'when' | 'victim_bank', value: s
   if (!v) return { ok: false, problem: 'empty' };
   c.fields[field] = { value: v, confirmed: false };
   c.pending = field;
+  act(c, 'heard', field === 'when' ? `Worked out when it happened: ${v.replace('T', ', ')} IST` : `Noted your bank: ${v}`);
   return { ok: true, value: v };
 }
 
@@ -195,6 +218,7 @@ export function deadlines(alertedOn: string, holidays: string[] = []) {
 export function takeFromShot(c: Complaint, field: 'utr' | 'amount' | 'payee'): Result {
   const v = c.shot?.[field];
   if (v === undefined) return { ok: false, problem: `the screenshot has no ${field}` };
+  act(c, 'check', `Took the ${LABEL[field]} from your payment screenshot`);
   if (field === 'utr') {
     c.fields.utr = { value: String(v), confirmed: false };
     c.pending = 'utr';
@@ -212,5 +236,6 @@ export function addFlag(c: Complaint, scam: string, red_flag: string, heard: str
   if (!scamById(scam)) scam = 'suspicious_call';
   if (c.flags.some((f) => f.scam === scam)) return false;
   c.flags.push({ scam, red_flag, heard: redactCodes(heard).slice(0, 300) });
+  act(c, 'flag', `Red flag on the call: the caller ${red_flag}. Told you to hang up (${scamById(scam)?.name ?? 'scam'})`);
   return true;
 }

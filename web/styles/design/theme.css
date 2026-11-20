@@ -2145,3 +2145,21 @@ html[data-large] {
 .pk-interp--on { display: block; border-left-color: var(--good, #1e7a46); }
 .pk-interp__ack { margin-top: 8px; font-size: 1rem; }
 .pk-interp__ack strong { font-variant-numeric: tabular-nums; letter-spacing: 0.04em; }
+
+/* What it's doing: the agent's steps on this call, logged as they happen */
+.as-card { padding: 16px 18px; }
+.as-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.as-live { display: inline-flex; align-items: center; gap: 6px; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--bad); }
+.as-live::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: var(--bad); animation: as-pulse 1.6s ease-in-out infinite; }
+@keyframes as-pulse { 50% { opacity: 0.25; } }
+@media (prefers-reduced-motion: reduce) { .as-live::before { animation: none; } }
+.as-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.as-step { display: grid; grid-template-columns: 22px 1fr auto; align-items: baseline; gap: 8px; font-size: 0.9375rem; line-height: 1.4; color: var(--ink); }
+.as-icon { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; font-size: 0.6875rem; font-weight: 800; background: var(--panel); color: var(--navy); }
+.as-step--done .as-icon { background: #e3f3e8; color: #1e7a46; }
+.as-step--flag .as-icon { background: var(--bad); color: #fff; }
+.as-step--ask .as-icon { background: #fff4d6; color: #8a5a00; }
+.as-step--tool .as-icon { background: var(--navy); color: #fff; }
+.as-step:last-child .as-text { font-weight: 700; }
+.as-at { font-size: 0.75rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
+.as-more { margin-top: 6px; font-size: 0.8125rem; color: var(--ink-3); }

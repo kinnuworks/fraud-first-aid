@@ -1,5 +1,7 @@
 // Language presets for the voice agent: which Sarvam ASR language code and which Murf
-// Falcon voice to use. Voice IDs come from Murf's live voice list (GET /v1/speech/voices).
+// Falcon voice to use. Voices are Murf's own picks for each language (the organisers' recommended-
+// voices sheet) and are checked against Murf's live list (GET /v1/speech/voices?model=falcon-2.1)
+// and by scripts/voice-roundtrip.ts.
 export type LangCode = 'hi' | 'kn' | 'te' | 'en' | 'ta' | 'ml' | 'bn' | 'mr' | 'gu' | 'pa' | 'auto';
 
 export type LangPreset = {
@@ -12,19 +14,19 @@ export type LangPreset = {
 export const PRESETS: Record<LangCode, LangPreset> = {
   hi: {
     asrLanguage: 'hi-IN',
-    voiceId: 'hi-IN-namrita',
+    voiceId: 'en-IN-pooja',
     locale: 'hi-IN',
     greeting: 'नमस्ते! मैं आपकी मदद के लिए यहाँ हूँ। बताइए, क्या हुआ?',
   },
   kn: {
     asrLanguage: 'kn-IN',
-    voiceId: 'kn-IN-harshitha',
+    voiceId: 'en-IN-pooja',
     locale: 'kn-IN',
     greeting: 'ನಮಸ್ಕಾರ! ನಾನು ನಿಮಗೆ ಸಹಾಯ ಮಾಡಲು ಇಲ್ಲಿದ್ದೇನೆ. ಏನಾಯಿತು ಹೇಳಿ?',
   },
   te: {
     asrLanguage: 'te-IN',
-    voiceId: 'en-IN-anisha',
+    voiceId: 'en-IN-pooja',
     locale: 'te-IN',
     greeting: 'నమస్కారం! నేను మీకు సహాయం చేయడానికి ఇక్కడ ఉన్నాను. ఏమైందో చెప్పండి?',
   },
@@ -36,13 +38,13 @@ export const PRESETS: Record<LangCode, LangPreset> = {
   },
   ta: {
     asrLanguage: 'ta-IN',
-    voiceId: 'ta-IN-karthikeyan',
+    voiceId: 'en-IN-pooja',
     locale: 'ta-IN',
     greeting: 'வணக்கம்! நான் உங்களுக்கு உதவ இங்கே இருக்கிறேன். என்ன நடந்தது என்று சொல்லுங்கள்.',
   },
   ml: {
     asrLanguage: 'ml-IN',
-    voiceId: 'ml-IN-nimisha',
+    voiceId: 'gu-IN-diya',
     locale: 'ml-IN',
     greeting: 'നമസ്കാരം! ഞാൻ നിങ്ങളെ സഹായിക്കാൻ ഇവിടെയുണ്ട്. എന്താണ് സംഭവിച്ചതെന്ന് പറയൂ.',
   },
@@ -54,7 +56,7 @@ export const PRESETS: Record<LangCode, LangPreset> = {
   },
   mr: {
     asrLanguage: 'mr-IN',
-    voiceId: 'mr-IN-prajakta',
+    voiceId: 'gu-IN-diya',
     locale: 'mr-IN',
     greeting: 'नमस्कार! मी तुमची मदत करायला इथे आहे. काय झालं ते सांगा.',
   },
@@ -70,11 +72,11 @@ export const PRESETS: Record<LangCode, LangPreset> = {
     locale: 'pa-IN',
     greeting: 'ਸਤ ਸ੍ਰੀ ਅਕਾਲ! ਮੈਂ ਤੁਹਾਡੀ ਮਦਦ ਲਈ ਇੱਥੇ ਹਾਂ। ਦੱਸੋ ਕੀ ਹੋਇਆ।',
   },
-  // Any language: Sarvam detects it; one Falcon voice that speaks all nine Indian languages
-  // (checked by round-trip: Telugu, Tamil, Kannada and Hindi all came back in the right language).
+  // Any language (and the 1930 interpreter): Sarvam detects it; Rachna, Murf's pick for Hindi,
+  // speaks English and all nine Indian languages here.
   auto: {
     asrLanguage: 'unknown',
-    voiceId: 'hi-IN-poonam',
+    voiceId: 'hi-IN-rachna',
     locale: 'hi-IN',
     greeting: 'నమస్కారం! नमस्ते! ನಮಸ್ಕಾರ! வணக்கம்! Hello! Speak in your own language and tell me what happened.',
   },

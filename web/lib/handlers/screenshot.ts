@@ -5,6 +5,8 @@ import { createAnthropic } from '@ai-sdk/anthropic';
 import { peekComplaint, hydrate, persist } from '@/lib/complaint/store';
 import { readScreenshot } from '@/lib/complaint/vision';
 import { compareWithScreenshot } from '@/lib/complaint/screenshot';
+import { act } from '@/lib/complaint/session';
+import { announce, shotLine } from '@/lib/complaint/announce';
 import { checkCap } from '@/lib/capability';
 
 const uploads = new Map<string, number>();
@@ -45,6 +47,15 @@ export async function POST(request: NextRequest) {
   await hydrate(id);
   const fresh = peekComplaint(id) ?? c;
   fresh.shot = r.shot;
+  const check = compareWithScreenshot(fresh, r.shot);
+  const off = Object.entries(check).flatMap(([k, v]) => (v.status === 'mismatch' ? [`${k === 'utr' ? 'UTR' : k}${v.groups?.length ? ` group ${v.groups.join(' and ')}` : ''}`] : []));
+  act(fresh, 'check', off.length ? `Read your payment screenshot: it disagrees with what you said on the ${off.join(', ')}` : 'Read your payment screenshot and checked it against what you said');
   await persist(id);
-  return NextResponse.json({ shot: r.shot, check: compareWithScreenshot(fresh, r.shot) });
+  // say it now, in the caller's language: a difference interrupts the agent (Agora speak API)
+  const line = shotLine(fresh.lang, check);
+  if (line && (await announce(fresh, line.text, line.interrupt))) {
+    act(fresh, 'tool', line.interrupt ? 'Cut in to say the screenshot differs (Agora speak, INTERRUPT)' : 'Said the screenshot matches (Agora speak)');
+    await persist(id);
+  }
+  return NextResponse.json({ shot: r.shot, check });
 }
