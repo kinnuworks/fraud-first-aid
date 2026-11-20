@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   const sent = await sendPack(c);
   act(c, sent.ok ? 'done' : 'check', sent.ok ? 'You pressed Send: emailed the pack with the calendar reminders' : `Could not email the pack: ${sent.problem}`);
   // the agent confirms it aloud once it finishes what it's saying (Agora speak API, APPEND)
-  if (sent.ok && (await announce(c, ANNOUNCE[c.lang].emailed, false))) act(c, 'tool', 'Told you aloud the pack was emailed (Agora speak)');
+  if (sent.ok && (await announce(c, ANNOUNCE[c.lang].emailed, false, id))) act(c, 'tool', 'Told you aloud the pack was emailed (Agora speak)');
   await persist(id);
   return NextResponse.json(sent);
 }

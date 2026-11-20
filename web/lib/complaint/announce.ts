@@ -5,6 +5,8 @@
 import { AgoraClient, Area, generateConvoAIToken } from 'agora-agents';
 import type { ReadbackLang } from '../entities/numbers';
 import type { Complaint } from './session';
+import { shared } from './shared';
+import { agentFor } from '../handlers/agents';
 
 type Lines = { shotGroup: (g: number) => string; shotDiffers: string; shotMatches: string; emailed: string };
 export const ANNOUNCE: Record<ReadbackLang, Lines> = {
@@ -82,10 +84,19 @@ export function shotLine(lang: ReadbackLang, check: Record<string, { status: str
 }
 
 // Say it now through the running agent (Agora speak API). Fails loudly in the log, never the request.
-export async function announce(c: Complaint, text: string, interrupt: boolean): Promise<boolean> {
+export async function announce(c: Complaint, text: string, interrupt: boolean, channel?: string): Promise<boolean> {
   const appId = process.env.NEXT_PUBLIC_AGORA_APP_ID;
   const appCertificate = process.env.NEXT_AGORA_APP_CERTIFICATE;
-  if (!c.agentId || !appId || !appCertificate || c.phase !== 'complaint') return false;
+  if (!appId || !appCertificate || c.phase !== 'complaint') return false;
+  // this instance's copy may predate the agent's id: ask the shared store, then this instance's own record
+  if (!c.agentId && channel) {
+    const stored = (await shared?.get(channel).catch(() => undefined))?.c as Partial<Complaint> | undefined;
+    c.agentId = stored?.agentId ?? agentFor(channel) ?? undefined;
+  }
+  if (!c.agentId) {
+    console.error('[announce] no agent id for this call; the line was not spoken:', text.slice(0, 60));
+    return false;
+  }
   try {
     const client = new AgoraClient({ area: Area.US, appId, appCertificate });
     // The low-level REST call needs the same token header the SDK's own stopAgent() builds; without it

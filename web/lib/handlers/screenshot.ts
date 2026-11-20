@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
   await persist(id);
   // say it now, in the caller's language: a difference interrupts the agent (Agora speak API)
   const line = shotLine(fresh.lang, check);
-  if (line && (await announce(fresh, line.text, line.interrupt))) {
+  if (line && (await announce(fresh, line.text, line.interrupt, id))) {
     act(fresh, 'tool', line.interrupt ? 'Cut in to say the screenshot differs (Agora speak, INTERRUPT)' : 'Said the screenshot matches (Agora speak)');
     await persist(id);
   }

@@ -53,6 +53,28 @@ function authorized(
 
 export const SILENT = "<silent>";
 
+// The history Agora sends, made safe for the model: text parts flattened to a string, empty user
+// turns dropped, and an empty assistant turn written as a silent reply (or the model reads the gap
+// as a pattern to keep and stays silent through a clear scam ask, ICFD validation, 20 Nov). The model
+// API refuses an empty message, and one empty turn in the history would fail every later turn of the
+// call (live interpreter run, 20 Nov).
+export function forModel(msgs: Array<{ role: string; content: unknown }>): Array<{ role: string; content: string }> {
+  const text = (c: unknown): string =>
+    typeof c === "string"
+      ? c
+      : Array.isArray(c)
+        ? c.map((p) => (p && typeof p === "object" && "text" in p ? String((p as { text: unknown }).text ?? "") : "")).join("")
+        : "";
+  const out: Array<{ role: string; content: string }> = [];
+  for (const m of msgs) {
+    if (m.role === "system") continue;
+    const t = text(m.content);
+    if (m.role === "assistant") out.push({ role: "assistant", content: t.trim() ? t : SILENT });
+    else if (t.trim()) out.push({ role: m.role, content: t });
+  }
+  return out;
+}
+
 // What the route has already seen of a call's latest user message, as a fingerprint (its length and
 // a hash), never the words: the store and this map hold no transcript, but the route can still tell
 // when Agora appends new words to the same message after a silent turn.
@@ -132,15 +154,7 @@ export function createLlmRoute({
         : streamTextImpl({
             model,
             system: typeof system === "function" ? system(session) : system,
-            // An empty assistant turn is a silent reply: say so, or the model reads the gap as a
-            // pattern to keep and stays silent through a clear scam ask (ICFD validation, 20 Nov).
-            messages: msgs
-              .filter((m) => m.role !== "system")
-              .map((m) =>
-                m.role === "assistant" && (m.content == null || (typeof m.content === "string" && !m.content.trim()))
-                  ? { ...m, content: SILENT }
-                  : m,
-              ) as never,
+            messages: forModel(msgs) as never,
             ...(tools
               ? { tools: tools(session, lastUser), stopWhen: stepCountIs(6) }
               : {}),
