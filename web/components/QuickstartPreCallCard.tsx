@@ -1,213 +1,13 @@
 'use client';
-// The first screen before a call: the ask, the language, the ways to start, and the payment screen
-// every UPI user has seen, with its 12-digit reference carried into a finished sample complaint.
-import { Loader2 } from 'lucide-react';
-import { useEffect, useState } from 'react';
-import { PhoneCallStart } from './PhoneCallStart';
-import { when } from './ComplaintCard';
-import { STATES } from './StatePreview';
-import { Logo } from './design/Logo';
+// The landing page before a call: the hero (Hero.tsx, on Tines' system), then the journey, the
+// reported cases, the way into /proof, the QR to open it on a phone, the numbers, 1930 alone vs with
+// Fraud First Aid, and the sources.
+import { type StartProps } from './HeroControls';
+import { Hero } from './Hero';
 import { ImpactBand } from './ImpactBand';
 import Image from 'next/image';
 
-const LANGS = [
-  ['en', 'English'],
-  ['kn', 'ಕನ್ನಡ'],
-  ['hi', 'हिन्दी'],
-  ['te', 'తెలుగు'],
-  ['ta', 'தமிழ்'],
-  ['ml', 'മലയാളം'],
-  ['bn', 'বাংলা'],
-  ['mr', 'मराठी'],
-  ['gu', 'ગુજરાતી'],
-  ['pa', 'ਪੰਜਾਬੀ'],
-  ['auto', 'Any language (auto)'],
-] as const;
-
-// The chosen language rides in ?lang=, which the call start reads.
-function LanguageChips() {
-  const [lang, setLang] = useState('en');
-  function pick(code: string) {
-    const url = new URL(window.location.href);
-    url.searchParams.set('lang', code);
-    window.history.replaceState(null, '', url);
-    setLang(code);
-  }
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get('lang');
-    if (q && LANGS.some(([c]) => c === q)) setLang(q);
-    else pick('en');
-  }, []);
-  return (
-    <label className="up-langpick" id="langs">
-      <span className="up-label">Language</span>
-      <select value={lang} onChange={(e) => pick(e.target.value)} className="up-select" aria-label="Language">
-        {LANGS.map(([code, label]) => (
-          <option key={code} value={code}>
-            {label}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
-// "Speak slowly": a slower voice for older callers (?slow=1, read by the call start) and larger text.
-function SlowToggle() {
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search).get('slow') === '1';
-    setOn(q);
-    if (q) document.documentElement.dataset.large = '';
-  }, []);
-  function toggle() {
-    const next = !on;
-    const url = new URL(window.location.href);
-    if (next) url.searchParams.set('slow', '1');
-    else url.searchParams.delete('slow');
-    window.history.replaceState(null, '', url);
-    if (next) document.documentElement.dataset.large = '';
-    else delete document.documentElement.dataset.large;
-    setOn(next);
-  }
-  return (
-    <button type="button" role="switch" aria-checked={on} onClick={toggle} className="up-switch" data-testid="slow-toggle">
-      <span className="up-switch__track" aria-hidden="true" />
-      Speak slowly, bigger text
-    </button>
-  );
-}
-
-// The sample card plays the read-back: each group of four is said back, then all three are confirmed.
-function ReadBack() {
-  const groups = ['4021', '7788', '9910'];
-  const [step, setStep] = useState(4);
-  useEffect(() => {
-    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-    let t: ReturnType<typeof setTimeout>;
-    const seq = [0, 1, 2, 3, 4];
-    const wait = [700, 900, 900, 900, 3600];
-    let i = 0;
-    const run = () => {
-      setStep(seq[i]);
-      t = setTimeout(() => {
-        i = (i + 1) % seq.length;
-        run();
-      }, wait[i]);
-    };
-    t = setTimeout(run, 2200);
-    return () => clearTimeout(t);
-  }, []);
-  return (
-    <>
-      <div className="mt-2">
-        <span className="up-utr" aria-label="4021 7788 9910">
-          {groups.map((g, i) => (
-            <span key={g} className="up-utr__g" data-state={step === 4 ? 'ok' : i < step ? 'pending' : 'empty'}>
-              {g}
-            </span>
-          ))}
-        </span>
-      </div>
-      <p className="mt-2 rc-reading" aria-hidden={step === 4}>
-        {step === 4 ? (
-          <>
-            <span className="up-tick" style={{ marginLeft: 0 }}>✓ confirmed</span>
-            <span className="up-tick">(screenshot ✓)</span>
-          </>
-        ) : (
-          'Reading back in groups of four…'
-        )}
-      </p>
-    </>
-  );
-}
-
-type QuickstartPreCallCardProps = {
-  isLoading: boolean;
-  error: string | null;
-  onStartConversation: () => void;
-};
-
-type Actions = QuickstartPreCallCardProps & { arrow?: boolean };
-
-function StartButton({ isLoading, onStartConversation, arrow }: Actions) {
-  return (
-    <button
-      type="button"
-      onClick={() => {
-        const url = new URL(window.location.href);
-        url.searchParams.delete('mode');
-        window.history.replaceState(null, '', url);
-        onStartConversation();
-      }}
-      disabled={isLoading}
-      className="up-btn"
-      aria-label={isLoading ? 'Starting conversation with AI agent' : 'Start conversation with AI agent'}
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Connecting… keep your bank SMS open.
-        </>
-      ) : (
-        <>Lost money? Report it by voice{arrow ? ' →' : ''}</>
-      )}
-    </button>
-  );
-}
-
-// One click from the first screen: a guarded call with no microphone, and the labelled sample scam
-// call plays by itself, so a judge sees the silent listening and the warning in about 30 seconds.
-function WatchButton({ isLoading, onStartConversation }: Actions) {
-  return (
-    <button
-      type="button"
-      disabled={isLoading}
-      onClick={() => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('mode', 'guard');
-        url.searchParams.set('watch', '1');
-        // the sample caller speaks Hindi: warn in Hindi unless the visitor picked a language
-        if ((url.searchParams.get('lang') ?? 'en') === 'en') url.searchParams.set('lang', 'hi');
-        window.history.replaceState(null, '', url);
-        onStartConversation();
-      }}
-      className="up-btn up-btn--bad"
-      data-testid="watch-scam"
-    >
-      {isLoading ? (
-        <>
-          <Loader2 className="h-4 w-4 animate-spin" />
-          Starting the sample call…
-        </>
-      ) : (
-        <>▶ Watch it catch a scam call</>
-      )}
-    </button>
-  );
-}
-
-function ListenButton({ isLoading, onStartConversation, link = false }: Actions & { link?: boolean }) {
-  return (
-    <button
-      type="button"
-      disabled={isLoading}
-      onClick={() => {
-        const url = new URL(window.location.href);
-        url.searchParams.set('mode', 'guard');
-        window.history.replaceState(null, '', url);
-        onStartConversation();
-      }}
-      className={link ? 'up-link text-left text-[1.0625rem]' : 'up-btn up-btn--ghost'}
-      style={link ? { background: 'none', border: 0, cursor: 'pointer', whiteSpace: 'normal' } : { whiteSpace: 'normal' }}
-    >
-      Real scam call on now? Put it on speaker and let it listen
-    </button>
-  );
-}
-
-// Two more ways in: open it on a phone (QR), or let it ring the caller's phone; plus a recording of the whole flow.
+// Another way in: open it on a phone (QR); plus a recording of the whole flow. Calls to the caller's phone are paused on the server.
 function MoreWays() {
   return (
     <section className="mw" aria-labelledby="mw-title">
@@ -216,8 +16,7 @@ function MoreWays() {
       </span>
       <div className="mw-body">
         <h2 id="mw-title" className="mw-title">Try it on your phone</h2>
-        <p className="mw-sub">Scan the code, or give your number and it calls you.</p>
-        <PhoneCallStart />
+        <p className="mw-sub">Scan the code to open it on your phone.</p>
       </div>
       <a
         className="up-link mw-rec"
@@ -295,7 +94,7 @@ function Journey() {
 // Reported outcomes after a fast 1930 report. No faces here.
 function Cases() {
   return (
-    <section className="cs2 up-wrap" aria-label="Reported cases">
+    <section className="cs2 up-wrap" id="cases" aria-label="Reported cases">
       <div className="cs2-card">
         <p className="cs2-num">₹17 lakh back</p>
         <p className="cs2-text">
@@ -372,100 +171,12 @@ function Compare() {
   );
 }
 
-const DEADLINE = when(STATES['complaint-done']!.deadlines!.zeroLiabilityBy);
+export type QuickstartPreCallCardProps = StartProps;
 
-/* The hero shows both halves: on the phone, the agent catching a fake KYC call (labelled sample);
-   beside it, the complaint card with the UTR read back in groups of four (Fold's app system). */
 export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
   return (
     <div className="up-page" style={{ overflowX: 'clip' }}>
-      <div className="up-wrap">
-        <header className="up-header">
-          <Logo />
-          <nav className="up-nav">
-            <a href="#how" className="fd-pill">How it works</a>
-            <a href="#sources" className="fd-pill">Sources</a>
-            <a href="tel:1930" className="fd-pill fd-pill--1930">Call 1930</a>
-          </nav>
-        </header>
-        <section className="rc-hero">
-          <div>
-            <p className="rc-stakes">
-              Indians reported losing <strong>₹22,845 crore</strong> to cyber fraud in 2024, across more than <strong>36 lakh</strong> cases.{' '}
-              <a className="rc-src" href="#sources" title="Lok Sabha reply, Ministry of Home Affairs, 22 Jul 2025">Source</a>
-            </p>
-            <h1 className="up-display">
-              Catches the scam on the call.{' '}
-              <span className="rc-h1-sub">Chases the money if it&apos;s gone.</span>
-            </h1>
-            <p className="up-lead rc-lead">
-              Put the call on speaker and it warns you in your language. Lost money? Tell it what happened and it gets every number right for
-              the 1930 helpline and your bank.
-            </p>
-            <div className="rc-ctas">
-              <WatchButton {...p} />
-              <StartButton {...p} />
-            </div>
-            <div className="rc-prefs">
-              <ListenButton {...p} link />
-              <LanguageChips />
-              <SlowToggle />
-            </div>
-            {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
-          </div>
-          <div className="rc-stage">
-            <div className="rc-phone" aria-label="Sample: the agent hears a fake KYC call ask for an OTP and tells the user to hang up">
-              <span className="rc-btn-vol" aria-hidden="true" />
-              <div className="rc-screen">
-                <span className="rc-cam" aria-hidden="true" />
-                <div className="rc-status" aria-hidden="true">
-                  <span>2:31</span>
-                  <svg width="44" height="12" viewBox="0 0 44 12" fill="currentColor">
-                    <rect x="0" y="8" width="3" height="4" rx="1" />
-                    <rect x="5" y="5" width="3" height="7" rx="1" />
-                    <rect x="10" y="2" width="3" height="10" rx="1" />
-                    <rect x="22" y="1" width="20" height="10" rx="3" fill="none" stroke="currentColor" strokeWidth="1.5" />
-                    <rect x="24" y="3" width="13" height="6" rx="1.5" />
-                  </svg>
-                </div>
-                <div className="rc-body rc-guard">
-                  <p className="rc-guard__head">
-                    <span className="rc-guard__dot" aria-hidden="true" /> Listening on speaker
-                    <span className="up-sample-tag rc-guard__tag">Sample</span>
-                  </p>
-                  <p className="rc-bubble">
-                    <span className="rc-bubble__who">Caller</span>
-                    Madam, your KYC expires tonight. Your account will be blocked.
-                  </p>
-                  <p className="rc-bubble rc-bubble--flag">
-                    <span className="rc-bubble__who">Caller · red flag</span>
-                    An OTP has come on your phone. Tell it to me now.
-                  </p>
-                  <p className="rc-bubble rc-bubble--agent">
-                    <span className="rc-bubble__who">It warns you, in your language</span>
-                    यह धोखाधड़ी वाली कॉल है। अभी फ़ोन काट दीजिए।
-                    <span className="rc-bubble__en">This is a scam call. Hang up now.</span>
-                  </p>
-                  <p className="rc-warn">Scam warning: fake KYC update</p>
-                </div>
-                <span className="rc-home" aria-hidden="true" />
-              </div>
-            </div>
-            <div className="rc-card up-card">
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-[1.125rem] font-bold">Your complaint</span>
-                <span className="up-sample-tag">Sample</span>
-              </div>
-              <p className="mt-4 text-[0.9375rem]" style={{ color: 'var(--ink-3)' }}>UTR (transaction reference)</p>
-              <ReadBack />
-              <p className="mt-4 border-t pt-4 text-[1rem]" style={{ borderColor: 'var(--rule)' }}>
-                Tell your bank by <strong>{DEADLINE}</strong> for zero liability (RBI, 3 working days).
-              </p>
-            </div>
-            <p className="rc-tech">Agora Conversational AI runs the live call · Sarvam hears 10 Indian languages · Murf Falcon speaks back</p>
-          </div>
-        </section>
-      </div>
+      <Hero {...p} />
       <Journey />
       <Cases />
       <section className="ck up-wrap" aria-label="Check it yourself">
@@ -477,11 +188,11 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
           <a href="/proof" className="up-btn ck-btn" data-testid="open-proof">Check it yourself</a>
         </div>
       </section>
-      <div className="up-wrap">
+      <div className="up-wrap" id="try">
         <MoreWays />
       </div>
       <ImpactBand />
-      <div className="up-wrap">
+      <div className="up-wrap" id="compare">
         <Compare />
       </div>
       <Below />

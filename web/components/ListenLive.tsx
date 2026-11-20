@@ -64,7 +64,7 @@ export function ListenLive({ session, viewKey }: { session: string; viewKey: str
       <span className="ll-dot" aria-hidden="true" />
       <div className="min-w-0 flex-1">
         <p className="font-bold text-[1.0625rem]">{state === 'on' ? (talking ? 'You are on the call' : 'Listening live') : 'Hear the call'}</p>
-        <p className="text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }} role="status">
+        <p className="text-[0.9375rem]" style={{ color: 'var(--side-ink-2)' }} role="status">
           {state === 'on'
             ? talking
               ? 'They can hear you. Help them stay calm and give the details slowly.'

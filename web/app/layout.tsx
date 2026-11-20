@@ -1,10 +1,12 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import '@/styles/design/theme.css';
+import '@/styles/design/tines.css';
+import Script from 'next/script';
 import {
-  IBM_Plex_Mono,
-  Figtree,
-  Anek_Latin,
+  Instrument_Sans,
+  Young_Serif,
+  DM_Mono,
   Anek_Telugu,
   Anek_Devanagari,
   Anek_Kannada,
@@ -15,8 +17,10 @@ import {
   Anek_Gurmukhi,
 } from 'next/font/google';
 
-const figtree = Figtree({ subsets: ['latin'], variable: '--font-figtree', display: 'swap' });
-const anekLatin = Anek_Latin({ subsets: ['latin'], variable: '--font-anek-latin', display: 'swap', axes: ['wdth'] });
+// Tines' faces, as free matches: Roobert -> Instrument Sans, Reckless -> Young Serif, Roobert Mono -> DM Mono.
+const sans = Instrument_Sans({ subsets: ['latin'], variable: '--font-face-sans', display: 'swap' });
+const serif = Young_Serif({ subsets: ['latin'], weight: '400', variable: '--font-face-serif', display: 'swap' });
+const mono = DM_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-face-mono', display: 'swap' });
 // Indian scripts load only when a page uses them.
 const anekTe = Anek_Telugu({ display: 'swap', preload: false, variable: '--font-anek-te' });
 const anekHi = Anek_Devanagari({ display: 'swap', preload: false, variable: '--font-anek-hi' });
@@ -26,7 +30,6 @@ const anekMl = Anek_Malayalam({ display: 'swap', preload: false, variable: '--fo
 const anekBn = Anek_Bangla({ display: 'swap', preload: false, variable: '--font-anek-bn' });
 const anekGu = Anek_Gujarati({ display: 'swap', preload: false, variable: '--font-anek-gu' });
 const anekPa = Anek_Gurmukhi({ display: 'swap', preload: false, variable: '--font-anek-pa' });
-const plexMono = IBM_Plex_Mono({ subsets: ['latin'], weight: ['400', '500', '600'], variable: '--font-plex-mono', display: 'swap' });
 
 export const viewport: Viewport = {
   width: 'device-width',
@@ -77,10 +80,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${figtree.variable} ${anekLatin.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')} ${plexMono.variable}`}
+      className={`h-full ${sans.variable} ${serif.variable} ${mono.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')}`}
       suppressHydrationWarning
     >
       <body className="h-full min-h-screen">
+        <Script src="/design/runtime.js" strategy="beforeInteractive" />
         {children}
       </body>
     </html>

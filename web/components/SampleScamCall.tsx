@@ -39,7 +39,7 @@ export function SampleScamCall() {
   }
 
   return (
-    <div className="flex flex-col gap-3 rounded-[16px] border border-dashed p-4 text-white" style={{ borderColor: 'rgb(255 255 255 / 0.4)' }} data-testid="sample-scam-call">
+    <div className="flex flex-col gap-3 rounded-[16px] border border-dashed p-4" style={{ borderColor: 'var(--side-edge)', color: 'var(--side-ink)' }} data-testid="sample-scam-call">
       <p className="text-[0.9375rem] leading-relaxed">
         <span className="up-sample-tag mr-2">Illustration</span>
         No scam call to hand? Play a sample (an illustration made with a generated voice, not a real call).

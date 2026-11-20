@@ -584,7 +584,7 @@ export default function ConversationComponent({
       controls={
         <div
           className="mx-auto flex w-fit items-center gap-3 rounded-full px-4 py-2"
-          style={{ background: 'var(--navy-2)' }}
+          style={{ background: 'var(--side-pane)' }}
           role="group"
           aria-label="Audio controls"
         >

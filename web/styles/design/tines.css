@@ -1,0 +1,1277 @@
+/* Fraud First Aid on Tines' system (tines.com, measured 20 Nov 2026, design/refs/tines): Roobert to
+   Instrument Sans, Reckless to Young Serif, Roobert Mono to DM Mono; pill buttons and labels in mono
+   caps; hairline cards with 14-16px corners and no shadows; the product shown in a lilac window with a
+   playback bar; flat Indian flowers (our own, drawn in Tines' hand). Colours are the owner's clearer
+   set (theme.css): deep ink for text, purple for what the product does, red for the scam, green for
+   confirmed, amber for checking and deadlines. */
+
+/* ---------- shared hero pieces ---------- */
+.hc-play {
+  flex: none;
+  width: 0.75em;
+  height: 0.875em;
+}
+.rc-flagtag {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 1px 7px;
+  border-radius: 999px;
+  background: var(--bad);
+  color: var(--on-bad);
+  letter-spacing: 0.04em;
+}
+.hc-tech {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 6px 22px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink-2);
+}
+.hc-tech li {
+  position: relative;
+}
+.hc-tech li + li::before {
+  content: '';
+  position: absolute;
+  left: -13px;
+  top: 0.55em;
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.6;
+}
+.hc-error {
+  margin-top: 12px;
+  font-size: 1rem;
+  color: var(--bad);
+}
+.hc-complaint {
+  display: grid;
+  gap: 6px;
+  text-align: left;
+}
+.hc-complaint__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.hc-complaint__title {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+.hc-complaint__k {
+  margin-top: 8px;
+  font-size: 0.9375rem;
+  color: var(--ink-3);
+}
+.hc-complaint__deadline {
+  margin-top: 10px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+/* ===================================================================== */
+/* A: Tines (tines.com). Cream page, purple ink, Roobert -> Instrument Sans, */
+/* Reckless -> Young Serif, Roobert Mono -> DM Mono; hairline coloured cards */
+/* with 14px corners, no shadows; pill buttons in mono caps; flat flowers.  */
+/* ===================================================================== */
+
+.ta-nav {
+  width: min(100% - 32px, 1360px);
+  margin: 0 auto;
+  min-height: 76px;
+  display: flex;
+  align-items: center;
+  gap: 36px;
+}
+.ta-nav .up-logo {
+  color: var(--ink);
+}
+.ta-nav .up-logo__mark {
+  background: var(--act);
+}
+.ta-links {
+  display: flex;
+  gap: 28px;
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--ink);
+}
+.ta-links a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.ta-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  border-radius: 999px;
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, transform 0.12s ease;
+}
+.ta-btn:active {
+  transform: translateY(1px);
+}
+.ta-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+.ta-btn:focus-visible {
+  outline: 2px solid var(--act);
+  outline-offset: 3px;
+}
+.ta-btn--fill {
+  background: var(--act);
+  color: var(--on-act);
+  border: 1px solid var(--act);
+}
+.ta-btn--sos {
+  background: var(--bad);
+  color: var(--on-bad);
+  border: 1px solid var(--bad);
+}
+.ta-btn--sos:hover {
+  background: var(--bad-ink);
+}
+.ta-btn--fill:hover {
+  background: var(--act-hover);
+}
+.ta-btn--line {
+  background: transparent;
+  color: var(--act);
+  border: 1px solid var(--act);
+}
+.ta-btn--line:hover {
+  background: var(--panel-2);
+}
+.ta-btn--nav {
+  margin-left: auto;
+  min-height: 40px;
+  padding: 0 22px;
+  font-size: 0.875rem;
+}
+.ta-btn--lg {
+  min-height: 52px;
+  padding: 0 28px;
+  font-size: 0.9375rem;
+}
+.ta-hero {
+  padding: 22px 16px 0;
+  text-align: center;
+}
+.ta-pill {
+  display: inline-flex;
+  align-items: stretch;
+  border: 1px solid var(--act);
+  border-radius: 999px;
+  overflow: hidden;
+  color: var(--ink);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  background: var(--sheet);
+}
+.ta-pill__k {
+  display: flex;
+  align-items: center;
+  padding: 6px 14px;
+  border-right: 1px solid var(--act);
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+.ta-pill__v {
+  padding: 6px 14px;
+}
+.ta-pill:hover .ta-pill__v {
+  background: var(--panel-2);
+}
+.ta-h1 {
+  max-width: 1040px;
+  margin: 20px auto 0;
+  font-family: var(--font-face-sans), system-ui, sans-serif;
+  font-weight: 500;
+  font-size: clamp(2.5rem, 1.25rem + 3.5vw, 4rem);
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--ink-display);
+  text-wrap: balance;
+}
+.ta-h1__2 {
+  display: block;
+}
+.ta-sub {
+  max-width: 980px;
+  margin: 18px auto 0;
+  font-family: var(--font-face-serif), Georgia, serif;
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.ta-langs {
+  max-width: 1360px;
+  margin: 26px auto 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+}
+.ta-langs__row {
+  display: flex;
+  gap: 44px;
+  width: max-content;
+  font-family: var(--font-face-sans), var(--font-scripts), system-ui, sans-serif;
+  font-size: 1.125rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: var(--ink-display);
+  animation: ta-marquee 46s linear infinite;
+}
+@keyframes ta-marquee {
+  to {
+    transform: translateX(calc(-50% - 22px));
+  }
+}
+.ta-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  margin-top: 24px;
+}
+.ta-prefs {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 12px 24px;
+  margin-top: 14px;
+}
+.ta-link {
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 500;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-align: center;
+}
+.ta-prefs .up-switch,
+.ta-prefs .up-select {
+  border-color: var(--rule-pill);
+  border-radius: 999px;
+  color: var(--ink);
+  background: var(--sheet);
+}
+.ta-prefs .up-switch[aria-checked='true'] .up-switch__track {
+  background: var(--act);
+}
+.ta-prefs .up-label {
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  color: var(--ink);
+}
+.ta-stage {
+  position: relative;
+  max-width: 1360px;
+  margin: 76px auto 0;
+  padding-bottom: 72px;
+}
+.jr {
+  padding-top: 84px;
+}
+.ta-ctas,
+.ta-prefs {
+  position: relative;
+  z-index: 2;
+}
+.ta-bloom {
+  position: absolute;
+  z-index: 0;
+  pointer-events: none;
+  background: url('/design/bloom.webp') no-repeat center bottom / contain;
+}
+.ta-bloom--r {
+  right: -110px;
+  top: -205px;
+  width: 600px;
+  height: 258px;
+}
+.ta-bloom--l {
+  left: -64px;
+  bottom: -46px;
+  width: 520px;
+  height: 224px;
+  transform: scaleX(-1);
+}
+.ta-win {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  padding: 10px;
+  border-radius: 26px;
+  background: var(--panel-2);
+  border: 1px solid rgb(115 74 206 / 0.18);
+  text-align: left;
+}
+.ta-win__bar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  height: 46px;
+  padding: 0 18px;
+  border-radius: 18px;
+  background: var(--panel);
+}
+.ta-win__pause {
+  display: inline-flex;
+  gap: 3px;
+}
+.ta-win__pause i {
+  width: 3px;
+  height: 12px;
+  border-radius: 1px;
+  background: var(--ink);
+}
+.ta-win__track {
+  position: relative;
+  flex: 1;
+  height: 4px;
+  border-radius: 999px;
+  background: repeating-linear-gradient(90deg, var(--rule-pill) 0 calc(16% - 3px), transparent calc(16% - 3px) 16%);
+}
+.ta-win__played {
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 79%;
+  border-radius: 999px;
+  background: var(--act);
+  transform-origin: left;
+  animation: ta-play 2s cubic-bezier(0.3, 0.6, 0.3, 1) 0.2s both;
+}
+.ta-win__played::after {
+  content: '';
+  position: absolute;
+  right: -6px;
+  top: -4px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--bad);
+  border: 2px solid var(--sheet);
+}
+.ta-win__mark {
+  position: absolute;
+  left: 79%;
+  bottom: 16px;
+  transform: translateX(-50%);
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: var(--bad);
+  color: #fff;
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  animation: ta-pop 0.5s cubic-bezier(0.2, 1.4, 0.4, 1) 2.1s both;
+}
+.ta-win__mark::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 100%;
+  width: 2px;
+  height: 8px;
+  background: var(--bad);
+}
+.ta-win__time {
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-size: 0.875rem;
+  color: var(--ink);
+}
+@keyframes ta-play {
+  from {
+    transform: scaleX(0.05);
+  }
+}
+@keyframes ta-pop {
+  from {
+    opacity: 0;
+    transform: translate(-50%, 8px) scale(0.8);
+  }
+}
+.ta-win__app {
+  display: grid;
+  grid-template-columns: 250px minmax(0, 1fr) 300px;
+  gap: 10px;
+  margin-top: 10px;
+  min-height: 460px;
+}
+.ta-win__side {
+  padding: 14px 12px;
+  border-radius: 16px;
+  background: var(--panel);
+}
+.ta-seg {
+  display: flex;
+  padding: 4px;
+  border-radius: 999px;
+  background: var(--panel-2);
+  font-size: 0.9375rem;
+  font-weight: 500;
+}
+.ta-seg span {
+  flex: 1;
+  padding: 6px 10px;
+  border-radius: 999px;
+  text-align: center;
+}
+.ta-seg span[aria-current] {
+  background: #fff;
+}
+.ta-side__k {
+  margin: 20px 4px 8px;
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+.ta-steps {
+  display: grid;
+  gap: 8px;
+}
+.ta-steps li {
+  position: relative;
+  padding: 8px 10px 8px 30px;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  line-height: 1.35;
+  background: var(--sheet);
+}
+.ta-steps li::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 13px;
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  border: 2px solid var(--ok);
+}
+.ta-steps li[data-kind='flag'] {
+  color: var(--bad);
+  background: var(--bad-bg);
+}
+.ta-steps li[data-kind='flag']::before {
+  border-color: var(--bad);
+  background: var(--bad);
+}
+.ta-win__main {
+  padding: 18px 22px;
+  border-radius: 16px;
+  background: #fff;
+}
+.ta-win__card {
+  padding: 18px;
+  border-radius: 16px;
+  background: #fff;
+  border: 1px solid var(--rule-pill);
+}
+.ta-win .rc-guard {
+  gap: 12px;
+  padding-top: 0;
+}
+.ta-win .rc-guard__head {
+  font-size: 0.9375rem;
+  color: var(--ink);
+}
+.ta-win .rc-bubble {
+  max-width: 34rem;
+  font-size: 1rem;
+  border-radius: 14px;
+  background: var(--sheet-2);
+  color: var(--ink);
+}
+.ta-win .rc-bubble__who {
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--ink-3);
+}
+.ta-win .rc-bubble--flag {
+  background: var(--bad-bg);
+  box-shadow: inset 3px 0 0 var(--bad);
+  color: var(--bad-ink);
+}
+.ta-win .rc-bubble--flag .rc-bubble__who {
+  color: var(--bad-ink);
+}
+.ta-win .rc-bubble--agent {
+  margin-left: auto;
+  background: var(--act-hover);
+  color: #fff;
+  font-family: var(--font-face-sans), var(--font-scripts), sans-serif;
+  font-size: 1.0625rem;
+}
+.ta-win .rc-bubble--agent .rc-bubble__who,
+.ta-win .rc-bubble__en {
+  color: var(--on-navy-2);
+}
+.ta-win .rc-bubble__en {
+  font-size: 0.9375rem;
+}
+.ta-win .rc-warn {
+  align-self: flex-start;
+  padding: 8px 16px;
+  border-radius: 999px;
+  background: var(--bad);
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-weight: 500;
+  font-size: 0.875rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+.ta-win .up-utr__g {
+  border-color: var(--rule-pill);
+  border-radius: 12px;
+  background: var(--sheet-2);
+  font-size: 1.125rem;
+  font-weight: 500;
+}
+.ta-win .up-utr__g[data-state='ok'] {
+  border-color: var(--ok-ui);
+  background: var(--ok-bg);
+  color: var(--ok);
+}
+.ta-tech {
+  position: relative;
+  z-index: 2;
+  margin-top: 14px;
+  color: var(--ink);
+}
+@media (max-width: 1180px) {
+  .ta-links {
+    display: none;
+  }
+  .ta-win__app {
+    grid-template-columns: minmax(0, 1fr) 280px;
+  }
+  .ta-win__side {
+    display: none;
+  }
+}
+@media (max-width: 760px) {
+  .ta-hero {
+    padding-top: 20px;
+  }
+  .ta-pill {
+    flex-direction: column;
+    border-radius: 18px;
+  }
+  .ta-pill__k {
+    justify-content: center;
+    border-right: 0;
+    border-bottom: 1px solid var(--act);
+  }
+  .ta-langs__row {
+    font-size: 1.375rem;
+    gap: 36px;
+  }
+  .ta-ctas .ta-btn {
+    width: 100%;
+    white-space: normal;
+    text-align: center;
+  }
+  .ta-stage {
+    margin-top: 48px;
+  }
+  .ta-win__app {
+    grid-template-columns: 1fr;
+    min-height: 0;
+  }
+  .ta-win__time {
+    display: none;
+  }
+  .ta-bloom--r {
+    width: 340px;
+    height: 146px;
+    top: -64px;
+    right: -60px;
+  }
+  .ta-bloom--l {
+    display: none;
+  }
+}
+
+/* A, inside: the call screen as Tines' product window. A lilac frame holds white panes; the call
+   panel is the light lilac sidebar; cards are white with a purple hairline and 16px corners;
+   labels and buttons in mono caps; Indian flowers spill along the bottom of the call panel. */
+.cs-side {
+  --foreground: 257 40% 30%;
+  --muted-foreground: 257 25% 42%;
+  --border: 257 60% 88%;
+  --primary: 257 59% 55%;
+  --viz-stop-1: 257 59% 55%;
+  --viz-stop-2: 330 70% 66%;
+  --viz-stop-3: 22 85% 52%;
+  position: relative;
+  padding-bottom: 96px;
+}
+.cs-side::after {
+  content: '';
+  position: absolute;
+  left: -20px;
+  right: -20px;
+  bottom: -6px;
+  height: 120px;
+  background: url('/design/bloom.webp') no-repeat center bottom / 120% auto;
+  pointer-events: none;
+}
+.cs-top {
+  background: var(--paper);
+  box-shadow: 0 1px 0 var(--rule);
+}
+.cs-tabs {
+  background: var(--panel-2);
+}
+.cs-tabs a,
+.up-label,
+.cd-k,
+.as-live,
+.up-alarm__kicker {
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+.cs-tabs a[aria-current] {
+  background: #ffffff;
+  color: var(--ink);
+}
+.cs-grid {
+  width: min(100% - 32px, 1500px);
+  max-width: none;
+  margin: 20px auto 40px;
+  padding: 10px;
+  gap: 10px;
+  border-radius: 26px;
+  background: var(--panel-2);
+  border: 1px solid rgb(115 74 206 / 0.18);
+}
+.cs-left,
+.cs-main,
+.cs-right {
+  gap: 10px;
+}
+.up-btn {
+  border-radius: 999px;
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  font-size: 0.9375rem;
+}
+.up-btn--sm {
+  font-size: 0.8125rem;
+}
+@media (max-width: 560px) {
+  .up-btn {
+    white-space: normal;
+    text-align: center;
+    letter-spacing: 0.04em;
+    padding-block: 10px;
+  }
+}
+.up-btn--ghost {
+  background: transparent;
+  color: var(--act);
+  border-color: var(--act);
+  box-shadow: none;
+}
+.up-alarm {
+  border-radius: 16px;
+  box-shadow: none;
+}
+.pk-interp {
+  border-radius: 14px;
+  border-color: var(--card-edge);
+  border-left-color: var(--act);
+  background: var(--sheet-2);
+}
+.pk-interp--on {
+  border-left-color: var(--ok-ui);
+  background: var(--ok-bg);
+}
+.cd-head .up-label,
+.as-head .up-label {
+  color: var(--ink);
+}
+.up-tick {
+  color: var(--ok);
+}
+@media (max-width: 860px) {
+  .cs-grid {
+    width: calc(100% - 16px);
+    margin: 8px auto 24px;
+    padding: 8px;
+  }
+}
+
+/* A, below the hero: our sections on Tines' own section patterns. The journey as outlined cards,
+   one colour each (Build / Deploy / Operationalize); the reported cases as tinted cards with serif
+   text; the numbers on the lilac band with flowers along its edge; the 1930 comparison under a
+   centred serif statement with the number drawn in flowers. */
+.jr-grid {
+  gap: 20px;
+}
+.jr > .up-label,
+.im-title {
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  color: var(--ink);
+}
+/* each step's colour says what it is about: red the scam, amber the hour after the loss, purple
+   Fraud First Aid acting, green everything handed over, deep purple speaking to 1930 for you */
+.jr-step {
+  --c: var(--bad);
+  background: transparent;
+  border: 1px solid var(--c);
+  border-radius: 14px;
+  color: var(--c);
+}
+.jr-step:nth-child(2) {
+  --c: var(--warn);
+}
+.jr-step:nth-child(3) {
+  --c: var(--act);
+}
+.jr-step:nth-child(4) {
+  --c: var(--ok);
+}
+.jr-step:nth-child(5) {
+  --c: var(--ink-display);
+}
+.jr-n {
+  font-weight: 400;
+  font-size: 3.5rem;
+  color: var(--c);
+}
+.jr-k {
+  margin-top: 20px;
+  padding-top: 14px;
+  border-top: 1px solid var(--c);
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  color: var(--c);
+}
+.jr-out {
+  font-weight: 500;
+  font-size: 1.375rem;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.jr-proof {
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.cs2-card {
+  border-radius: 14px;
+  background: var(--ok-bg);
+}
+.cs2-num {
+  font-weight: 400;
+  color: var(--ok);
+}
+.cs2-text {
+  font-family: var(--font-face-serif), Georgia, serif;
+  font-size: 1.25rem;
+  line-height: 1.45;
+  color: var(--ink);
+}
+.cs2-card .jr-proof {
+  color: inherit;
+  opacity: 0.85;
+}
+.ck-card,
+.mw {
+  border-radius: 14px;
+  border: 1px solid var(--act);
+  background: transparent;
+}
+.ck-title,
+.mw-title {
+  font-weight: 400;
+}
+.im {
+  position: relative;
+  width: min(100% - 32px, 1360px);
+  margin: 96px auto 0;
+  padding: 64px 0 150px;
+  border-radius: 48px;
+  background: var(--panel-2);
+  color: var(--ink);
+  overflow: hidden;
+}
+.im::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -8px;
+  height: 150px;
+  background: url('/design/bloom.webp') repeat-x center bottom / auto 150px;
+  pointer-events: none;
+}
+.im .up-wrap {
+  width: min(100% - 96px, 1200px);
+}
+.im-stat + .im-stat {
+  border-color: rgb(113 75 208 / 0.25);
+}
+.im-num {
+  font-weight: 400;
+  color: var(--ink);
+}
+.im-label {
+  font-family: var(--font-face-serif), Georgia, serif;
+  font-weight: 400;
+  font-size: 1.25rem;
+}
+.im-src {
+  color: var(--ink-3);
+}
+.cmp {
+  text-align: center;
+}
+.cmp::before {
+  content: '1930' / '';
+  display: block;
+  font-family: var(--font-face-sans), system-ui, sans-serif;
+  font-weight: 700;
+  font-size: clamp(7rem, 3rem + 18vw, 17rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: transparent;
+  background: url('/design/bloom.webp') repeat center 78% / auto 260%;
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+.cmp .up-h2 {
+  max-width: 24ch;
+  margin: 28px auto 0;
+  font-family: var(--font-face-serif), Georgia, serif;
+  font-weight: 400;
+  color: var(--ink);
+}
+.cmp-grid {
+  text-align: left;
+}
+.cmp-col {
+  border-radius: 14px;
+  border: 1px solid var(--bad);
+  background: transparent;
+  color: var(--ink);
+}
+.cmp-col--us {
+  border-color: var(--act);
+  background: var(--panel-2);
+  color: var(--ink);
+}
+.cmp-col--us .up-label {
+  color: var(--ink);
+}
+.cmp-col .up-label {
+  font-family: var(--font-face-mono), ui-monospace, monospace;
+  color: var(--bad-ink);
+}
+.cmp-proof {
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+/* ===================================================================== */
+/* Motion that carries meaning (every direction; colours from tokens).    */
+/* 1 the guard listening, 2 the red-flag alarm arriving, 3 each UTR group */
+/* read back, 4 steps ticking in, 5 the interpreter switching on.         */
+/* Reduced motion: everything shows at once, nothing moves.               */
+/* ===================================================================== */
+:root {
+  --ease-pop: cubic-bezier(0.2, 1.35, 0.35, 1);
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --dur-in: 0.45s;
+}
+html[data-record] {
+  --dur-in: 0.7s;
+}
+
+/* 1. The guard listening: the dot breathes, the rings travel outward, the card's edge glows softly. */
+.rc-guard__dot {
+  position: relative;
+}
+.rc-guard__dot::after {
+  content: '';
+  position: absolute;
+  inset: -4px;
+  border-radius: 50%;
+  border: 2px solid currentColor;
+  color: var(--ok-ui);
+  animation: mo-ping 1.8s var(--ease-out) infinite;
+}
+.gd-listen {
+  animation: mo-breathe 3.2s ease-in-out infinite;
+}
+.gd-radar span {
+  border-color: var(--act);
+}
+.gd-radar i {
+  background: var(--act);
+  animation: mo-beat 1.6s ease-in-out infinite;
+}
+@keyframes mo-ping {
+  from {
+    transform: scale(0.6);
+    opacity: 0.9;
+  }
+  to {
+    transform: scale(2.2);
+    opacity: 0;
+  }
+}
+@keyframes mo-breathe {
+  50% {
+    box-shadow: 0 0 0 6px color-mix(in srgb, var(--act) 10%, transparent);
+  }
+}
+@keyframes mo-beat {
+  50% {
+    transform: scale(1.18);
+  }
+}
+
+/* 2. The red-flag alarm: it lands with weight, shakes twice, and one ring spreads from it. */
+.up-alarm[data-motion-in] {
+  position: relative;
+  animation: mo-alarm 0.62s var(--ease-pop) both, mo-shake 0.42s ease-in-out 0.55s 1;
+}
+.up-alarm[data-motion-in]::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 var(--bad);
+  animation: mo-ring 1.1s var(--ease-out) 0.25s 2 both;
+  pointer-events: none;
+}
+.up-alarm__kicker::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  vertical-align: 1px;
+  animation: as-pulse 1s ease-in-out 3;
+}
+@keyframes mo-alarm {
+  from {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.94);
+  }
+  70% {
+    opacity: 1;
+    transform: translateY(2px) scale(1.015);
+  }
+  to {
+    transform: none;
+  }
+}
+@keyframes mo-shake {
+  20%,
+  60% {
+    transform: translateX(-4px);
+  }
+  40%,
+  80% {
+    transform: translateX(4px);
+  }
+}
+@keyframes mo-ring {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--bad) 55%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 22px color-mix(in srgb, var(--bad) 0%, transparent);
+  }
+}
+.rc-warn {
+  animation: mo-alarm 0.6s var(--ease-pop) both;
+}
+.rc-bubble--flag {
+  animation: mo-in 0.5s var(--ease-out) both;
+}
+
+/* 3. The read-back: a group being said back glows, each confirmed group pops in turn with its tick. */
+.up-utr__g {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+.up-utr__g[data-state='pending'] {
+  animation: mo-read 1.1s ease-in-out infinite;
+}
+.up-utr__g[data-state='ok'] {
+  animation: mo-confirm 0.5s var(--ease-pop) both;
+}
+.up-utr__g[data-state='ok']:nth-child(2) {
+  animation-delay: 0.12s;
+}
+.up-utr__g[data-state='ok']:nth-child(3) {
+  animation-delay: 0.24s;
+}
+.up-utr__g[data-state='bad'] {
+  animation: mo-shake 0.42s ease-in-out 2;
+}
+.up-tick {
+  animation: mo-in 0.4s var(--ease-out) 0.35s both;
+}
+@keyframes mo-read {
+  50% {
+    box-shadow: 0 0 0 4px color-mix(in srgb, var(--warn) 22%, transparent);
+  }
+}
+@keyframes mo-confirm {
+  from {
+    transform: scale(0.9);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  to {
+    transform: none;
+  }
+}
+
+/* 4. What it's doing: each new step slides in and its icon ticks. Transcript lines arrive the same way. */
+.as-step,
+.tr-row {
+  animation: mo-in var(--dur-in) var(--ease-out) both;
+}
+.as-icon {
+  animation: mo-tick 0.45s var(--ease-pop) 0.15s both;
+}
+.as-step:nth-child(2) { animation-delay: 0.05s; }
+.as-step:nth-child(3) { animation-delay: 0.1s; }
+.as-step:nth-child(4) { animation-delay: 0.15s; }
+.as-step:nth-child(5) { animation-delay: 0.2s; }
+.as-step:nth-child(6) { animation-delay: 0.25s; }
+.as-step:nth-child(7) { animation-delay: 0.3s; }
+@keyframes mo-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes mo-tick {
+  from {
+    transform: scale(0.4);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+
+/* 5. The interpreter switching on: the block opens downward, its title gets a live dot. */
+.pk-interp--on {
+  animation: mo-open 0.6s var(--ease-out) both;
+  transform-origin: top;
+}
+.pk-interp--on .pk-interp__title::before {
+  content: '';
+  display: inline-block;
+  width: 9px;
+  height: 9px;
+  margin-right: 8px;
+  border-radius: 50%;
+  background: var(--ok-ui);
+  vertical-align: 1px;
+  box-shadow: 0 0 0 0 var(--ok-ui);
+  animation: mo-live 1.6s var(--ease-out) infinite;
+}
+@keyframes mo-open {
+  from {
+    opacity: 0;
+    clip-path: inset(0 0 100% 0 round 14px);
+  }
+  to {
+    opacity: 1;
+    clip-path: inset(0 0 0 0 round 14px);
+  }
+}
+@keyframes mo-live {
+  from {
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--ok-ui) 60%, transparent);
+  }
+  to {
+    box-shadow: 0 0 0 10px color-mix(in srgb, var(--ok-ui) 0%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rc-guard__dot::after,
+  .gd-listen,
+  .gd-radar i,
+  .up-alarm[data-motion-in],
+  .up-alarm[data-motion-in]::after,
+  .up-alarm__kicker::before,
+  .rc-warn,
+  .rc-bubble--flag,
+  .up-utr__g,
+  .up-tick,
+  .as-step,
+  .tr-row,
+  .as-icon,
+  .pk-interp--on,
+  .pk-interp--on .pk-interp__title::before {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+html[data-motion='reduce'] *,
+html[data-motion='reduce'] *::before,
+html[data-motion='reduce'] *::after {
+  animation-duration: 0.01ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 0.01ms !important;
+}
+
+/* ---------- reduced motion: the hero holds still ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .ta-langs__row,
+  .ta-win__played,
+  .ta-win__mark {
+    animation: none !important;
+  }
+}
+html[data-motion='reduce'] .ta-langs__row,
+html[data-motion='reduce'] .ta-win__played,
+html[data-motion='reduce'] .ta-win__mark {
+  animation: none !important;
+}
+
+
+/* 1930 alone vs with Fraud First Aid: red crosses for the problems, green ticks for what it fixes */
+.cmp-col li::before {
+  background: var(--bad-bg);
+  color: var(--bad);
+}
+.cmp-col--us li::before {
+  background: var(--ok-ui);
+  color: #ffffff;
+}
+
+/* the guard listens for these: shown as red flags, so a judge reads them as the danger signs */
+.gd-signs span {
+  background: var(--bad-bg);
+  color: var(--bad-ink);
+}
+/* example chips carry real text (Telugu, Hinglish numbers): sentence case in the body face */
+.pf-box .up-btn--sm {
+  font-family: var(--font-ui);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 500;
+}
+
+/* Phones: the product moves up under the headline and lead, so the sample call and its red flag
+   are on the first screen; the languages, buttons and settings follow. The window keeps the call;
+   the steps and the sample complaint are in the journey below. */
+@media (max-width: 760px) {
+  .ta-hero {
+    display: flex;
+    flex-direction: column;
+    padding-top: 14px;
+  }
+  .ta-pill {
+    order: 1;
+    align-self: center;
+    font-size: 0.875rem;
+  }
+  .ta-pill__k,
+  .ta-pill__v {
+    padding: 4px 12px;
+  }
+  .ta-h1 {
+    order: 2;
+    margin-top: 16px;
+    font-size: 2.375rem;
+  }
+  .ta-sub {
+    order: 3;
+    margin-top: 12px;
+    font-size: 1.0625rem;
+  }
+  .ta-stage {
+    order: 4;
+    margin-top: 52px;
+    padding-bottom: 0;
+  }
+  .ta-langs {
+    order: 5;
+    margin-top: 28px;
+  }
+  .ta-ctas {
+    order: 6;
+  }
+  .ta-prefs {
+    order: 7;
+  }
+  .ta-tech {
+    order: 8;
+  }
+  .hc-error {
+    order: 9;
+  }
+  .ta-win {
+    padding: 6px;
+    border-radius: 20px;
+  }
+  .ta-win__bar {
+    height: 40px;
+    padding: 0 12px;
+    gap: 10px;
+  }
+  .ta-win__app {
+    margin-top: 6px;
+  }
+  .ta-win__card {
+    display: none;
+  }
+  .ta-win__main {
+    padding: 14px;
+  }
+  .ta-win .rc-bubble {
+    font-size: 0.9375rem;
+  }
+  .ta-bloom--r {
+    width: 300px;
+    height: 129px;
+    top: -84px;
+    right: -50px;
+  }
+}

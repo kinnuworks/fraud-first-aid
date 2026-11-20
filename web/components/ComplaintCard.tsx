@@ -184,11 +184,11 @@ function DeadlineCalendar({ data }: { data: ComplaintView }) {
         <>
           <div className="cal-legend">
             <span>
-              <i style={{ boxShadow: 'inset 0 0 0 1.5px rgb(255 255 255 / 0.6)' }} />
+              <i style={{ boxShadow: 'inset 0 0 0 1.5px var(--side-edge)' }} />
               Money left
             </span>
             <span>
-              <i style={{ background: '#fff' }} />
+              <i style={{ background: 'var(--side-mark-bg)' }} />
               Tell your bank by
             </span>
           </div>
@@ -210,7 +210,7 @@ function DeadlineCalendar({ data }: { data: ComplaintView }) {
           </div>
         </>
       ) : (
-        <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }}>
+        <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--side-ink-2)' }}>
           The date appears here once you say when the money left.
         </p>
       )}
