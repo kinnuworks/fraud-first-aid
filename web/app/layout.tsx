@@ -36,7 +36,7 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
-  title: 'Fraud First Aid: the first hour of a UPI fraud, in your language',
+  title: 'Fraud First Aid for UPI scams: on the call and after, in your mother tongue',
   description:
     "Catches the scam on the call. Chases the money if it's gone. A voice agent in ten Indian languages: it warns you during a scam call, takes your complaint with every number right, and speaks to 1930 for you.",
   metadataBase: new URL('https://fraudfirstaid.vercel.app'),
