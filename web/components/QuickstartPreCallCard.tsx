@@ -235,8 +235,9 @@ function MoreWays() {
 // Numbers on the first screen come from the fact sheet, each with its source below.
 const FACTS: Array<[string, string, string]> = [
   ['UPI fraud incidents, FY2024-25', '12.64 lakh', 'Lok Sabha reply, via IANS, 15 Dec 2025'],
-  ['Reported lost to cyber fraud, 2024', '₹22,845.73 crore', 'Lok Sabha reply, 22 Jul 2025'],
+  ['Reported lost to cyber fraud, 2024', '₹22,845.73 crore across 36,37,288 incidents', 'Lok Sabha reply, 22 Jul 2025'],
   ['Senior citizens lost, 2025', '₹4,005.12 crore', 'Rajya Sabha reply, 5 Aug 2026'],
+  ['Karnataka, lost and recovered over three years', '₹5,474 crore lost, ₹627 crore back', 'Karnataka Home Minister, Assembly reply, via The News Minute, 10 Dec 2025'],
   ['Held through 1930, till 30 Jun 2026', '₹11,158 crore+', 'Lok Sabha reply, Aug 2026'],
 ];
 
@@ -385,8 +386,8 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         <section className="rc-hero">
           <div>
             <p className="rc-stakes">
-              Karnataka lost <strong>₹5,474 crore</strong> to cyber fraud in three years. Only <strong>₹627 crore</strong> came back.{' '}
-              <a className="rc-src" href="#sources" title="Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)">Source</a>
+              Indians reported losing <strong>₹22,845 crore</strong> to cyber fraud in 2024, across more than <strong>36 lakh</strong> cases.{' '}
+              <a className="rc-src" href="#sources" title="Lok Sabha reply, Ministry of Home Affairs, 22 Jul 2025">Source</a>
             </p>
             <h1 className="up-display">
               Catches the scam on the call.{' '}
