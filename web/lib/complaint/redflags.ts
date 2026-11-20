@@ -30,7 +30,14 @@ const GONE = String.raw`${MONEY}[^.?!]{0,40}\b(gone|lost|chale? gay\w*|chala gay
 // "10000 rupees debited"), not "it will be deducted from my salary".
 const DEBITED = String.raw`\b(got|was|were|been|just|already)\s+(debited|deducted|cut)\b(?! off)|(?<!(will|to|would|can|could|should|must) be )\b(debited|deducted)\s+from\s+(my|our)\b|${AMT}\s+(debited|deducted)\b`;
 const SENT = String.raw`\b(i|we|i've|i have|maine|humne|already)\b[^.?!]{0,20}\b(sent|transferred|lost)\b[^.?!]{0,30}${MONEY}`;
-const INDIC = 'పంపేశా|పోయాయి|పోయింది|కట్ అయ్యా|भेज दिए|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು';
+const INDIC_GONE = 'పోయాయి|పోయింది|కట్ అయ్యా|भेज दिए|चले गए|कट गए|ಕಳೆದು|ಹೋಯಿತು';
+// "I sent / paid / it got debited" in the caller's own language, counted only with money in the
+// same sentence ("I sent the photo" is not a loss). Spellings vary in transcripts (పంపేశాను,
+// పంపేసాను, పంపించేశాను): a live run on 20 Nov missed the hand-over on one of them.
+const INDIC_SENT = 'పంపే[శస]ా|పంపించే[శస]ా|పంపించాను|పంపాను|కట్టే[శస]ా|కట్టాను|చెల్లించాను|ట్రాన్స్‌?ఫర్ చే[శస]ా|డెబిట్ అయ[ిి్]|कट गया|डेबिट हो गए|भेज दिया|ट्रांसफर कर दि|ಕಳುಹಿಸಿದೆ|ಕಳಿಸಿದೆ|ಕಟ್ ಆಯಿತು|ಪಾವತಿಸಿದೆ|அனுப்பிவிட்டேன்|அனுப்பினேன்|போய்விட்டது|அயച്ചു|നഷ്ടപ്പെട്ടു|পাঠিয়ে দিয়েছি|পাঠিয়েছি|চলে গেছে|पाठवले|કપાઈ ગયા|મોકલી દીધા|મોકલ્યા|ਭੇਜ ਦਿੱਤੇ|ਕੱਟ ਗਏ|ਚਲੇ ਗਏ';
+const INDIC_MONEY = String.raw`(?:రూపాయ|రూ\.?|డబ్బు|पैसे|रुपय|रुपए|ರೂಪಾಯ|ಹಣ|ரூபாய்|பணம்|രൂപ|പണം|টাকা|રૂપિયા|પૈસા|ਰੁਪਏ|ਪੈਸੇ|₹|\d{3,})`;
+const INDIC_LOSS = String.raw`${INDIC_MONEY}[^.?!।]{0,60}(?:${INDIC_SENT})|(?:${INDIC_SENT})[^.?!।]{0,30}${INDIC_MONEY}`;
+const INDIC = `${INDIC_GONE}|${INDIC_LOSS}`;
 export const LOSS = new RegExp(`${PAID}|${GONE}|${DEBITED}|${SENT}|${INDIC}`, 'i');
 // A line about "your account" or "your money" is the caller talking to the victim, not the
 // victim's own loss ("Rs 49,999 was debited from your account", a classic opener).

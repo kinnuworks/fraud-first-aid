@@ -191,3 +191,21 @@ describe('review 20 Nov: saysHangUp only for hang up', () => {
     }
   });
 });
+
+describe('a loss said in Indian languages (spellings vary in transcripts)', () => {
+  it('counts sent or paid money as a loss', async () => {
+    const { isLoss } = await import('./redflags');
+    for (const t of [
+      'అయ్యో, నేను ఇప్పటికే 25,000 రూపాయలు పంపించేశాను.',
+      'అయ్యో నేను ఇప్పటికే ఇరవై ఐదు వేల రూపాయలు పంపేసాను',
+      'నేను ఇప్పటికే ఇరవై ఐదు వేల రూపాయలు పంపేశాను',
+      'मैंने 5000 रुपये भेज दिया',
+      'ನಾನು ಈಗಾಗಲೇ 20000 ರೂಪಾಯಿ ಕಳುಹಿಸಿದೆ',
+      'நான் 10000 ரூபாய் அனுப்பிவிட்டேன்',
+    ]) expect(isLoss(t), t).toBe(true);
+  });
+  it('does not count sending something that is not money', async () => {
+    const { isLoss } = await import('./redflags');
+    for (const t of ['నేను ఫోటో పంపేశాను', 'मैंने फोटो भेज दिया', 'అమ్మ, నేను నీకు ఫోటో పంపాను చూడు']) expect(isLoss(t), t).toBe(false);
+  });
+});
