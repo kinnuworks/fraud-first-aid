@@ -10,8 +10,13 @@ cd "$(dirname "$0")"
 
 (cd web && pnpm -s typecheck && pnpm -s lint && pnpm -s test)
 # Real external API the agent calls: IFSC -> bank branch (public, no key).
-curl -sf -m 15 https://ifsc.razorpay.com/SBIN0000813 | grep -q '"BANK":"State Bank of India"' \
-  || { echo "check.sh: live IFSC API check failed"; exit 1; }
+# (On failure it says how: curl's exit code, the HTTP status and the time, so a passing blip can be told
+# from an outage. Pass condition unchanged: HTTP 200 and the right bank.)
+ifsc_out=$(curl -s -m 15 -w '\n%{http_code} %{time_total}s' https://ifsc.razorpay.com/SBIN0000813) && ifsc_rc=0 || ifsc_rc=$?
+ifsc_status=$(tail -n1 <<<"$ifsc_out")
+if [ "$ifsc_rc" -ne 0 ] || [ "${ifsc_status%% *}" != 200 ] || ! grep -q '"BANK":"State Bank of India"' <<<"$ifsc_out"; then
+  echo "check.sh: live IFSC API check failed (curl exit $ifsc_rc, HTTP and time: $ifsc_status)"; exit 1
+fi
 # Accessibility of the live screens (axe-core, WCAG 2.1 AA): no serious or critical rule.
 (cd web && npx -y tsx@4.20.6 scripts/a11y-check.ts >/dev/null 2>&1) \
   || { echo "check.sh: accessibility check failed (run: cd web && npx -y tsx@4.20.6 scripts/a11y-check.ts)"; exit 1; }
