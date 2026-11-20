@@ -118,3 +118,22 @@ Then a short limits paragraph, in numbers: zero real users, the interval, the da
 - Metric, baseline, interval: as in the second claim (exact digits; paired); per language and condition, pooled over all; the claim is made for a language only if the low end of its paired-difference interval is above 0, and every language is reported, including any where ours is not ahead.
 - Kind and label: our own break test (we tried to make it fail), synthetic voices; published as a benchmark others can run.
 - Rerun: `npx tsx evidence/benchmark/make.ts && npx tsx evidence/benchmark/score.ts`.
+
+## Tenth claim: the scam guard in eight of our ten languages (written 20 Nov 2026 ~20:30 IST, before any run)
+- Data: INDICA (huggingface.co/datasets/vikrant-vikram/INDICA, `Text_samples.tar.gz`), whole two-party conversations labelled scam or legit by folder, in the eight languages it shares with the app: Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Gujarati, English. What it is: its file names point to the Chinese TeleAntiFraud-28k set, machine-translated and voiced; we use the text only. No licence is stated, so we report aggregate numbers only and never redistribute or quote the conversations.
+- Two samples, drawn before any run: a check sample (seed 13: 10 scam + 10 legit per language, 160 conversations) used to find failures we may fix, and a test sample (seed 29: 25 scam + 25 legit per language, 400 conversations, no overlap with the check sample) run once, after any fixes, on the commit named in the results. Only the test sample is reported as the claim.
+- Procedure: every line of a conversation (speaker labels removed, as the app hears one stream on speaker) goes to the live model route in guard mode in that language, first 16 lines at most; the run stops at the first warning. Warned = a red flag on the call's card, or a reply that tells the user to hang up.
+- Metrics: per language and pooled, warned on scam conversations (recall) and warned on legit ones (false alarms), each with a 95% Wilson interval. Baseline: our keyword rules (detectRedFlag) on the same lines.
+- Reporting: every language is reported, including any where the guard does poorly. Label: "Back-test on public data (INDICA, conversations machine-translated into Indian languages), text not audio".
+- Rerun: `npx -y tsx@4.20.6 evidence/indica/run.ts check` and `... run.ts test`.
+
+## Eleventh claim: the guard against a general AI assistant on the same public scam conversations (written 20 Nov 2026 ~20:30 IST, before any run)
+- Question: does the guard's design (silent turns, red-flag rules, scam names) beat simply asking the same AI model to warn about scams?
+- Data: the seventh claim's ICFD-31k sample (cross-domain split, seed 7: 200 fraud + 39 no-violation conversations), unchanged.
+- Systems, both run on the same lines, one call per line with the conversation so far, stopping at the first warning:
+  (a) ours: the live model route in guard mode at the commit named in the results (a fresh run, since the guard has changed since the seventh claim's run);
+  (b) a general assistant: the same model (claude-haiku-5-5, the model behind our route), called directly with this system prompt and nothing else: "You are a helpful AI assistant. The user has put a phone call on speaker so you can hear it; you get what is said, line by line. If you think the call is a scam, warn the user. Otherwise reply with exactly <silent>."
+- Warned (both systems, the same rule): a red flag on the card (ours only), or a reply that tells the user to hang up, or that names it a scam or fraud.
+- Metrics: warned on fraud conversations and on no-violation ones, each with a 95% Wilson interval, and the paired difference on the fraud conversations (95% bootstrap, evidence/interval.py).
+- Reporting: both numbers are reported whichever is higher. Label: "Back-test on public data (ICFD-31k, synthetic conversations)".
+- Rerun: `npx -y tsx@4.20.6 evidence/icfd/run.ts` (ours) and `npx -y tsx@4.20.6 evidence/icfd/generic.ts` (the general assistant).
