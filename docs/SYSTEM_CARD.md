@@ -22,7 +22,7 @@ What the agent does, what it will not do, how it can fail, what it keeps, and ho
 - **A false alarm.** In our own break test it stayed silent on 24 of 24 ordinary calls (family, office and payment talk in English, Hindi and Telugu). A real deployment would see far more variety.
 - **Mishearing a number.** Every number is read back and must be confirmed; a screenshot that disagrees makes the agent cut in at once. In noise, 295 of 300 spoken numbers came out exact (synthetic voices).
 - **Languages.** Its spoken lines in eight of the ten languages were written by us and not yet checked by native speakers.
-- **The 1930 interpreter** has been tested only with sample voices playing the operator, not on a real 1930 call. In two live runs on an overloaded test machine it misheard the 14-digit acknowledgement number (two digits dropped at one end). It reads the number back to the operator for that reason, so the operator can correct it on the call, and it puts a number read out over two turns back together.
+- **The 1930 interpreter** has been tested only with sample voices playing the operator, not on a real 1930 call. In three of four live runs on 20 and 21 Nov, speech recognition on the call got one or two digits of the 14-digit acknowledgement number wrong on first hearing, though the same clip sent straight to the speech-to-text service came back exact. That is why it reads the number back to the operator, who can correct it on the call, and why it puts a number read out over two turns back together. In the fourth run it heard the number exactly and the operator confirmed it. A correction on a live call hasn't happened in our tests yet.
 
 ## What it keeps
 
