@@ -2,9 +2,11 @@
 
 **Catches the scam on the call. Chases the money if it's gone.** First aid for a UPI fraud, and like first aid it has to be fast: the first hour decides whether the money can still be frozen. It listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
 
-It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person, in ten Indian languages, with a Murf Falcon voice that reads every number back.
+It's for the person on the phone when it happens: the parent who gets a "KYC" call, the senior citizens who lost ₹4,005 crore to cyber fraud in 2025 (Rajya Sabha reply, 5 Aug 2026), anyone who doesn't think in English in the first panicked hour. And when they call 1930, it speaks to the operator for them.
 
-**Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds.
+It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person: an agent per call with our own model route and tools, silent turns while it listens, Agora's speak API to cut in, a second agent on the same call as the 1930 interpreter, RTC for family to listen, and RTM for every step on screen. Sarvam hears ten Indian languages; Murf Falcon speaks them with Murf's own recommended Indian voices and reads every number back.
+
+**Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds. **Check it yourself: https://fraudfirstaid.vercel.app/proof**: try to fool the scam guard with your own lines, or say a UTR any way you like.
 
 ![The live app, sped up: the scam warning, the UTR read back, the screenshot catching a wrong group, and the pack ready for 1930](docs/core-loop.gif)
 
@@ -15,7 +17,7 @@ Proof, recomputed on every push from the results files in this repo:
 - Back-test on public data (FLEURS read speech in Hindi, Telugu and Kannada, 2022): the exact numbers in 207 of 330 sentences. The speech-to-text alone: 114.
 - Our own break test (we tried to make it fail): 24 of 24 ordinary calls left alone.
 
-[![tests](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py) · [technical report](docs/technical-report.md)
+[![tests](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py) · [technical report](docs/technical-report.md) · [system card: what it won't do, how it can fail, what it keeps](docs/SYSTEM_CARD.md)
 
 Why it matters in Karnataka: the state lost ₹5,473.97 crore to cyber fraud in three years and recovered ₹627 crore, 11.5% (Home Minister's reply in the Assembly, [The News Minute, 10 Dec 2025](https://www.thenewsminute.com/karnataka/karnataka-residents-lost-rs-5474-crore-to-cyber-fraud-only-115-recovered)). Money comes back when 1930 hears fast and exact: a 79-year-old in Mangaluru got ₹17 lakh back and a 44-year-old in Bengaluru ₹14 lakh, both because 1930 heard within hours ([cases below](#why-this-matters)).
 
@@ -100,7 +102,7 @@ What it already runs on:
 - The operator doesn't have to speak the victim's language: the 1930 interpreter speaks to them in English and to the victim in theirs.
 - A new language is configuration: a Sarvam language code and a Murf Falcon voice in [`agent-config.ts`](web/lib/agent-config.ts), plus the number words in [`numbers.ts`](web/lib/entities/numbers.ts), with tests.
 - The 1930 operator and the family each get a read-only live view of the call by link (`/watch?as=operator`, `/watch?as=family`).
-- The same agent is wired to call out over a phone line (Agora telephony through a SIP trunk, [`phone.ts`](web/lib/handlers/phone.ts)) for a victim without a smartphone, or a callback before the bank's deadline. It isn't reliable yet (see the limits below).
+- The same agent is wired to call out over a phone line (Agora telephony through a SIP trunk, [`phone.ts`](web/lib/handlers/phone.ts)) for a victim without a smartphone, or a callback before the bank's deadline. It's switched off in the live app for now (see the limits below). For India, Agora's Conversational AI also runs on Exotel's telephony ([Agora and Exotel, Oct 2025](https://exotel.com/newsroom/agora-exotel-ai-voice-bot-collaboration/)), which is the path to an Indian number.
 
 What one complaint costs (an estimate, not an observed result, from each vendor's published price on 19 Nov 2026): our scripted live run took 3 min 43 s, so take a 4-minute call. Agora's Conversational AI Engine is US$0.10 a minute, the same with our own speech, model and voice keys ([Agora pricing](https://docs.agora.io/en/ai/reference/pricing)): US$0.40. Sarvam speech-to-text is ₹0.49 a minute ([Sarvam pricing](https://www.sarvam.ai/api-pricing)): ₹1.96. Murf Falcon is 1 cent per 1,000 characters ([Murf](https://murf.ai/api/docs/text-to-speech-models/falcon-2-1)): about 2 cents, assuming 2,000 characters spoken. The AI model adds about 1 cent, assuming 25 turns of about 4,000 tokens. In total, about US$0.43 plus ₹2 per complaint, almost all of it the real-time voice minutes. Assumptions: call length from one run; characters and tokens estimated, not measured.
 
@@ -212,9 +214,9 @@ Evidence, stated plainly: no real users yet; it was built for this hackathon. In
 
 - It doesn't file the complaint for you. The national cybercrime portal has no public API and asks for an OTP and a captcha, so Fraud First Aid prepares everything and you call 1930 or file yourself.
 - It can't get money back, and it never asks for an OTP, PIN, password or card number.
-- The phone line isn't reliable yet. The agent can place a call through Agora's telephony and a Twilio SIP trunk, and it has rung a test phone, but in our tests only 2 of about 14 calls left Agora's SIP gateway. For now you talk to it in the browser.
+- Calls to your phone are switched off. The agent can place a call through Agora's telephony and a Twilio SIP trunk, and it has rung a test phone, but in our tests only 2 of about 14 calls left Agora's SIP gateway, and a form that rings any number someone types needs more abuse protection than a hackathon build has. For now you talk to it in the browser, on a phone or a laptop.
 - Emailing the pack runs on Resend's test sender, which only delivers to our own address until a sending domain is verified. You can copy everything from the screen.
-- A call's complaint is kept in a shared store (Upstash Redis) for two hours so any server instance can answer it, then it expires; nothing is kept afterwards.
+- A call's complaint is kept in a shared store (Upstash Redis) for two hours so any server instance can answer it, then it expires. Any OTP, PIN or CVV said on the call is blanked before anything is kept, and the store holds a fingerprint of what was heard, not the words. One thing outlives the call: a keyed hash of a confirmed payee's UPI ID (never the ID itself), counted for 90 days so a later call can be warned, and only when the complaint's UTR matched its payment screenshot.
 - The number tests use synthetic Murf voices and public read speech, not real callers on noisy phone lines.
 - The 1930 interpreter has been tested with sample voices playing the operator, not on a real 1930 call. Its spoken lines in eight of the ten languages were written by us and not yet checked by native speakers.
 
