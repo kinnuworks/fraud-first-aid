@@ -207,3 +207,12 @@ describe('rate limits and the stored transcript', () => {
     expect(continues('hello my UTR is four', 'hello my UTR is')).toBe(' four');
   });
 });
+
+describe('the acknowledgement number is read back to the operator (a live run misheard it, 20 Nov)', () => {
+  it('reads it back in English first so the operator can correct it, then tells the caller', () => {
+    const c = full('te');
+    const got = ackLine(c, '', 'Please note the acknowledgement number: three one five one, two five one one, two zero zero one, two three.')!;
+    expect(got.say.startsWith('Let me read that back: three one five one, two five one one, two zero zero one, two three.')).toBe(true);
+    expect(got.say).toContain('అక్నాలెడ్జ్‌మెంట్');
+  });
+});
