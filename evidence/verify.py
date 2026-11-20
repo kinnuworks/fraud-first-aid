@@ -70,7 +70,7 @@ claim("FLEURS phone codec", f"{o}/{n} vs {b}/{n}, diff {interval('fleurs-test-ph
 r = rows("fleurs-test-six-2026-11-21.csv")
 o, b, n = total(r, "ours"), total(r, "baseline"), len(r)
 lo, hi = interval("fleurs-test-six-2026-11-21.csv")
-claim("FLEURS six more languages", f"{o}/{n} vs {b}/{n}, diff {lo} to {hi}", [f"{o} of {n:,}", f"against {b}", f"{lo:.2f} to {hi:.2f}"])
+claim("FLEURS six more languages", f"{o}/{n} vs {b}/{n}, diff {lo} to {hi}", [f"{o} of {n:,}", f"against {b}", f"{lo:.2f} to {hi:.2f}"], proof=[f"{o} of {n:,}", f"own numerals: {b}", "fleurs-test-six-2026-11-21.csv"])
 
 # Numbers in noise (our own break test)
 r = rows("breaktest-2026-11-19.csv")
