@@ -78,15 +78,15 @@ export function ConnectionStatusPanel({
         aria-label="Connection details"
       >
         <div className="flex items-center justify-between gap-2">
-          <div className="text-xs font-semibold tracking-wide text-foreground">
+          <div className="text-[0.8125rem] font-semibold tracking-wide text-foreground">
             Connection Details
           </div>
-          <div className="text-[11px] text-muted-foreground">
+          <div className="text-[0.8125rem] text-muted-foreground">
             RTC {connectionState.toLowerCase()}
           </div>
         </div>
         {connectionIssues.length === 0 ? (
-          <div className="text-xs text-muted-foreground">No RTM or agent errors reported.</div>
+          <div className="text-[0.8125rem] text-muted-foreground">No RTM or agent errors reported.</div>
         ) : (
           <div className="space-y-2 max-h-56 overflow-auto pr-1">
             {connectionIssues.map((issue) => (

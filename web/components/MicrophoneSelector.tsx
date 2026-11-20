@@ -142,7 +142,7 @@ export function MicrophoneSelector({
         align="center"
         className="w-56 bg-popover border-border"
       >
-        <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">
+        <div className="px-2 py-1.5 text-[0.8125rem] font-medium text-muted-foreground">
           Microphone
         </div>
         {devices.map((device) => (

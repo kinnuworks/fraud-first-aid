@@ -115,12 +115,12 @@ export function ConversationErrorCard({ issue }: ConversationErrorCardProps) {
 
   return (
     // Compact diagnostic card: headline for quick triage, optional CTA, raw payload for deeper debugging.
-    <div className="rounded border border-destructive/30 bg-destructive/10 px-2 py-1.5 text-xs">
+    <div className="rounded border border-destructive/30 bg-destructive/10 px-2 py-1.5 text-[0.8125rem]">
       <div className="font-medium text-destructive">
         Conversation AI Engine Error: {transportCode}
       </div>
       {showNormalizedMessage && <div className="text-foreground">{normalizedMessage}</div>}
-      {cta && <div className="text-[11px] text-destructive/90">{cta}</div>}
+      {cta && <div className="text-[0.8125rem] text-destructive/90">{cta}</div>}
       {showRaw && (
         <div className="mt-2 border-t border-destructive/20 pt-2 text-muted-foreground break-words">
           {issue.message}

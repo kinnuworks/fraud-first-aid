@@ -8,6 +8,10 @@ import { buildPack } from '@/lib/complaint/pack';
 import { missingFields, deadlines } from '@/lib/complaint/session';
 import { compareWithScreenshot, type Shot } from '@/lib/complaint/screenshot';
 
+// The sample's own clock: the pack is built at 14:44:21 on 19 Nov, the last step in its record.
+// A fixed time keeps the server and browser renders identical (no hydration mismatch).
+const SAMPLE_NOW = new Date('2026-11-19T14:44:21+05:30');
+
 function view(lang: 'te' | 'en', fields: ReturnType<typeof newComplaint>['fields'], shot?: Shot): ComplaintView {
   const c = { ...newComplaint(lang), fields, shot };
   return {
@@ -16,7 +20,7 @@ function view(lang: 'te' | 'en', fields: ReturnType<typeof newComplaint>['fields
     missing: missingFields(c),
     deadlines: c.fields.when ? deadlines(c.fields.when.value.slice(0, 10)) : null,
     check: shot ? compareWithScreenshot(c, shot) : null,
-    pack: buildPack(c, '2026-11-19'),
+    pack: buildPack(c, '2026-11-19', SAMPLE_NOW),
   };
 }
 
@@ -95,7 +99,7 @@ export function StatePreview({ state }: { state: string }) {
             <section>
               <span className="up-label">Live call</span>
               <div className="cs-orb">
-                <p className="max-w-[14rem] text-center text-[0.9375rem]" style={{ color: 'var(--on-navy-2)' }}>
+                <p className="max-w-[14rem] text-center text-[0.9375rem]" style={{ color: 'var(--side-ink-2)' }}>
                   The agent appears here during a live call.
                 </p>
               </div>
