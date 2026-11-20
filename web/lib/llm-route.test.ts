@@ -293,3 +293,34 @@ describe('history: silent turns', () => {
     expect(seen.filter((m) => m.role === 'assistant').map((m) => m.content)).toEqual(['<silent>', '<silent>']);
   });
 });
+
+describe('the model never gets an empty message (live interpreter run, 20 Nov: one empty turn made every later turn fail)', () => {
+  it('drops empty user turns, fills empty assistant turns, and flattens text parts', async () => {
+    let sent: Array<{ role: string; content: unknown }> = [];
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: ((opts: { messages: Array<{ role: string; content: unknown }> }) => {
+        sent = opts.messages;
+        return { textStream: (async function* () { yield 'ok'; })() };
+      }) as never,
+    });
+    const r = new NextRequest('http://localhost/api/chat/completions?session=e1', {
+      method: 'POST',
+      body: JSON.stringify({
+        messages: [
+          { role: 'user', content: 'hello' },
+          { role: 'assistant', content: '' },
+          { role: 'user', content: '   ' },
+          { role: 'assistant', content: [{ type: 'text', text: 'The UTR is four zero two one.' }] },
+          { role: 'user', content: [{ type: 'text', text: '' }] },
+          { role: 'user', content: 'What is your name?' },
+        ],
+      }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    await (await route(r)).text();
+    expect(sent.every((m) => typeof m.content === 'string' && (m.content as string).trim() !== '')).toBe(true);
+    expect(sent.map((m) => m.content)).toEqual(['hello', '<silent>', 'The UTR is four zero two one.', 'What is your name?']);
+  });
+});
