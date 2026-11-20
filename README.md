@@ -44,6 +44,38 @@ It does not replace 1930 or file the complaint for you, and it can't recover mon
 
 To see every screen without talking: [`?state=complaint-done`](https://fraudfirstaid.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://fraudfirstaid.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://fraudfirstaid.vercel.app/demo/full-flow.mp4) shows one whole live call at double speed, from the scam warning to the 1930 interpreter keeping the acknowledgement number (21 Nov 2026; sample voices, no audio track).
 
+### How a call flows
+
+```mermaid
+flowchart TB
+  subgraph room["The caller's room"]
+    phone["Scam call or 1930 call, on speaker"]
+    app["Fraud First Aid in a browser, on another phone or laptop"]
+  end
+  subgraph agora["Agora"]
+    rtc["RTC: live audio"]
+    agent["Conversational AI agent per call: Sarvam hears, Murf Falcon speaks"]
+    interp["Second agent on the same call: the 1930 interpreter"]
+    rtm["RTM: live transcript and agent state"]
+  end
+  subgraph ours["Our server"]
+    route["Model route: an AI model with complaint tools"]
+    numbers["Number layer: spoken digits in ten languages, read back by code"]
+    tools["Tools: IFSC lookup, screenshot check, the pack, email after a spoken yes"]
+    speak["Speak API: cuts in when the screenshot disagrees"]
+  end
+  phone -- sound --> app
+  app <--> rtc
+  rtc <--> agent
+  rtc <--> interp
+  agent --> route
+  interp --> route
+  route --> numbers
+  route --> tools
+  speak --> agent
+  agent --> rtm --> app
+```
+
 ### Read the code: five files
 
 - [`web/lib/complaint/redflags.ts`](web/lib/complaint/redflags.ts): the guard's red flags and when money counts as gone
