@@ -23,7 +23,7 @@ import {
 } from 'agora-agent-client-toolkit';
 import { AgentVisualizer } from 'agora-agent-uikit';
 import { MicButtonWithVisualizer } from 'agora-agent-uikit/rtc';
-import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { agentUidFor } from '@/lib/agora';
 import { TypeInstead } from '@/components/TypeInstead';
 import {
   getCurrentInProgressMessage,
@@ -131,7 +131,8 @@ export default function ConversationComponent({
   // Tracks granular RTC connection state for the status dot.
   // Agora states: DISCONNECTED | CONNECTING | CONNECTED | DISCONNECTING | RECONNECTING
   const [connectionState, setConnectionState] = useState<string>('CONNECTING');
-  const agentUID = String(DEFAULT_AGENT_UID);
+  // this call's agent (lib/agora.ts): the same uid the server gave it
+  const agentUID = agentUidFor(agoraData.channel);
   const [joinedUID, setJoinedUID] = useState<UID>(0);
 
   // Transcript + agent state — managed with AgoraVoiceAI (see effect below).

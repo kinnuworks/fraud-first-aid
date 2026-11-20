@@ -3,7 +3,7 @@
 // interpreter on the same call: it hears any language and keeps the confirmed complaint.
 import { NextRequest, NextResponse } from 'next/server';
 import { AgoraClient, Area, ExpiresIn } from 'agora-agents';
-import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { agentUidFor } from '@/lib/agora';
 import { PRESETS } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { hydrate, peekComplaint, persist } from '@/lib/complaint/store';
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     const uid = body.uid != null && /^\d{1,10}$/.test(String(body.uid)) ? String(body.uid) : undefined;
     const session = agent.createSession({
       channel,
-      agentUid: String(DEFAULT_AGENT_UID),
+      agentUid: agentUidFor(channel),
       remoteUids: uid ? [uid] : ['*'], // '*': everyone in the call
       idleTimeout: 30,
       expiresIn: ExpiresIn.minutes(20),

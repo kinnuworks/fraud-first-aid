@@ -5,7 +5,7 @@ import {
   ExpiresIn,
 } from 'agora-agents';
 import { ClientStartRequest, AgentResponse } from '@/types/conversation';
-import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { agentUidFor } from '@/lib/agora';
 import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
@@ -16,7 +16,6 @@ import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 
 // System prompt that defines the agent's personality and behavior.
 // Swap this out to change what the agent talks about.
-const agentUid = String(DEFAULT_AGENT_UID);
 
 function requireEnv(name: string): string {
   const value = process.env[name];
@@ -93,7 +92,7 @@ export async function POST(request: NextRequest) {
     // remoteUids restricts the agent to only process audio from this user
     const session = agent.createSession({
       channel: channel_name,
-      agentUid,
+      agentUid: agentUidFor(channel_name),
       remoteUids: [requester_id],
       idleTimeout: 30,
       expiresIn: ExpiresIn.minutes(20), // a call never needs longer; caps cost if a capability leaks

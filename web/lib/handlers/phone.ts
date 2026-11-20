@@ -10,7 +10,7 @@ import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
 import { indianMobile, CallLimiter } from '@/lib/phone';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
-import { DEFAULT_AGENT_UID } from '@/lib/agora';
+import { agentUidFor } from '@/lib/agora';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
 
 const limiter = new CallLimiter(Number(process.env.PHONE_CALLS_PER_HOUR ?? 20));
@@ -60,7 +60,7 @@ export async function POST(request: NextRequest) {
     const agent = buildAgent({ client, preset: presetFor(langArg), lang, langArg, mode, channel, llmUrl, surface: 'phone' });
     const properties = agent.toProperties({
       channel,
-      agentUid: String(DEFAULT_AGENT_UID),
+      agentUid: agentUidFor(channel),
       remoteUids: [String(SIP_UID)],
       idleTimeout: 30,
       appId,

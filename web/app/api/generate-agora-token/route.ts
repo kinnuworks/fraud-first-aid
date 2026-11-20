@@ -5,7 +5,7 @@ import { DEFAULT_AGENT_UID } from '@/lib/agora';
 import { allowInMemory, clientAddress } from '@/lib/ratelimit';
 
 // The agent, the phone line and the family links have their own uids; nobody else may sign in as them.
-const RESERVED = (uid: number) => uid === Number(DEFAULT_AGENT_UID) || uid === 7001 || (uid >= 80000 && uid < 100000);
+const RESERVED = (uid: number) => uid === Number(DEFAULT_AGENT_UID) || uid === 7001 || (uid >= 80000 && uid < 100000) || uid >= 10_000_000;
 
 const EXPIRATION_TIME_IN_SECONDS = 3600;
 
