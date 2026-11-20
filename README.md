@@ -175,6 +175,8 @@ The methods, every result, the bugs the tests found and the limits are written u
 
 Evidence, stated plainly: no real users yet; it was built for this hackathon. Instead: a back-test on public speech (FLEURS, Hindi/Telugu/Kannada) against the speech-to-text's own numerals, the same back-test through a phone codec, planned and committed before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md), and our own break test of the main claim (spoken numbers in noise). Each one reruns from the repo with one command.
 
+To recompute every result below from its results file, with no keys: `python3 -I evidence/verify.py`. It also checks that this README and the app's [Check it yourself](https://fraudfirstaid.vercel.app/proof) page state the same numbers, and GitHub runs it on every push.
+
 > Claim: Fraud First Aid reads spoken 10- and 12-digit numbers exactly in 295 of 300 noisy clips.
 > Evidence type: our own break test (we tried to make it fail), not real users.
 > Data: Murf Falcon voices speaking 25 numbers digit by digit in Hindi, Telugu, Kannada and English, with white noise at 20, 10 and 5 dB, 19 Nov 2026, 300 clips ([results](evidence/results/breaktest-2026-11-19.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same clips, 79 of 300.
