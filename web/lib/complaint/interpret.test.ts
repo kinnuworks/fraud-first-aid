@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint, type Complaint } from './session';
-import { canInterpret, interpretSystem, ackFrom, INTERPRET_GREETING, interpretShortcut, ackLine, spokenWhen, spelled } from './interpret';
+import { canInterpret, interpretSystem, ackFrom, INTERPRET_GREETING, interpretLine, ackLine, spokenWhen, spelled } from './interpret';
 import { buildPack } from './pack';
 import { READBACK_LANGS } from '../entities/numbers';
 
@@ -52,11 +52,12 @@ describe('1930 interpreter', () => {
     expect(p.operatorCard).toContain('1930 acknowledgement number: 31512511200123');
   });
 
+  // The model marks the moment ([[intro]], [[utr]]); code says the words and every number (bug audit,
+  // 20 Nov: keyword triggers fired on the caller's own "I'm calling 1930").
   it('introduces the case to the operator from code: the right date, the payee spelled, the UTR in words', () => {
     const c = full('te');
     c.phase = 'interpret';
-    expect(interpretShortcut(c, 'నమస్కారం')).toBeNull(); // the caller, not the operator
-    const intro = interpretShortcut(c, 'Hello, this is the national cyber crime helpline, 1930. How can I help you?')!;
+    const intro = interpretLine(c, 'intro')!;
     expect(intro).toContain('19 November 2026 at 2:30 pm');
     expect(intro).toContain('r a m e s h at o k a x i s');
     expect(intro).toContain('The UTR is four zero two one, seven seven eight eight, nine nine one zero.');
@@ -64,13 +65,12 @@ describe('1930 interpreter', () => {
     expect(intro).toContain('ఆపరేటర్‌కి');
   });
 
-  it('answers the UTR question from code, and leaves other questions to the model', () => {
+  it('reads the UTR and amount from code when asked, and nothing before the interpreter starts', () => {
     const c = full('te');
-    c.phase = 'interpret';
-    c.interpIntro = true;
     c.fields.utr!.value = '402177869910';
-    expect(interpretShortcut(c, 'Please tell me the UTR number of the transaction and the amount.')).toMatch(/^The UTR is four zero two one, seven seven eight six, nine nine one zero\. The amount is Rs 25,000\./);
-    expect(interpretShortcut(c, 'What is the full name of the person who lost the money?')).toBeNull();
+    expect(interpretLine(c, 'utr')).toBeNull(); // still on the complaint
+    c.phase = 'interpret';
+    expect(interpretLine(c, 'utr')).toMatch(/^The UTR is four zero two one, seven seven eight six, nine nine one zero\. The amount is Rs 25,000\./);
   });
 
   it("reads the acknowledgement number back in the caller's language from the operator's own words", () => {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { NextRequest } from 'next/server';
-import { createLlmRoute } from './llm-route';
+import { createLlmRoute, fingerprint } from './llm-route';
 
 function fakeStream(parts: string[]) {
   return () =>
@@ -252,7 +252,8 @@ describe('custom LLM route with a shared store', () => {
     await res.text();
     // the words seen on another instance ('hello') come from the store, so only the new words count
     expect(order).toEqual(['load:up-1', 'init:up-1', 'turn: my UTR is', 'save']);
-    expect(saved).toEqual({ session: 'up-1', seen: 'hello my UTR is' });
+    // the store keeps a fingerprint of the words seen, never the words (security pass, 20 Nov)
+    expect(saved).toEqual({ session: 'up-1', seen: fingerprint('hello my UTR is') });
   });
 });
 

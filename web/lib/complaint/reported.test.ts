@@ -50,6 +50,8 @@ describe('reportOnce: a confirmed complaint counts its payee once', () => {
     const { newComplaint } = await import('./session');
     const c = newComplaint('en');
     c.fields = { utr: { value: '402177889910', confirmed: true }, amount: { value: 1, confirmed: true }, payee: { value: 'ramesh@okaxis', confirmed: true }, when: { value: '2026-11-19T14:30', confirmed: true }, victim_bank: { value: 'SBI', confirmed: true } } as never;
+    // only a UTR confirmed against the payment screenshot counts (security pass, 20 Nov)
+    c.shot = { utr: '402177889910' };
     const seen: string[] = [];
     await reportOnce(c, async (u) => { seen.push(u); return 1; });
     await reportOnce(c, async (u) => { seen.push(u); return 1; });

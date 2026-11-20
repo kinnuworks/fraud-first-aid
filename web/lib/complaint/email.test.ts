@@ -31,7 +31,8 @@ describe('sendPackEmail', () => {
 
   it('reports a refusal plainly and never throws', async () => {
     const fake = (async () => new Response(JSON.stringify({ message: 'You can only send testing emails to your own email address' }), { status: 403 })) as unknown as typeof fetch;
-    expect(await sendPackEmail('x@y.com', pack, 'k', fake)).toEqual({ ok: false, problem: 'You can only send testing emails to your own email address' });
+    // the provider's text is logged, not shown: it can name the account it delivers to
+    expect(await sendPackEmail('x@y.com', pack, 'k', fake)).toEqual({ ok: false, problem: 'email could not be sent to this address right now; copy the pack from the screen instead' });
     expect(await sendPackEmail('bad', pack, 'k', fake)).toEqual({ ok: false, problem: 'not an email address' });
     expect(await sendPackEmail('x@y.com', pack, '', fake)).toEqual({ ok: false, problem: 'email is not set up' });
   });
