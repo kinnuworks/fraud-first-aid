@@ -1,6 +1,5 @@
-/* Fraud First Aid on Tines' system (tines.com, measured 20 Nov 2026, design/refs/tines): Roobert to
-   Instrument Sans, Reckless to Young Serif, Roobert Mono to DM Mono; pill buttons and labels in mono
-   caps; hairline cards with 14-16px corners and no shadows; the product shown in a lilac window with a
+/* Fraud First Aid on Tines' system (tines.com, measured 20 Nov 2026, design/refs/tines). Type is now
+   Anek throughout (Ek Type, Mumbai), digits included, at the owner's asking; hairline cards with 14-16px corners and no shadows; the product shown in a lilac window with a
    playback bar; a dense flat illustration of first-aid and UPI-safety things (our own, drawn in
    Tines' hand, where Tines draws flowers). Colours are the owner's clearer
    set (theme.css): deep ink for text, purple for what the product does, red for the scam, green for
@@ -78,9 +77,9 @@
 }
 
 /* ===================================================================== */
-/* A: Tines (tines.com). Cream page, purple ink, Roobert -> Instrument Sans, */
-/* Reckless -> Young Serif, Roobert Mono -> DM Mono; hairline coloured cards */
-/* with 14px corners, no shadows; pill buttons in mono caps; flat illustration. */
+/* A: Tines (tines.com), on the owner's white page, first-aid green and Anek  */
+/* throughout; hairline coloured cards with 14px corners, no shadows; pill    */
+/* buttons; flat illustration.                                                 */
 /* ===================================================================== */
 
 .ta-nav {
@@ -899,8 +898,9 @@
   background: var(--panel-2);
   color: var(--ink);
 }
-.cmp-col--us .up-label {
-  color: var(--ink);
+/* the help column's label is green like its ticks; the scam column's stays red (below) */
+.cmp-col.cmp-col--us .up-label {
+  color: var(--ok);
 }
 .cmp-col .up-label {
   font-family: var(--font-ui);
@@ -1502,12 +1502,25 @@ html[data-motion='reduce'] .gd-radar::before {
   font-weight: 600;
   letter-spacing: 0.06em;
 }
+/* Digits in Anek too, not a monospace (owner: "i dont like that robotic font on website, need
+   warmer"). Tabular figures keep the UTR groups, times, counters and phone numbers lined up and steady
+   while they tick; running text such as the 1930 script keeps Anek's own figures. */
 .ta-win__time,
 .up-utr__g,
 .cd-utr,
 .as-at,
-.tr-time {
+.tr-time,
+.rc-ref,
+.up-input,
+.up-pipe .step b,
+.pk-bank__num,
+.pf-digits {
   font-family: var(--font-num);
+  font-variant-numeric: tabular-nums;
+}
+/* Anek's space is narrower than a monospace one: keep the UTR's groups of four apart */
+.pf-digits {
+  word-spacing: 0.25em;
 }
 @media (max-width: 760px) {
   .ta-path__do .ta-btn--lg {

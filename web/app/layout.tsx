@@ -5,7 +5,6 @@ import '@/styles/design/tines.css';
 import Script from 'next/script';
 import {
   Anek_Latin,
-  DM_Mono,
   Anek_Telugu,
   Anek_Devanagari,
   Anek_Kannada,
@@ -16,10 +15,9 @@ import {
   Anek_Gurmukhi,
 } from 'next/font/google';
 
-// Anek (Ek Type, Mumbai) for English and all ten Indian scripts, so Hindi and English sit together
-// evenly; DM Mono only where digits must line up (the UTR, times).
+// Anek (Ek Type, Mumbai) for English, digits and all ten Indian scripts, so Hindi and English sit
+// together evenly; its tabular figures line up the UTR and times where needed.
 const sans = Anek_Latin({ subsets: ['latin'], variable: '--font-face-sans', display: 'swap', axes: ['wdth'] });
-const mono = DM_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-face-mono', display: 'swap' });
 // Indian scripts load only when a page uses them.
 const anekTe = Anek_Telugu({ display: 'swap', preload: false, variable: '--font-anek-te' });
 const anekHi = Anek_Devanagari({ display: 'swap', preload: false, variable: '--font-anek-hi' });
@@ -79,7 +77,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${sans.variable} ${mono.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')}`}
+      className={`h-full ${sans.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')}`}
       suppressHydrationWarning
     >
       <body className="h-full min-h-screen">

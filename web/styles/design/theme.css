@@ -65,7 +65,9 @@
   --font-display: var(--font-face-sans), system-ui, sans-serif;
   --font-ui: var(--font-face-sans), system-ui, sans-serif;
   --font-serif: var(--font-face-sans), system-ui, sans-serif;
-  --font-num: var(--font-face-mono), ui-monospace, monospace;
+  /* digits in the same warm Anek as the words, with the Indian scripts behind it; tabular figures
+     where numbers line up or tick are set in tines.css */
+  --font-num: var(--font-face-sans), var(--font-scripts), system-ui, sans-serif;
   --font-scripts: var(--font-anek-te), var(--font-anek-hi), var(--font-anek-kn), var(--font-anek-ta), var(--font-anek-ml),
     var(--font-anek-bn), var(--font-anek-gu), var(--font-anek-pa);
 
@@ -421,7 +423,8 @@ body {
 .up-pre {
   white-space: pre-wrap;
   font-family: var(--font-num);
-  font-size: 0.875rem;
+  /* the 1930 script is read aloud on the call: reading size in Anek */
+  font-size: 1rem;
   line-height: 1.6;
   background: var(--sheet-2);
   border-radius: 12px;
