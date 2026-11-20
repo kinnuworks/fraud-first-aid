@@ -8,9 +8,9 @@ It runs on Agora's Conversational AI Engine because the job is a live, interrupt
 
 **Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds. **Check it yourself: https://fraudfirstaid.vercel.app/proof**: try to fool the scam guard with your own lines, or say a UTR any way you like.
 
-![The live app, sped up: the scam warning, the UTR read back, the screenshot catching a wrong group, and the pack ready for 1930](docs/core-loop.gif)
+![The live app, sped up: the scam warning, the UTR read back with the screenshot catching a wrong group, and Fraud First Aid giving the 1930 operator the UTR](docs/core-loop.gif)
 
-*The live app on 20 Nov 2026, sped up: the one-click scam catch, then a complaint in Telugu with the UTR read back and the pack. The voices are generated sample clips (an illustration); the app and its answers are real.*
+*The live app on 21 Nov 2026, sped up: the one-click scam catch, a complaint in Telugu with the UTR read back and checked against the payment screenshot, then the 1930 interpreter giving the operator the UTR in English. The voices, the operator's included, are generated sample clips (an illustration); the app and its answers are real.*
 
 Proof, recomputed on every push from the results files in this repo:
 - Back-test on public data (INDICA, scam calls machine-translated into Indian languages): warned on 198 of 200 scam conversations and on none of 200 legitimate ones, in Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Gujarati and English. Keyword rules alone caught 16.
@@ -42,7 +42,7 @@ It does not replace 1930 or file the complaint for you, and it can't recover mon
 2. Or pick a language, press **Lost money? Report it by voice**, say what happened and a made-up 12-digit UTR digit by digit ("four zero two one, seven seven eight eight, nine nine one zero"), an amount and a UPI ID.
 3. Say "the second group is wrong" when it reads the UTR back, and correct it. When all five details are confirmed, the pack appears.
 
-To see every screen without talking: [`?state=complaint-done`](https://fraudfirstaid.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://fraudfirstaid.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://fraudfirstaid.vercel.app/demo/full-flow.mp4) shows one whole call (sample voices, no audio track).
+To see every screen without talking: [`?state=complaint-done`](https://fraudfirstaid.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://fraudfirstaid.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://fraudfirstaid.vercel.app/demo/full-flow.mp4) shows one whole live call at double speed, from the scam warning to the 1930 interpreter keeping the acknowledgement number (21 Nov 2026; sample voices, no audio track).
 
 ### Read the code: five files
 
