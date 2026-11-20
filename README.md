@@ -85,6 +85,14 @@ flowchart TB
 - [`web/lib/agent-config.ts`](web/lib/agent-config.ts) and [`invite-agent.ts`](web/lib/handlers/invite-agent.ts): the Agora agent with Sarvam speech-to-text and Murf Falcon voices per language
 
 
+## What's new here
+
+- It knows when not to talk. On guard it stays silent through someone else's call and speaks only when the caller asks for a code, a scan or money. It can't be talked out of it: it still warned on 20 of 20 attempts to switch it off (our own break test).
+- It interrupts itself when the evidence disagrees. If the payment screenshot doesn't match the UTR the caller said, Agora's speak API cuts the agent off mid-sentence to say which group differs.
+- It joins your 1930 call. A second Agora agent on the same call speaks English to the operator and your language to you, and reads the acknowledgement number back so a misheard digit is fixed on the call.
+- The model never types a digit. Code turns the caller's words into digits and speaks them back; when the model needs a number in a reply, it marks the spot and code fills in the exact digits.
+- Each confirmed complaint warns the next person (below).
+
 ## Reported before
 
 Every confirmed complaint makes the guard sharper for the next person. When a complaint is confirmed, a keyed one-way hash of the payee's UPI ID is counted for 90 days. If a caller on a later guarded call names that ID ("send the fee to ramesh at okaxis"), Fraud First Aid warns at once that the ID was named in an earlier fraud complaint. Only the hash is kept, never the ID, and the warning never says who anyone is. The counts so far come from our own test calls, not real victims. Code: [`reported.ts`](web/lib/complaint/reported.ts).
