@@ -1,6 +1,6 @@
 # Fraud First Aid
 
-**Catches the scam on the call. Chases the money if it's gone.** First aid for a UPI fraud, and like first aid it has to be fast: the first hour decides whether the money can still be frozen. It listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
+**Catches the scam on the call. Chases the money if it's gone.** First aid for a UPI fraud, and like first aid it has to be fast: the first hour decides whether the money can still be frozen. It listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets your bank and 1930, India's national cyber fraud helpline, what they need within minutes.
 
 It's for the person on the phone when it happens: the parent who gets a "KYC" call, the senior citizens who lost ₹4,005 crore to cyber fraud in 2025 (Rajya Sabha reply, 5 Aug 2026), anyone who doesn't think in English in the first panicked hour. And when they call 1930, it speaks to the operator for them.
 

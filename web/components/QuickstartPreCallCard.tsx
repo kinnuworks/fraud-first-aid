@@ -139,7 +139,7 @@ function Below() {
             Fraud First Aid never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
             cannot recover money.
           </p>
-          <a href="tel:1930" className="ta-btn ta-btn--sos ta-btn--nav ft-call">
+          <a href="tel:1930" className="ta-btn ta-btn--sos ta-btn--nav ft-call" aria-label="Call 1930, India's national cyber fraud helpline" title="1930 is India's national cyber fraud helpline">
             Call 1930
           </a>
         </div>
@@ -171,7 +171,7 @@ function Compare() {
   return (
     <section className="cmp" aria-labelledby="cmp-title">
       <h2 id="cmp-title" className="up-h2">
-        1930 is the right number to call. Fraud First Aid gets you ready for it.
+        1930 is India&apos;s national helpline for cyber fraud, and the right number to call. Fraud First Aid gets you ready for it.
       </h2>
       <div className="cmp-grid">
         <div className="cmp-col">

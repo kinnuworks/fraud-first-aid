@@ -78,7 +78,7 @@ export function Hero(p: StartProps) {
           <a href="#try">Try it on your phone</a>
           <a href="#sources">Sources</a>
         </nav>
-        <a href="tel:1930" className="ta-btn ta-btn--sos ta-btn--nav">Call 1930</a>
+        <a href="tel:1930" className="ta-btn ta-btn--sos ta-btn--nav" aria-label="Call 1930, India's national cyber fraud helpline" title="1930 is India's national cyber fraud helpline">Call 1930</a>
       </header>
       <section className="ta-hero">
         <a className="ta-pill" href="#sources">
@@ -105,7 +105,7 @@ export function Hero(p: StartProps) {
           </div>
           <div className="ta-path ta-path--money">
             <p className="ta-path__k">If money&apos;s gone</p>
-            <p className="ta-path__t">Tell it what happened and it gets every number right for the 1930 helpline and your bank.</p>
+            <p className="ta-path__t">Tell it what happened and it gets every number right for your bank and for 1930, India&apos;s national cyber fraud helpline.</p>
             <div className="ta-path__do">
               <StartButton {...p} className="ta-btn ta-btn--line ta-btn--lg" />
             </div>
