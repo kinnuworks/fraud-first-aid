@@ -15,7 +15,7 @@ It runs on Agora's Conversational AI Engine because the job is a live, interrupt
 Proof, recomputed on every push from the results files in this repo:
 - Back-test on public data (INDICA, scam calls machine-translated into Indian languages): warned on 198 of 200 scam conversations and on none of 200 legitimate ones, in Telugu, Hindi, Kannada, Tamil, Malayalam, Bengali, Gujarati and English. Keyword rules alone caught 16.
 - Back-test on public data (ICFD-31k, synthetic scam calls, 2025): warned in 144 of 200 scam conversations it had never seen, and stayed quiet on 29 of 39 legitimate ones. The same AI model simply told to warn about scams warned on 199, but also on 33 of 39 legitimate calls.
-- Back-test on public data (FLEURS read speech in Hindi, Telugu and Kannada, 2022): the exact numbers in 207 of 330 sentences. The speech-to-text alone: 114.
+- Back-test on public data (FLEURS read speech in Hindi, Telugu and Kannada, 2022): the exact numbers in 207 of 330 sentences. The speech-to-text alone: 114. In six more of our languages, 540 of 1,107 against 423.
 - Our own break test (we tried to make it fail): 24 of 24 ordinary calls left alone.
 
 [![tests](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/tests.yml/badge.svg)](.github/workflows/tests.yml) [![evidence](https://github.com/kinnuworks/fraud-first-aid/actions/workflows/evidence.yml/badge.svg)](evidence/verify.py) · [technical report](docs/technical-report.md) · [system card: what it won't do, how it can fail, what it keeps](docs/SYSTEM_CARD.md)
@@ -194,6 +194,12 @@ To recompute every result below from its results file, with no keys: `python3 -I
 > Data: the same 330 FLEURS test sentences in Hindi, Telugu and Kannada, each converted to 8 kHz G.711 mu-law (the codec of Indian phone calls and Twilio) before transcription; planned and committed before the run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md), run once on 19 and 20 Nov 2026 ([results](evidence/results/fleurs-test-phone-2026-11-20.csv)). Baseline: the numerals in Sarvam saarika:v2.5's own transcript of the same audio, 115 of 330 (34.8%).
 > Result: 63.9% exact (95% interval 58.6% to 68.9%); paired difference +0.29 (95% interval 0.24 to 0.34). Hindi 48/64, Telugu 63/105, Kannada 100/161, no lower than on full-band audio (207 of 330).
 > Rerun: `python3 -I evidence/fleurs/phone.py test && npx tsx evidence/fleurs/score.ts test phone`. Limits: simulated phone audio (the codec only, no packet loss or line noise); read sentences, not dictated UTRs.
+
+> Claim: on real speech in six more of our languages, Fraud First Aid gets the exact numbers right in 540 of 1,107 sentences, against 423 for the speech-to-text's own numerals.
+> Evidence type: back-test on public data (FLEURS read speech, six more languages), not real users.
+> Data: the FLEURS test slice (same revision) in Tamil, Malayalam, Bengali, Marathi, Gujarati and Punjabi, every sentence with a number, 1,107 (20 over 30 seconds left out). These languages had no building slice: planned before any run in [`evidence/EVAL_PLAN.md`](evidence/EVAL_PLAN.md) (fourth claim), transcribed on 19 and 21 Nov 2026 and scored once ([results](evidence/results/fleurs-test-six-2026-11-21.csv)).
+> Result: 48.8% exact (95% interval 45.8% to 51.7%) against 38.2% (35.4% to 41.1%); paired difference +0.11 (95% interval 0.08 to 0.13). Ahead in all six: Tamil 48/122 (44), Malayalam 116/220 (83), Bengali 122/182 (120), Marathi 103/265 (43), Gujarati 93/214 (80), Punjabi 58/104 (53).
+> Rerun: `python3 -I evidence/fleurs/fetch.py test six && npx tsx evidence/fleurs/score.ts test six`. Limits: read sentences, not phone calls; the numbers are years and amounts inside sentences, not dictated UTRs; Bengali is nearly level, and under half the Tamil and Marathi sentences come out exact.
 
 > Claim: on public scam-call conversations it was never tuned on, the guard warned in 133 of 200, against 5 of 200 for keyword rules alone.
 > Evidence type: back-test on public data (ICFD-31k, synthetic conversations), not real users.

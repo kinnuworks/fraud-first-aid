@@ -146,3 +146,6 @@ Then a short limits paragraph, in numbers: zero real users, the interval, the da
 - Keep-or-revert rule, checked before any ICFD or INDICA test run: the change stays only if the ordinary calls stay 24/24 silent and the guard break test stays 20/20 + 20/20 on the changed guard; otherwise it is reverted and only the reverted guard is measured.
 - After this, the tenth claim's INDICA test sample runs once, unchanged.
 - Rerun: `npx -y tsx@4.20.6 evidence/icfd/run.ts <base> --twelfth`, `npx -y tsx@4.20.6 evidence/icfd/generic.ts --twelfth`, `npx -y tsx@4.20.6 evidence/breaktest/ordinary.ts <base>` and `... ordinary.ts --generic`.
+
+## The fourth claim, completed (21 Nov 2026 ~00:43-00:47 IST)
+- The test key was topped up and the remaining clips transcribed (23 Marathi, 214 Gujarati, 104 Punjabi); the whole claim was then scored once, over the cached transcripts, with the number layer as of 690969c. Besides the two changes noted above, c710996 (20 Nov ~01:17 IST) narrowed the English "and" rule to "hundred"; it touches only English. Result in the Evidence ledger and evidence/results/fleurs-test-six-2026-11-21.csv: ours 540/1,107, Sarvam's own numerals 423/1,107, paired difference +0.11 (0.084 to 0.127), threshold met; ahead in all six languages, Bengali nearly level (122 vs 120).

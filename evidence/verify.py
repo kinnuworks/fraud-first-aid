@@ -66,6 +66,12 @@ r = rows("fleurs-test-phone-2026-11-20.csv")
 o, b, n = total(r, "ours"), total(r, "baseline"), len(r)
 claim("FLEURS phone codec", f"{o}/{n} vs {b}/{n}, diff {interval('fleurs-test-phone-2026-11-20.csv')}", [f"{o} of {n}", f"{b} for the speech-to-text"], proof=[f"{o} of {n}", f"own numerals: {b}"])
 
+# FLEURS in six more languages (fourth claim)
+r = rows("fleurs-test-six-2026-11-21.csv")
+o, b, n = total(r, "ours"), total(r, "baseline"), len(r)
+lo, hi = interval("fleurs-test-six-2026-11-21.csv")
+claim("FLEURS six more languages", f"{o}/{n} vs {b}/{n}, diff {lo} to {hi}", [f"{o} of {n:,}", f"against {b}", f"{lo:.2f} to {hi:.2f}"])
+
 # Numbers in noise (our own break test)
 r = rows("breaktest-2026-11-19.csv")
 o, b, n = total(r, "ours"), total(r, "baseline"), len(r)
