@@ -2091,3 +2091,35 @@ html[data-large] {
 
 /* Headline second line: the language promise, quieter than the claim */
 .rc-h1-sub { color: var(--ink-3); }
+
+/* hero, 20 Nov second pass: stakes as a small kicker above the headline, one line under it,
+   buttons, then listen + language + slow voice in one row; the tech credit sits under the phone */
+.rc-hero .rc-stakes {
+  margin: 0 0 14px;
+  max-width: 36rem;
+  font-size: 1rem;
+  line-height: 1.45;
+  font-weight: 600;
+  color: var(--bad);
+}
+.rc-hero .rc-stakes strong { font-weight: 800; }
+.rc-hero .rc-src {
+  display: inline;
+  margin: 0;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--ink-3);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.rc-hero .rc-lead { margin-top: 18px; }
+.rc-hero .rc-prefs {
+  margin-top: 18px;
+  padding-top: 0;
+  border-top: 0;
+  font-size: 0.9375rem;
+}
+.rc-stage .rc-tech {
+  margin-top: 16px;
+  text-align: center;
+}

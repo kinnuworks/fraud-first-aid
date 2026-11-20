@@ -384,31 +384,28 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         </header>
         <section className="rc-hero">
           <div>
-            <h1 className="up-display">
-              It hears the scam call and tells you to hang up.{' '}
-              <span className="rc-h1-sub">In your language, before you pay.</span>
-            </h1>
             <p className="rc-stakes">
-              Karnataka lost <strong>₹5,474 crore</strong> to cyber fraud in three years. Only <strong>₹627 crore</strong> came back.
-              <span className="rc-src">Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
+              Karnataka lost <strong>₹5,474 crore</strong> to cyber fraud in three years. Only <strong>₹627 crore</strong> came back.{' '}
+              <a className="rc-src" href="#sources" title="Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)">Source</a>
             </p>
+            <h1 className="up-display">
+              Catches the scam on the call.{' '}
+              <span className="rc-h1-sub">Chases the money if it&apos;s gone.</span>
+            </h1>
             <p className="up-lead rc-lead">
-              Put the call on speaker next to this phone or laptop. If the money&apos;s already gone, it takes your complaint by voice and gets
-              every number right for the 1930 helpline and your bank, while the money can still be frozen.
+              Put the call on speaker and it warns you in your language. Lost money? Tell it what happened and it gets every number right for
+              the 1930 helpline and your bank.
             </p>
             <div className="rc-ctas">
               <WatchButton {...p} />
               <StartButton {...p} />
             </div>
-            <div className="rc-listen">
-              <ListenButton {...p} link />
-            </div>
             <div className="rc-prefs">
+              <ListenButton {...p} link />
               <LanguageChips />
               <SlowToggle />
             </div>
             {p.error && <p className="mt-3 text-[0.9375rem]" style={{ color: 'var(--bad)' }}>{p.error}</p>}
-            <p className="rc-tech">Agora Conversational AI runs the live call · Sarvam hears 10 Indian languages · Murf Falcon speaks back</p>
           </div>
           <div className="rc-stage">
             <div className="rc-phone" aria-label="Sample: the agent hears a fake KYC call ask for an OTP and tells the user to hang up">
@@ -459,6 +456,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
                 Tell your bank by <strong>{DEADLINE}</strong> for zero liability (RBI, 3 working days).
               </p>
             </div>
+            <p className="rc-tech">Agora Conversational AI runs the live call · Sarvam hears 10 Indian languages · Murf Falcon speaks back</p>
           </div>
         </section>
       </div>
