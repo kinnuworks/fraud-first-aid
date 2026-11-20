@@ -160,7 +160,7 @@ From "I've lost money" to the pack ready for 1930: 3 min 38 s, 4 min 05 s and 4 
 Where to look, line by line:
 - The agent starts per call with `session.start()`: [`invite-agent.ts#L105`](web/lib/handlers/invite-agent.ts#L105), listening only to the caller (`remoteUids`, [#L97](web/lib/handlers/invite-agent.ts#L97)).
 - The pipeline is built in [`agent-builder.ts#L28`](web/lib/agent-builder.ts#L28): Sarvam speech-to-text in the caller's language, our model URL with tools, and Murf Falcon as the voice: `new MurfTTS({ voiceId, locale, model: 'FALCON' })` at [#L101](web/lib/agent-builder.ts#L101), slower with `rate: -20` for older callers.
-- Turn detection (slow mode waits 900 ms of silence instead of 480 before taking its turn) and the tools/RTM switches: [#L42](web/lib/agent-builder.ts#L42) and [#L63](web/lib/agent-builder.ts#L63).
+- Turn detection (slow mode waits 900 ms of silence instead of 480 before taking its turn, and the 1930 interpreter 800 ms, so an operator reading out a number in groups isn't cut off mid-number) and the tools/RTM switches: [#L42](web/lib/agent-builder.ts#L42) and [#L65](web/lib/agent-builder.ts#L65).
 - The Murf Falcon voice per language: [`agent-config.ts`](web/lib/agent-config.ts#L14).
 
 ## Check it yourself
