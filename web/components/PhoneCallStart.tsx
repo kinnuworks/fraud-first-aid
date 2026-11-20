@@ -16,8 +16,10 @@ export function PhoneCallStart() {
     const r = await fetch(`/api/call/phone?session=${encodeURIComponent(t.channel)}&cap=${encodeURIComponent(t.cap)}`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify({ to, lang: q.get('lang') ?? 'te', mode: q.get('mode') === 'guard' ? 'guard' : 'complaint' }),
-    });
+      // always the complaint, which greets whoever answers
+      body: JSON.stringify({ to, lang: q.get('lang') ?? 'te', mode: 'complaint' }),
+    }).catch(() => null);
+    if (!r) return setState('Could not reach the server. Check your connection and try again.');
     const j = await r.json().catch(() => ({}));
     if (!r.ok) return setState(j.error ?? 'Could not place the call.');
     router.push(`/watch?session=${encodeURIComponent(t.channel)}&key=${encodeURIComponent(t.viewCap)}&as=phone`);

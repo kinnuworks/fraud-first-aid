@@ -136,17 +136,20 @@ const SIGNS = ['an OTP', 'a PIN', 'a QR scan', 'an app install', 'money'];
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 
 // The bank deadline as a month calendar: the day the money left, and the day the bank must hear by.
+const todayIstYm = () => new Date(Date.now() + 330 * 60000).toISOString().slice(0, 7);
+
 function DeadlineCalendar({ data }: { data: ComplaintView }) {
   const [today] = useState(() => new Date());
   const debitIso = typeof data.fields.when?.value === 'string' ? data.fields.when.value.slice(0, 10) : null;
   const deadlineIso = data.deadlines?.zeroLiabilityBy ?? null;
   const anchor = deadlineIso ?? debitIso;
-  const year = anchor ? Number(anchor.slice(0, 4)) : today.getFullYear();
-  const month = anchor ? Number(anchor.slice(5, 7)) - 1 : today.getMonth();
+  const year = anchor ? Number(anchor.slice(0, 4)) : Number(todayIstYm().slice(0, 4));
+  const month = anchor ? Number(anchor.slice(5, 7)) - 1 : Number(todayIstYm().slice(5, 7)) - 1;
   const first = new Date(Date.UTC(year, month, 1)).getUTCDay();
   const days = new Date(Date.UTC(year, month + 1, 0)).getUTCDate();
   const iso = (d: number) => `${year}-${String(month + 1).padStart(2, '0')}-${String(d).padStart(2, '0')}`;
-  const todayIso = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  // today in India, whatever time zone the viewer's device is set to
+  const todayIso = new Date(today.getTime() + 330 * 60000).toISOString().slice(0, 10);
   return (
     <section aria-label="Bank deadline">
       <span className="up-label">Bank deadline</span>
@@ -260,7 +263,7 @@ export function ComplaintCardView({
 }: {
   data: ComplaintView | null;
   onScreenshot?: (f: File) => void;
-  onEmail?: (email: string) => Promise<void>;
+  onEmail?: (email: string) => Promise<string | null>;
   onInterpret?: () => Promise<string | null>;
 }) {
   if (!data)
@@ -347,7 +350,7 @@ export function ComplaintCardView({
               <SinceDebit when={f.when?.value} />
             </span>
           </div>
-          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} interpreter={<Interpreter data={data} onInterpret={onInterpret} />} />}
+          {data.pack.ok && <PackView pack={data.pack} emailSent={data.emailSent ?? null} onEmail={onEmail} interpreter={<Interpreter data={data} onInterpret={onInterpret} />} lang={data.lang} />}
           {mismatches.map((k) => (
             <Mismatch key={k} k={k} said={f[k]!.value} c={data.check![k]!} />
           ))}
@@ -469,9 +472,10 @@ function SinceDebit({ when }: { when?: string | number }) {
   );
 }
 
-function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e: string) => Promise<void> }) {
+function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e: string) => Promise<string | null> }) {
   const [email, setEmail] = useState('');
   const [busy, setBusy] = useState(false);
+  const [problem, setProblem] = useState<string | null>(null);
   if (emailSent && 'id' in emailSent) {
     return (
       <p className="text-[0.9375rem]" data-testid="email-sent">
@@ -486,8 +490,12 @@ function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e
       onSubmit={async (e) => {
         e.preventDefault();
         setBusy(true);
-        await onEmail(email);
-        setBusy(false);
+        setProblem(null);
+        try {
+          setProblem(await onEmail(email));
+        } finally {
+          setBusy(false);
+        }
       }}
     >
       <label className="text-[0.9375rem]" htmlFor="pack-email">
@@ -506,9 +514,9 @@ function EmailPack({ emailSent, onEmail }: { emailSent: EmailState; onEmail?: (e
       <button type="submit" disabled={busy} className="up-btn up-btn--ghost up-btn--sm" data-testid="email-send">
         {busy ? 'Sending…' : 'Send'}
       </button>
-      {emailSent && 'problem' in emailSent && (
+      {(problem || (emailSent && 'problem' in emailSent)) && (
         <span className="text-[0.875rem]" role="status">
-          Couldn&apos;t send: {emailSent.problem}
+          Couldn&apos;t send: {problem ?? (emailSent && 'problem' in emailSent ? emailSent.problem : '')}
         </span>
       )}
     </form>
@@ -520,10 +528,12 @@ function PackView({
   emailSent,
   onEmail,
   interpreter,
+  lang,
 }: {
+  lang?: string;
   pack: Extract<Pack, { ok: true }>;
   emailSent: EmailState;
-  onEmail?: (e: string) => Promise<void>;
+  onEmail?: (e: string) => Promise<string | null>;
   interpreter?: ReactNode;
 }) {
   return (
@@ -562,7 +572,7 @@ function PackView({
       </div>
       {interpreter}
       <div className="pk-list">
-        <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open />
+        <PackItem n={1} title="Call 1930 now and read this out" text={pack.script1930} open lang={lang} />
         <PackItem n={2} title={`Send this letter to your bank by ${when(pack.deadlines.zeroLiabilityBy)}`} text={pack.bankLetter} />
         <PackItem n={3} title="If the 1930 operator asks, share this English summary" text={pack.operatorCard} />
         {pack.callRecord && <PackItem n={4} title="The scam call as Fraud First Aid heard it, with the red flags marked (evidence for 1930 and the cyber cell)" text={pack.callRecord} />}
@@ -625,8 +635,8 @@ function AgentSteps({ actions }: { actions?: ComplaintView['actions'] }) {
         <span className="as-live" aria-hidden="true">live</span>
       </div>
       <ol className="as-list" aria-live="polite">
-        {recent.map((a, i) => (
-          <li key={`${a.at}-${i}`} className={`as-step as-step--${a.kind}`}>
+        {recent.map((a) => (
+          <li key={`${a.at}|${a.text}`} className={`as-step as-step--${a.kind}`}>
             <span className="as-icon" aria-hidden="true">{STEP_ICON[a.kind]}</span>
             <span className="as-text">{a.text}</span>
             <time className="as-at">{a.at}</time>
@@ -677,10 +687,15 @@ function Interpreter({ data, onInterpret }: { data: ComplaintView; onInterpret?:
         disabled={busy}
         onClick={async () => {
           setBusy(true);
-          const err = await onInterpret();
-          setProblem(err);
-          setStarted(err === null);
-          setBusy(false);
+          try {
+            const err = await onInterpret();
+            setProblem(err);
+            setStarted(err === null);
+          } catch {
+            setProblem("Couldn't reach the server. Read the script below to the operator instead.");
+          } finally {
+            setBusy(false);
+          }
         }}
       >
         {busy ? 'Starting…' : 'Speak to 1930 for me'}
@@ -689,7 +704,7 @@ function Interpreter({ data, onInterpret }: { data: ComplaintView; onInterpret?:
   );
 }
 
-function PackItem({ n, title, text, open = false }: { n: number; title: string; text: string; open?: boolean }) {
+function PackItem({ n, title, text, open = false, lang }: { n: number; title: string; text: string; open?: boolean; lang?: string }) {
   const [copied, setCopied] = useState(false);
   return (
     <div className="pk-row">
@@ -699,7 +714,7 @@ function PackItem({ n, title, text, open = false }: { n: number; title: string; 
           <strong>{title}</strong>
           <span className="pk-show" aria-hidden="true" />
         </summary>
-        <pre className="up-pre">{text}</pre>
+        <pre className="up-pre" lang={lang}>{text}</pre>
       </details>
       <button
         type="button"
@@ -720,16 +735,24 @@ function PackItem({ n, title, text, open = false }: { n: number; title: string; 
 export function ComplaintCard({ session, cap, uid, onInterpreterStart }: { session: string; cap: string; uid?: string | number; onInterpreterStart?: () => void }) {
   const [data, setData] = useState<ComplaintView | null>(null);
   useEffect(() => {
+    // one request at a time, the next a second after the last reply: an older reply can never land
+    // after a newer one (slow mobile data)
     let live = true;
+    let timer: ReturnType<typeof setTimeout> | undefined;
     const tick = async () => {
-      const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`);
-      if (live && r.ok) setData(await r.json());
+      try {
+        const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`);
+        if (live && r.ok) setData(await r.json());
+      } catch {
+        // offline for a moment: the next poll tries again
+      } finally {
+        if (live) timer = setTimeout(tick, 1000);
+      }
     };
     tick();
-    const t = setInterval(tick, 1000);
     return () => {
       live = false;
-      clearInterval(t);
+      if (timer) clearTimeout(timer);
     };
   }, [session, cap]);
   const [shotState, setShotState] = useState<string | null>(null);
@@ -737,9 +760,13 @@ export function ComplaintCard({ session, cap, uid, onInterpreterStart }: { sessi
     setShotState('Reading the screenshot…');
     const fd = new FormData();
     fd.append('file', file);
-    const r = await fetch(`/api/call/screenshot?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, { method: 'POST', body: fd });
-    const j = await r.json().catch(() => ({}));
-    setShotState(r.ok ? null : `Couldn't read it: ${j.error ?? r.status}`);
+    try {
+      const r = await fetch(`/api/call/screenshot?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, { method: 'POST', body: fd });
+      const j = await r.json().catch(() => ({}));
+      setShotState(r.ok ? null : `Couldn't read it: ${j.error ?? r.status}`);
+    } catch {
+      setShotState("Couldn't send the screenshot. Check your connection and try again.");
+    }
   }
   return (
     <>
@@ -760,11 +787,17 @@ export function ComplaintCard({ session, cap, uid, onInterpreterStart }: { sessi
           return j.error ?? 'Could not start the interpreter. Read the script below to the operator instead.';
         }}
         onEmail={async (email) => {
-          await fetch(`/api/call/email?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, {
-            method: 'POST',
-            headers: { 'content-type': 'application/json' },
-            body: JSON.stringify({ email, send: true }),
-          });
+          try {
+            const r = await fetch(`/api/call/email?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(cap)}`, {
+              method: 'POST',
+              headers: { 'content-type': 'application/json' },
+              body: JSON.stringify({ email, send: true }),
+            });
+            const j = await r.json().catch(() => ({}));
+            return r.ok && j.ok !== false ? null : (j.error ?? j.problem ?? `Couldn't send it (${r.status}).`);
+          } catch {
+            return "Couldn't reach the server. Check your connection and try again.";
+          }
         }}
       />
       {shotState && (

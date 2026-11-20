@@ -95,6 +95,9 @@ function isRtmSalStatusPayload(value: unknown): value is RtmSalStatusPayload {
   );
 }
 
+// uids given to listen-only links (lib/handlers/listen.ts)
+const listenOnly = (uid: string | number) => Number(uid) >= 90000 && Number(uid) < 100000;
+
 export default function ConversationComponent({
   agoraData,
   rtmClient,
@@ -112,6 +115,15 @@ export default function ConversationComponent({
   const [watch] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('watch') === '1');
   const watchPlayed = useRef(false);
   const remoteUsers = useRemoteUsers();
+  // A browser that blocks sound until a tap (iOS Safari) gets a button instead of silence.
+  const [autoplayBlocked, setAutoplayBlocked] = useState(false);
+  useEffect(() => {
+    import('agora-rtc-react')
+      .then(({ default: AgoraRTC }) => {
+        AgoraRTC.onAutoplayFailed = () => setAutoplayBlocked(true);
+      })
+      .catch((e) => console.error('[audio] could not watch for blocked autoplay:', e));
+  }, []);
   const [isEnabled, setIsEnabled] = useState(true);
   const [isAgentConnected, setIsAgentConnected] = useState(false);
   const [isConnectionDetailsOpen, setIsConnectionDetailsOpen] = useState(false);
@@ -547,11 +559,26 @@ export default function ConversationComponent({
           aria-label="AI agent status visualization"
         >
           <AgentVisualizer state={visualizerState} size="md" />
-          {remoteUsers.map((user) => (
+          {/* listen-only family and operator links (uids 90000-99999) are never played: Agora would
+              let a subscriber token publish unless co-host authentication is on (security pass, 20 Nov) */}
+          {remoteUsers.filter((user) => !listenOnly(user.uid)).map((user) => (
             <div key={user.uid} className="hidden" data-remote-uid={String(user.uid)}>
               <RemoteUser user={user} />
             </div>
           ))}
+          {autoplayBlocked && (
+            <button
+              type="button"
+              className="up-btn absolute bottom-3 left-1/2 -translate-x-1/2"
+              data-testid="tap-to-hear"
+              onClick={() => {
+                setAutoplayBlocked(false);
+                remoteUsers.filter((u) => !listenOnly(u.uid)).forEach((u) => u.audioTrack?.play());
+              }}
+            >
+              Tap to hear the agent
+            </button>
+          )}
         </div>
       }
       controls={

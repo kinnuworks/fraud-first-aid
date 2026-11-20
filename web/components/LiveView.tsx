@@ -25,17 +25,26 @@ function useLive(session: string, key: string) {
   const [gone, setGone] = useState(false);
   useEffect(() => {
     let live = true;
+    // one refused poll can be a server instance that hasn't loaded the call yet: only five in a row
+    // mean the call has ended or the link is wrong, and then polling stops
+    let misses = 0;
+    let t: ReturnType<typeof setInterval> | undefined;
     const tick = async () => {
-      const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(key)}`);
-      if (!live) return;
-      if (r.ok) setData(await r.json());
-      else if (r.status === 403 || r.status === 404) setGone(true);
+      const r = await fetch(`/api/call/complaint?session=${encodeURIComponent(session)}&cap=${encodeURIComponent(key)}`).catch(() => null);
+      if (!live || !r) return;
+      if (r.ok) {
+        misses = 0;
+        setData(await r.json());
+      } else if ([400, 403, 404].includes(r.status) && ++misses >= 5) {
+        setGone(true);
+        if (t) clearInterval(t);
+      }
     };
     tick();
-    const t = setInterval(tick, 1000);
+    t = setInterval(tick, 1000);
     return () => {
       live = false;
-      clearInterval(t);
+      if (t) clearInterval(t);
     };
   }, [session, key]);
   return { data, gone };
