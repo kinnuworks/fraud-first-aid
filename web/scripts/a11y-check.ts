@@ -3,7 +3,7 @@
 import { chromium } from 'playwright';
 
 const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
-const PAGES = ['/', '/?state=complaint-done', '/?state=complaint-mismatch', '/?state=guard-flagged', '/watch?as=operator'];
+const PAGES = ['/', '/?state=complaint-done', '/?state=complaint-mismatch', '/?state=guard-flagged', '/?state=complaint-interpret', '/proof', '/watch?as=operator'];
 
 (async () => {
   const browser = await chromium.launch();
