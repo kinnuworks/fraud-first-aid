@@ -119,6 +119,8 @@ const play = async (page: Page, clip: string) => {
   const gaveUtr = utr.length === 12 && (flat(afterUtr).replace(/ /g, '').includes(utr) || flat(afterUtr).includes(spokenUtr));
   const relayedName = /lakshmi|laxmi/i.test(all);
   const ack = st.ack1930;
+  const steps: Array<{ text: string }> = st.actions ?? [];
+  log(`screenshot cut-in spoken (Agora speak): ${steps.some((a) => /Agora speak/.test(a.text))}`);
   log(`phase ${st.phase}; UTR ${utr}; gave UTR to operator: ${gaveUtr}; relayed the name: ${relayedName}; ack: ${ack}`);
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});
   await ctx.close();

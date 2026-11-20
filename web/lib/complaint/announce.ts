@@ -2,7 +2,7 @@
 // from the Send button), are said aloud at once through Agora's speak API, in the caller's language.
 // A screenshot that disagrees interrupts the agent (priority INTERRUPT); a confirmation waits for it
 // to finish (APPEND).
-import { AgoraClient, Area } from 'agora-agents';
+import { AgoraClient, Area, generateConvoAIToken } from 'agora-agents';
 import type { ReadbackLang } from '../entities/numbers';
 import type { Complaint } from './session';
 
@@ -88,7 +88,13 @@ export async function announce(c: Complaint, text: string, interrupt: boolean): 
   if (!c.agentId || !appId || !appCertificate || c.phase !== 'complaint') return false;
   try {
     const client = new AgoraClient({ area: Area.US, appId, appCertificate });
-    await client.agents.speak({ appid: appId, agentId: c.agentId, text, priority: interrupt ? 'INTERRUPT' : 'APPEND', interruptable: true });
+    // The low-level REST call needs the same token header the SDK's own stopAgent() builds; without it
+    // Agora answers 401 "Invalid authentication type" (seen in production, 20 Nov).
+    const token = generateConvoAIToken({ appId, appCertificate, channelName: 'speak', uid: 0 });
+    await client.agents.speak(
+      { appid: appId, agentId: c.agentId, text, priority: interrupt ? 'INTERRUPT' : 'APPEND', interruptable: true },
+      { headers: { Authorization: `agora token=${token}` } },
+    );
     return true;
   } catch (e) {
     console.error('[announce] Agora speak failed:', e);
