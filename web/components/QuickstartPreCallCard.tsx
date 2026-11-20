@@ -4,6 +4,7 @@
 // Fraud First Aid, and the sources.
 import { type StartProps } from './HeroControls';
 import { Hero } from './Hero';
+import { Logo } from './design/Logo';
 import { ImpactBand } from './ImpactBand';
 import Image from 'next/image';
 
@@ -112,13 +113,27 @@ function Cases() {
   );
 }
 
+// The footer: the promise, the page's links, Call 1930 and the sources, on a deep green band.
 function Below() {
   return (
-    <section id="sources" className="up-wrap src" aria-label="Sources">
-      <p className="src-never">
-        Fraud First Aid never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
-        cannot recover money.
-      </p>
+    <section id="sources" className="ft" aria-label="Sources">
+      <div className="up-wrap ft-in">
+        <div>
+          <Logo />
+          <p className="src-never">
+            Fraud First Aid never asks for an OTP, PIN, password or card number. It does not file on the cybercrime portal for you and it
+            cannot recover money.
+          </p>
+          <a href="tel:1930" className="ta-btn ta-btn--sos ta-btn--nav ft-call">
+            Call 1930
+          </a>
+        </div>
+        <nav className="ft-links" aria-label="On this page">
+          <a href="#how">How it works</a>
+          <a href="#cases">Real cases</a>
+          <a href="/proof">Check it yourself</a>
+          <a href="#try">Try it on your phone</a>
+        </nav>
       <details className="src-list">
         <summary>Sources for every number on this page</summary>
         <ul>
@@ -131,6 +146,7 @@ function Below() {
           <li>Guard and number break tests: our own tests, described with their data in the README.</li>
         </ul>
       </details>
+      </div>
     </section>
   );
 }

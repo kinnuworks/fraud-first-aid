@@ -4,8 +4,7 @@ import '@/styles/design/theme.css';
 import '@/styles/design/tines.css';
 import Script from 'next/script';
 import {
-  Instrument_Sans,
-  Young_Serif,
+  Anek_Latin,
   DM_Mono,
   Anek_Telugu,
   Anek_Devanagari,
@@ -17,9 +16,9 @@ import {
   Anek_Gurmukhi,
 } from 'next/font/google';
 
-// Tines' faces, as free matches: Roobert -> Instrument Sans, Reckless -> Young Serif, Roobert Mono -> DM Mono.
-const sans = Instrument_Sans({ subsets: ['latin'], variable: '--font-face-sans', display: 'swap' });
-const serif = Young_Serif({ subsets: ['latin'], weight: '400', variable: '--font-face-serif', display: 'swap' });
+// Anek (Ek Type, Mumbai) for English and all ten Indian scripts, so Hindi and English sit together
+// evenly; DM Mono only where digits must line up (the UTR, times).
+const sans = Anek_Latin({ subsets: ['latin'], variable: '--font-face-sans', display: 'swap', axes: ['wdth'] });
 const mono = DM_Mono({ subsets: ['latin'], weight: ['400', '500'], variable: '--font-face-mono', display: 'swap' });
 // Indian scripts load only when a page uses them.
 const anekTe = Anek_Telugu({ display: 'swap', preload: false, variable: '--font-anek-te' });
@@ -46,7 +45,7 @@ export const metadata: Metadata = {
     title: "Fraud First Aid: catches the scam on the call, chases the money if it's gone",
     description: 'A voice agent in ten Indian languages, built on Agora Conversational AI and Murf Falcon.',
     url: 'https://fraudfirstaid.vercel.app',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Fraud First Aid: the headline above its product window, where a sample fake KYC call runs as a heart-monitor line that spikes red at the red flag, beside a first-aid kit, a phone and a shield' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Fraud First Aid: the headline above its product window, where a sample fake KYC call runs as a heart-monitor line that spikes red at the red flag, beside a drawing of scam-call warnings turning into a first-aid kit' }],
     type: 'website',
   },
   twitter: { card: 'summary_large_image', images: ['/og.png'] },
@@ -80,7 +79,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`h-full ${sans.variable} ${serif.variable} ${mono.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')}`}
+      className={`h-full ${sans.variable} ${mono.variable} ${[anekTe, anekHi, anekKn, anekTa, anekMl, anekBn, anekGu, anekPa].map((f) => f.variable).join(' ')}`}
       suppressHydrationWarning
     >
       <body className="h-full min-h-screen">

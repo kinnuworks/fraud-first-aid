@@ -258,8 +258,11 @@ export default function LandingPage() {
       </div>
 
       {/* Persistent attribution footer for the pre-call and in-call views. */}
-      <footer className={`up-wrap z-40 shrink-0 ${showConversation ? 'py-2' : 'py-4 pb-8'}`}>
-        <div className="flex items-center justify-end gap-2" style={{ color: 'var(--ink-3)' }}>
+      <footer className={`z-40 shrink-0 ${showConversation ? 'up-wrap py-2' : 'lp-foot'}`}>
+        <div
+          className={showConversation ? 'flex items-center justify-end gap-2' : 'up-wrap lp-foot__in'}
+          style={showConversation ? { color: 'var(--ink-3)' } : undefined}
+        >
           <span className="text-[0.8125rem] font-medium">
             Powered by
           </span>
@@ -267,7 +270,7 @@ export default function LandingPage() {
             href="https://agora.io/en/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-primary transition-colors"
+            className={showConversation ? 'hover:text-primary transition-colors' : 'lp-foot__logo'}
             aria-label="Visit Agora's website"
           >
             <Image

@@ -90,22 +90,32 @@ export function Hero(p: StartProps) {
         <h1 className="ta-h1">
           Catches the scam on the call. <span className="ta-h1__2">Chases the money if it&apos;s gone.</span>
         </h1>
-        <p className="ta-sub">
-          Open this page on another phone or laptop, put the scam call on speaker next to it, and it warns you in your language. Lost
-          money? Tell it what happened and it gets every number right for the 1930 helpline and your bank.
-        </p>
         <LangStrip />
-        <div className="ta-ctas">
-          <WatchButton {...p} className="ta-btn ta-btn--fill ta-btn--lg" />
-          <StartButton {...p} className="ta-btn ta-btn--line ta-btn--lg" />
+        {/* the two ways in, each with its own words and button (the journey's first two steps) */}
+        <div className="ta-paths">
+          <div className="ta-path ta-path--scam">
+            <p className="ta-path__k">During the scam</p>
+            <p className="ta-path__t">
+              Open this page on another phone or laptop, put the scam call on speaker next to it, and it warns you in your language.
+            </p>
+            <div className="ta-path__do">
+              <WatchButton {...p} className="ta-btn ta-btn--fill ta-btn--lg" />
+              <ListenButton {...p} link className="ta-link" />
+            </div>
+          </div>
+          <div className="ta-path ta-path--money">
+            <p className="ta-path__k">If money&apos;s gone</p>
+            <p className="ta-path__t">Tell it what happened and it gets every number right for the 1930 helpline and your bank.</p>
+            <div className="ta-path__do">
+              <StartButton {...p} className="ta-btn ta-btn--line ta-btn--lg" />
+            </div>
+          </div>
         </div>
         <div className="ta-prefs">
-          <ListenButton {...p} link className="ta-link" />
           <LanguageChips className="up-langpick ta-lang" />
           <SlowToggle />
         </div>
         {p.error && <p className="hc-error">{p.error}</p>}
-        <Tech className="ta-tech" />
         <div className="ta-stage">
           <span className="ta-bloom ta-bloom--r" aria-hidden="true" />
           <span className="ta-bloom ta-bloom--l" aria-hidden="true" />
@@ -146,6 +156,9 @@ export function Hero(p: StartProps) {
               </div>
             </div>
           </figure>
+        </div>
+        <div className="ta-after">
+          <Tech className="ta-tech" />
         </div>
       </section>
     </>

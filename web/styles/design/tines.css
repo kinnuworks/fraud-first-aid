@@ -114,7 +114,7 @@
   justify-content: center;
   gap: 10px;
   border-radius: 999px;
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -188,7 +188,7 @@
   align-items: center;
   padding: 6px 14px;
   border-right: 1px solid var(--act);
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-size: 0.8125rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -202,7 +202,7 @@
 .ta-h1 {
   max-width: 1040px;
   margin: 20px auto 0;
-  font-family: var(--font-face-sans), system-ui, sans-serif;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: clamp(2.5rem, 1.25rem + 3.5vw, 4rem);
   line-height: 1.05;
@@ -216,7 +216,7 @@
 .ta-sub {
   max-width: 980px;
   margin: 18px auto 0;
-  font-family: var(--font-face-serif), Georgia, serif;
+  font-family: var(--font-ui);
   font-size: 1.125rem;
   line-height: 1.5;
   color: var(--ink-2);
@@ -278,13 +278,13 @@
   background: var(--act);
 }
 .ta-prefs .up-label {
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   color: var(--ink);
 }
 .ta-stage {
   position: relative;
   max-width: 1360px;
-  margin: 76px auto 0;
+  margin: 96px auto 0;
   padding-bottom: 72px;
 }
 .jr {
@@ -302,10 +302,10 @@
   background: url('/design/aid.webp') no-repeat center bottom / contain;
 }
 .ta-bloom--r {
-  right: -100px;
-  top: -176px;
-  width: 560px;
-  height: 241px;
+  right: -150px;
+  top: -180px;
+  width: 600px;
+  height: 200px;
 }
 .ta-bloom--l {
   left: -64px;
@@ -321,7 +321,7 @@
   padding: 10px;
   border-radius: 26px;
   background: var(--panel-2);
-  border: 1px solid rgb(115 74 206 / 0.18);
+  border: 1px solid rgb(11 122 75 / 0.2);
   text-align: left;
 }
 .ta-win__bar {
@@ -394,7 +394,7 @@
   border-radius: 999px;
   background: var(--bad);
   color: #fff;
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -412,7 +412,7 @@
   background: var(--bad);
 }
 .ta-win__time {
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-size: 0.875rem;
   color: var(--ink);
 }
@@ -513,7 +513,7 @@
   color: var(--ink);
 }
 .ta-win .rc-bubble__who {
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-size: 0.8125rem;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -546,7 +546,7 @@
   padding: 8px 16px;
   border-radius: 999px;
   background: var(--bad);
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-weight: 500;
   font-size: 0.875rem;
   letter-spacing: 0.06em;
@@ -629,13 +629,13 @@
    labels and buttons in mono caps; the first-aid and UPI-safety pile sits along the bottom of the
    call panel. */
 .cs-side {
-  --foreground: 257 40% 30%;
-  --muted-foreground: 257 25% 42%;
-  --border: 257 60% 88%;
-  --primary: 257 59% 55%;
-  --viz-stop-1: 257 59% 55%;
-  --viz-stop-2: 330 70% 66%;
-  --viz-stop-3: 22 85% 52%;
+  --foreground: 0 0% 100%;
+  --muted-foreground: 146 30% 82%;
+  --border: 150 40% 28%;
+  --primary: 146 60% 62%;
+  --viz-stop-1: 146 65% 55%;
+  --viz-stop-2: 160 45% 80%;
+  --viz-stop-3: 0 0% 100%;
   position: relative;
   padding-bottom: 96px;
 }
@@ -661,7 +661,7 @@
 .cd-k,
 .as-live,
 .up-alarm__kicker {
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-weight: 500;
   letter-spacing: 0.08em;
 }
@@ -677,7 +677,7 @@
   gap: 10px;
   border-radius: 26px;
   background: var(--panel-2);
-  border: 1px solid rgb(115 74 206 / 0.18);
+  border: 1px solid rgb(11 122 75 / 0.2);
 }
 .cs-left,
 .cs-main,
@@ -686,7 +686,7 @@
 }
 .up-btn {
   border-radius: 999px;
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-weight: 500;
   text-transform: uppercase;
   letter-spacing: 0.06em;
@@ -747,7 +747,7 @@
 }
 .jr > .up-label,
 .im-title {
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   color: var(--ink);
 }
 /* each step's colour says what it is about: red the scam, amber the hour after the loss, purple
@@ -780,7 +780,7 @@
   margin-top: 20px;
   padding-top: 14px;
   border-top: 1px solid var(--c);
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   font-weight: 500;
   letter-spacing: 0.06em;
   color: var(--c);
@@ -804,7 +804,7 @@
   color: var(--ok);
 }
 .cs2-text {
-  font-family: var(--font-face-serif), Georgia, serif;
+  font-family: var(--font-ui);
   font-size: 1.25rem;
   line-height: 1.45;
   color: var(--ink);
@@ -847,14 +847,14 @@
   width: min(100% - 96px, 1200px);
 }
 .im-stat + .im-stat {
-  border-color: rgb(113 75 208 / 0.25);
+  border-color: rgb(11 122 75 / 0.22);
 }
 .im-num {
   font-weight: 400;
   color: var(--ink);
 }
 .im-label {
-  font-family: var(--font-face-serif), Georgia, serif;
+  font-family: var(--font-ui);
   font-weight: 400;
   font-size: 1.25rem;
 }
@@ -867,7 +867,7 @@
 .cmp::before {
   content: '1930' / '';
   display: block;
-  font-family: var(--font-face-sans), system-ui, sans-serif;
+  font-family: var(--font-ui);
   font-weight: 700;
   font-size: clamp(7rem, 3rem + 18vw, 17rem);
   line-height: 0.85;
@@ -881,7 +881,7 @@
 .cmp .up-h2 {
   max-width: 24ch;
   margin: 28px auto 0;
-  font-family: var(--font-face-serif), Georgia, serif;
+  font-family: var(--font-ui);
   font-weight: 400;
   color: var(--ink);
 }
@@ -903,7 +903,7 @@
   color: var(--ink);
 }
 .cmp-col .up-label {
-  font-family: var(--font-face-mono), ui-monospace, monospace;
+  font-family: var(--font-ui);
   color: var(--bad-ink);
 }
 .cmp-proof {
@@ -1256,8 +1256,8 @@ html[data-motion='reduce'] .ta-win__mark {
     padding-bottom: 0;
   }
   .ta-langs {
-    order: 6;
-    margin-top: 28px;
+    order: 3;
+    margin-top: 18px;
   }
   .ta-prefs {
     order: 7;
@@ -1302,5 +1302,355 @@ html[data-motion='reduce'] .ta-win__mark {
 @media (max-width: 860px) {
   .cs-main {
     order: -1;
+  }
+}
+
+
+/* Hero, owner's ask (20 Nov ~22:35): less text, easier to follow. The lead becomes the two ways in,
+   side by side, each with its own words and button: red for during the scam, amber for after the
+   loss (the journey's colours). The languages and the tech line move under the product. */
+.ta-paths {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+  max-width: 1040px;
+  margin: 28px auto 0;
+  text-align: left;
+}
+.ta-path {
+  --c: var(--bad);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 20px 22px 22px;
+  border: 1px solid var(--c);
+  border-radius: 16px;
+  background: var(--paper);
+}
+.ta-path--money {
+  --c: var(--warn);
+}
+.ta-path__k {
+  font-family: var(--font-ui);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--c);
+}
+.ta-path--scam .ta-path__k {
+  color: var(--bad-ink);
+}
+.ta-path__t {
+  font-family: var(--font-ui);
+  font-size: 1.125rem;
+  line-height: 1.5;
+  color: var(--ink-2);
+}
+.ta-path__do {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 16px;
+  margin-top: auto;
+  padding-top: 6px;
+}
+.ta-path__do .ta-link {
+  text-align: left;
+  font-size: 0.9375rem;
+}
+.ta-prefs {
+  margin-top: 16px;
+}
+.ta-after {
+  max-width: 1360px;
+  margin: 8px auto 0;
+  padding: 0 16px 8px;
+  text-align: center;
+}
+.ta-after .ta-tech {
+  margin-top: 10px;
+}
+@media (max-width: 760px) {
+  .ta-paths {
+    order: 4;
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 18px;
+  }
+  .ta-path {
+    padding: 16px;
+  }
+  .ta-path__t {
+    font-size: 1rem;
+  }
+  .ta-path__do .ta-btn--lg {
+    width: 100%;
+    padding: 0 16px;
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+  }
+  .ta-prefs {
+    order: 5;
+  }
+  .ta-stage {
+    order: 6;
+  }
+  .ta-after {
+    order: 7;
+  }
+}
+
+/* Inside, first-aid theme (owner: "inside too"). The guard listening is a heart monitor: a green
+   trace runs across a dark screen while it listens, and stops for nothing. */
+.gd-radar {
+  width: 148px;
+  height: 80px;
+  border-radius: 14px;
+  background: var(--navy);
+  overflow: hidden;
+  box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.08);
+}
+.gd-radar span,
+.gd-radar i {
+  display: none;
+}
+.gd-radar::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='148' height='80' viewBox='0 0 148 80'%3E%3Cpath d='M0 44H40l6-8 6 16 8-34 8 44 6-18H148' fill='none' stroke='%2353e39a' stroke-width='2.5' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E") repeat-x 0 0 / 148px 80px;
+  animation: gd-trace 1.6s linear infinite;
+}
+.gd-radar::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, var(--navy) 0%, transparent 30%, transparent 70%, var(--navy) 100%);
+}
+@keyframes gd-trace {
+  to {
+    background-position: -148px 0;
+  }
+}
+
+/* The pack is the first-aid kit: its card carries the white plus on green, like the first-aid sign. */
+[data-testid='pack'] {
+  position: relative;
+  border-top: 6px solid var(--act);
+}
+[data-testid='pack']::before {
+  content: '';
+  position: absolute;
+  top: 22px;
+  right: 24px;
+  width: 44px;
+  height: 44px;
+  border-radius: 12px;
+  background: var(--act) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 18 18' fill='white'%3E%3Crect x='6.5' y='1.5' width='5' height='15' rx='1.2'/%3E%3Crect x='1.5' y='6.5' width='15' height='5' rx='1.2'/%3E%3C/svg%3E") no-repeat center / 24px 24px;
+}
+[data-testid='pack'] .pk-hero {
+  padding-right: 56px;
+}
+@media (prefers-reduced-motion: reduce) {
+  .gd-radar::before {
+    animation: none;
+  }
+}
+html[data-motion='reduce'] .gd-radar::before {
+  animation: none;
+}
+
+
+/* Type, owner's ask ("font better too please"): Anek for everything, buttons in sentence case, labels
+   as small bold capitals in the same face; the mono stays only for digits (the UTR, times). */
+.ta-btn,
+.up-btn {
+  font-family: var(--font-ui);
+  text-transform: none;
+  letter-spacing: 0;
+  font-weight: 600;
+}
+.ta-btn--lg {
+  font-size: 1.0625rem;
+}
+.ta-btn--nav {
+  font-size: 1rem;
+}
+.ta-h1 {
+  font-weight: 600;
+  letter-spacing: -0.025em;
+  line-height: 1;
+}
+.ta-path__t {
+  font-size: 1.1875rem;
+  line-height: 1.45;
+}
+.ta-pill__k,
+.ta-path__k,
+.ta-win__mark,
+.up-label,
+.cd-k,
+.as-live,
+.up-alarm__kicker,
+.jr-k,
+.ta-win .rc-warn,
+.ta-win .rc-bubble__who,
+.cs-tabs a {
+  font-weight: 600;
+  letter-spacing: 0.06em;
+}
+.ta-win__time,
+.up-utr__g,
+.cd-utr,
+.as-at,
+.tr-time {
+  font-family: var(--font-num);
+}
+@media (max-width: 760px) {
+  .ta-path__do .ta-btn--lg {
+    font-size: 1rem;
+    letter-spacing: 0;
+  }
+}
+
+
+/* Inside contrast (owner: "the 3 columns, add a bit of contrast color so easier to view"): the call
+   panel is deep green with white text; the complaint and transcript columns are white with a firm
+   green edge; the frame stays light green. */
+.cs-grid {
+  background: var(--panel-2);
+}
+.cs-side .up-label,
+.cs-side .ta-side__k {
+  color: var(--side-ink-2);
+}
+.cs-main > .cd-card,
+.cs-main > section > .cd-card,
+.up-transcript {
+  border-color: var(--card-edge);
+}
+.cs-tabs a[aria-current] {
+  background: var(--navy);
+  color: var(--on-navy);
+}
+
+/* Footer (owner: "easily prettier footer too"): a deep green band with the first-aid art peeking
+   over its edge; the promise, the page's links, Call 1930, the sources, and who powers it. */
+.ft {
+  position: relative;
+  margin-top: 150px;
+  padding: 64px 0 36px;
+  background: var(--navy);
+  color: var(--on-navy);
+}
+.ft::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: -118px;
+  height: 128px;
+  background: url('/design/aid.webp') repeat-x center bottom / auto 128px;
+  pointer-events: none;
+}
+.ft-in {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(0, 1fr);
+  gap: 32px 56px;
+  align-items: start;
+}
+.ft .up-logo {
+  color: var(--on-navy);
+}
+.ft .up-logo__mark {
+  background: var(--act);
+  color: #ffffff;
+  box-shadow: 0 0 0 2px rgb(255 255 255 / 0.3);
+}
+.ft .up-logo__tag {
+  color: var(--on-navy-2);
+}
+.ft .src-never {
+  margin-top: 18px;
+  max-width: 40rem;
+  font-size: 1.1875rem;
+  line-height: 1.5;
+  color: var(--on-navy);
+}
+.ft-call {
+  margin-top: 20px;
+}
+.ft-links {
+  display: grid;
+  gap: 10px;
+  font-size: 1.0625rem;
+  font-weight: 500;
+}
+.ft-links a {
+  color: var(--on-navy);
+  text-decoration: underline;
+  text-decoration-color: rgb(255 255 255 / 0.35);
+  text-underline-offset: 4px;
+}
+.ft-links a:hover {
+  text-decoration-color: currentColor;
+}
+.ft .src-list {
+  grid-column: 1 / -1;
+  margin-top: 4px;
+  padding-top: 20px;
+  border-top: 1px solid rgb(255 255 255 / 0.16);
+  color: var(--on-navy-2);
+}
+.ft .src-list summary {
+  color: var(--on-navy);
+}
+.lp-foot {
+  background: var(--navy);
+  color: var(--on-navy-2);
+}
+.lp-foot .lp-foot__in {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 10px;
+  padding: 0 0 28px;
+}
+.lp-foot .lp-foot__logo {
+  display: inline-flex;
+  padding: 6px 10px;
+  border-radius: 10px;
+  background: #ffffff;
+}
+@media (max-width: 760px) {
+  .ft {
+    margin-top: 110px;
+    padding-top: 48px;
+  }
+  .ft::before {
+    top: -82px;
+    height: 90px;
+    background-size: auto 90px;
+  }
+  .ft-in {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* one burst of art per screen: the hero keeps the right-hand pile, the lower-left one goes (it sat on
+   the tech line under the window) */
+.ta-bloom--l {
+  display: none;
+}
+
+@media (max-width: 760px) {
+  .ta-bloom--r {
+    width: 330px;
+    height: 110px;
+    top: -100px;
+    right: -70px;
   }
 }

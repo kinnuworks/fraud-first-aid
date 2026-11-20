@@ -4,66 +4,67 @@
 
 :root {
   color-scheme: light;
-  /* page and surfaces: a white page; lilac panels from Tines' product window */
+  /* page and surfaces: a white page; pale mint panels (the first-aid green, softened) */
   --paper: #ffffff;
-  --panel: #f5f2fd;
-  --panel-2: #ece7fb;
+  --panel: #f1f8f4;
+  --panel-2: #e3f2ea;
   --sheet: #ffffff;
-  --sheet-2: #f8f6fd;
-  /* text in deep ink (Tines sets text in its mid purple; too light from a projector) */
-  --ink: #221a3d;
-  --ink-2: #352c55;
-  --ink-3: #5c5578;
-  --ink-display: #33247a;
-  --rule: #e7e2f5;
-  --rule-pill: #cdc2f0;
-  --rule-strong: #8b7fc0;
+  --sheet-2: #f6fbf8;
+  /* text in deep ink with a green cast, so it reads from a projector */
+  --ink: #12211a;
+  --ink-2: #2a3a33;
+  --ink-3: #4f6159;
+  --ink-display: #0d3b29;
+  --rule: #dcebe3;
+  --rule-pill: #b6d6c5;
+  --rule-strong: #6e9884;
   /* strong panels: the active tab, result cards, the product's own dark buttons */
-  --navy: #33247a;
-  --navy-2: #4a37a3;
+  --navy: #0d3b29;
+  --navy-2: #175a3f;
   --on-navy: #ffffff;
-  --on-navy-2: #ddd5fb;
-  /* purple means Fraud First Aid acting: buttons, links, the brand */
-  --act: #714bd0;
-  --act-hover: #5d39bd;
+  --on-navy-2: #cfe9db;
+  /* first-aid green means Fraud First Aid acting: buttons, links, the brand (the first-aid sign is
+     a white plus on green) */
+  --act: #0b7a4b;
+  --act-hover: #08603b;
   --on-act: #ffffff;
-  --link: #5d39bd;
-  --blue: #5d39bd;
-  --blue-bg: #f1edfd;
-  --focus: #714bd0;
-  /* colours that mean something: red the scam, green confirmed, amber checking and deadlines */
+  --link: #08603b;
+  --blue: #08603b;
+  --blue-bg: #eaf6ef;
+  --focus: #0b7a4b;
+  /* colours that mean something: red the scam, green confirmed and help, amber checking and deadlines */
   --marker: #c8261b;
   --bad: #c8261b;
   --bad-ink: #a3241b;
   --bad-bg: #fde9e7;
   --on-bad: #ffffff;
-  --ok: #0e7a44;
+  --ok: #0b7a4b;
   --ok-ui: #17a35b;
   --ok-bg: #e4f6ec;
-  --ok-act: #0e7a44;
+  --ok-act: #0b7a4b;
   --on-ok-act: #ffffff;
   --warn: #9a5200;
   --warn-ui: #e49307;
   --warn-bg: #fff2d9;
   --pending-ink: #a35a00;
   --app-bg: #ffffff;
-  /* the call panel (left column of the call screen): Tines' light lilac sidebar */
-  --side-bg: #f5f2fd;
-  --side-ink: #221a3d;
-  --side-ink-2: #5c5578;
-  --side-pane: #ffffff;
-  --side-line: #e3dcf7;
-  --side-dim: #352c55;
-  --side-edge: #8b7fc0;
-  --side-mark-bg: #714bd0;
-  --side-mark-ink: #ffffff;
-  /* panels of the call screen: corners and the hairline edge */
+  /* the call panel (left column of the call screen): deep green, so the three columns read apart */
+  --side-bg: #0d3b29;
+  --side-ink: #ffffff;
+  --side-ink-2: #cfe9db;
+  --side-pane: #175a3f;
+  --side-line: rgb(255 255 255 / 0.14);
+  --side-dim: rgb(255 255 255 / 0.88);
+  --side-edge: rgb(255 255 255 / 0.6);
+  --side-mark-bg: #ffffff;
+  --side-mark-ink: #0d3b29;
+  /* panels of the call screen: corners and a firm edge */
   --r-panel: 16px;
-  --card-edge: #e3dcf7;
+  --card-edge: #bfdccc;
 
   --font-display: var(--font-face-sans), system-ui, sans-serif;
   --font-ui: var(--font-face-sans), system-ui, sans-serif;
-  --font-serif: var(--font-face-serif), Georgia, serif;
+  --font-serif: var(--font-face-sans), system-ui, sans-serif;
   --font-num: var(--font-face-mono), ui-monospace, monospace;
   --font-scripts: var(--font-anek-te), var(--font-anek-hi), var(--font-anek-kn), var(--font-anek-ta), var(--font-anek-ml),
     var(--font-anek-bn), var(--font-anek-gu), var(--font-anek-pa);
@@ -81,27 +82,27 @@
 
   /* shadcn and agent-uikit tokens (HSL triplets) */
   --background: 0 0% 100%;
-  --foreground: 253 40% 17%;
+  --foreground: 151 29% 10%;
   --card: 0 0% 100%;
-  --card-foreground: 253 40% 17%;
+  --card-foreground: 151 29% 10%;
   --popover: 0 0% 100%;
-  --popover-foreground: 253 40% 17%;
-  --muted: 254 75% 97%;
-  --muted-foreground: 252 15% 40%;
-  --secondary: 254 75% 97%;
-  --secondary-foreground: 253 40% 17%;
-  --accent: 254 75% 97%;
-  --accent-foreground: 253 40% 17%;
-  --border: 254 55% 92%;
-  --input: 254 55% 92%;
-  --primary: 257 59% 55%;
+  --popover-foreground: 151 29% 10%;
+  --muted: 146 38% 96%;
+  --muted-foreground: 152 10% 34%;
+  --secondary: 146 38% 96%;
+  --secondary-foreground: 151 29% 10%;
+  --accent: 146 38% 96%;
+  --accent-foreground: 151 29% 10%;
+  --border: 148 30% 89%;
+  --input: 148 30% 89%;
+  --primary: 155 83% 26%;
   --primary-foreground: 0 0% 100%;
-  --ring: 257 59% 55%;
+  --ring: 155 83% 26%;
   --destructive: 4 76% 45%;
   --destructive-foreground: 0 0% 100%;
-  --viz-stop-1: 257 59% 55%;
-  --viz-stop-2: 254 70% 82%;
-  --viz-stop-3: 330 70% 62%;
+  --viz-stop-1: 155 83% 26%;
+  --viz-stop-2: 146 45% 72%;
+  --viz-stop-3: 170 60% 40%;
 }
 
 /* ---------- base ---------- */
