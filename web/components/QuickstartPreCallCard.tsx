@@ -45,7 +45,7 @@ const JOURNEY: Array<[string, string, string]> = [
   [
     'During the scam',
     'It hears the call and tells you to hang up.',
-    'Warned in 133 of 200 public scam calls it never saw (ICFD-31k back-test; keyword rules: 5). It knows a UPI ID from an earlier complaint.',
+    'Warned on 198 of 200 scam calls in eight Indian languages, and on none of 200 normal ones (INDICA back-test). It knows a UPI ID from an earlier complaint.',
   ],
   [
     "If money's gone",
