@@ -7,7 +7,8 @@ import { isUtr, isMobile } from './fields';
 import { act, REQUIRED, recordNumber, recordDigits, recordUpi, recordText, confirmField, deadlines, type Complaint, type FieldName, redactCodes } from './session';
 import { istToday } from './today';
 import { isLoss, isFraudLoss } from './redflags';
-import { parseAmount } from './fields';
+import { parseAmount, spokenUpiId, UPI_HANDLE } from './fields';
+import { SILENCE_PROMPT } from '../filler';
 import { scriptLang } from '../entities/script';
 
 type Lang = 'te' | 'hi' | 'kn' | 'en';
@@ -57,9 +58,29 @@ const BANKS: Array<[string, RegExp]> = [
 const matchBank = (t: string) => BANKS.find(([, re]) => re.test(t))?.[0] ?? null;
 // "ramesh at okaxis" / "ramesh@okaxis" anywhere in a code-mixed sentence
 const UPI_IN_TEXT = /([a-z0-9][a-z0-9._-]{1,})\s*(?:@|\bat the rate(?: of)?\b|\bat\b)\s*([a-z][a-z0-9]{1,})/i;
+// A UPI ID in what they said: an explicit @ or "at the rate", or "at" followed by a real UPI handle
+// ("at okaxis", not "at around 3 pm"). The whole utterance goes to the parser, so "ramesh dot kumar"
+// stays whole.
+function upiInTurn(t: string): string | null {
+  const m = t.match(UPI_IN_TEXT);
+  if (!m) return null;
+  const explicit = /@|at the rate/i.test(t);
+  if (!explicit && !UPI_HANDLE.test(m[2])) return null;
+  const from = t.slice(0, (m.index ?? 0) + m[0].length);
+  return spokenUpiId(from.replace(/^.*?\b(?:is|was|to|ko|ki|ku|కి|కు|को|ಗೆ)\b\s*/i, '')) ?? spokenUpiId(`${m[1]} at ${m[2]}`);
+}
+// Dictation is mostly number words or numerals ("four zero two one", "UTR 4021"); a story with a
+// number in it ("someone took 5000 from my account") is not.
+function mostlyDigits(t: string): boolean {
+  const words = t.split(/[\s,.;:!?।-]+/).filter(Boolean);
+  if (!words.length) return false;
+  const numeric = words.filter((w) => spokenToDigits(w) !== '').length;
+  return numeric / words.length >= 0.5;
+}
 // Amounts and money words: digits here are not a UTR being dictated.
 const NOT_DICTATION = /thousand|hundred|lakh|crore|rupee|\brs\b|₹|हज़ार|हजार|सौ|लाख|रुपय|रुपए|వేల|వేలు|వంద|లక్ష|రూపాయ|ಸಾವಿರ|ನೂರು|ಲಕ್ಷ|ರೂಪಾಯ/i;
-export const YES = /^(yes|yeah|yep|correct|right|that'?s right|ha+n?|haan ji|ji haan|sahi|sahi hai|हाँ|हां|जी|सही|ठीक|అవును|ఔను|సరే|సరిగ్గా|కరెక్ట్|ಹೌದು|ಸರಿ)/i;
+// A yes is a whole word ("yesterday", "hang on" and "Harish" are not), in any of the four languages.
+export const YES = /^(yes|yeah|yep|correct|right|that'?s right|haa?n|haan ji|ji haan|sahi|sahi hai|हाँ|हां|जी|सही|ठीक|అవును|ఔను|సరే|సరిగ్గా|కరెక్ట్|ಹೌದು|ಸರಿ)(?=$|[\s,.!?।])/i;
 export const NO = /\b(no|not|wrong|nahi)\b|नहीं|गलत|ग़लत|లేదు|కాదు|తప్పు|ಇಲ್ಲ|ತಪ್ಪು/i;
 
 function say(c: Complaint, f: FieldName, lang: Lang): string {
@@ -114,6 +135,8 @@ export function guardHandover(c: Complaint, lastUser: string): string | null {
     c.fields.amount = { value: amt, confirmed: false };
     act(c, 'heard', `Heard the amount: Rs ${amt.toLocaleString('en-IN')}`);
   }
+  // the guard keeps listening for red flags for the rest of this call (the scammer may still be on it)
+  c.startedOnGuard = true;
   if (!FAST.includes(c.lang as Lang)) return null;
   const lang = c.lang as Lang;
   c.pending = undefined;
@@ -124,6 +147,8 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
   if (c.phase !== 'complaint' || !FAST.includes(c.lang as Lang)) return null;
   const lang = c.lang as Lang;
   const t = lastUser.trim().replace(/^[\s,.!।]+/, '');
+  // Agora's silence reminder is an instruction for the model, not the caller's words.
+  if (t.includes(SILENCE_PROMPT.slice(0, 40))) return null;
   // A clean yes to what was just read back.
   if (c.pending && YES.test(t) && !NO.test(t) && t.length <= 40) {
     confirmField(c, c.pending);
@@ -136,14 +161,17 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
     return SHORT[lang](have.length, readbackText(have, c.lang as ReadbackLang));
   }
   // The payee, when it is the next thing we need: a UPI ID or a 10-digit mobile.
+  // (out of order too: a caller often names who they paid early; a real UPI handle or a mobile only)
   if (!c.fields.payee && c.fields.utr?.confirmed) {
-    const m = t.match(UPI_IN_TEXT);
-    if (m && recordUpi(c, `${m[1]} at ${m[2]}`).ok) return say(c, 'payee', lang);
+    const id = upiInTurn(t);
+    if (id && recordUpi(c, id.replace('@', ' at ')).ok) return say(c, 'payee', lang);
     const d = spokenToDigits(t);
     if (isMobile(d) && recordDigits(c, 'payee', d).ok) return say(c, 'payee', lang);
   }
   // The caller's bank, when it is next: a major bank named in any script.
-  if (!c.fields.victim_bank && c.fields.utr?.confirmed) {
+  // (out of order too, but not while they answer the amount: "5000 from my SBI account" goes to the
+  // model, which records both)
+  if (!c.fields.victim_bank && c.fields.utr?.confirmed && !(!c.fields.amount && parseAmount(t))) {
     // a UPI handle ("okaxis", "oksbi") names the payee's app bank, not the caller's own bank
     const b = matchBank(t.replace(new RegExp(UPI_IN_TEXT.source, 'gi'), ' '));
     if (b && recordText(c, 'victim_bank', b).ok) return say(c, 'victim_bank', lang);
@@ -158,7 +186,7 @@ export function complaintShortcut(c: Complaint, lastUser: string, today = istTod
     }
     // Callers pause between groups, so turn detection can split the UTR: hold dictated digits
     // (not amounts) silently until 12 have arrived.
-    if (!c.fields.utr && d.length >= 2 && d.length < 12 && !NOT_DICTATION.test(t)) {
+    if (!c.fields.utr && d.length >= 2 && d.length < 12 && !NOT_DICTATION.test(t) && (c.digitBuffer || mostlyDigits(t))) {
       let buf = (c.digitBuffer ?? '') + d;
       if (buf.length > 12) buf = d;
       if (buf.length === 12) {

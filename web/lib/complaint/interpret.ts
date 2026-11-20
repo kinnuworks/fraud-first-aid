@@ -40,7 +40,8 @@ ${spoken}
 ` : ''}
 What to do on each turn:
 1. Ringing, hold music, a recorded menu or anything not meant for you: if a recorded menu lists options, tell the caller in ${lang} in one sentence which option is for a financial or UPI fraud complaint; otherwise answer with exactly <silent>.
-2. Your introduction to the operator and the UTR, when they ask for it, are spoken for you. If the operator asks to hear a detail again, copy its spoken form exactly.
+2. The first time a live operator speaks to you (a person, not a recorded menu or hold message), reply with only [[intro]]: your introduction and the case summary are then spoken for you, with every number exact.
+2b. Whenever the operator asks for the UTR, transaction ID or reference number, or the amount, reply with only [[utr]]: the UTR and the amount are read out for you. For any other detail in the list, copy its spoken form exactly.
 3. The operator asks for something in the details above: answer the operator directly, in English (in Hindi if the operator spoke Hindi). Read every number digit by digit in groups: the UTR in three groups of four ("four zero two one, seven seven eight eight, nine nine one zero"), a UPI ID letter by letter where it helps. Then tell the caller in one short ${lang} sentence what you told them.
 4. The operator asks for something not in the details (the caller's name, address, mobile number, account number, the last digits of a card): ask the caller in ${lang}, in one short question, and wait.
 5. The caller speaks in ${lang}: give it to the operator in English, starting with "The caller says", faithfully and briefly. If they gave a number, read it digit by digit.
@@ -90,20 +91,6 @@ export const TO_CALLER: Record<ReadbackLang, CallerLines> = {
   pa: { told: 'ਕੀ ਹੋਇਆ, ਤੁਹਾਡਾ UTR ਅਤੇ ਰਕਮ ਮੈਂ ਆਪਰੇਟਰ ਨੂੰ ਦੱਸ ਦਿੱਤੀ ਹੈ।', gaveUtr: 'ਮੈਂ ਆਪਰੇਟਰ ਨੂੰ ਤੁਹਾਡਾ UTR ਅਤੇ ਰਕਮ ਦੱਸ ਦਿੱਤੀ ਹੈ।', ack: (r) => `ਤੁਹਾਡੀ ਸ਼ਿਕਾਇਤ ਦਰਜ ਹੋ ਗਈ ਹੈ। ਐਕਨੌਲੇਜਮੈਂਟ ਨੰਬਰ ਹੈ ${r}। ਇੱਕ ਵਾਰ ਫਿਰ: ${r}। ਇਹ ਤੁਹਾਡੀ ਸਕ੍ਰੀਨ ਤੇ ਸੇਵ ਹੈ।` },
 };
 
-// The operator's lines come in English or Hindi; the caller's in their own script. A line in Latin
-// script (or Devanagari, for a caller who doesn't speak Hindi) is the operator's.
-function fromOperator(c: Complaint, text: string): boolean {
-  const letters = text.replace(/[^\p{L}]/gu, '');
-  if (!letters) return false;
-  const latin = (letters.match(/[A-Za-z]/g) ?? []).length / letters.length;
-  const deva = (letters.match(/[ऀ-ॿ]/g) ?? []).length / letters.length;
-  const keyword = /\b(1930|helpline|cyber|complaint|how can i help|transaction|utr)\b|हेल्पलाइन|साइबर|शिकायत/i.test(text);
-  if (c.lang === 'en') return keyword;
-  if (c.lang === 'hi') return latin > 0.6 || keyword;
-  return latin > 0.6 || deva > 0.6 || keyword;
-}
-const ASKS_UTR = /\butr\b|u\s?t\s?r\b|transaction (id|number|reference|ref)|reference number|यूटीआर|ट्रांजैक्शन|रेफरेंस/i;
-
 function factsOf(c: Complaint) {
   const f = c.fields;
   if (!f.utr || !f.amount || !f.when || !f.payee) return null;
@@ -116,28 +103,43 @@ function factsOf(c: Complaint) {
   };
 }
 
-// The interpreter's fixed replies: its first words to the operator, and the UTR when asked for it.
-// Everything else goes to the model, which has no numbers of its own to say (see interpretSystem).
-export function interpretShortcut(c: Complaint, lastUser: string): string | null {
+// What the interpreter says when the model marks the moment: [[intro]] when the live operator first
+// speaks, [[utr]] when they ask for the UTR or the amount. The model decides who is speaking and
+// when; code says every number.
+export function interpretLine(c: Complaint, kind: 'intro' | 'utr'): string | null {
   if (c.phase !== 'interpret' || !canInterpret(c)) return null;
-  const t = lastUser.trim();
-  if (!t || !fromOperator(c, t)) return null;
   const k = factsOf(c);
   if (!k) return null;
-  const toCaller = c.lang === 'en' ? '' : ` ${TO_CALLER[c.lang].told}`;
-  if (!c.interpIntro) {
+  const toCaller = (line: string) => (c.lang === 'en' ? '' : ` ${line}`);
+  if (kind === 'intro') {
     c.interpIntro = true;
-    return `Hello, I'm Fraud First Aid, an AI assistant helping this caller report a UPI fraud. The caller speaks ${LANG_NAME[c.lang]}, and I'll interpret. Rs ${inr(c.fields.amount!.value)} was debited on ${k.when}, paid to ${k.payee}. ${k.utr}${toCaller}`;
+    return `Hello, I'm Fraud First Aid, an AI assistant helping this caller report a UPI fraud. The caller speaks ${LANG_NAME[c.lang]}, and I'll interpret. Rs ${inr(c.fields.amount!.value)} was debited on ${k.when}, paid to ${k.payee}. ${k.utr}${toCaller(TO_CALLER[c.lang].told)}`;
   }
-  if (ASKS_UTR.test(t)) return `${k.utr} ${k.amount}${c.lang === 'en' ? '' : ` ${TO_CALLER[c.lang].gaveUtr}`}`;
-  return null;
+  return `${k.utr} ${k.amount}${toCaller(TO_CALLER[c.lang].gaveUtr)}`;
 }
 
-// The acknowledgement number, from the operator's own words when they hold one (the model's marker
-// only says that one was given), and the line that reads it back to the caller.
+// Runs of digits in what was heard ("1930" and "three one two one ..." are two runs).
+function digitRuns(text: string): string[] {
+  const runs: string[] = [];
+  let cur = '';
+  for (const w of text.split(/\s+/)) {
+    const d = spokenToDigits(w.replace(/^[^\p{L}\p{N}]+|[^\p{L}\p{N}]+$/gu, ''));
+    if (d) cur += d;
+    else if (cur) { runs.push(cur); cur = ''; }
+  }
+  if (cur) runs.push(cur);
+  return runs;
+}
+
+// The acknowledgement number: the one the model marked, when the operator's own words hold it;
+// otherwise the longest run of digits they said (6 to 30 long). Read back to the caller by code.
 export function ackLine(c: Complaint, markerDetail: string, lastUser: string): { ack: string; say: string } | null {
-  const heard = spokenToDigits(lastUser);
-  const ack = heard.length >= 6 && heard.length <= 30 ? heard : ackFrom(markerDetail);
+  const marked = ackFrom(markerDetail);
+  const runs = digitRuns(lastUser);
+  const heardAll = runs.join('');
+  const ack = marked && /^\d+$/.test(marked) && heardAll.includes(marked)
+    ? marked
+    : runs.filter((r) => r.length >= 6 && r.length <= 30).sort((a, b) => b.length - a.length)[0] ?? marked;
   if (!ack) return null;
   return { ack, say: TO_CALLER[c.lang].ack(spokenCode(ack, c.lang)) };
 }

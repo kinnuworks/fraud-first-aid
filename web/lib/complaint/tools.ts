@@ -4,7 +4,7 @@ import { tool, type ToolSet } from 'ai';
 import { z } from 'zod';
 import { getComplaint } from './store';
 import type { Complaint } from './session';
-import { act, recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
+import { act, redactNamedCodes, recordNumber, correctGroup, confirmField, recordUpi, recordAmount, recordText, missingFields, deadlines, takeFromShot, type FieldName } from './session';
 import { lookupIfsc } from './ifsc';
 import { YES, NO } from './fastpath';
 import { sendPack } from './send';
@@ -84,7 +84,8 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       inputSchema: z.object({ summary_en: z.string().max(300) }),
       execute: async ({ summary_en }) => {
         // the caller's first telling is kept; later calls refine only the English summary
-        c.story = { en: summary_en, words: c.story?.words || lastUser.slice(0, 500) };
+        // any OTP, PIN or CVV they mention is blanked before their words are kept or passed on
+        c.story = { en: redactNamedCodes(summary_en), words: c.story?.words || redactNamedCodes(lastUser).slice(0, 500) };
         act(c, 'heard', `Understood what happened: ${summary_en}`);
         return { ok: true };
       },
@@ -99,6 +100,8 @@ export function complaintTools(session: string, lastUser: string): ToolSet {
       inputSchema: z.object({}),
       // A critical action: only on the caller's own yes in this turn, never on the model's word alone.
       execute: async () => {
+        // already sent: say so again, never send twice
+        if (c.emailSent && 'id' in c.emailSent) return { ok: true, already: true, id: c.emailSent.id };
         const t = lastUser.trim().replace(/^[\s,.!।]+/, '');
         if (!YES.test(t) || NO.test(t)) {
           act(c, 'ask', 'Asked for your yes before emailing the pack');

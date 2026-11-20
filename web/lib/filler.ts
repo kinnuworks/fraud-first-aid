@@ -26,4 +26,4 @@ export function fillerWords(lang: string) {
 
 // The model words the reminder in the caller's language ("think" passes it to our route).
 export const SILENCE_PROMPT =
-  'The caller has been quiet for 20 seconds; they may be in shock. In one short, warm sentence in their language, tell them to take their time, then ask for the next missing detail.';
+  'The caller has gone quiet for a while; they may be in shock. In one short, warm sentence in their language, tell them to take their time, then ask for the next missing detail.';

@@ -9,7 +9,11 @@ type Raw = { utr?: string | null; amount?: string | number | null; payee?: strin
 
 export function normalizeShot(raw: Raw): Shot {
   const utr = (raw.utr ?? '').replace(/\D/g, '');
-  const amt = typeof raw.amount === 'number' ? raw.amount : Number(String(raw.amount ?? '').replace(/[^\d.]/g, ''));
+  // "Rs. 5,000", "Rs.5000.00", "₹25,000", "INR 1,20,000": drop the currency (and its dot) first,
+  // then read the number with its paise.
+  const amtText = String(raw.amount ?? '').trim().replace(/^(?:rs\.?|inr|₹)\s*/i, '').replace(/,/g, '');
+  const amtMatch = amtText.match(/\d+(?:\.\d+)?/);
+  const amt = typeof raw.amount === 'number' ? raw.amount : amtMatch ? Number(amtMatch[0]) : NaN;
   const payee = raw.payee?.trim().toLowerCase();
   return {
     utr: isUtr(utr) ? utr : undefined,
@@ -24,6 +28,8 @@ export type FieldCheck =
   | { status: 'mismatch'; spoken: string | number; screenshot: string | number; groups?: number[] }
   | { status: 'spoken_only'; spoken: string | number }
   | { status: 'screenshot_only'; screenshot: string | number }
+  // both are there but can't be compared fairly (a payee name against a UPI ID, the time as free text)
+  | { status: 'shown'; spoken: string | number; screenshot: string | number }
   | { status: 'missing' };
 
 export function compareWithScreenshot(c: Complaint, shot: Shot): Record<'utr' | 'amount' | 'payee' | 'when', FieldCheck> {
@@ -44,8 +50,24 @@ export function compareWithScreenshot(c: Complaint, shot: Shot): Record<'utr' | 
   return {
     utr,
     amount: one(amtS, shot.amount, amtS === shot.amount),
-    payee: one(payS, shot.payee, payS === shot.payee),
-    // Spoken time is ISO and the screenshot's is free text: shown side by side, not compared.
-    when: c.fields.when || shot.when ? one(c.fields.when?.value, shot.when, true) : { status: 'missing' },
+    payee: payee(payS, shot.payee),
+    // Spoken time is ISO and the screenshot's is free text: shown side by side, never called a match.
+    when: c.fields.when && shot.when ? { status: 'shown', spoken: c.fields.when.value, screenshot: shot.when } : one(c.fields.when?.value, shot.when, true),
   };
+}
+
+// A phone payee is the same number whatever the spacing or +91; a UPI ID is compared as an ID; a
+// name on the screenshot can't be checked against an ID, so it is shown, not judged.
+function payee(spoken: string | undefined, seen: string | undefined): FieldCheck {
+  if (spoken === undefined && seen === undefined) return { status: 'missing' };
+  if (seen === undefined) return { status: 'spoken_only', spoken: spoken! };
+  if (spoken === undefined) return { status: 'screenshot_only', screenshot: seen };
+  const d = (x: string) => x.replace(/\D/g, '').slice(-10);
+  if (/^[6-9]\d{9}$/.test(d(spoken)) && d(spoken).length === 10 && /\d{10}/.test(seen.replace(/\D/g, ''))) {
+    return d(spoken) === d(seen) ? { status: 'match', spoken, screenshot: seen } : { status: 'mismatch', spoken, screenshot: seen };
+  }
+  if (spoken.includes('@') && seen.includes('@')) {
+    return spoken.toLowerCase() === seen.toLowerCase() ? { status: 'match', spoken, screenshot: seen } : { status: 'mismatch', spoken, screenshot: seen };
+  }
+  return { status: 'shown', spoken, screenshot: seen };
 }

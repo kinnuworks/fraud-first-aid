@@ -30,6 +30,7 @@ export function complaintSystem(session: string, today = istToday()): string {
           v.status === 'match' ? `${k}: matches`
           : v.status === 'mismatch' ? `${k}: MISMATCH (said ${v.spoken}, screenshot ${v.screenshot}${v.groups?.length ? `, group ${v.groups.join(' and ')}` : ''})`
           : v.status === 'screenshot_only' ? `${k}: only on the screenshot (${v.screenshot})`
+          : v.status === 'shown' ? `${k}: the screenshot shows ${v.screenshot} (not compared; if it plainly disagrees with what they said, ask which is right)`
           : `${k}: ${v.status.replace('_', ' ')}`,
         )
         .join('; ')}. On a mismatch, say both versions and ask which is right; if the screenshot is right, call take_from_screenshot. A field only on the screenshot can be taken with take_from_screenshot and read back.`

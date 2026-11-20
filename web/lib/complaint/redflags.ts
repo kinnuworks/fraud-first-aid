@@ -96,7 +96,8 @@ const WARNING: Record<ReadbackLang, string> = {
 
 // The fixed warning to speak now, or null to let the model answer.
 export function guardShortcut(c: Complaint, lastUser: string): string | null {
-  if (c.phase !== 'guard' || isLoss(lastUser)) return null;
+  // on guard, and for the rest of a call that began on guard (the scammer may still be talking)
+  if (!(c.phase === 'guard' || (c.phase === 'complaint' && c.startedOnGuard)) || isLoss(lastUser)) return null;
   const f = detectRedFlag(lastUser);
   if (!f || !addFlag(c, f.scam, f.ask, lastUser)) return null;
   return WARNING[c.lang];

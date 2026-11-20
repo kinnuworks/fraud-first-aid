@@ -42,6 +42,8 @@ export type Complaint = {
   ack1930?: string;
   // The interpreter has introduced the case to the operator.
   interpIntro?: boolean;
+  // The call began on guard: red-flag rules keep running after it becomes a complaint.
+  startedOnGuard?: boolean;
   // The payee was counted in the reported-payees registry (once per call).
   reportedPayee?: boolean;
   fields: Partial<{
@@ -104,6 +106,12 @@ export function redactCodes(text: string): string {
   }
   return out.join('');
 }
+
+// For the caller's own story and the flag text: blank numbers only when the line names a code (OTP,
+// PIN, CVV, password), so "paid 25,000" stays and "my UPI PIN 4321" doesn't.
+// ("QR code" is not a secret code.)
+const NAMED_CODE = /\b(otp|pin|cvv|password|passcode)\b|(?<!\bqr\s?)\bcode\b|ओटीपी|पिन|ఓటీపీ|పిన్|ಒಟಿಪಿ|ಪಿನ್/i;
+export const redactNamedCodes = (text: string) => (NAMED_CODE.test(text) ? redactCodes(text) : text);
 
 export function logHeard(c: Complaint, text: string, now: Date = new Date()): void {
   const t = redactCodes(text.trim());
@@ -194,6 +202,10 @@ export function recordAmount(c: Complaint, spoken: string): Result {
 export function recordText(c: Complaint, field: 'when' | 'victim_bank', value: string): Result {
   const v = value.trim();
   if (!v) return { ok: false, problem: 'empty' };
+  // the time drives the RBI deadline: only a real ISO date and time (YYYY-MM-DDTHH:MM) is taken
+  if (field === 'when' && (!/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}/.test(v) || Number.isNaN(Date.parse(`${v.slice(0, 16)}:00Z`)))) {
+    return { ok: false, problem: 'give the time as YYYY-MM-DDTHH:MM, e.g. 2026-11-19T14:30' };
+  }
   c.fields[field] = { value: v, confirmed: false };
   c.pending = field;
   act(c, 'heard', field === 'when' ? `Worked out when it happened: ${v.replace('T', ', ')} IST` : `Noted your bank: ${v}`);
@@ -237,7 +249,7 @@ export function addFlag(c: Complaint, scam: string, red_flag: string, heard: str
   // A warning the model gave under a name not in our list still reaches the card, once.
   if (!scamById(scam)) scam = 'suspicious_call';
   if (c.flags.some((f) => f.scam === scam)) return false;
-  c.flags.push({ scam, red_flag, heard: redactCodes(heard).slice(0, 300) });
+  c.flags.push({ scam, red_flag: redactNamedCodes(red_flag), heard: redactCodes(heard.trim()).slice(0, 300) });
   act(c, 'flag', `Red flag on the call: the caller ${red_flag}. Told you to hang up (${scamById(scam)?.name ?? 'scam'})`);
   return true;
 }

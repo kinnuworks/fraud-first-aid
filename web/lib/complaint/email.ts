@@ -19,7 +19,7 @@ export async function sendPackEmail(to: string, p: PackParts, key = process.env.
     p.bankLetter,
     '',
     '3. If the 1930 operator asks, share this summary:',
-    p.operatorCard,
+    p.operatorCard.split('\n').filter((l) => !l.startsWith("Caller's words")).join('\n'),
     '',
     ...(p.callRecord ? ['The scam call as Fraud First Aid heard it (evidence for 1930 and the cyber cell):', p.callRecord, ''] : []),
     'Three reminders (the bank deadline, the RBI credit date and day 30) are attached as a calendar file.',
@@ -39,7 +39,11 @@ export async function sendPackEmail(to: string, p: PackParts, key = process.env.
       }),
     });
     const j = (await r.json().catch(() => ({}))) as { id?: string; message?: string };
-    return r.ok && j.id ? { ok: true, id: j.id } : { ok: false, problem: j.message ?? `email failed (${r.status})` };
+    if (r.ok && j.id) return { ok: true, id: j.id };
+    // the provider's own text can name our account (Resend's test sender says whose inbox it
+    // delivers to): log it here, show the caller a plain line
+    console.error('[email] send failed:', r.status, j.message);
+    return { ok: false, problem: 'email could not be sent to this address right now; copy the pack from the screen instead' };
   } catch {
     return { ok: false, problem: 'email service unreachable' };
   }

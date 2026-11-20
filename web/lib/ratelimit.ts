@@ -34,5 +34,11 @@ export const allowStart = createLimiter({ incr });
 // every ten minutes and 600 an hour for the whole app.
 export const allowTry = createLimiter({ incr, perAddress: 30, perHour: 600, prefix: 'rl:try' });
 
-// The caller's address as Vercel passes it (the first entry of x-forwarded-for).
-export const clientAddress = (h: Headers) => (h.get('x-forwarded-for') ?? '').split(',')[0].trim() || h.get('x-real-ip') || 'unknown';
+// The caller's address as Vercel passes it (the first entry of x-forwarded-for). An IPv6 address
+// counts by its /64, which one subscriber usually holds whole.
+export const clientAddress = (h: Headers) => {
+  const ip = (h.get('x-forwarded-for') ?? '').split(',')[0].trim() || h.get('x-real-ip') || 'unknown';
+  if (!ip.includes(':')) return ip;
+  const parts = ip.split('::')[0].split(':').filter(Boolean);
+  return `${parts.slice(0, 4).join(':')}::/64`;
+};

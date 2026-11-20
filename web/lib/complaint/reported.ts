@@ -44,16 +44,21 @@ export async function guardReported(c: Complaint, lastUser: string, times: (upi:
   if (c.phase !== 'guard' || isLoss(lastUser)) return null;
   const upi = upiIn(lastUser);
   if (!upi) return null;
-  const n = await times(upi).catch(() => 0);
+  const n = await times(upi).catch((e) => {
+    console.error('[reported] lookup failed:', e);
+    return 0;
+  });
   if (n < 1) return null;
   if (!addFlag(c, 'reported_payee', `named a UPI ID (${upi}) that was already in an earlier fraud complaint`, lastUser)) return null;
   return SAY[c.lang] ?? SAY.en!;
 }
 
-// Once every field is confirmed, count the payee (once per call).
+// Once every field is confirmed, count the payee (once per call), but only when the UTR the caller
+// confirmed matches their payment screenshot: a made-up complaint can't mark someone's UPI ID.
 export async function reportOnce(c: Complaint, report: (upi: string) => Promise<number> = reported.report): Promise<void> {
   const p = c.fields.payee;
   if (c.reportedPayee || !p?.confirmed || missingFields(c).length) return;
+  if (!c.shot?.utr || c.shot.utr !== c.fields.utr?.value) return;
   c.reportedPayee = true;
-  await report(p.value).catch(() => 0);
+  await report(p.value).catch((e) => console.error('[reported] count failed:', e));
 }

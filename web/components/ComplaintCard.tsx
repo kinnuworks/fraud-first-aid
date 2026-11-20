@@ -11,7 +11,7 @@ type Field = { value: string | number; confirmed: boolean };
 type Pack =
   | { ok: false; missing: string[] }
   | { ok: true; bankLetter: string; script1930: string; operatorCard: string; reminders: string; bankLine?: { bank: string; phone: string; source: string } | null; portalSheet?: string; nextSteps?: string; ombudsmanDraft?: string; callRecord?: string; minutesSinceDebit: number | null; deadlines: { zeroLiabilityBy: string; boardPolicyAfter: string } };
-type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'missing'; screenshot?: string | number; groups?: number[] };
+type Check = { status: 'match' | 'mismatch' | 'spoken_only' | 'screenshot_only' | 'shown' | 'missing'; screenshot?: string | number; groups?: number[] };
 type Flag = { red_flag: string; scam: string; heard: string };
 type EmailState = { id: string; at: string } | { problem: string } | null;
 export type ComplaintView = {
@@ -86,12 +86,13 @@ const CHECK_TEXT: Record<Check['status'], string> = {
   mismatch: 'screenshot differs',
   spoken_only: 'not on screenshot',
   screenshot_only: 'on screenshot',
+  shown: 'screenshot shows',
   missing: '',
 };
 
 function CheckNote({ c, k }: { c?: Check; k: string }) {
   if (!c || c.status === 'missing') return null;
-  const extra = c.status === 'mismatch' || c.status === 'screenshot_only' ? `: ${show(k, c.screenshot!)}` : '';
+  const extra = c.status === 'mismatch' || c.status === 'screenshot_only' || c.status === 'shown' ? `: ${show(k, c.screenshot!)}` : '';
   return (
     <span
       data-check={c.status}
@@ -300,7 +301,7 @@ export function ComplaintCardView({
   const shotStatus = (k: 'utr' | 'amount' | 'payee') => {
     const c = data.check?.[k];
     if (!c) return 'not added';
-    return c.status === 'match' ? 'matches' : c.status === 'mismatch' ? 'differs' : c.status === 'spoken_only' ? 'not on screenshot' : 'on screenshot';
+    return c.status === 'match' ? 'matches' : c.status === 'mismatch' ? 'differs' : c.status === 'spoken_only' ? 'not on screenshot' : c.status === 'shown' ? 'shown, not compared' : 'on screenshot';
   };
   return (
     <section aria-label="Your complaint" className="flex flex-col gap-5" id="complaint">

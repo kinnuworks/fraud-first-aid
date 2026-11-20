@@ -8,7 +8,7 @@ import {
   type LanguageModel,
   type ToolSet,
 } from "ai";
-import { randomUUID, timingSafeEqual } from "crypto";
+import { createHash, randomUUID, timingSafeEqual } from "crypto";
 
 type Deps = {
   secret: string | undefined;
@@ -53,7 +53,19 @@ function authorized(
 
 export const SILENT = "<silent>";
 
-// Last user message seen per session (see the append behaviour in the route).
+// What the route has already seen of a call's latest user message, as a fingerprint (its length and
+// a hash), never the words: the store and this map hold no transcript, but the route can still tell
+// when Agora appends new words to the same message after a silent turn.
+export const fingerprint = (text: string) => `fp1:${text.length}:${createHash("sha256").update(text).digest("hex").slice(0, 32)}`;
+// The new words in `whole` when it continues what `prev` saw, else null. `prev` may be a fingerprint
+// or, from a store written before fingerprints, the plain text.
+export function continues(whole: string, prev: string): string | null {
+  const m = prev.match(/^fp1:(\d+):([0-9a-f]{32})$/);
+  if (!m) return prev && whole.startsWith(prev) && whole.length > prev.length ? whole.slice(prev.length) : null;
+  const len = Number(m[1]);
+  if (whole.length <= len || fingerprint(whole.slice(0, len)) !== prev) return null;
+  return whole.slice(len);
+}
 const seenUser = new Map<string, string>();
 
 export function createLlmRoute({
@@ -95,16 +107,16 @@ export function createLlmRoute({
     // After a silent reply Agora appends the next utterance to the same user message, so pass on
     // only the words this session hasn't seen yet.
     const prev = seenUser.get(session) ?? "";
-    const lastUser =
-      prev && whole.startsWith(prev) && whole.length > prev.length ? whole.slice(prev.length) : whole;
-    seenUser.set(session, whole);
+    const lastUser = continues(whole, prev) ?? whole;
+    const seenNow = fingerprint(whole);
+    seenUser.set(session, seenNow);
     if (seenUser.size > 500) seenUser.delete(seenUser.keys().next().value as string);
     // Save once per request: a second save would end a newer turn's hold on the call.
     let saved = false;
     const saveOnce = async () => {
       if (saved) return;
       saved = true;
-      await save?.(session, whole).catch((e) => console.error("[llm-route] save failed:", e));
+      await save?.(session, seenNow).catch((e) => console.error("[llm-route] save failed:", e));
     };
     let fixed: string | null;
     let result: { textStream: AsyncIterable<string> };
@@ -200,9 +212,11 @@ export function createLlmRoute({
                 .slice(2, close)
                 .match(/^flag:([a-z_]+)\|([\s\S]*)$/);
               if (m) onMarker?.(session, m[1], m[2].trim(), lastUser);
-              // [[ack:<number>]]: the 1930 acknowledgement number heard while interpreting
+              // [[ack:<number>]]: the 1930 acknowledgement number heard while interpreting;
+              // [[intro]] / [[utr]]: the interpreter's introduction and the UTR, spoken by code
               const ack = pending.slice(2, close).match(/^ack:([\s\S]{1,60})$/);
-              const instead = ack ? onMarker?.(session, 'ack', ack[1].trim(), lastUser) : undefined;
+              const bare = pending.slice(2, close).trim().match(/^(intro|utr)$/);
+              const instead = ack ? onMarker?.(session, 'ack', ack[1].trim(), lastUser) : bare ? onMarker?.(session, bare[1], '', lastUser) : undefined;
               if (typeof instead === "string") {
                 // code speaks the number; the model's own wording of it is dropped
                 say(instead);
