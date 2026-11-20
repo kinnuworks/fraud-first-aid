@@ -136,6 +136,8 @@ Measured in one scripted run of the live app (19 Nov 2026, 11 turns, recorded vo
 
 Confirmations and numbers skip the model: our route answers them from the complaint's state, so the reply step takes 151 to 323 ms instead of more than 3 seconds. A second run on 20 Nov 2026, on the current build (13 turns, [results](evidence/results/latency-2026-11-20.csv)), came out alike: 198 to 339 ms for the turns that skip the model, 2,388 to 4,474 ms for the five that go through it, speech-to-text 174 to 353 ms and the voice's first audio 77 to 215 ms. Rerun: `cd web && npx -y tsx@4.20.6 scripts/demo-full.ts`. Limits: two runs, synthetic voices, the browser and not a phone line.
 
+From "I've lost money" to the pack ready for 1930: 3 min 38 s, 4 min 05 s and 4 min 17 s in three scripted live runs on 20 Nov 2026, each with one misremembered UTR group caught by the payment screenshot (sample Telugu voices, fixed pauses between turns; rerun `cd web && npx -y tsx@4.20.6 scripts/interpret-check.ts`).
+
 ## How it uses Agora and Murf
 
 | Feature | What it does here | Where |
