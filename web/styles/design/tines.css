@@ -1198,9 +1198,9 @@ html[data-motion='reduce'] .ta-win__mark {
   font-weight: 500;
 }
 
-/* Phones: the product moves up under the headline and lead, so the sample call and its red flag
-   are on the first screen; the languages, buttons and settings follow. The window keeps the call;
-   the steps and the sample complaint are in the journey below. */
+/* Phones: the two buttons sit right under the headline and lead, then the product, so the sample
+   call's red-flag timeline shows on the first screen; the languages and settings follow. The
+   window keeps the call; the steps and the sample complaint are in the journey below. */
 @media (max-width: 760px) {
   .ta-hero {
     display: flex;
@@ -1226,17 +1226,23 @@ html[data-motion='reduce'] .ta-win__mark {
     margin-top: 12px;
     font-size: 1.0625rem;
   }
-  .ta-stage {
+  .ta-ctas {
     order: 4;
-    margin-top: 52px;
+    margin-top: 18px;
+  }
+  .ta-ctas .ta-btn--lg {
+    padding: 0 16px;
+    font-size: 0.875rem;
+    letter-spacing: 0.03em;
+  }
+  .ta-stage {
+    order: 5;
+    margin-top: 56px;
     padding-bottom: 0;
   }
   .ta-langs {
-    order: 5;
-    margin-top: 28px;
-  }
-  .ta-ctas {
     order: 6;
+    margin-top: 28px;
   }
   .ta-prefs {
     order: 7;
