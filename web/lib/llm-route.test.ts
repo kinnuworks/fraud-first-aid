@@ -114,7 +114,9 @@ describe('inline markers', () => {
       secret: 's3cret',
       model: {} as never,
       streamTextImpl: fakeStream(['[[fla', 'g:fake_kyc|asked for the ', 'OTP]]This is a fake ', 'KYC call. Hang up.']),
-      onMarker: (session, id, detail) => seen.push([session, id, detail]),
+      onMarker: (session, id, detail) => {
+        seen.push([session, id, detail]);
+      },
     });
     const r = new NextRequest('http://localhost/api/chat/completions?session=m1', {
       method: 'POST',
@@ -135,7 +137,9 @@ describe('inline markers', () => {
       secret: 's3cret',
       model: {} as never,
       streamTextImpl: fakeStream(['[[ack:3151 2511', ' 2001 23]]Your number is ', 'three one five one.']),
-      onMarker: (session, id, detail) => seen.push([session, id, detail]),
+      onMarker: (session, id, detail) => {
+        seen.push([session, id, detail]);
+      },
     });
     const r = new NextRequest('http://localhost/api/chat/completions?session=m2', {
       method: 'POST',
@@ -149,6 +153,25 @@ describe('inline markers', () => {
       .join('');
     expect(text).toBe('Your number is three one five one.');
     expect(seen).toEqual([['m2', 'ack', '3151 2511 2001 23']]);
+  });
+  it('speaks the line onMarker returns instead of the rest of the model reply (numbers read back by code)', async () => {
+    const route = createLlmRoute({
+      secret: 's3cret',
+      model: {} as never,
+      streamTextImpl: fakeStream(['[[ack:31512511200123]]', 'Your number is three one ', 'five one, wrong digits']),
+      onMarker: (_s, id) => (id === 'ack' ? 'Read back by code.' : undefined),
+    });
+    const r = new NextRequest('http://localhost/api/chat/completions?session=m3', {
+      method: 'POST',
+      body: JSON.stringify({ messages: [{ role: 'user', content: 'x' }] }),
+      headers: { 'content-type': 'application/json', authorization: 'Bearer s3cret' },
+    });
+    const text = (await (await route(r)).text())
+      .split('\n\n')
+      .filter((l) => l.startsWith('data: {'))
+      .map((l) => JSON.parse(l.slice(6)).choices[0].delta.content ?? '')
+      .join('');
+    expect(text).toBe('Read back by code.');
   });
 });
 
