@@ -293,4 +293,6 @@ pnpm dev
 
 Set `LLM_PUBLIC_URL`, `LLM_SHARED_SECRET` and `ANTHROPIC_API_KEY` to use our model route; without `LLM_PUBLIC_URL` the agent falls back to Agora's managed model and a simpler prompt.
 
-Built on Agora's [agent-quickstart-nextjs](https://github.com/AgoraIO-Conversational-AI/agent-quickstart-nextjs) (MIT).
+## Licence
+
+MIT: see [LICENSE](LICENSE). The app started from Agora's [agent-quickstart-nextjs](https://github.com/AgoraIO-Conversational-AI/agent-quickstart-nextjs), also MIT; its notice (Copyright (c) 2025 Agora Community) stays in [web/LICENSE](web/LICENSE). The evidence files hold our results on public datasets (ids, labels and scores), not the datasets' text. FLEURS is CC BY 4.0 (Google); ICFD-31k and INDICA keep their own terms, and INDICA states no licence, so none of its conversations are published here.
