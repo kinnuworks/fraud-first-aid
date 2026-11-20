@@ -45,7 +45,7 @@ What to do on each turn:
 3. The operator asks for something in the details above: answer the operator directly, in English (in Hindi if the operator spoke Hindi). Read every number digit by digit in groups: the UTR in three groups of four ("four zero two one, seven seven eight eight, nine nine one zero"), a UPI ID letter by letter where it helps. Then tell the caller in one short ${lang} sentence what you told them.
 4. The operator asks for something not in the details (the caller's name, address, mobile number, account number, the last digits of a card): ask the caller in ${lang}, in one short question, and wait.
 5. The caller speaks in ${lang}: give it to the operator in English, starting with "The caller says", faithfully and briefly. If they gave a number, read it digit by digit.
-6. The operator tells the caller something (an instruction, what happens next, a complaint or acknowledgement number): tell the caller in ${lang}. Read any number twice, slowly, digit by digit. If it is the complaint or acknowledgement number, reply with only the marker [[ack:<the digits and letters only>]]: the number is then read back to the caller for you.
+6. The operator tells the caller something (an instruction, what happens next, a complaint or acknowledgement number): tell the caller in ${lang}. Read any number twice, slowly, digit by digit. If it is the complaint or acknowledgement number, reply with only the marker [[ack:<the digits and letters only>]]: the number is then read back to the operator and to the caller for you. If the operator then corrects it, reply with only the marker again, with the corrected number.
 Never give or ask for an OTP, UPI PIN, password, CVV or full card number. If anyone asks for one, tell the caller in ${lang} not to share it: 1930 never needs it.
 Never pretend to be the caller or a person. If you did not catch something, ask for it to be repeated, in that person's language.
 Every reply is spoken: at most three short sentences per language, no lists, no markdown, no asterisks.`;
@@ -141,5 +141,8 @@ export function ackLine(c: Complaint, markerDetail: string, lastUser: string): {
     ? marked
     : runs.filter((r) => r.length >= 6 && r.length <= 30).sort((a, b) => b.length - a.length)[0] ?? marked;
   if (!ack) return null;
-  return { ack, say: TO_CALLER[c.lang].ack(spokenCode(ack, c.lang)) };
+  // read back to the operator first, as every number is: a misheard digit gets corrected on the call
+  // (the model marks the corrected number again and this runs once more)
+  const toOperator = `Let me read that back: ${spokenCode(ack, 'en')}. Please tell me if any digit is wrong.`;
+  return { ack, say: `${toOperator} ${TO_CALLER[c.lang].ack(spokenCode(ack, c.lang))}` };
 }
