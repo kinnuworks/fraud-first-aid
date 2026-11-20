@@ -84,7 +84,7 @@ export function Hero(p: StartProps) {
         <a className="ta-pill" href="#sources">
           <span className="ta-pill__k">In 2024</span>
           <span className="ta-pill__v">
-            Indians reported losing ₹22,845 crore to cyber fraud <span aria-hidden="true">→</span>
+            Indians reported losing <strong className="ta-pill__num">₹22,845 crore</strong> to cyber fraud <span aria-hidden="true">→</span>
           </span>
         </a>
         <h1 className="ta-h1">

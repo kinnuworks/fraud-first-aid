@@ -70,6 +70,21 @@ const JOURNEY: Array<[string, string, string]> = [
   ],
 ];
 
+// Numbers in a proof line or a case, bold and marked like a highlighter, so the evidence reads at a
+// glance ("198 of 200", "3 working days", "₹14 lakh"). Codes like RBI/2017-18/15 and ages stay plain.
+const NUM = /((?<![\w/-])₹?\d[\d,]*(?:\.\d+)?(?: (?:lakh|crore))?(?: of \d[\d,]*)?(?: working days)?(?![\w/-]))/g;
+function withNumbers(text: string) {
+  return text.split(NUM).map((part, i) =>
+    i % 2 ? (
+      <strong key={i} className="num-hi">
+        {part}
+      </strong>
+    ) : (
+      part
+    ),
+  );
+}
+
 function Journey() {
   return (
     <section id="how" className="jr up-wrap" aria-labelledby="jr-title">
@@ -84,7 +99,7 @@ function Journey() {
             </span>
             <p className="jr-k">{k}</p>
             <p className="jr-out">{outcome}</p>
-            <p className="jr-proof">{proof}</p>
+            <p className="jr-proof">{withNumbers(proof)}</p>
           </li>
         ))}
       </ol>
@@ -106,7 +121,7 @@ function Cases() {
       </div>
       <div className="cs2-card">
         <p className="cs2-num">₹14 lakh back</p>
-        <p className="cs2-text">A 44-year-old in Bengaluru called 1930 within the golden hour. All ₹14 lakh came back.</p>
+        <p className="cs2-text">{withNumbers('A 44-year-old in Bengaluru called 1930 within the golden hour. All ₹14 lakh came back.')}</p>
         <p className="jr-proof">Telangana Today / PTI, 23 Sep 2025</p>
       </div>
     </section>

@@ -1654,3 +1654,51 @@ html[data-motion='reduce'] .gd-radar::before {
     right: -70px;
   }
 }
+
+
+/* Numbers that carry the case, bold and marked (owner: "make the numbers more highlited and bold so
+   its more impactful"): losses in red, money back in green, the evidence with a highlighter mark. */
+.num-hi {
+  font-weight: 700;
+  color: var(--ink);
+  padding: 0 2px;
+  border-radius: 3px;
+  background: linear-gradient(transparent 55%, var(--warn-bg) 55%);
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.ta-pill__num {
+  font-weight: 700;
+  color: var(--bad-ink);
+}
+.im-num {
+  font-weight: 800;
+  font-size: clamp(3rem, 1.9rem + 3.2vw, 4.75rem);
+  letter-spacing: -0.035em;
+  color: var(--ink-display);
+}
+.im-num .im-unit {
+  font-weight: 700;
+}
+.im-stat:first-child .im-num {
+  color: var(--ok);
+}
+.im-label {
+  font-weight: 500;
+}
+.im-label strong {
+  font-weight: 700;
+}
+.cs2-num {
+  font-weight: 800;
+  font-size: clamp(2.5rem, 1.7rem + 2.4vw, 3.75rem);
+  letter-spacing: -0.03em;
+  color: var(--ok);
+}
+.jr-n {
+  font-weight: 700;
+}
+.pf-big {
+  font-weight: 800;
+  letter-spacing: -0.03em;
+}
