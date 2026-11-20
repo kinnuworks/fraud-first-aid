@@ -384,14 +384,17 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
         </header>
         <section className="rc-hero">
           <div>
-            <h1 className="up-display">Hang up before you pay. Get it frozen if you did.</h1>
+            <h1 className="up-display">
+              It hears the scam call and tells you to hang up.{' '}
+              <span className="rc-h1-sub">In your language, before you pay.</span>
+            </h1>
             <p className="rc-stakes">
               Karnataka lost <strong>₹5,474 crore</strong> to cyber fraud in three years. Only <strong>₹627 crore</strong> came back.
               <span className="rc-src">Karnataka Home Minister, reply in the Assembly (The News Minute, 10 Dec 2025)</span>
             </p>
             <p className="up-lead rc-lead">
-              Like first aid, it has to be fast. Put a scam call on speaker next to this phone or laptop and it warns you in your language. If the
-              money&apos;s gone, it takes your complaint by voice and gets every number right for 1930 and your bank.
+              Put the call on speaker next to this phone or laptop. If the money&apos;s already gone, it takes your complaint by voice and gets
+              every number right for the 1930 helpline and your bank, while the money can still be frozen.
             </p>
             <div className="rc-ctas">
               <WatchButton {...p} />

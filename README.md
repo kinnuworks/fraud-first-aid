@@ -1,6 +1,6 @@
 # Fraud First Aid
 
-**Hang up before you pay. Get it frozen if you did.** First aid for a UPI fraud, and like first aid it has to be fast: the first hour decides whether the money can still be frozen. It listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
+**It hears the scam call and tells you to hang up. In your language, before you pay.** First aid for a UPI fraud, and like first aid it has to be fast: the first hour decides whether the money can still be frozen. It listens to the scam call on speaker and warns you in your language, and if the money has gone it takes your complaint by voice with every number right and gets 1930 and your bank what they need within minutes.
 
 It runs on Agora's Conversational AI Engine because the job is a live, interruptible conversation with a frightened person, in ten Indian languages, with a Murf Falcon voice that reads every number back.
 

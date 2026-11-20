@@ -1967,7 +1967,7 @@ html[data-large] {
 .up-select:focus-visible { outline: 3px solid var(--focus, #2f5bea); outline-offset: 2px; }
 /* hero, 20 Nov cleanup: headline, stakes, one lead, two buttons, one quiet row of settings */
 .rc-hero .up-display {
-  font-size: clamp(2.75rem, 1.6rem + 3.4vw, 4.5rem);
+  font-size: clamp(2.5rem, 1.5rem + 2.6vw, 3.75rem);
 }
 .rc-lead {
   margin-top: 16px;
@@ -2088,3 +2088,6 @@ html[data-large] {
     width: 100%;
   }
 }
+
+/* Headline second line: the language promise, quieter than the claim */
+.rc-h1-sub { color: var(--ink-3); }
