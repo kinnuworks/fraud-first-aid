@@ -28,7 +28,7 @@ Why it matters in Karnataka: the state lost ₹5,473.97 crore to cyber fraud in 
 2. **If the money's gone**, it takes your complaint by voice and gets every detail right. Each number is read back in groups of four until you confirm it, then checked against your payment screenshot.
 3. **It acts**: it finds your bank and branch from the IFSC code, your bank's own fraud line, and the date your bank must hear by for zero liability (RBI: 3 working days).
 4. **It hands you everything**: the 1930 script in your language, an English card for the 1930 operator, the bank letter, three calendar reminders (the last on day 30: did your bank reply?) and an RBI Ombudsman complaint ready for that day. It emails the pack once you say yes. One tap brings a family member onto the call: they hear it, and they can talk to you while the agent keeps working.
-5. **It speaks to 1930 for you.** Call 1930, put it on speaker and press **Speak to 1930 for me**. Fraud First Aid gives the operator every detail in English, digit by digit, tells you in your language what they ask, passes your answers back, and reads the acknowledgement number back to the operator before saving it, so a misheard digit gets corrected on the call.
+5. **It speaks to 1930 for you.** Call 1930, put it on speaker and press **Speak to 1930 for me**. Fraud First Aid gives the operator every detail in English, digit by digit, tells you in your language what they ask, passes your answers back, and reads the acknowledgement number back to the operator, so a misheard digit gets corrected on the call before it's kept.
 
 All the while, a **What it's doing** list on the call screen shows each step as it happens: what it heard, what it checked, which service it called, what it asked you first.
 
