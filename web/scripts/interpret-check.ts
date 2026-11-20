@@ -13,7 +13,7 @@
 // Spends real Agora/Sarvam/Murf/model credits. Video: evidence/.cache/demo-full/
 // Run: npx -y tsx@4.20.6 scripts/demo-full.ts [https://fraudfirstaid.vercel.app]
 import { chromium, type Page } from 'playwright';
-import { mkdirSync } from 'fs';
+import { mkdirSync, readFileSync } from 'fs';
 
 const BASE = process.argv[2] ?? 'https://fraudfirstaid.vercel.app';
 const HERE = new URL('.', import.meta.url).pathname;
@@ -83,12 +83,26 @@ const play = async (page: Page, clip: string) => {
   const input = page.locator('input[type=file]');
   if (await input.count()) {
     log('adding the payment screenshot');
-    await input.setInputFiles(`${HERE}fixtures/sample-payment.png`);
+    // The sample screenshot is dated two hours before this run (IST), so the story never conflicts with
+    // the date: a fixed 19 Nov screenshot against "today at 2:30" made the agent rightly ask which was
+    // right, and fixed clips can't answer that (21 Nov).
+    const t = new Date(Date.now() - 2 * 3600e3 + 5.5 * 3600e3);
+    const mon = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'][t.getUTCMonth()];
+    const h = t.getUTCHours();
+    const shotWhen = `${t.getUTCDate()} ${mon} ${t.getUTCFullYear()}, ${h % 12 || 12}:${String(t.getUTCMinutes()).padStart(2, '0')} ${h < 12 ? 'am' : 'pm'}`;
+    const html = readFileSync(`${HERE}fixtures/sample-payment.html`, 'utf8').replace('19 Nov 2026, 2:30 pm', shotWhen);
+    const shotPage = await ctx.newPage();
+    await shotPage.setViewportSize({ width: 390, height: 560 });
+    await shotPage.setContent(html);
+    await shotPage.screenshot({ path: `${OUT}sample-payment-now.png`, fullPage: true });
+    await shotPage.close();
+    log(`payment screenshot dated ${shotWhen}`);
+    await input.setInputFiles(`${OUT}sample-payment-now.png`);
     await page.locator('[data-check="mismatch"]').waitFor({ timeout: 60000 }).then(async () => { log('mismatch shown on the card'); await page.waitForTimeout(1500); await page.screenshot({ path: `${OUT}3-screenshot-mismatch.png` }); }).catch(() => log('no mismatch shown'));
   } else log('no screenshot input (still on guard?)');
   await play(page, 'victim-3-screenshot-right');
   await play(page, 'victim-4-yes');
-  for (const clip of ['victim-5-payee', 'victim-4-yes', 'victim-6-when', 'victim-4-yes', 'victim-7-bank', 'victim-4-yes']) await play(page, clip);
+  for (const clip of ['victim-5-payee', 'victim-4-yes', 'victim-6-when-shot', 'victim-4-yes', 'victim-7-bank', 'victim-4-yes']) await play(page, clip);
   for (let i = 0; i < 3 && !(await page.getByTestId('pack').isVisible().catch(() => false)); i++) await play(page, 'victim-4-yes');
   const packed = await page.getByTestId('pack').isVisible().catch(() => false);
   log(packed ? 'PACK READY' : 'pack not ready');
