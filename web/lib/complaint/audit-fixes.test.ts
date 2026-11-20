@@ -221,6 +221,24 @@ describe('an acknowledgement number read out over two turns (the operator paused
   });
 });
 
+describe('the operator confirms the read-back (live run, 21 Nov: it read the whole number back a second time)', () => {
+  const said = 'Your complaint is registered. Please note the acknowledgement number 31512511200123.';
+  it('thanks them once instead of reading the number back again', () => {
+    const c = full('te');
+    c.ack1930 = '31512511200123';
+    const got = ackLine(c, '31512511200123', "Yes, that's correct.", `${said} | Yes, that's correct.`)!;
+    expect(got.ack).toBe('31512511200123');
+    expect(got.say).not.toContain('read that back');
+    expect(got.say.length).toBeLessThan(60);
+  });
+  it('still reads it back when the operator says the digits again, so a repeated mishearing is heard', () => {
+    const c = full('te');
+    c.ack1930 = '31512511200123';
+    const again = 'No, it is three one five one, two five one one, two zero zero one, two three.';
+    expect(ackLine(c, '31512511200123', again, `${said} | ${again}`)!.say).toContain('Let me read that back');
+  });
+});
+
 describe('the acknowledgement number is read back to the operator (a live run misheard it, 20 Nov)', () => {
   it('reads it back in English first so the operator can correct it, then tells the caller', () => {
     const c = full('te');
