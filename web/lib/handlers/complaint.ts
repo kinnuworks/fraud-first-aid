@@ -9,11 +9,12 @@ import { compareWithScreenshot } from '@/lib/complaint/screenshot';
 import { allowInMemory, clientAddress } from '@/lib/ratelimit';
 
 export async function GET(request: NextRequest) {
-  // the card polls once a second; anything far beyond that from one address is a loop, not a person
-  if (!allowInMemory(`poll:${clientAddress(request.headers)}`, 600)) {
+  const id = request.nextUrl.searchParams.get('session') ?? '';
+  // the card polls once a second: far more than that for one call from one address is a loop, not a
+  // person (counted per call, so a venue full of judges on one address is never blocked)
+  if (!allowInMemory(`poll:${clientAddress(request.headers)}:${id.slice(0, 64)}`, 240)) {
     return NextResponse.json({ error: 'too many requests' }, { status: 429 });
   }
-  const id = request.nextUrl.searchParams.get('session') ?? '';
   if (!/^[\w-]{1,64}$/.test(id)) return NextResponse.json({ error: 'bad session' }, { status: 400 });
   if (!canView(id, request.nextUrl.searchParams.get('cap'))) return NextResponse.json({ error: 'not your call' }, { status: 403 });
   await hydrate(id);
