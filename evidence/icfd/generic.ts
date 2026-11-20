@@ -30,7 +30,16 @@ let seed = 7;
 const rand = () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 const yes = all.filter((c) => c.final_verdict === 'YES');
 for (let i = yes.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [yes[i], yes[j]] = [yes[j], yes[i]]; }
-const sample = [...yes.slice(0, 200), ...all.filter((c) => c.final_verdict === 'NO')];
+const TWELFTH = process.argv.includes('--twelfth');
+function fresh(): Conv[] {
+  const used = new Set(yes.slice(0, 200).map((c) => c.release_metadata.conversation_uid));
+  const pool = all.filter((c) => c.final_verdict === 'YES');
+  let s17 = 17;
+  const r17 = () => { s17 |= 0; s17 = (s17 + 0x6d2b79f5) | 0; let t = Math.imul(s17 ^ (s17 >>> 15), 1 | s17); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r17() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  return pool.filter((c) => !used.has(c.release_metadata.conversation_uid)).slice(0, 200);
+}
+const sample = [...(TWELFTH ? fresh() : yes.slice(0, 200)), ...all.filter((c) => c.final_verdict === 'NO')];
 
 export const NAMES_SCAM = /\b(scam|scammer|fraud|fraudulent|fake call)\b|धोखा|फ्रॉड|ठगी|स्कैम/i;
 const warns = (reply: string) => reply.trim() !== '<silent>' && (saysHangUp(reply) || NAMES_SCAM.test(reply));
@@ -60,7 +69,8 @@ async function one(c: Conv) {
 }
 
 (async () => {
-  const out = join(CACHE, 'generic-results.jsonl');
+  const tag = TWELFTH ? 'twelfth' : 'eleventh';
+  const out = join(CACHE, TWELFTH ? 'generic-twelfth-results.jsonl' : 'generic-results.jsonl');
   const done = new Set(existsSync(out) ? readFileSync(out, 'utf8').trim().split('\n').filter(Boolean).map((l) => JSON.parse(l).uid) : []);
   const todo = sample.filter((c) => !done.has(c.release_metadata.conversation_uid));
   let next = 0;
@@ -78,5 +88,5 @@ async function one(c: Conv) {
   const [lo, hi] = wilson(k, f.length), [lo2, hi2] = wilson(kn, n.length);
   console.log(`\ngeneral assistant (${MODEL}, plain prompt): fraud warned ${k}/${f.length} (${(100 * lo).toFixed(1)}-${(100 * hi).toFixed(1)}%); no-violation warned ${kn}/${n.length} (${(100 * lo2).toFixed(1)}-${(100 * hi2).toFixed(1)}%)`);
   const date = new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10);
-  writeFileSync(join(__dirname, '..', 'results', `icfd-generic-${date}.csv`), ['uid,verdict,turns,warn_turn,warned', ...rows.map((r) => [r.uid, r.verdict, r.turns, r.warnTurn, +(r.warnTurn >= 0)].join(','))].join('\n') + '\n');
+  writeFileSync(join(__dirname, '..', 'results', TWELFTH ? `icfd-generic-twelfth-${date}.csv` : `icfd-generic-${date}.csv`), ['uid,verdict,turns,warn_turn,warned', ...rows.map((r) => [r.uid, r.verdict, r.turns, r.warnTurn, +(r.warnTurn >= 0)].join(','))].join('\n') + '\n');
 })();

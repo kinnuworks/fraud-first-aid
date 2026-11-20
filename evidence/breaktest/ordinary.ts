@@ -36,7 +36,21 @@ const CALLS: Array<[string, string[]]> = [
   ['te', ['పిల్లలు స్కూల్ నుంచి వచ్చారా?', 'వచ్చారు, హోంవర్క్ చేస్తున్నారు.']],
 ];
 
+// `--generic`: the twelfth claim's general assistant (evidence/icfd/generic.ts) on the same calls.
+const GENERIC = process.argv.includes('--generic');
+async function genericTurn(msgs: Array<{ role: string; content: string }>) {
+  const { createRequire } = await import('module');
+  const req = createRequire(new URL('../../web/package.json', import.meta.url).pathname);
+  const { generateText } = req('ai');
+  const { createAnthropic } = req('@ai-sdk/anthropic');
+  const anthropic = createAnthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+  const SYSTEM = 'You are a helpful AI assistant. The user has put a phone call on speaker so you can hear it; you get what is said, line by line. If you think the call is a scam, warn the user. Otherwise reply with exactly <silent>.';
+  const r = await generateText({ model: anthropic('claude-haiku-5-5'), system: SYSTEM, messages: msgs.map((m) => ({ role: m.role as 'user' | 'assistant', content: m.content || '<silent>' })), maxOutputTokens: 300 });
+  return r.text.trim() === '<silent>' ? '' : r.text;
+}
+
 async function turn(session: string, lang: string, msgs: Array<{ role: string; content: string }>) {
+  if (GENERIC) return genericTurn(msgs);
   for (let a = 1; ; a++) {
     const r = await fetch(`${BASE}/api/call/chat/completions?session=${session}&lang=${lang}&mode=guard`, {
       method: 'POST',
@@ -65,7 +79,7 @@ async function card(session: string) {
       msgs.push({ role: 'user', content: t });
       const s = await turn(session, lang, msgs);
       msgs.push({ role: 'assistant', content: s });
-      const c = await card(session);
+      const c = GENERIC ? { phase: 'guard', flags: [] } : await card(session);
       what = c.phase === 'complaint' ? 'switched to a complaint' : (c.flags?.length ?? 0) > 0 ? 'flagged' : s.trim() ? 'spoke' : '';
       if (what) { at = k; line = t; said = s.trim(); break; }
     }
@@ -75,5 +89,5 @@ async function card(session: string) {
   }
   console.log(`Ordinary calls: ${pass}/${CALLS.length} passed (silent, no flag, no switch)`);
   mkdirSync(new URL('../.cache/', import.meta.url).pathname, { recursive: true });
-  writeFileSync(new URL('../.cache/guard-ordinary.csv', import.meta.url).pathname, rows.join('\n') + '\n');
+  writeFileSync(new URL(GENERIC ? '../.cache/guard-ordinary-generic.csv' : '../.cache/guard-ordinary.csv', import.meta.url).pathname, rows.join('\n') + '\n');
 })();

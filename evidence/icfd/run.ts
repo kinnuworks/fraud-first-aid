@@ -12,7 +12,7 @@ import { detectRedFlag, saysHangUp } from '../../web/lib/complaint/redflags';
 const BASE = process.argv[2] ?? 'https://utr-pakka.vercel.app';
 // Eleventh claim (`--eleventh`): a fresh run of our guard scored with the same text rule as the general
 // assistant (evidence/icfd/generic.ts), results kept apart from the seventh claim's.
-const ELEVENTH = process.argv.includes('--eleventh');
+const ELEVENTH = process.argv.includes('--eleventh') || process.argv.includes('--twelfth');
 const NAMES_SCAM = /\b(scam|scammer|fraud|fraudulent|fake call)\b|धोखा|फ्रॉड|ठगी|स्कैम/i;
 const SECRET = process.env.LLM_SHARED_SECRET;
 if (!SECRET) throw new Error('LLM_SHARED_SECRET must be set');
@@ -30,7 +30,18 @@ let seed = 7;
 const rand = () => { seed |= 0; seed = (seed + 0x6d2b79f5) | 0; let t = Math.imul(seed ^ (seed >>> 15), 1 | seed); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
 const yes = all.filter((c) => c.final_verdict === 'YES');
 for (let i = yes.length - 1; i > 0; i--) { const j = Math.floor(rand() * (i + 1)); [yes[i], yes[j]] = [yes[j], yes[i]]; }
-const sample = [...yes.slice(0, 200), ...all.filter((c) => c.final_verdict === 'NO')];
+const SEVENTH = yes.slice(0, 200);
+// Twelfth claim (`--twelfth`): a fresh 200, the first in the seed-17 order not among the seventh's.
+const TWELFTH = process.argv.includes('--twelfth');
+function fresh(): Conv[] {
+  const used = new Set(SEVENTH.map((c) => c.release_metadata.conversation_uid));
+  const pool = all.filter((c) => c.final_verdict === 'YES');
+  let s17 = 17;
+  const r17 = () => { s17 |= 0; s17 = (s17 + 0x6d2b79f5) | 0; let t = Math.imul(s17 ^ (s17 >>> 15), 1 | s17); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+  for (let i = pool.length - 1; i > 0; i--) { const j = Math.floor(r17() * (i + 1)); [pool[i], pool[j]] = [pool[j], pool[i]]; }
+  return pool.filter((c) => !used.has(c.release_metadata.conversation_uid)).slice(0, 200);
+}
+const sample = [...(TWELFTH ? fresh() : SEVENTH), ...all.filter((c) => c.final_verdict === 'NO')];
 
 const HANGUP = /hang up|cut the call|phone cut|kaat|काट/i;
 async function turn(session: string, msgs: Array<{ role: string; content: string }>) {
@@ -68,7 +79,8 @@ async function one(c: Conv, idx: number) {
 }
 
 (async () => {
-  const out = join(CACHE, ELEVENTH ? 'ours-eleventh-results.jsonl' : 'results.jsonl');
+  const tag = process.argv.includes('--twelfth') ? 'twelfth' : 'eleventh';
+  const out = join(CACHE, ELEVENTH ? `ours-${tag}-results.jsonl` : 'results.jsonl');
   const done = new Map<string, unknown>(existsSync(out) ? readFileSync(out, 'utf8').trim().split('\n').filter(Boolean).map((l) => { const r = JSON.parse(l); return [r.uid, r]; }) : []);
   const todo = sample.map((c, i) => [c, i] as const).filter(([c]) => !done.has(c.release_metadata.conversation_uid));
   let next = 0;
@@ -82,8 +94,8 @@ async function one(c: Conv, idx: number) {
   }));
   const rows = readFileSync(out, 'utf8').trim().split('\n').map((l) => JSON.parse(l)).filter((r) => !r.error);
   const csv = ['uid,verdict,type,turns,label_turn,warn_turn,baseline_turn,handover_turn,ours,baseline,early', ...rows.map((r) => [r.uid, r.verdict, r.type, r.turns, r.labelTurn, r.warnTurn, r.baseTurn, r.handover, +(r.warnTurn >= 0), +(r.baseTurn >= 0), +(r.warnTurn >= 0 && r.labelTurn >= 0 && r.warnTurn <= r.labelTurn)].join(','))];
-  writeFileSync(join(CACHE, ELEVENTH ? 'ours-eleventh-results.csv' : 'results.csv'), csv.join('\n') + '\n');
-  if (ELEVENTH) writeFileSync(join(__dirname, '..', 'results', `icfd-ours-eleventh-${new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10)}.csv`), csv.join('\n') + '\n');
+  writeFileSync(join(CACHE, ELEVENTH ? `ours-${tag}-results.csv` : 'results.csv'), csv.join('\n') + '\n');
+  if (ELEVENTH) writeFileSync(join(__dirname, '..', 'results', `icfd-ours-${tag}-${new Date(Date.now() + 330 * 60000).toISOString().slice(0, 10)}.csv`), csv.join('\n') + '\n');
   const f = rows.filter((r) => r.verdict === 'YES'), n = rows.filter((r) => r.verdict === 'NO');
   const warned = f.filter((r) => r.warnTurn >= 0);
   const med = warned.map((r) => r.warnTurn + 1).sort((a, b) => a - b)[Math.floor(warned.length / 2)];
