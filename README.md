@@ -96,7 +96,8 @@ The people who take these reports today are the 1930 helpline, state cyber cells
 
 What it already runs on:
 
-- Every call is its own Agora agent with its own capability key, so calls don't share state, and a busy hour means more agents rather than a bigger server.
+- Every call is its own Agora agent with its own capability key, so calls don't share state, and a busy hour means more agents rather than a bigger server. Our own test on 20 Nov 2026: five scam calls started at the same moment on the live app, and all five got the warning, 23.5 to 26.3 seconds after the press (one call alone: 20.7 to 22.9 s; [results](evidence/results/concurrent-2026-11-20.csv), rerun: `cd web && npx -y tsx@4.20.6 scripts/concurrent-check.ts`).
+- The operator doesn't have to speak the victim's language: the 1930 interpreter speaks to them in English and to the victim in theirs.
 - A new language is configuration: a Sarvam language code and a Murf Falcon voice in [`agent-config.ts`](web/lib/agent-config.ts), plus the number words in [`numbers.ts`](web/lib/entities/numbers.ts), with tests.
 - The 1930 operator and the family each get a read-only live view of the call by link (`/watch?as=operator`, `/watch?as=family`).
 - The same agent is wired to call out over a phone line (Agora telephony through a SIP trunk, [`phone.ts`](web/lib/handlers/phone.ts)) for a victim without a smartphone, or a callback before the bank's deadline. It isn't reliable yet (see the limits below).
