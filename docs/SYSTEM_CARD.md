@@ -7,7 +7,7 @@ What the agent does, what it will not do, how it can fail, what it keeps, and ho
 - **On guard**, it listens to a call the user has put on speaker and stays silent until it hears a red flag: a request for an OTP, PIN, password or card number, a QR code to scan, a screen-sharing app, a payment, a threat of arrest, or a loan, prize, job or investment offer that then asks for a fee, documents, a link, an app or a move to WhatsApp. Then it tells the user, in their language, to hang up, and names the scam with the official advisory's own words.
 - **If money has gone**, it takes the complaint by voice: the 12-digit UTR, the amount, the time, who was paid and the user's bank. Each number is read back in groups until the user confirms it, and checked against their payment screenshot if they add one.
 - **It acts**: it looks up the bank and branch from the IFSC code, finds the bank's own fraud line, works out the RBI zero-liability deadline, and builds the pack (the 1930 script in the user's language, an English card for the operator, a bank letter, calendar reminders and a ready Ombudsman complaint). It emails the pack only after the user says yes.
-- **On the 1930 call**, with the call on speaker, a second agent speaks to the operator in English and to the user in their language, and keeps the acknowledgement number.
+- **On the 1930 call**, with the call on speaker, a second agent speaks to the operator in English and to the user in their language, reads the acknowledgement number back to the operator, and keeps it.
 
 ## What it will not do
 
@@ -18,11 +18,11 @@ What the agent does, what it will not do, how it can fail, what it keeps, and ho
 
 ## How it can fail
 
-- **Missing a scam.** On 200 public scam conversations it had never seen (ICFD-31k, synthetic text), the guard as of 20 Nov evening warned on 111. The same AI model simply asked to warn about scams warned on 197, but also on 33 of 39 legitimate calls (ours: 7). We chose few false alarms over catching everything: a guard that cries wolf on every call is turned off. Widening the guard to loan, investment and link scams is measured on a fresh sample (twelfth claim in [`evidence/EVAL_PLAN.md`](../evidence/EVAL_PLAN.md)).
+- **Missing a scam.** On a fresh 200 public scam conversations it had never seen (ICFD-31k, synthetic text), the current guard warned on 144, and on 10 of 39 legitimate ones. The same AI model simply asked to warn about scams warned on 199, but also on 33 of 39 legitimate calls. We chose few false alarms over catching everything: a guard that cries wolf on every call is turned off. On scam conversations machine-translated into eight Indian languages (INDICA), it warned on 198 of 200 and on none of 200 legitimate ones (twelfth and tenth claims in [`evidence/EVAL_PLAN.md`](../evidence/EVAL_PLAN.md)).
 - **A false alarm.** In our own break test it stayed silent on 24 of 24 ordinary calls (family, office and payment talk in English, Hindi and Telugu). A real deployment would see far more variety.
 - **Mishearing a number.** Every number is read back and must be confirmed; a screenshot that disagrees makes the agent cut in at once. In noise, 295 of 300 spoken numbers came out exact (synthetic voices).
 - **Languages.** Its spoken lines in eight of the ten languages were written by us and not yet checked by native speakers.
-- **The 1930 interpreter** has been tested only with sample voices playing the operator, not on a real 1930 call.
+- **The 1930 interpreter** has been tested only with sample voices playing the operator, not on a real 1930 call. In two live runs on an overloaded test machine it misheard the 14-digit acknowledgement number (two digits dropped at one end). It reads the number back to the operator for that reason, so the operator can correct it on the call, and it puts a number read out over two turns back together.
 
 ## What it keeps
 
