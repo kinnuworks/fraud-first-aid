@@ -102,6 +102,10 @@ const play = async (page: Page, clip: string) => {
     await page.evaluate(() => window.scrollTo(0, 0));
     return (await page.locator('.up-transcript').first().innerText().catch(() => '')) || '';
   };
+  // INTERP_DELAY_S: wait this long after the pack before starting the interpreter, as the finals
+  // demo does (a complaint finished 10 to 15 minutes before the slot, then the interpreter live)
+  const delay = Number(process.env.INTERP_DELAY_S ?? 0);
+  if (delay > 0) { log(`waiting ${delay} s before starting the interpreter`); await page.waitForTimeout(delay * 1000); }
   await page.getByTestId('interpret-1930').click();
   await page.getByTestId('interpreter-on').waitFor({ timeout: 30000 });
   log('interpreter on; waiting for its greeting');
