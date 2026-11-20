@@ -10,6 +10,8 @@ const CLIPS: Array<[string, string, string, string]> = [
   ['operator-2-utr', 'Okay. Please tell me the UTR number of the transaction, and the amount.', 'en-IN-aarav', 'en-IN'],
   ['operator-3-name', 'Thank you. What is the full name of the person who lost the money?', 'en-IN-aarav', 'en-IN'],
   ['victim-8-name', 'నా పేరు లక్ష్మి రెడ్డి.', 'en-IN-anisha', 'te-IN'],
+  // the caller confirms the payment time shown on the screenshot (the checks date the screenshot at run time)
+  ['victim-6-when-shot', 'స్క్రీన్‌షాట్‌లో ఉన్న సమయమే సరైనది.', 'en-IN-anisha', 'te-IN'],
   ['operator-4-ack', 'Your complaint is registered. Please note the acknowledgement number: three one five one, two five one one, two zero zero one, two three.', 'en-IN-aarav', 'en-IN'],
   // after the interpreter reads the number back: the operator confirms it, or corrects it
   ['operator-5-confirm', "Yes, that's correct.", 'en-IN-aarav', 'en-IN'],
