@@ -1281,3 +1281,11 @@ html[data-motion='reduce'] .ta-win__mark {
     right: -50px;
   }
 }
+
+/* Phones: on the call screen the warning, the complaint and the pack come first; the call panel
+   (agent, sample call, bank calendar) follows, then the transcript. */
+@media (max-width: 860px) {
+  .cs-main {
+    order: -1;
+  }
+}

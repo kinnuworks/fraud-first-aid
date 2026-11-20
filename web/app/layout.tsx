@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     title: "Fraud First Aid: catches the scam on the call, chases the money if it's gone",
     description: 'A voice agent in ten Indian languages, built on Agora Conversational AI and Murf Falcon.',
     url: 'https://fraudfirstaid.vercel.app',
-    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Fraud First Aid: a phone catching a fake KYC call and warning in Hindi, beside the complaint card reading the UTR back in groups of four' }],
+    images: [{ url: '/og.png', width: 1200, height: 630, alt: 'Fraud First Aid: the headline beside its product window, where a sample fake KYC call is marked with a red flag on its timeline and the complaint reads the UTR back in groups of four' }],
     type: 'website',
   },
   twitter: { card: 'summary_large_image', images: ['/og.png'] },
