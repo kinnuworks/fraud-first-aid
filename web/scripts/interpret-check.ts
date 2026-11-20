@@ -44,7 +44,9 @@ const play = async (page: Page, clip: string) => {
   await go().catch(async (e) => { log(`  clip fetch failed (${String(e).slice(0, 80)}); retrying`); await page.waitForTimeout(1500); await go(); });
   await idle(page);
   // Agora's live pipeline metrics for this turn, as shown in the call screen's pipeline bar
-  const bar = (await page.locator('.up-pipe').first().innerText().catch(() => '')) || '';
+  // (the interpreter's screen has no pipeline bar: don't wait 30 s for one)
+  const pipe = page.locator('.up-pipe').first();
+  const bar = (await pipe.count()) ? (await pipe.innerText({ timeout: 2000 }).catch(() => '')) || '' : '';
   const n = (k: string) => { const m = bar.match(new RegExp(`${k}\\s*(\\d+)\\s*ms`)); return m ? Number(m[1]) : undefined; };
   lat.push({ clip, ttlw: n('ttlw'), ttfs: n('ttfs'), ttfb: n('ttfb') });
 };
@@ -106,6 +108,16 @@ const play = async (page: Page, clip: string) => {
   await play(page, 'operator-3-name');
   await play(page, 'victim-8-name');
   await play(page, 'operator-4-ack');
+  // wait for the number to reach the call (a busy machine has delayed the clip by a minute), then
+  // for the read-back to finish, so the transcript holds the whole exchange
+  const ackBy = Date.now() + 120000;
+  let heard = '';
+  while (Date.now() < ackBy && !heard) {
+    heard = String((await (await fetch(`${BASE}/api/call/complaint?session=${session}&cap=${cap}`)).json().catch(() => ({}))).ack1930 ?? '');
+    if (!heard) await page.waitForTimeout(2000);
+  }
+  log(heard ? `acknowledgement number saved: ${heard}` : 'no acknowledgement number after 2 minutes');
+  await idle(page, 60000);
   await page.waitForTimeout(3000);
   await page.screenshot({ path: `${OUT}interp-final.png`, fullPage: true });
   const all = await agentText();
@@ -120,6 +132,8 @@ const play = async (page: Page, clip: string) => {
   const relayedName = /lakshmi|laxmi/i.test(all);
   const ack = st.ack1930;
   const steps: Array<{ text: string }> = st.actions ?? [];
+  // the interpreter's turn shapes (lengths and digit counts, never words; only with DEBUG_TURNS=1)
+  for (const t of (st.trace ?? []).filter((x: string) => x.startsWith('interpret'))) log(`  turn: ${t}`);
   log(`screenshot cut-in spoken (Agora speak): ${steps.some((a) => /Agora speak/.test(a.text))}`);
   log(`phase ${st.phase}; UTR ${utr}; gave UTR to operator: ${gaveUtr}; relayed the name: ${relayedName}; ack: ${ack}`);
   await page.getByRole('button', { name: /End conversation/i }).click().catch(() => {});
