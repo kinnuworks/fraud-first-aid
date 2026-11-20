@@ -35,7 +35,10 @@ function useLive(session: string, key: string) {
       if (r.ok) {
         misses = 0;
         setData(await r.json());
-      } else if ([400, 403, 404].includes(r.status) && ++misses >= 5) {
+        return;
+      }
+      await r.text().catch(() => ''); // read a refusal through, so the request closes
+      if ([400, 403, 404].includes(r.status) && ++misses >= 5) {
         setGone(true);
         if (t) clearInterval(t);
       }
