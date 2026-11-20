@@ -137,3 +137,12 @@ Then a short limits paragraph, in numbers: zero real users, the interval, the da
 - Metrics: warned on fraud conversations and on no-violation ones, each with a 95% Wilson interval, and the paired difference on the fraud conversations (95% bootstrap, evidence/interval.py).
 - Reporting: both numbers are reported whichever is higher. Label: "Back-test on public data (ICFD-31k, synthetic conversations)".
 - Rerun: `npx -y tsx@4.20.6 evidence/icfd/run.ts` (ours) and `npx -y tsx@4.20.6 evidence/icfd/generic.ts` (the general assistant).
+
+## Twelfth claim: the guard after widening it to loan-app, investment and app-link scams (written 20 Nov 2026 ~20:10 IST, before the change is written or any run)
+- Why: the eleventh claim (ours 111/200 fraud warned, 7/39 no-violation; the general assistant 197/200 and 33/39) and the tenth claim's check sample (30/80 scam, 0/80 legit) show the guard misses scams that never ask for an OTP or a payment on the call: a loan or investment offer that asks for documents, a fee, an app download, a link to click or a move to WhatsApp or Telegram. The change is written from the tenth claim's check sample only; the seventh and eleventh claims' ICFD conversations are not read to write it.
+- Data: (1) ICFD-31k cross_domain, a fresh sample: the first 200 fraud conversations in the seed-17 order that are not among the seventh claim's 200 (seed 7), plus the split's 39 no-violation conversations (seen before, by both earlier claims); (2) our 24 ordinary calls (the eighth claim's break test, seen before).
+- Systems: ours at the commit named in the results, and the general assistant exactly as in the eleventh claim (same model, same prompt, same rule).
+- Metrics and reporting: as in the eleventh claim, plus, on the 24 ordinary calls, how many each system stays silent through (the eighth claim's rule: no reply at all, no flag, no switch). Both systems are reported whichever is higher.
+- Keep-or-revert rule, checked before any ICFD or INDICA test run: the change stays only if the ordinary calls stay 24/24 silent and the guard break test stays 20/20 + 20/20 on the changed guard; otherwise it is reverted and only the reverted guard is measured.
+- After this, the tenth claim's INDICA test sample runs once, unchanged.
+- Rerun: `npx -y tsx@4.20.6 evidence/icfd/run.ts <base> --twelfth`, `npx -y tsx@4.20.6 evidence/icfd/generic.ts --twelfth`, `npx -y tsx@4.20.6 evidence/breaktest/ordinary.ts <base>` and `... ordinary.ts --generic`.
