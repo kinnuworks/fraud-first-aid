@@ -31,6 +31,7 @@ import {
   mapAgentVisualizerState,
   normalizeTimestampMs,
   normalizeTranscript,
+  withArchive,
 } from '@/lib/conversation';
 import { MicrophoneSelector } from './MicrophoneSelector';
 import {
@@ -385,7 +386,11 @@ export default function ConversationComponent({
   // Completed (END + INTERRUPTED) messages shown as history.
   // INTERRUPTED must be included — if the agent's first turn is cut off,
   // messageList stays empty and the first interrupted turn is never shown.
-  const messageList = useMemo(() => getMessageList(transcript), [transcript]);
+  const liveList = useMemo(() => getMessageList(transcript), [transcript]);
+  // The conversation as it stood when the 1930 interpreter took over (see withArchive).
+  const [archive, setArchive] = useState<ReturnType<typeof getMessageList> | null>(null);
+  const messageList = useMemo(() => withArchive(archive, liveList), [archive, liveList]);
+  const onInterpreterStart = useCallback(() => setArchive(liveList), [liveList]);
 
   const currentInProgressMessage = useMemo(() => {
     // The live partial turn renders separately from the completed history list.
@@ -520,7 +525,7 @@ export default function ConversationComponent({
       }
       transcriptPanel={
         <>
-          <ComplaintCard session={agoraData.channel} cap={agoraData.cap} uid={agoraData.uid} />
+          <ComplaintCard session={agoraData.channel} cap={agoraData.cap} uid={agoraData.uid} onInterpreterStart={onInterpreterStart} />
           <SecondScreens session={agoraData.channel} viewKey={agoraData.viewCap} talkKey={agoraData.talkCap} />
         </>
       }

@@ -716,7 +716,7 @@ function PackItem({ n, title, text, open = false }: { n: number; title: string; 
   );
 }
 
-export function ComplaintCard({ session, cap, uid }: { session: string; cap: string; uid?: string | number }) {
+export function ComplaintCard({ session, cap, uid, onInterpreterStart }: { session: string; cap: string; uid?: string | number; onInterpreterStart?: () => void }) {
   const [data, setData] = useState<ComplaintView | null>(null);
   useEffect(() => {
     let live = true;
@@ -751,7 +751,10 @@ export function ComplaintCard({ session, cap, uid }: { session: string; cap: str
             headers: { 'content-type': 'application/json' },
             body: JSON.stringify({ channel: session, cap, uid }),
           });
-          if (r.ok) return null;
+          if (r.ok) {
+            onInterpreterStart?.();
+            return null;
+          }
           const j = await r.json().catch(() => ({}));
           return j.error ?? 'Could not start the interpreter. Read the script below to the operator instead.';
         }}

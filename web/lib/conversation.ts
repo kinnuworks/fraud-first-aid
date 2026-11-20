@@ -124,3 +124,16 @@ export function getCurrentInProgressMessage(
   const item = transcript.find((entry) => entry.status === TurnStatus.IN_PROGRESS);
   return item ? toMessageListItem(item) : null;
 }
+
+// After the 1930 interpreter replaces the call's agent, its turn ids start again and the toolkit
+// writes its turns over the old agent's entries with the same ids. Keep the conversation as it was
+// at the switch, and show every entry that is new or changed since then after it, in time order.
+export function withArchive(archive: IMessageListItem[] | null, current: IMessageListItem[]): IMessageListItem[] {
+  if (!archive) return current;
+  const key = (m: IMessageListItem) => `${m.uid}:${m.turn_id}`;
+  const before = new Map(archive.map((m) => [key(m), m.text]));
+  const fresh = current
+    .filter((m) => before.get(key(m)) !== m.text)
+    .sort((a, b) => (a.createdAt ?? 0) - (b.createdAt ?? 0));
+  return [...archive, ...fresh];
+}
