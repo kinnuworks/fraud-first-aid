@@ -14,6 +14,9 @@ import { ErrorBoundary } from './ErrorBoundary';
 import { LoadingSkeleton } from './LoadingSkeleton';
 import { QuickstartPreCallCard } from './QuickstartPreCallCard';
 
+// ?proxy=1 sends the call and its messages through Agora's cloud proxy (networks that block UDP).
+const proxyOn = () => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('proxy') === '1';
+
 // Dynamically import the ConversationComponent with ssr disabled
 const ConversationComponent = dynamic(() => import('./ConversationComponent'), {
   ssr: false,
@@ -42,6 +45,9 @@ const AgoraProvider = dynamic(
             mode: 'rtc',
             codec: 'vp8',
           });
+          // ?proxy=1: venue Wi-Fi that blocks Agora's UDP ports; route the call through Agora's
+          // cloud proxy over TCP/TLS 443 (mode 5). Must be set before joining.
+          if (proxyOn()) clientRef.current.startProxyServer(5);
         }
         return (
           <AgoraRTCProvider client={clientRef.current}>
@@ -123,6 +129,7 @@ export default function LandingPage() {
           const rtm: RTMClient = new AgoraRTM.RTM(
             process.env.NEXT_PUBLIC_AGORA_APP_ID!,
             responseData.uid,
+            proxyOn() ? { cloudProxy: true } : undefined,
           );
           await rtm.login({ token: responseData.token });
           await rtm.subscribe(responseData.channel);
