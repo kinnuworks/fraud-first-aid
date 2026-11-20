@@ -147,6 +147,8 @@ describe('saysHangUp: a spoken warning without a marker still reaches the card',
     'यह धोखाधड़ी वाली कॉल है। अभी फ़ोन काट दीजिए।',
     'ಇದು ವಂಚನೆಯ ಕರೆ. ಈಗಲೇ ಫೋನ್ ಕಟ್ ಮಾಡಿ.',
     'இது ஒரு மோசடி அழைப்பு. உடனே அழைப்பைத் துண்டியுங்கள்.',
+    'Yeh fake refund scam hai, abhi call cut karein.',
+    'Yeh fraud call hai, phone kaat dijiye.',
   ])('%s', async (t) => {
     const { saysHangUp } = await import('./redflags');
     expect(saysHangUp(t)).toBe(true);
