@@ -82,7 +82,7 @@ flowchart TB
 
 ### Read the code: six files
 
-- [`web/lib/agent-builder.ts`](web/lib/agent-builder.ts): the whole Agora agent in one place: [`new Agent`](web/lib/agent-builder.ts#L32), Sarvam speech-to-text ([L81](web/lib/agent-builder.ts#L81)), our model route as the agent's LLM ([L85](web/lib/agent-builder.ts#L85)), Murf Falcon as its voice ([L103](web/lib/agent-builder.ts#L103)), and the turn timing ([L58](web/lib/agent-builder.ts#L58))
+- [`web/lib/agent-builder.ts`](web/lib/agent-builder.ts): the whole Agora agent in one place: [`new Agent`](web/lib/agent-builder.ts#L33), Sarvam speech-to-text ([L62](web/lib/agent-builder.ts#L62)), our model route as the agent's LLM ([L66](web/lib/agent-builder.ts#L66)), Murf Falcon as its voice ([L84](web/lib/agent-builder.ts#L84)), and the turn timing ([L43](web/lib/agent-builder.ts#L43))
 - [`web/lib/complaint/announce.ts`](web/lib/complaint/announce.ts#L105): Agora's speak API, INTERRUPT when the screenshot disagrees and APPEND for confirmations
 - [`web/lib/complaint/redflags.ts`](web/lib/complaint/redflags.ts): the guard's red flags and when money counts as gone
 - [`web/lib/entities/numbers.ts`](web/lib/entities/numbers.ts): spoken numbers in ten languages to exact digits
@@ -221,8 +221,8 @@ From "I've lost money" to the pack ready for 1930: 3 min 38 s, 4 min 05 s and 4 
 
 Where to look, line by line:
 - The agent starts per call with `session.start()`: [`invite-agent.ts#L105`](web/lib/handlers/invite-agent.ts#L105), listening only to the caller (`remoteUids`, [#L97](web/lib/handlers/invite-agent.ts#L97)).
-- The pipeline is built in [`agent-builder.ts#L28`](web/lib/agent-builder.ts#L28): Sarvam speech-to-text in the caller's language, our model URL with tools, and Murf Falcon as the voice: `new MurfTTS({ voiceId, locale, model: 'FALCON' })` at [#L101](web/lib/agent-builder.ts#L101), slower with `rate: -20` for older callers.
-- Turn detection (slow mode waits 900 ms of silence instead of 480 before taking its turn, and the 1930 interpreter 800 ms, so an operator reading out a number in groups isn't cut off mid-number) and the tools/RTM switches: [#L42](web/lib/agent-builder.ts#L42) and [#L65](web/lib/agent-builder.ts#L65).
+- The pipeline is built in [`agent-builder.ts#L29`](web/lib/agent-builder.ts#L29): Sarvam speech-to-text in the caller's language, our model URL with tools, and Murf Falcon as the voice: `new MurfTTS({ voiceId, locale, model: 'FALCON' })` at [#L84](web/lib/agent-builder.ts#L84), slower with `rate: -20` for older callers.
+- Turn detection, per mode ([turn-config.ts](web/lib/turn-config.ts)): the guard takes its turn after 480 ms of silence, so it can cut in the moment a caller asks for the OTP. The complaint and the 1930 interpreter wait 800 ms, so a pause between UTR groups or an operator reading a number in groups isn't cut off, and need 400 ms of speech before they stop talking, so room noise doesn't interrupt them. Slow mode waits 1200 ms. Used at [#L43](web/lib/agent-builder.ts#L43), with the tools/RTM switches at [#L46](web/lib/agent-builder.ts#L46).
 - The Murf Falcon voice per language: [`agent-config.ts`](web/lib/agent-config.ts#L14).
 
 ## Check it yourself
