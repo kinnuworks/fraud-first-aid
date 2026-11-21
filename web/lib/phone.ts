@@ -34,3 +34,19 @@ export class CallLimiter {
     this.live.delete(number);
   }
 }
+
+// "Listen to my call": the phone line in guard mode. Allowed only with an allowlist (today, the
+// presenter's number): a silent guard never rings a stranger. Anything else is the complaint.
+export function phoneMode(requested: unknown, allowList: string | undefined): 'guard' | 'complaint' {
+  return requested === 'guard' && !!allowList?.trim() ? 'guard' : 'complaint';
+}
+
+// What the guard says when the person answers, before they merge it into the call they are on.
+const GUARD_GREETING: Record<string, string> = {
+  en: "Fraud First Aid here. Tap merge to add me to your call. I'll stay quiet and warn you if the caller asks for a code, a scan or money.",
+  hi: 'फ़्रॉड फ़र्स्ट एड बोल रही हूँ। मुझे अपनी कॉल में जोड़ने के लिए मर्ज दबाइए। मैं चुप रहूँगी, और अगर कॉलर कोड, स्कैन या पैसे माँगे तो आपको चेतावनी दूँगी।',
+  kn: 'ಫ್ರಾಡ್ ಫಸ್ಟ್ ಏಡ್ ಮಾತಾಡ್ತಿದೀನಿ. ನನ್ನನ್ನು ನಿಮ್ಮ ಕರೆಗೆ ಸೇರಿಸಲು ಮರ್ಜ್ ಒತ್ತಿ. ನಾನು ಸುಮ್ಮನಿರ್ತೀನಿ, ಕರೆ ಮಾಡಿದವರು ಕೋಡ್, ಸ್ಕ್ಯಾನ್ ಅಥವಾ ಹಣ ಕೇಳಿದರೆ ನಿಮಗೆ ಎಚ್ಚರಿಕೆ ಕೊಡ್ತೀನಿ.',
+};
+export function guardPhoneGreeting(lang: string): string {
+  return GUARD_GREETING[lang] ?? GUARD_GREETING.en;
+}

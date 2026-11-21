@@ -27,7 +27,8 @@ export type BuildOpts = {
 };
 
 export function buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface, slow = false, greeting: greetingOverride }: BuildOpts) {
-  const greeting = mode === 'guard' ? undefined : (greetingOverride ?? preset.greeting);
+  // the browser guard is silent from the start; the phone guard passes its own line (say who it is, ask to merge)
+  const greeting = mode === 'guard' ? greetingOverride : (greetingOverride ?? preset.greeting);
     // Pipeline: Sarvam speech-to-text (caller's language) → our model route with complaint
     // tools (or Agora's managed model before deploy) → Murf Falcon voice for that language.
   return new Agent({

@@ -8,7 +8,8 @@ import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
-import { indianMobile, CallLimiter, mayCall } from '@/lib/phone';
+import { indianMobile, CallLimiter, mayCall, phoneMode, guardPhoneGreeting } from '@/lib/phone';
+import { act } from '@/lib/complaint/session';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 import { agentUidFor } from '@/lib/agora';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
@@ -53,14 +54,27 @@ export async function POST(request: NextRequest) {
   }
   const langArg = body.lang ?? 'te';
   const lang: ReadbackLang = (READBACK_LANGS as readonly string[]).includes(langArg) ? (langArg as ReadbackLang) : 'en';
-  // always the complaint, which greets the person it rings; a silent guard on a stranger's phone is never allowed
-  const mode = 'complaint' as const;
+  // the complaint, which greets the person it rings; or, only with an allowlist (the presenter's phone),
+  // the guard, which says who it is and asks to be merged into the call: never a silent guard on a stranger
+  const mode = phoneMode(body.mode, process.env.PHONE_ALLOWED_NUMBERS);
   startComplaint(channel, lang, mode);
   if (langArg === 'auto') getComplaint(channel).autoLang = true;
+  if (mode === 'guard')
+    act(getComplaint(channel), 'heard', 'Listening on your phone call through an Agora voice agent that stays silent until the caller asks for a code, a scan or money');
   await persist(channel);
   try {
     const client = agoraRestClient(appId, appCertificate);
-    const agent = buildAgent({ client, preset: presetFor(langArg), lang, langArg, mode, channel, llmUrl, surface: 'phone' });
+    const agent = buildAgent({
+      client,
+      preset: presetFor(langArg),
+      lang,
+      langArg,
+      mode,
+      channel,
+      llmUrl,
+      surface: 'phone',
+      ...(mode === 'guard' ? { greeting: guardPhoneGreeting(lang) } : {}),
+    });
     const properties = agent.toProperties({
       channel,
       agentUid: agentUidFor(channel),

@@ -9,15 +9,21 @@ export function PhoneCallStart() {
   const [state, setState] = useState<string | null>(null);
   async function call(e: React.FormEvent) {
     e.preventDefault();
-    setState('Placing the call. Your phone rings in about 40 seconds…');
+    // "Listen to my call": the guard rings you; answer, then tap Merge to add it to the call you're on
+    const guard = ((e.nativeEvent as SubmitEvent).submitter as HTMLButtonElement | null)?.value === 'guard';
+    setState(
+      guard
+        ? 'Calling you in about 40 seconds. Answer, then tap Merge to add it to the call you are on.'
+        : 'Placing the call. Your phone rings in about 40 seconds…',
+    );
     const q = new URLSearchParams(window.location.search);
     const t = await fetch('/api/generate-agora-token').then((r) => r.json()).catch(() => null);
     if (!t?.channel || !t?.cap) return setState('Could not start the call.');
     const r = await fetch(`/api/call/phone?session=${encodeURIComponent(t.channel)}&cap=${encodeURIComponent(t.cap)}`, {
       method: 'POST',
       headers: { 'content-type': 'application/json' },
-      // always the complaint, which greets whoever answers
-      body: JSON.stringify({ to, lang: q.get('lang') ?? 'te', mode: 'complaint' }),
+      // the complaint greets whoever answers; the guard rings only an allowlisted number (the server checks)
+      body: JSON.stringify({ to, lang: q.get('lang') ?? 'te', mode: guard ? 'guard' : 'complaint' }),
     }).catch(() => null);
     if (!r) return setState('Could not reach the server. Check your connection and try again.');
     const j = await r.json().catch(() => ({}));
@@ -40,8 +46,11 @@ export function PhoneCallStart() {
         className="up-input"
         data-testid="phone-to"
       />
-      <button type="submit" className="up-btn up-btn--ghost up-btn--sm" data-testid="phone-call-button">
+      <button type="submit" value="complaint" className="up-btn up-btn--ghost up-btn--sm" data-testid="phone-call-button">
         Call my phone
+      </button>
+      <button type="submit" value="guard" className="up-btn up-btn--ghost up-btn--sm" data-testid="phone-guard-button">
+        Listen to my call
       </button>
       {state && (
         <span role="status" className="text-[0.875rem]">
