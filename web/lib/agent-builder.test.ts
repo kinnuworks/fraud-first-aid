@@ -16,10 +16,11 @@ describe('when a turn ends', () => {
     // a live run split the acknowledgement number at a pause between groups (20 Nov)
     expect(wait('interpret')).toBeGreaterThanOrEqual(800);
   });
-  it('a normal call stays quick, and slow mode still waits longest', () => {
-    expect(wait('complaint')).toBe(480);
+  it('the guard stays quick, the complaint waits through pauses, and slow mode still waits longest', () => {
+    // 21 Nov venue rehearsal: at 480 ms the complaint agent answered in the caller's pauses (lib/turn-config.test.ts)
     expect(wait('guard')).toBe(480);
-    expect(wait('complaint', true)).toBe(900);
-    expect(wait('interpret', true)).toBe(900);
+    expect(wait('complaint')).toBe(800);
+    expect(wait('complaint', true)).toBe(1200);
+    expect(wait('interpret', true)).toBe(1200);
   });
 });
