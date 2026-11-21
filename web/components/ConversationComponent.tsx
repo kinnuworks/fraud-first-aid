@@ -47,7 +47,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
-import { DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply } from '@/lib/complaint/demo1930';
+import { DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor } from '@/lib/complaint/demo1930';
 import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
@@ -433,7 +433,7 @@ export default function ConversationComponent({
     if (!watch || demo1930 || demoComplaint || !isAgentConnected || watchPlayed.current) return;
     watchPlayed.current = true;
     const t = setTimeout(() => {
-      playClipIntoCall(client, '/demo/sample-scam-call.wav').catch((e) => console.error('[watch]', e));
+      playClipIntoCall(client, scamClipFor(new URLSearchParams(window.location.search).get('lang'))).catch((e) => console.error('[watch]', e));
     }, 2500);
     return () => clearTimeout(t);
   }, [watch, demo1930, demoComplaint, isAgentConnected, client]);

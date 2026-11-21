@@ -73,3 +73,9 @@ export function nextComplaintClip(st: DemoState): string | null {
   if (missing.includes('victim_bank')) return 'victim-7-bank';
   return 'victim-4-yes';
 }
+
+// "Watch it catch a scam call": the sample scam call in the chosen language where one exists. The guard
+// hears in the chosen language, so a Kannada listener gets the Kannada call; everyone else the Hindi one.
+export function scamClipFor(lang: string | null): string {
+  return lang === 'kn' ? '/demo/sample-scam-call-kn.wav' : '/demo/sample-scam-call.wav';
+}
