@@ -450,11 +450,9 @@ export default function ConversationComponent({
     watchPlayed.current = true;
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     const busy = () => stateRef.current === 'speaking' || stateRef.current === 'thinking';
-    // waits for the agent to start answering (up to startWait), then for 1.5 s of quiet; the greeting
-    // gets a longer start wait, since an agent can take 20 s to join (21 Nov)
-    const answered = async (max = 45000, startWait = 15000) => {
+    const answered = async (max = 45000) => {
       const t0 = Date.now();
-      while (Date.now() - t0 < startWait && !busy() && !unmounted.current) await sleep(200);
+      while (Date.now() - t0 < 15000 && !busy() && !unmounted.current) await sleep(200);
       let quiet = 0;
       while (Date.now() - t0 < max && !unmounted.current) {
         if (!busy()) {
@@ -481,7 +479,7 @@ export default function ConversationComponent({
       }
       onInterpreterStart();
       await sleep(1500);
-      await answered(60000, 35000); // the interpreter's greeting
+      await answered(30000); // the interpreter's greeting
       await sleep(1000);
       const lang = new URLSearchParams(window.location.search).get('lang') ?? 'hi';
       for (const clip of demo1930Clips(lang)) {
@@ -509,11 +507,9 @@ export default function ConversationComponent({
     watchPlayed.current = true;
     const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
     const busy = () => stateRef.current === 'speaking' || stateRef.current === 'thinking';
-    // waits for the agent to start answering (up to startWait), then for 1.5 s of quiet; the greeting
-    // gets a longer start wait, since an agent can take 20 s to join (21 Nov)
-    const answered = async (max = 45000, startWait = 15000) => {
+    const answered = async (max = 45000) => {
       const t0 = Date.now();
-      while (Date.now() - t0 < startWait && !busy() && !unmounted.current) await sleep(200);
+      while (Date.now() - t0 < 15000 && !busy() && !unmounted.current) await sleep(200);
       let quiet = 0;
       while (Date.now() - t0 < max && !unmounted.current) {
         if (!busy()) {
@@ -536,7 +532,7 @@ export default function ConversationComponent({
     const state = async () =>
       (await (await fetch(`/api/call/complaint?session=${agoraData.channel}&cap=${agoraData.cap}`)).json().catch(() => ({}))) as Parameters<typeof nextComplaintClip>[0];
     (async () => {
-      await answered(60000, 35000); // the agent's greeting
+      await answered(30000); // the agent's greeting
       await sleep(500);
       // what happened is already noted: the UTR (one group wrong), the screenshot, then backing it.
       // The screenshot goes in while the agent reads the UTR back, so Agora's speak API cuts it off.
