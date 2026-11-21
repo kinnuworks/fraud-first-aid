@@ -8,6 +8,8 @@ It runs on Agora's Conversational AI Engine because the job is a live, interrupt
 
 **Live: https://fraudfirstaid.vercel.app** · press **Watch it catch a scam call**: one click, no microphone, the warning in about 20 seconds. **Check it yourself: https://fraudfirstaid.vercel.app/proof**: try to fool the scam guard with your own lines, or say a UTR any way you like.
 
+**Watch the film (3.5 minutes): https://www.youtube.com/watch?v=6yf1EIiZsak**: the whole journey on the live app, from the scam warning to the 1930 interpreter.
+
 ![The live app, sped up: the scam warning, the UTR read back with the screenshot catching a wrong group, and Fraud First Aid giving the 1930 operator the UTR](docs/core-loop.gif)
 
 *The live app on 21 Nov 2026, sped up: the one-click scam catch, a complaint in Telugu with the UTR read back and checked against the payment screenshot, then the 1930 interpreter giving the operator the UTR in English. The voices, the operator's included, are generated sample clips (an illustration); the app and its answers are real.*
