@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint } from './session';
 import { canInterpret, interpretLine } from './interpret';
-import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply, seedDemo1930, DEMO_ACK } from './demo1930';
+import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor, seedDemo1930, DEMO_ACK } from './demo1930';
 
 // "Watch it call 1930 for you": one click, no microphone, no complaint to finish first. A labelled
 // sample complaint is loaded already confirmed, the interpreter starts at once, and the sample 1930
@@ -89,5 +89,15 @@ describe('nextComplaintClip', () => {
   });
   it('nothing left: no clip', () => {
     expect(nextComplaintClip({ fields: { utr: f('402177869910', true) }, missing: [] })).toBe(null);
+  });
+});
+
+// "Watch it catch a scam call" plays the sample scam call in the chosen language where one exists:
+// the guard hears in that language, so a Hindi call under Kannada was missed in 1 of 2 runs (21 Nov).
+describe('scamClipFor', () => {
+  it('Kannada gets the Kannada sample call; everything else the Hindi one', () => {
+    expect(scamClipFor('kn')).toBe('/demo/sample-scam-call-kn.wav');
+    expect(scamClipFor('hi')).toBe('/demo/sample-scam-call.wav');
+    expect(scamClipFor(null)).toBe('/demo/sample-scam-call.wav');
   });
 });
