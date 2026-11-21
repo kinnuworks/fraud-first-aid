@@ -674,7 +674,7 @@ function Interpreter({ data, onInterpret }: { data: ComplaintView; onInterpret?:
   return (
     <div className="pk-interp">
       <div>
-        <p className="pk-interp__title">Calling 1930 in English or Hindi is hard?</p>
+        <p className="pk-interp__title">Hard to explain it to 1930 in their language?</p>
         <p className="pk-interp__text">
           Call 1930 on your phone and put it on speaker next to this screen. Fraud First Aid gives the operator your details, digit by digit, and tells you in {lang} what they ask.
         </p>

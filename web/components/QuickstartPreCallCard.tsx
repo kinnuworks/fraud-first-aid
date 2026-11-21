@@ -39,6 +39,8 @@ const FACTS: Array<[string, string, string]> = [
   ['Senior citizens lost, 2025', '₹4,005.12 crore', 'Rajya Sabha reply, 5 Aug 2026'],
   ['Karnataka, lost and recovered over three years', '₹5,474 crore lost, ₹627 crore back', 'Karnataka Home Minister, Assembly reply, via The News Minute, 10 Dec 2025'],
   ['Held through 1930, till 30 Jun 2026', '₹11,158 crore+', 'Lok Sabha reply, Aug 2026'],
+  ['Adults who can speak any English, 2005 survey', '1 in 5; 4% fluently', 'India Human Development Survey, via Azam, Chin and Prakash, IZA DP 4802'],
+  ["Karnataka's 1930 voice menu", 'Kannada, Hindi and English', 'Deccan Herald, 22 Apr 2025'],
 ];
 
 // The journey, outcome first, each step with one small proof line (STATE.md, JOURNEY HIGHLIGHT).
@@ -178,7 +180,7 @@ function Compare() {
           <p className="up-label">Calling 1930 alone</p>
           <ul>
             <li>You read a 12-digit UTR out loud while you panic.</li>
-            <li>In English or Hindi, whatever language you think in.</li>
+            <li>Only in the helpline&apos;s languages: Kannada, Hindi or English in Karnataka.</li>
             <li>Any wrong digit slows the freeze.</li>
           </ul>
         </div>
@@ -195,7 +197,8 @@ function Compare() {
       <div className="cmp-proof">
         <p>
           In June 2026 the Home Minister asked the 1930 helpline to add AI tools and multilingual support, because language
-          barriers stop people from reporting promptly (Devdiscourse, 17 Jun 2026).
+          barriers stop people from reporting promptly (Devdiscourse, 17 Jun 2026). Only one Indian adult in five can speak any
+          English (India Human Development Survey, 2005).
         </p>
       </div>
     </section>
