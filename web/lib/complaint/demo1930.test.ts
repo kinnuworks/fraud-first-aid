@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint } from './session';
 import { canInterpret, interpretLine } from './interpret';
-import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, operatorReply, seedDemo1930, DEMO_ACK } from './demo1930';
+import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply, seedDemo1930, DEMO_ACK } from './demo1930';
 
 // "Watch it call 1930 for you": one click, no microphone, no complaint to finish first. A labelled
 // sample complaint is loaded already confirmed, the interpreter starts at once, and the sample 1930
@@ -62,5 +62,29 @@ describe('the sample complaint caller', () => {
   it('then confirms the payee, the time on the screenshot and the bank', () => {
     for (const c of ['victim-5-payee', 'victim-6-when-shot', 'victim-7-bank']) expect(DEMO_COMPLAINT_STEPS).toContain(c);
     expect(DEMO_COMPLAINT_STEPS[DEMO_COMPLAINT_STEPS.length - 1]).toBe('victim-4-yes');
+  });
+});
+
+describe('the 1930 demo in Hindi', () => {
+  it('the sample caller answers the name question in Hindi; the operator lines stay English', () => {
+    expect(demo1930Clips('hi')).toEqual(['operator-1-hello', 'operator-2-utr', 'operator-3-name', 'victim-8-name-hi', 'operator-4-ack']);
+    expect(demo1930Clips('te')).toEqual(DEMO_1930_CLIPS);
+  });
+});
+
+// After the UTR and the screenshot, the sample caller answers what the agent is asking, from the
+// call's own state, instead of a fixed order (a fixed order cost an 82 s detour on 21 Nov).
+describe('nextComplaintClip', () => {
+  const f = (v: unknown, confirmed: boolean) => ({ value: v, confirmed });
+  it('a detail read back and not yet confirmed gets a yes', () => {
+    expect(nextComplaintClip({ fields: { payee: f('ramesh@okaxis', false) }, missing: ['payee (not confirmed)', 'victim_bank'] })).toBe('victim-4-yes');
+  });
+  it('a missing detail gets its line: payee, then the time on the screenshot, then the bank', () => {
+    expect(nextComplaintClip({ fields: {}, missing: ['payee', 'when', 'victim_bank'] })).toBe('victim-5-payee');
+    expect(nextComplaintClip({ fields: {}, missing: ['when', 'victim_bank'] })).toBe('victim-6-when-shot');
+    expect(nextComplaintClip({ fields: {}, missing: ['victim_bank'] })).toBe('victim-7-bank');
+  });
+  it('nothing left: no clip', () => {
+    expect(nextComplaintClip({ fields: { utr: f('402177869910', true) }, missing: [] })).toBe(null);
   });
 });
