@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint } from './session';
 import { canInterpret, interpretLine } from './interpret';
-import { DEMO_1930_CLIPS, operatorReply, seedDemo1930, DEMO_ACK } from './demo1930';
+import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, operatorReply, seedDemo1930, DEMO_ACK } from './demo1930';
 
 // "Watch it call 1930 for you": one click, no microphone, no complaint to finish first. A labelled
 // sample complaint is loaded already confirmed, the interpreter starts at once, and the sample 1930
@@ -45,5 +45,20 @@ describe('the sample 1930 operator', () => {
     expect(operatorReply(DEMO_ACK)).toBe('operator-5-confirm');
     expect(operatorReply('31512511200128')).toBe('operator-5-correct');
     expect(operatorReply('')).toBe(null);
+  });
+});
+
+// "Watch it take a complaint": the labelled sample caller's lines play into a live complaint call,
+// and the sample payment screenshot is added by itself after the UTR.
+describe('the sample complaint caller', () => {
+  it('says money has gone, gives the UTR with one group wrong, adds the screenshot, then backs the screenshot', () => {
+    const i = (s: string) => DEMO_COMPLAINT_STEPS.indexOf(s);
+    expect(DEMO_COMPLAINT_STEPS[0]).toBe('victim-1-lost');
+    expect(i('victim-2-utr')).toBeLessThan(i('screenshot'));
+    expect(i('screenshot')).toBeLessThan(i('victim-3-screenshot-right'));
+  });
+  it('then confirms the payee, the time on the screenshot and the bank', () => {
+    for (const c of ['victim-5-payee', 'victim-6-when-shot', 'victim-7-bank']) expect(DEMO_COMPLAINT_STEPS).toContain(c);
+    expect(DEMO_COMPLAINT_STEPS[DEMO_COMPLAINT_STEPS.length - 1]).toBe('victim-4-yes');
   });
 });
