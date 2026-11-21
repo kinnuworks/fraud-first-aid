@@ -245,6 +245,10 @@ function embeddedNumerals(tok: string): string | null {
 export function spokenToDigits(text: string): string {
   const tokens = text
     .toLowerCase()
+    // speech-to-text sometimes glues an English word to an Indian-script one ("UTR Numberనాలుగు"):
+    // a change of script is a word break
+    .replace(/([a-z])(?=[\u0900-\u0DFF])/g, '$1 ')
+    .replace(/([\u0900-\u0DFF])(?=[a-z])/g, '$1 ')
     .replace(/[-–—_.,;:!?()।॥]/g, ' ')
     .split(/\s+/)
     .filter(Boolean)
