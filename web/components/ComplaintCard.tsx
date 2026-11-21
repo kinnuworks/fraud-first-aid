@@ -263,6 +263,7 @@ export function ComplaintCardView({
   onEmail,
   onInterpret,
   agentState,
+  watching,
 }: {
   data: ComplaintView | null;
   onScreenshot?: (f: File) => void;
@@ -270,6 +271,8 @@ export function ComplaintCardView({
   onInterpret?: () => Promise<string | null>;
   // the live call's Agora agent state (RTM); absent on previews and shared views
   agentState?: string | null;
+  // the read-only watch page of a live call (a phone call, a shared view)
+  watching?: boolean;
 }) {
   if (!data)
     return (
@@ -300,7 +303,7 @@ export function ComplaintCardView({
             </div>
           </div>
         </section>
-        <LiveSystem actions={data.actions} agentState={agentState} phase={data.phase} />
+        <LiveSystem actions={data.actions} agentState={agentState} phase={data.phase} watching={watching} />
       </>
     );
   }
@@ -346,7 +349,7 @@ export function ComplaintCardView({
         </div>
       )}
       <AgentSteps actions={data.actions} />
-      <LiveSystem actions={data.actions} agentState={agentState} phase={data.phase} />
+      <LiveSystem actions={data.actions} agentState={agentState} phase={data.phase} watching={watching} />
       {data.phase === 'guard' ? null : (
         <>
           <CalendarSlot data={data} />

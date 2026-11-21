@@ -89,3 +89,16 @@ export function stateCaption(state: string | null | undefined, phase?: string): 
   if (state) return 'On the call, waiting for someone to speak';
   return 'Waiting for the agent to join the call';
 }
+
+// The panel's tag and its caption between steps. The call screen passes Agora's agent state (null
+// until the agent reports); the read-only watch page has the call's steps but no agent state.
+type PanelSource = { agentState?: string | null; watching?: boolean; phase?: string };
+export function panelTag({ agentState, watching }: PanelSource): 'live' | 'sample' {
+  return agentState !== undefined || watching ? 'live' : 'sample';
+}
+export function panelCaption({ agentState, watching, phase }: PanelSource): string {
+  if (agentState !== undefined && agentState !== null) return stateCaption(agentState, phase);
+  if (watching) return 'Live from the call: each new step lights the parts that did it';
+  if (agentState === null) return stateCaption(null, phase);
+  return 'The latest step, and the parts that did it';
+}

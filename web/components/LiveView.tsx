@@ -151,7 +151,7 @@ export function FamilyView({ session, viewKey, phone = false }: { session: strin
       </header>
       <div className="up-wrap flex max-w-[56rem] flex-col gap-5 py-8">
         {!phone && <ListenLive session={session} viewKey={viewKey} />}
-        <ComplaintCardView data={data} />
+        <ComplaintCardView data={data} watching />
       </div>
     </main>
   );

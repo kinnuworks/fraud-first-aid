@@ -11,7 +11,8 @@ import {
   nextFlash,
   nodesForAction,
   nodesForState,
-  stateCaption,
+  panelCaption,
+  panelTag,
   type FlashRec,
   type Flow,
   type NodeId,
@@ -69,11 +70,22 @@ const LANES: Array<{
   },
 ];
 
-export function LiveSystem({ actions, agentState, phase }: { actions?: Step[]; agentState?: string | null; phase?: string }) {
+export function LiveSystem({
+  actions,
+  agentState,
+  phase,
+  watching,
+}: {
+  actions?: Step[];
+  agentState?: string | null;
+  phase?: string;
+  // the read-only watch page: the call's live steps, without Agora's agent state
+  watching?: boolean;
+}) {
   const newest = actions?.length ? actions[actions.length - 1] : undefined;
   const key = newest ? `${newest.at}|${newest.text}` : '';
-  // a call screen passes agentState (null until the agent reports); previews and shared views don't
-  const live = agentState !== undefined;
+  // a call screen passes agentState (null until the agent reports); the watch page is live too
+  const live = panelTag({ agentState, watching }) === 'live';
   const [rec, setRec] = useState<FlashRec>(null);
   const [now, setNow] = useState(0);
   useEffect(() => {
@@ -90,16 +102,14 @@ export function LiveSystem({ actions, agentState, phase }: { actions?: Step[]; a
   const flows = new Set<Flow>(flowsFor([...lit], agentState));
   const caption = flash
     ? `${STAGE_NAMES[stageOf(flash.kind, flash.text)]}: ${flash.text}`
-    : live
-      ? stateCaption(agentState, phase)
-      : 'The latest step, and the parts that did it';
+    : panelCaption({ agentState, watching, phase });
 
   return (
     <section className="cd-card ls-card" aria-label="Behind the scenes on this call">
       <div className="as-head">
         <span className="up-label">Behind the scenes</span>
         <span className="as-live" aria-hidden="true">
-          {live ? 'live' : 'sample'}
+          {panelTag({ agentState, watching })}
         </span>
       </div>
       <div className="ls-strip" aria-hidden="true">
