@@ -65,7 +65,10 @@ export function nextComplaintClip(st: DemoState): string | null {
   const missing = st.missing ?? [];
   if (!missing.length) return null;
   if (Object.values(st.fields ?? {}).some((f) => f && !f.confirmed)) return 'victim-4-yes';
-  if (missing.includes('payee')) return 'victim-5-payee';
+  // the screenshot already holds the amount and the UPI ID: the caller backs them, which speech-to-text
+  // can't mishear the way it can a spoken UPI ID ('okaxis')
+  if (missing.includes('amount')) return 'victim-9-amount-shot';
+  if (missing.includes('payee')) return 'victim-5-payee-shot';
   if (missing.includes('when')) return 'victim-6-when-shot';
   if (missing.includes('victim_bank')) return 'victim-7-bank';
   return 'victim-4-yes';
