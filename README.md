@@ -80,8 +80,10 @@ flowchart TB
   agent --> rtm --> app
 ```
 
-### Read the code: five files
+### Read the code: six files
 
+- [`web/lib/agent-builder.ts`](web/lib/agent-builder.ts): the whole Agora agent in one place: [`new Agent`](web/lib/agent-builder.ts#L32), Sarvam speech-to-text ([L81](web/lib/agent-builder.ts#L81)), our model route as the agent's LLM ([L85](web/lib/agent-builder.ts#L85)), Murf Falcon as its voice ([L103](web/lib/agent-builder.ts#L103)), and the turn timing ([L58](web/lib/agent-builder.ts#L58))
+- [`web/lib/complaint/announce.ts`](web/lib/complaint/announce.ts#L105): Agora's speak API, INTERRUPT when the screenshot disagrees and APPEND for confirmations
 - [`web/lib/complaint/redflags.ts`](web/lib/complaint/redflags.ts): the guard's red flags and when money counts as gone
 - [`web/lib/entities/numbers.ts`](web/lib/entities/numbers.ts): spoken numbers in ten languages to exact digits
 - [`web/lib/complaint/fastpath.ts`](web/lib/complaint/fastpath.ts): read-back in groups of four, corrections, answers without the model
@@ -152,7 +154,22 @@ What it already runs on:
 
 What one complaint costs (an estimate, not an observed result, from each vendor's published price on 19 Nov 2026): our scripted live run took 3 min 43 s, so take a 4-minute call. Agora's Conversational AI Engine is US$0.10 a minute, the same with our own speech, model and voice keys ([Agora pricing](https://docs.agora.io/en/ai/reference/pricing)): US$0.40. Sarvam speech-to-text is ₹0.49 a minute ([Sarvam pricing](https://www.sarvam.ai/api-pricing)): ₹1.96. Murf Falcon is 1 cent per 1,000 characters ([Murf](https://murf.ai/api/docs/text-to-speech-models/falcon-2-1)): about 2 cents, assuming 2,000 characters spoken. The AI model adds about 1 cent, assuming 25 turns of about 4,000 tokens. In total, about US$0.43 plus ₹2 per complaint, almost all of it the real-time voice minutes. Assumptions: call length from one run; characters and tokens estimated, not measured.
 
-What a real deployment would still need: an Indian phone number, and a filing API from the cybercrime portal, which has none public today. Calls already share state through a Redis store (Upstash), so any server instance can answer any turn.
+### What it takes to deploy it
+
+What already runs as it would in production:
+- the Agora agent per call;
+- the shared store (Upstash), so any server instance can answer any turn;
+- per-call keys and rate limits;
+- the five-calls-at-once test.
+
+What a real deployment adds, in order:
+1. **A phone number people can call.** The phone path is built (Agora telephony with a BYO SIP trunk, [`phone.ts`](web/lib/handlers/phone.ts)). It needs Agora's gateway to pass the calls to the trunk, or an Indian number through Agora's Exotel route. The same agent and tools answer it.
+2. **A verified email domain,** so the pack reaches any address, not only ours (one DNS change in Resend).
+3. **A place to answer the calls.** For example, an option in a state cyber cell's or a bank's phone menu that forwards to the number, as an overflow line. This is our idea of how a pilot could work; no one has agreed to it.
+4. **Native-speaker review** of the spoken lines in the eight languages we wrote ourselves.
+5. **A filing API from the cybercrime portal,** which has none public today. Until then the pack is read out on the 1930 call, which the interpreter already does.
+
+Running costs scale with calls, at about US$0.43 plus ₹2 per 4-minute complaint (the estimate above). Nothing about the design changes with volume.
 
 ## How it works
 
