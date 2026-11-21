@@ -106,7 +106,7 @@ export default function LandingPage() {
             channel_name: responseData.channel,
             cap: responseData.cap,
             lang: new URLSearchParams(window.location.search).get('lang') ?? 'en',
-            mode: (['guard', 'demo1930'] as const).find((m) => m === new URLSearchParams(window.location.search).get('mode')) ?? 'complaint',
+            mode: (['guard', 'demo1930', 'democomplaint'] as const).find((m) => m === new URLSearchParams(window.location.search).get('mode')) ?? 'complaint',
             slow: new URLSearchParams(window.location.search).get('slow') === '1',
           } as ClientStartRequest & { lang: string; mode: string; slow: boolean }),
         })

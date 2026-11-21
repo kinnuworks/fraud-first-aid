@@ -9,7 +9,8 @@ export const DEMO_ACK = '31512511200123';
 
 // In order: the operator answers, asks for the UTR, asks for the caller's name (not in the complaint,
 // so the interpreter asks the caller, and the sample caller answers in Telugu), then gives the number.
-export const DEMO_1930_CLIPS = ['operator-1-hello', 'operator-2-utr', 'operator-3-name', 'victim-8-name', 'operator-4-ack'];
+// (no separate UTR question: the interpreter's opening summary already gives the UTR)
+export const DEMO_1930_CLIPS = ['operator-1-hello', 'operator-3-name', 'victim-8-name', 'operator-4-ack'];
 
 // The operator's answer to the interpreter's read-back: a real operator confirms an exact number and
 // corrects a wrong one (live speech recognition can slip a digit; the read-back is how it gets fixed).
@@ -78,4 +79,16 @@ export function nextComplaintClip(st: DemoState): string | null {
 // hears in the chosen language, so a Kannada listener gets the Kannada call; everyone else the Hindi one.
 export function scamClipFor(lang: string | null): string {
   return lang === 'kn' ? '/demo/sample-scam-call-kn.wav' : '/demo/sample-scam-call.wav';
+}
+
+// The short complaint demo: what happened is noted up front (labelled sample), so the caller's first
+// line is the UTR with one group wrong; the screenshot and Agora's cut-in follow within about 40 s.
+export const DEMO_COMPLAINT_FAST = ['victim-2-utr', 'screenshot', 'victim-3-screenshot-right'];
+
+export function seedDemoStory(c: Complaint) {
+  c.story = {
+    en: 'A caller posing as the bank said the KYC would expire tonight and had the victim scan a QR code; Rs 25,000 was paid.',
+    words: '',
+  };
+  act(c, 'heard', 'Understood what happened (sample data): a fake KYC call; Rs 25,000 paid after scanning a QR code');
 }

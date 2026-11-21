@@ -47,7 +47,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
-import { DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor } from '@/lib/complaint/demo1930';
+import { DEMO_COMPLAINT_FAST, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor } from '@/lib/complaint/demo1930';
 import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
@@ -534,8 +534,8 @@ export default function ConversationComponent({
     (async () => {
       await answered(30000); // the agent's greeting
       await sleep(500);
-      // the story, the UTR (one group wrong), the screenshot, then backing the screenshot
-      for (const step of DEMO_COMPLAINT_STEPS.slice(0, 4)) {
+      // what happened is already noted: the UTR (one group wrong), the screenshot, then backing it
+      for (const step of DEMO_COMPLAINT_FAST) {
         if (unmounted.current) return;
         if (step === 'screenshot') {
           await addShot();

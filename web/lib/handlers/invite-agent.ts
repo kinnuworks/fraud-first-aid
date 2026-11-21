@@ -10,7 +10,7 @@ import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { act } from '@/lib/complaint/session';
-import { seedDemo1930 } from '@/lib/complaint/demo1930';
+import { seedDemo1930, seedDemoStory } from '@/lib/complaint/demo1930';
 import { istToday } from '@/lib/complaint/today';
 import { checkCap } from '@/lib/capability';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
@@ -78,6 +78,8 @@ export async function POST(request: NextRequest) {
     const rawMode = (body as unknown as { mode?: string }).mode;
     // demo1930: "Watch it call 1930 for you" (a labelled sample complaint, then the 1930 interpreter)
     const demo1930 = rawMode === 'demo1930';
+    // democomplaint: "Watch it take a complaint" (what happened noted up front, labelled sample)
+    const demoComplaint = rawMode === 'democomplaint';
     const mode = rawMode === 'guard' ? 'guard' : 'complaint';
     startComplaint(channel_name, lang, mode);
     if (langArg === 'auto') getComplaint(channel_name).autoLang = true;
@@ -86,6 +88,7 @@ export async function POST(request: NextRequest) {
     else act(getComplaint(channel_name), 'heard', mode === 'guard'
       ? 'Listening through an Agora voice agent that stays silent until the caller asks for a code, a scan or money'
       : 'An Agora voice agent joined the call to take your report, in your language');
+    if (demoComplaint) seedDemoStory(getComplaint(channel_name));
     await persist(channel_name);
 
     // --- 2. Build and start the agent ---
