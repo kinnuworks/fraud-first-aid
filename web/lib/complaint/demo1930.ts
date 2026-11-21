@@ -92,3 +92,9 @@ export function seedDemoStory(c: Complaint) {
   };
   act(c, 'heard', 'Understood what happened (sample data): a fake KYC call; Rs 25,000 paid after scanning a QR code');
 }
+
+// How long the complaint demo waits after a line: before the screenshot, only until the agent starts
+// reading the UTR back, so the screenshot lands mid-sentence and Agora's speak API cuts in.
+export function waitBefore(next: string | undefined): 'speaking' | 'answered' {
+  return next === 'screenshot' ? 'speaking' : 'answered';
+}
