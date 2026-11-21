@@ -1693,7 +1693,10 @@ html[data-motion='reduce'] .gd-radar::before {
 .im-num .im-unit {
   font-weight: 700;
 }
-.im-stat:first-child .im-num {
+.im-stat--loss .im-num {
+  color: var(--bad-ink);
+}
+.im-stat--held .im-num {
   color: var(--ok);
 }
 .im-label {
@@ -2010,5 +2013,22 @@ html[data-motion='reduce'] .gd-radar::before {
   }
   .bts-lanes.is-playing .bts-item.is-on {
     transform: none;
+  }
+}
+
+/* Who this happens to, with five numbers: a divider only between numbers in the same row */
+@media (min-width: 1181px) {
+  .im-stat:nth-child(3n + 1) {
+    border-left: 0;
+    padding-left: 0;
+  }
+}
+@media (min-width: 861px) and (max-width: 1180px) {
+  .im-stats {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .im-stat:nth-child(2n + 1) {
+    border-left: 0;
+    padding-left: 0;
   }
 }
