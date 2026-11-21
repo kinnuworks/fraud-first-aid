@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { nodesForAction, nodesForState, flowsFor } from './live-nodes';
+import { nodesForAction, nodesForState, flowsFor, nextFlash, isFlashing } from './live-nodes';
 
 // The live "behind the scenes" panel on the call screen lights the parts that act, from two real
 // signals: Agora's agent state (RTM) and each step the server logs (act()).
@@ -59,5 +59,30 @@ describe('flowsFor', () => {
     expect(flowsFor(['ag-agent', 'sv-model'], 'thinking')).toEqual(['ag-sv']);
     expect(flowsFor(['sv-model', 'ex-ifsc', 'ex-store'], null)).toEqual(['sv-ex']);
     expect(flowsFor(['ag-agent', 'ex-murf', 'you-call', 'ag-rtc'], 'speaking')).toEqual(['ag-you']);
+  });
+});
+
+// The newest step lights its parts for 5 s, then the panel goes back to Agora's agent state. The call
+// screen re-polls every second or two and gets the same step back each time; that must not keep it lit.
+describe('nextFlash / isFlashing', () => {
+  it('a new step stays lit for 5 s, then goes out', () => {
+    const rec = nextFlash(null, 'a', 1000);
+    expect(isFlashing(rec, 'a', 5999)).toBe(true);
+    expect(isFlashing(rec, 'a', 6000)).toBe(false);
+  });
+  it('the same step polled again neither restarts nor extends it', () => {
+    const rec = nextFlash(null, 'a', 1000);
+    const again = nextFlash(rec, 'a', 4000);
+    expect(again).toBe(rec);
+    expect(isFlashing(again, 'a', 6500)).toBe(false);
+  });
+  it('a newer step starts its own 5 s', () => {
+    const rec = nextFlash(nextFlash(null, 'a', 1000), 'b', 7000);
+    expect(isFlashing(rec, 'b', 11999)).toBe(true);
+    expect(isFlashing(rec, 'a', 7001)).toBe(false);
+  });
+  it('no step, nothing lit', () => {
+    expect(nextFlash(null, '', 1000)).toBe(null);
+    expect(isFlashing(null, '', 1000)).toBe(false);
   });
 });
