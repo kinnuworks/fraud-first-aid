@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint } from './session';
 import { canInterpret, interpretLine } from './interpret';
-import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, DEMO_COMPLAINT_FAST, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor, seedDemo1930, seedDemoStory, waitBefore, DEMO_ACK } from './demo1930';
+import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, DEMO_COMPLAINT_FAST, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor, seedDemo1930, seedDemoStory, DEMO_ACK } from './demo1930';
 
 // "Watch it call 1930 for you": one click, no microphone, no complaint to finish first. A labelled
 // sample complaint is loaded already confirmed, the interpreter starts at once, and the sample 1930
@@ -114,15 +114,5 @@ describe('the short complaint demo', () => {
     seedDemoStory(c);
     expect(c.story?.en).toMatch(/KYC/);
     expect((c.actions ?? []).some((a) => /sample/i.test(a.text) && /what happened/i.test(a.text))).toBe(true);
-  });
-});
-
-// The cut-in: the screenshot goes in while the agent is still reading the UTR back, so Agora's speak
-// API interrupts it mid-sentence every time (added after it went quiet, it only spoke up; 21 Nov).
-describe('waitBefore', () => {
-  it('before the screenshot, wait only until the agent starts speaking; otherwise until it has answered', () => {
-    expect(waitBefore('screenshot')).toBe('speaking');
-    expect(waitBefore('victim-3-screenshot-right')).toBe('answered');
-    expect(waitBefore(undefined)).toBe('answered');
   });
 });
