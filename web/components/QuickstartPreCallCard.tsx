@@ -124,7 +124,7 @@ function BehindTheScenes() {
         <Image
           src="/architecture.png"
           width={2400}
-          height={1350}
+          height={1500}
           sizes="(max-width: 1180px) 100vw, 1120px"
           alt="Behind the scenes on one call: you talk in your browser; Agora runs one AI agent per call (Sarvam hears, our server decides, Murf Falcon speaks), plus the speak API, a second agent for the 1930 call, and RTC and RTM; our server holds the scam guard, the number layer, an AI model with 12 tools, the screenshot check and the pack builder; it calls an AI model API, Razorpay IFSC, Resend and Upstash; the Twilio phone line is built but switched off"
         />

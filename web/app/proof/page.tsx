@@ -72,7 +72,7 @@ export default function Proof() {
             services it calls.
           </p>
           <a href="/architecture.png" target="_blank" rel="noopener noreferrer">
-            <Image src="/architecture.png" width={2400} height={1350} alt="Behind the scenes on one call: you, Agora's agent with Sarvam and Murf Falcon, our server's guard, number layer, AI model with 12 tools, screenshot check and pack builder, and the services it calls" style={{ width: '100%', height: 'auto', borderRadius: 12, border: '1px solid var(--line, #d6e3dc)' }} />
+            <Image src="/architecture.png" width={2400} height={1500} alt="Behind the scenes on one call: you, Agora's agent with Sarvam and Murf Falcon, our server's guard, number layer, AI model with 12 tools, screenshot check and pack builder, and the services it calls" style={{ width: '100%', height: 'auto', borderRadius: 12, border: '1px solid var(--line, #d6e3dc)' }} />
           </a>
         </section>
         <section className="pf-more">

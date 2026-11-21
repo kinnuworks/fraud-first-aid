@@ -46,9 +46,7 @@ To see every screen without talking: [`?state=complaint-done`](https://fraudfirs
 
 ### The whole system
 
-![Behind the scenes on one call: you talk in your browser; Agora runs one AI agent per call (Sarvam hears, our server decides, Murf Falcon speaks), plus the speak API, a second agent for the 1930 call, and RTC and RTM; our server holds the guard, the number layer, an AI model with 12 tools, the screenshot check and the pack builder; services: an AI model API, Razorpay IFSC, Resend, Upstash, and a Twilio phone line that's built but off](docs/architecture.png)
-
-Every component in more detail: [docs/architecture-detailed.png](docs/architecture-detailed.png).
+![Behind the scenes, everything on one call: you (the call on speaker, the live page in ten languages, what you see, your 1930 pack, second screens, /proof); Agora (one Conversational AI agent per call where Sarvam hears, our server decides and Murf Falcon speaks; turn-taking; the speak API; a second agent for the 1930 call; RTC; RTM; telephony built but off); our server (the guard, the fast path, the number layer, an AI model with 12 tools, the screenshot check, the pack builder, deadlines and banks, control and safety); services (Sarvam, Murf Falcon, an AI model API, Razorpay IFSC, Resend, Upstash Redis, a Twilio SIP trunk that's off); plus one call step by step, how we know it works, and privacy](docs/architecture.png)
 
 ### How a call flows
 
