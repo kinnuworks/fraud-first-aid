@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { indianMobile, CallLimiter, mayCall } from './phone';
+import { indianMobile, CallLimiter, mayCall, phoneMode, guardPhoneGreeting } from './phone';
 
 describe('mayCall', () => {
   it('with no list set, any Indian mobile may be called', () => {
@@ -44,5 +44,23 @@ describe('CallLimiter', () => {
     expect(l.take('+918800556677', t + 3000)).toBe(true);
     expect(l.take('+917019283746', t + 4000)).toBe(false); // hourly cap of 3 reached
     expect(l.take('+917019283746', t + 3_700_000)).toBe(true); // an hour later
+  });
+});
+
+// "Listen to my call": the agent rings the presenter, says who it is and asks them to merge it into the
+// call they are on, then listens silently like the browser guard. A silent guard may ring only a number
+// on the allowlist, never a stranger: with no list, the phone line stays the complaint.
+describe('phoneMode', () => {
+  it('guard only when asked for and an allowlist is set', () => {
+    expect(phoneMode('guard', '+919845012345')).toBe('guard');
+    expect(phoneMode('guard', undefined)).toBe('complaint');
+    expect(phoneMode('guard', '  ')).toBe('complaint');
+    expect(phoneMode('complaint', '+919845012345')).toBe('complaint');
+    expect(phoneMode('anything', '+919845012345')).toBe('complaint');
+  });
+  it('the guard says who it is and asks to be merged, in Hindi, Kannada and English', () => {
+    for (const l of ['hi', 'kn', 'en'] as const) expect(guardPhoneGreeting(l).length).toBeGreaterThan(20);
+    expect(guardPhoneGreeting('en')).toMatch(/merge/i);
+    expect(guardPhoneGreeting('ta')).toBe(guardPhoneGreeting('en'));
   });
 });
