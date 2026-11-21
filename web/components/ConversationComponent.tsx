@@ -47,7 +47,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
-import { DEMO_COMPLAINT_FAST, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor, waitBefore } from '@/lib/complaint/demo1930';
+import { DEMO_COMPLAINT_FAST, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor } from '@/lib/complaint/demo1930';
 import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
@@ -534,22 +534,14 @@ export default function ConversationComponent({
     (async () => {
       await answered(30000); // the agent's greeting
       await sleep(500);
-      // what happened is already noted: the UTR (one group wrong), the screenshot, then backing it.
-      // The screenshot goes in while the agent reads the UTR back, so Agora's speak API cuts it off.
-      const speakingNow = async () => {
-        const t0 = Date.now();
-        while (Date.now() - t0 < 20000 && stateRef.current !== 'speaking' && !unmounted.current) await sleep(150);
-        await sleep(1500); // mid read-back
-      };
-      for (let i = 0; i < DEMO_COMPLAINT_FAST.length; i++) {
-        const step = DEMO_COMPLAINT_FAST[i];
+      // what happened is already noted: the UTR (one group wrong), the screenshot, then backing it
+      for (const step of DEMO_COMPLAINT_FAST) {
         if (unmounted.current) return;
         if (step === 'screenshot') {
           await addShot();
           await sleep(1500);
         } else await playClipIntoCall(client, `/demo/${step}.wav`);
-        if (waitBefore(DEMO_COMPLAINT_FAST[i + 1]) === 'speaking') await speakingNow();
-        else await answered();
+        await answered();
       }
       // then answer what the agent is asking, from the call's state, until the pack shows
       for (let i = 0; i < 12 && !packShown() && !unmounted.current; i++) {
