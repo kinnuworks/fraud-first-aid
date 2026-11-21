@@ -10,6 +10,9 @@ const CLIPS: Array<[string, string, string, string]> = [
   ['operator-2-utr', 'Okay. Please tell me the UTR number of the transaction, and the amount.', 'en-IN-aarav', 'en-IN'],
   ['operator-3-name', 'Thank you. What is the full name of the person who lost the money?', 'en-IN-aarav', 'en-IN'],
   ['victim-8-name', 'నా పేరు లక్ష్మి రెడ్డి.', 'en-IN-anisha', 'te-IN'],
+  // the caller backs the amount and the UPI ID shown on the screenshot (the one-click complaint demo)
+  ['victim-9-amount-shot', 'స్క్రీన్‌షాట్‌లో ఉన్న మొత్తమే సరైనది, ఇరవై ఐదు వేల రూపాయలు.', 'en-IN-anisha', 'te-IN'],
+  ['victim-5-payee-shot', 'స్క్రీన్‌షాట్‌లో ఉన్న UPI ID సరైనదే.', 'en-IN-anisha', 'te-IN'],
   // the same caller in Hindi, for the one-click 1930 demo
   ['victim-8-name-hi', 'मेरा नाम लक्ष्मी रेड्डी है।', 'en-IN-anisha', 'hi-IN'],
   // the caller confirms the payment time shown on the screenshot (the checks date the screenshot at run time)

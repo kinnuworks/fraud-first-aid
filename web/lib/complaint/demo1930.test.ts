@@ -79,8 +79,11 @@ describe('nextComplaintClip', () => {
   it('a detail read back and not yet confirmed gets a yes', () => {
     expect(nextComplaintClip({ fields: { payee: f('ramesh@okaxis', false) }, missing: ['payee (not confirmed)', 'victim_bank'] })).toBe('victim-4-yes');
   });
-  it('a missing detail gets its line: payee, then the time on the screenshot, then the bank', () => {
-    expect(nextComplaintClip({ fields: {}, missing: ['payee', 'when', 'victim_bank'] })).toBe('victim-5-payee');
+  it('a missing detail gets its line: the amount and the UPI ID backed from the screenshot, then the time, then the bank', () => {
+    // 21 Nov: the agent asked for the amount and the caller had no line for it, then 'okaxis' was misheard
+    // three times; backing the screenshot's amount and UPI ID cut about 80 s from the demo
+    expect(nextComplaintClip({ fields: {}, missing: ['amount', 'payee', 'when', 'victim_bank'] })).toBe('victim-9-amount-shot');
+    expect(nextComplaintClip({ fields: {}, missing: ['payee', 'when', 'victim_bank'] })).toBe('victim-5-payee-shot');
     expect(nextComplaintClip({ fields: {}, missing: ['when', 'victim_bank'] })).toBe('victim-6-when-shot');
     expect(nextComplaintClip({ fields: {}, missing: ['victim_bank'] })).toBe('victim-7-bank');
   });
