@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { nodesForAction, nodesForState, flowsFor, nextFlash, isFlashing } from './live-nodes';
+import { nodesForAction, nodesForState, flowsFor, nextFlash, isFlashing, stateCaption } from './live-nodes';
 
 // The live "behind the scenes" panel on the call screen lights the parts that act, from two real
 // signals: Agora's agent state (RTM) and each step the server logs (act()).
@@ -12,6 +12,16 @@ describe('nodesForState', () => {
   });
   it('speaking: Murf Falcon speaks back over RTC', () => {
     expect(nodesForState('speaking').sort()).toEqual(['ag-agent', 'ag-rtc', 'ex-murf', 'you-call'].sort());
+  });
+  it('silent turn: our scam guard heard nothing risky, so the agent stays quiet', () => {
+    expect(nodesForState('silent').sort()).toEqual(['ag-agent', 'sv-guard'].sort());
+  });
+  it('a caption for every agent state, and the join message only before the agent reports', () => {
+    expect(stateCaption('silent', 'guard')).toMatch(/silent turn/i);
+    expect(stateCaption('idle', 'complaint')).not.toMatch(/join/i);
+    expect(stateCaption(null, 'guard')).toMatch(/join/i);
+    expect(stateCaption('listening', 'guard')).toMatch(/on guard/i);
+    expect(stateCaption('speaking', 'complaint')).toMatch(/murf/i);
   });
   it('nothing lit before the agent is on the call', () => {
     expect(nodesForState(null)).toEqual([]);
