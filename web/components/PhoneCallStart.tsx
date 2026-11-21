@@ -9,7 +9,7 @@ export function PhoneCallStart() {
   const [state, setState] = useState<string | null>(null);
   async function call(e: React.FormEvent) {
     e.preventDefault();
-    setState('Calling your phone…');
+    setState('Placing the call. Your phone rings in about 40 seconds…');
     const q = new URLSearchParams(window.location.search);
     const t = await fetch('/api/generate-agora-token').then((r) => r.json()).catch(() => null);
     if (!t?.channel || !t?.cap) return setState('Could not start the call.');

@@ -8,8 +8,10 @@ import { Logo } from './design/Logo';
 import { ImpactBand } from './ImpactBand';
 import Image from 'next/image';
 import { BehindTheScenes } from './BehindTheScenes';
+import { PhoneCallStart } from './PhoneCallStart';
 
-// Another way in: open it on a phone (QR); plus a recording of the whole flow. Calls to the caller's phone are paused on the server.
+// Another way in: open it on a phone (QR), or have it ring a phone (only numbers on the server's
+// PHONE_ALLOWED_NUMBERS list, so the page can't ring a stranger); plus a recording of the whole flow.
 function MoreWays() {
   return (
     <section className="mw" aria-labelledby="mw-title">
@@ -18,7 +20,11 @@ function MoreWays() {
       </span>
       <div className="mw-body">
         <h2 id="mw-title" className="mw-title">Try it on your phone</h2>
-        <p className="mw-sub">Scan the code to open it on your phone.</p>
+        <p className="mw-sub">
+          Scan the code to open it in your phone&apos;s browser. It can also ring a real phone: today only the
+          presenter&apos;s, so nobody can use it to call a stranger.
+        </p>
+        <PhoneCallStart />
       </div>
       <a
         className="up-link mw-rec"

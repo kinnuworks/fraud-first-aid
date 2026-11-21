@@ -8,6 +8,15 @@ export function indianMobile(input: string): string | null {
   return /^[6-9]\d{9}$/.test(d) ? `+91${d}` : null;
 }
 
+// PHONE_ALLOWED_NUMBERS (comma-separated): when set, the app rings only these numbers, so the public
+// page can't be used to ring a stranger. Unset or empty: any Indian mobile. A list with no valid
+// number refuses everyone rather than opening up.
+export function mayCall(to: string, list: string | undefined): boolean {
+  const entries = (list ?? '').split(',').map((s) => s.trim()).filter(Boolean);
+  if (entries.length === 0) return true;
+  return entries.map(indianMobile).some((n) => n !== null && n === to);
+}
+
 export class CallLimiter {
   // a number counts as live until its call ends or the agent's 20-minute limit has passed
   private live = new Map<string, number>();

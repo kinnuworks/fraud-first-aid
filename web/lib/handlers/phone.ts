@@ -8,7 +8,7 @@ import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
-import { indianMobile, CallLimiter } from '@/lib/phone';
+import { indianMobile, CallLimiter, mayCall } from '@/lib/phone';
 import { READBACK_LANGS, type ReadbackLang } from '@/lib/entities/numbers';
 import { agentUidFor } from '@/lib/agora';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
@@ -24,8 +24,8 @@ export function agoraRestClient(appId: string, appCertificate: string) {
 }
 
 export async function POST(request: NextRequest) {
-  // Off unless PHONE_CALLS_ENABLED=1: calling a number someone types lets them ring any mobile, and
-  // the line reaches the trunk on only a few calls today (security pass, 20 Nov).
+  // Off unless PHONE_CALLS_ENABLED=1, and limited to PHONE_ALLOWED_NUMBERS when that is set: calling
+  // a number someone types would let them ring any mobile (security pass, 20 Nov).
   if (process.env.PHONE_CALLS_ENABLED !== '1') {
     return NextResponse.json({ error: 'Calls to your phone are paused for now. Open this page on your phone instead: it works the same in the browser.' }, { status: 503 });
   }
@@ -40,6 +40,9 @@ export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => ({}))) as { to?: string; lang?: string; mode?: string };
   const to = indianMobile(String(body.to ?? ''));
   if (!to) return NextResponse.json({ error: 'enter an Indian mobile number' }, { status: 400 });
+  if (!mayCall(to, process.env.PHONE_ALLOWED_NUMBERS)) {
+    return NextResponse.json({ error: "Today it rings only the presenter's phone, so it can't be used to call a stranger. Scan the code to try it in your phone's browser." }, { status: 403 });
+  }
   const appId = process.env.NEXT_PUBLIC_AGORA_APP_ID, appCertificate = process.env.NEXT_AGORA_APP_CERTIFICATE;
   const from = process.env.TWILIO_PHONE_NUMBER, llmUrl = process.env.LLM_PUBLIC_URL;
   if (!appId || !appCertificate || !from || !llmUrl) return NextResponse.json({ error: 'phone calls are not set up' }, { status: 500 });
