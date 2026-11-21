@@ -11,6 +11,7 @@ import {
   nextFlash,
   nodesForAction,
   nodesForState,
+  stateCaption,
   type FlashRec,
   type Flow,
   type NodeId,
@@ -68,12 +69,6 @@ const LANES: Array<{
   },
 ];
 
-const SAY: Record<string, string> = {
-  listening: 'Listening: Agora carries the call to Sarvam, which turns it into text',
-  thinking: 'Thinking: Agora sends the turn to our server, which decides what to do',
-  speaking: 'Speaking: Murf Falcon answers in your language, over Agora',
-};
-
 export function LiveSystem({ actions, agentState, phase }: { actions?: Step[]; agentState?: string | null; phase?: string }) {
   const newest = actions?.length ? actions[actions.length - 1] : undefined;
   const key = newest ? `${newest.at}|${newest.text}` : '';
@@ -95,13 +90,9 @@ export function LiveSystem({ actions, agentState, phase }: { actions?: Step[]; a
   const flows = new Set<Flow>(flowsFor([...lit], agentState));
   const caption = flash
     ? `${STAGE_NAMES[stageOf(flash.kind, flash.text)]}: ${flash.text}`
-    : agentState && SAY[agentState]
-      ? phase === 'guard' && agentState === 'listening'
-        ? 'On guard: Agora carries the call to Sarvam; our server stays silent until there is a red flag'
-        : SAY[agentState]
-      : live
-        ? 'Waiting for the agent to join the call'
-        : 'The latest step, and the parts that did it';
+    : live
+      ? stateCaption(agentState, phase)
+      : 'The latest step, and the parts that did it';
 
   return (
     <section className="cd-card ls-card" aria-label="Behind the scenes on this call">

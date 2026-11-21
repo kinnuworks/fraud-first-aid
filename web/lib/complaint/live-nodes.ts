@@ -27,6 +27,7 @@ export function nodesForState(state: string | null | undefined): NodeId[] {
   if (state === 'listening') return ['you-call', 'ag-rtc', 'ag-agent', 'ex-sarvam'];
   if (state === 'thinking') return ['ag-agent', 'sv-model'];
   if (state === 'speaking') return ['ag-agent', 'ex-murf', 'ag-rtc', 'you-call'];
+  if (state === 'silent') return ['ag-agent', 'sv-guard'];
   return [];
 }
 
@@ -71,4 +72,20 @@ export function nextFlash(prev: FlashRec, key: string, now: number): FlashRec {
 
 export function isFlashing(rec: FlashRec, key: string, now: number): boolean {
   return !!key && rec?.key === key && now < rec.until;
+}
+
+// What the panel says when no step is lit: Agora's agent state, in words.
+export function stateCaption(state: string | null | undefined, phase?: string): string {
+  if (state === 'listening')
+    return phase === 'guard'
+      ? 'On guard: Agora carries the call to Sarvam; our server stays silent until there is a red flag'
+      : 'Listening: Agora carries the call to Sarvam, which turns it into text';
+  if (state === 'thinking') return 'Thinking: Agora sends the turn to our server, which decides what to do';
+  if (state === 'speaking') return 'Speaking: Murf Falcon answers in your language, over Agora';
+  if (state === 'silent')
+    return phase === 'guard'
+      ? 'Silent turn: our scam guard heard nothing risky, so the agent stays quiet and keeps listening'
+      : 'Silent turn: our server chose to say nothing, so the agent keeps listening';
+  if (state) return 'On the call, waiting for someone to speak';
+  return 'Waiting for the agent to join the call';
 }
