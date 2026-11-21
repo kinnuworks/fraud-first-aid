@@ -47,7 +47,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
-import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, operatorReply } from '@/lib/complaint/demo1930';
+import { DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply } from '@/lib/complaint/demo1930';
 import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
@@ -457,7 +457,7 @@ export default function ConversationComponent({
       while (Date.now() - t0 < max && !unmounted.current) {
         if (!busy()) {
           if (!quiet) quiet = Date.now();
-          if (Date.now() - quiet > 2000) return;
+          if (Date.now() - quiet > 1500) return;
         } else quiet = 0;
         await sleep(250);
       }
@@ -481,7 +481,8 @@ export default function ConversationComponent({
       await sleep(1500);
       await answered(30000); // the interpreter's greeting
       await sleep(1000);
-      for (const clip of DEMO_1930_CLIPS) {
+      const lang = new URLSearchParams(window.location.search).get('lang') ?? 'hi';
+      for (const clip of demo1930Clips(lang)) {
         if (unmounted.current) return;
         await playClipIntoCall(client, `/demo/${clip}.wav`);
         await answered();
@@ -513,7 +514,7 @@ export default function ConversationComponent({
       while (Date.now() - t0 < max && !unmounted.current) {
         if (!busy()) {
           if (!quiet) quiet = Date.now();
-          if (Date.now() - quiet > 2000) return;
+          if (Date.now() - quiet > 1500) return;
         } else quiet = 0;
         await sleep(250);
       }
@@ -528,10 +529,13 @@ export default function ConversationComponent({
       input.dispatchEvent(new Event('change', { bubbles: true }));
     };
     const packShown = () => !!document.querySelector('[data-testid="pack"]');
+    const state = async () =>
+      (await (await fetch(`/api/call/complaint?session=${agoraData.channel}&cap=${agoraData.cap}`)).json().catch(() => ({}))) as Parameters<typeof nextComplaintClip>[0];
     (async () => {
       await answered(30000); // the agent's greeting
-      await sleep(800);
-      for (const step of DEMO_COMPLAINT_STEPS) {
+      await sleep(500);
+      // the story, the UTR (one group wrong), the screenshot, then backing the screenshot
+      for (const step of DEMO_COMPLAINT_STEPS.slice(0, 4)) {
         if (unmounted.current) return;
         if (step === 'screenshot') {
           await addShot();
@@ -539,12 +543,15 @@ export default function ConversationComponent({
         } else await playClipIntoCall(client, `/demo/${step}.wav`);
         await answered();
       }
-      for (let i = 0; i < 3 && !packShown() && !unmounted.current; i++) {
-        await playClipIntoCall(client, '/demo/victim-4-yes.wav');
+      // then answer what the agent is asking, from the call's state, until the pack shows
+      for (let i = 0; i < 12 && !packShown() && !unmounted.current; i++) {
+        const clip = nextComplaintClip(await state().catch(() => ({})));
+        if (!clip) break;
+        await playClipIntoCall(client, `/demo/${clip}.wav`);
         await answered();
       }
     })().catch((e) => console.error('[watch complaint]', e));
-  }, [watch, demoComplaint, isAgentConnected, client]);
+  }, [watch, demoComplaint, isAgentConnected, client, agoraData.channel, agoraData.cap]);
 
   // Sync isAgentConnected with remoteUsers (covers cases where user-joined/left are missed)
   useEffect(() => {

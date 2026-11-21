@@ -51,3 +51,22 @@ export const DEMO_COMPLAINT_STEPS = [
   'victim-7-bank',
   'victim-4-yes',
 ];
+
+// The 1930 demo's clips for the caller's language: the operator speaks English; the sample caller
+// answers the name question in Hindi or Telugu.
+export function demo1930Clips(lang: string): string[] {
+  return lang === 'hi' ? DEMO_1930_CLIPS.map((c) => (c === 'victim-8-name' ? 'victim-8-name-hi' : c)) : DEMO_1930_CLIPS;
+}
+
+// After the UTR and the screenshot: the sample caller's next line, from the call's state. A detail read
+// back and not yet confirmed gets a yes; otherwise the first missing detail gets its line.
+type DemoState = { fields?: Record<string, { value: unknown; confirmed: boolean } | undefined>; missing?: string[] };
+export function nextComplaintClip(st: DemoState): string | null {
+  const missing = st.missing ?? [];
+  if (!missing.length) return null;
+  if (Object.values(st.fields ?? {}).some((f) => f && !f.confirmed)) return 'victim-4-yes';
+  if (missing.includes('payee')) return 'victim-5-payee';
+  if (missing.includes('when')) return 'victim-6-when-shot';
+  if (missing.includes('victim_bank')) return 'victim-7-bank';
+  return 'victim-4-yes';
+}

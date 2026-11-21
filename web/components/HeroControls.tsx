@@ -223,8 +223,8 @@ export function Watch1930Button({ isLoading, onStartConversation, className }: A
         const url = new URL(window.location.href);
         url.searchParams.set('mode', 'demo1930');
         url.searchParams.set('watch', '1');
-        // the sample caller answers in Telugu
-        url.searchParams.set('lang', 'te');
+        // the sample caller answers in Hindi; the operator speaks English
+        url.searchParams.set('lang', 'hi');
         window.history.replaceState(null, '', url);
         onStartConversation();
       }}
