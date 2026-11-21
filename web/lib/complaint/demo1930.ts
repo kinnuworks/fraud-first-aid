@@ -1,6 +1,6 @@
 // "Watch it call 1930 for you": one click, no microphone, and no complaint to finish first. A labelled
 // sample complaint is loaded with every detail confirmed (the same sample as the payment screenshot),
-// the 1930 interpreter starts at once, and the page plays the sample 1930 operator's lines into the
+// the page starts the 1930 interpreter through 'Speak to 1930 for me' at once, and plays the sample 1930 operator's lines into the
 // call one at a time (components/ConversationComponent.tsx). Sample data and sample voices only.
 import { act, type Complaint } from './session';
 
@@ -32,7 +32,6 @@ export function seedDemo1930(c: Complaint, today: string) {
     'done',
     'Loaded a sample complaint for the 1930 demo (sample data): Rs 25,000 to ramesh@okaxis at 9:30 am today, UTR 4021 7786 9910, State Bank of India, every detail confirmed',
   );
-  c.phase = 'interpret';
 }
 
 // "Watch it take a complaint": the labelled sample caller (Telugu) in a live complaint call. Each line

@@ -6,12 +6,11 @@ import {
 } from 'agora-agents';
 import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { agentUidFor } from '@/lib/agora';
-import { presetFor, PRESETS } from '@/lib/agent-config';
+import { presetFor } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { act } from '@/lib/complaint/session';
 import { seedDemo1930 } from '@/lib/complaint/demo1930';
-import { INTERPRET_GREETING } from '@/lib/complaint/interpret';
 import { istToday } from '@/lib/complaint/today';
 import { checkCap } from '@/lib/capability';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
@@ -99,10 +98,8 @@ export async function POST(request: NextRequest) {
       appCertificate,
     });
 
-    const agent = demo1930
-      ? // the 1930 interpreter, as "Speak to 1930 for me" starts it (lib/handlers/interpret.ts)
-        buildAgent({ client, preset: PRESETS.auto, lang, langArg: lang, mode: 'interpret', greeting: INTERPRET_GREETING[lang], channel: channel_name, llmUrl, surface: 'web' })
-      : buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface: 'web', slow: (body as unknown as { slow?: boolean }).slow === true });
+    // demo1930 starts as a finished complaint; the page then starts the interpreter (/api/call/interpret)
+    const agent = buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface: 'web', slow: (body as unknown as { slow?: boolean }).slow === true });
 
     // remoteUids restricts the agent to only process audio from this user
     const session = agent.createSession({
@@ -124,7 +121,6 @@ export async function POST(request: NextRequest) {
     setAgent(channel_name, agentId);
     // remembered in the shared store, so the interpreter can replace this agent from any instance
     getComplaint(channel_name).agentId = agentId;
-    if (demo1930) act(getComplaint(channel_name), 'tool', 'Started the 1930 interpreter: an Agora agent on this call, hearing English, Hindi and your language');
     await persist(channel_name);
 
     return NextResponse.json({

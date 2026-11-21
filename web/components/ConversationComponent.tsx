@@ -465,6 +465,20 @@ export default function ConversationComponent({
     const ackNow = async () =>
       String(((await (await fetch(`/api/call/complaint?session=${agoraData.channel}&cap=${agoraData.cap}`)).json().catch(() => ({}))) as { ack1930?: string }).ack1930 ?? '');
     (async () => {
+      // the complaint agent has joined with the sample complaint: hand the call to the 1930 interpreter
+      // through the same route as 'Speak to 1930 for me' (a second Agora agent replaces the first)
+      await sleep(2500);
+      for (let i = 0; i < 5 && !unmounted.current; i++) {
+        const r = await fetch('/api/call/interpret', {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ channel: agoraData.channel, cap: agoraData.cap, uid: agoraData.uid }),
+        }).catch(() => null);
+        if (r?.ok) break;
+        await sleep(2000);
+      }
+      onInterpreterStart();
+      await sleep(1500);
       await answered(30000); // the interpreter's greeting
       await sleep(1000);
       for (const clip of DEMO_1930_CLIPS) {
@@ -483,7 +497,7 @@ export default function ConversationComponent({
         await playClipIntoCall(client, `/demo/${reply}.wav`);
       }
     })().catch((e) => console.error('[watch 1930]', e));
-  }, [watch, demo1930, isAgentConnected, client, agoraData.channel, agoraData.cap]);
+  }, [watch, demo1930, isAgentConnected, client, agoraData.channel, agoraData.cap, agoraData.uid, onInterpreterStart]);
 
   // "Watch it take a complaint": the labelled sample caller's lines, each after the agent has answered,
   // the sample payment screenshot added through the card's own upload, then "yes" until the pack shows.
