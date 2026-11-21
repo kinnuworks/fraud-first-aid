@@ -2207,6 +2207,13 @@ html[data-large] {
 .as-step:last-child .as-text { font-weight: 700; }
 .as-at { font-size: 0.8125rem; color: var(--ink-3); font-variant-numeric: tabular-nums; }
 .as-more { margin-top: 6px; font-size: 0.8125rem; color: var(--ink-3); }
+/* the organisers' five stages (FAQ 44): which this call has reached, and each step's stage */
+.as-stages { list-style: none; margin: 0 0 10px; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+.as-stage { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px 4px 4px; border-radius: 999px; border: 1px solid var(--rule); font-size: 0.8125rem; font-weight: 600; color: var(--ink-2); background: var(--paper); }
+.as-stage-n { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: var(--panel); color: var(--ink-2); font-size: 0.75rem; font-weight: 800; }
+.as-stage.is-on { border-color: var(--ok); color: var(--ink); background: var(--ok-bg); }
+.as-stage.is-on .as-stage-n { background: var(--ok); color: #fff; }
+.as-tag { display: inline-block; margin-right: 4px; padding: 0 6px; border-radius: 6px; background: var(--panel); color: var(--ink-2); font-size: 0.75rem; font-weight: 700; letter-spacing: 0.02em; vertical-align: 1px; }
 
 /* /proof: check it yourself */
 .pf-hero { padding: 32px 0 8px; max-width: 46rem; }

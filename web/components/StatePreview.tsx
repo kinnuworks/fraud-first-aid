@@ -49,7 +49,7 @@ const STEPS: Step[] = [
   { at: '14:44:21', kind: 'done', text: 'You said yes: emailed the pack with the calendar reminders' },
 ];
 const INTERP_STEPS: Step[] = [
-  ...STEPS.slice(-3),
+  ...STEPS,
   { at: '14:45:02', kind: 'tool', text: 'Started the 1930 interpreter: a new agent that hears English, Hindi and your language' },
   { at: '14:46:40', kind: 'done', text: 'Saved the 1930 acknowledgement number: 31512511200123' },
 ];

@@ -5,6 +5,7 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { createPortal } from 'react-dom';
 import { minutesSince } from '@/lib/complaint/pack';
 import { scamById } from '@/lib/complaint/scams';
+import { stageOf, stagesSeen, STAGE_NAMES } from '@/lib/complaint/stages';
 import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
 
 type Field = { value: string | number; confirmed: boolean };
@@ -628,17 +629,31 @@ const STEP_ICON: Record<NonNullable<ComplaintView['actions']>[number]['kind'], s
 function AgentSteps({ actions }: { actions?: ComplaintView['actions'] }) {
   if (!actions?.length) return null;
   const recent = actions.slice(-7);
+  const seen = stagesSeen(actions);
   return (
     <section className="cd-card as-card" aria-label="What Fraud First Aid is doing" data-testid="agent-steps">
       <div className="as-head">
         <span className="up-label">What it&apos;s doing</span>
         <span className="as-live" aria-hidden="true">live</span>
       </div>
+      <ol className="as-stages" aria-label="The five stages: which this call has reached">
+        {STAGE_NAMES.map((name, i) => (
+          <li key={name} className={`as-stage${seen.has(i as 0 | 1 | 2 | 3 | 4) ? ' is-on' : ''}`}>
+            <span className="as-stage-n" aria-hidden="true">
+              {seen.has(i as 0 | 1 | 2 | 3 | 4) ? '✓' : i + 1}
+            </span>
+            {name}
+            <span className="sr-only">{seen.has(i as 0 | 1 | 2 | 3 | 4) ? ': reached' : ': not yet'}</span>
+          </li>
+        ))}
+      </ol>
       <ol className="as-list" aria-live="polite">
         {recent.map((a) => (
           <li key={`${a.at}|${a.text}`} className={`as-step as-step--${a.kind}`}>
             <span className="as-icon" aria-hidden="true">{STEP_ICON[a.kind]}</span>
-            <span className="as-text">{a.text}</span>
+            <span className="as-text">
+              <span className="as-tag">{STAGE_NAMES[stageOf(a.kind, a.text)]}</span> {a.text}
+            </span>
             <time className="as-at">{a.at}</time>
           </li>
         ))}
