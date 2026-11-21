@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { nodesForAction, nodesForState, flowsFor, nextFlash, isFlashing, stateCaption } from './live-nodes';
+import { nodesForAction, nodesForState, flowsFor, nextFlash, isFlashing, stateCaption, panelTag, panelCaption } from './live-nodes';
 
 // The live "behind the scenes" panel on the call screen lights the parts that act, from two real
 // signals: Agora's agent state (RTM) and each step the server logs (act()).
@@ -94,5 +94,21 @@ describe('nextFlash / isFlashing', () => {
   it('no step, nothing lit', () => {
     expect(nextFlash(null, '', 1000)).toBe(null);
     expect(isFlashing(null, '', 1000)).toBe(false);
+  });
+});
+
+// The read-only watch page (a phone call or a shared live view) has the call's steps but not Agora's
+// agent state: it is live, not a sample, and says so.
+describe('panelTag and panelCaption', () => {
+  it('the call screen and the watch page are live; previews are samples', () => {
+    expect(panelTag({ agentState: null })).toBe('live');
+    expect(panelTag({ watching: true })).toBe('live');
+    expect(panelTag({})).toBe('sample');
+  });
+  it('the watch page, between steps, says it follows the call live', () => {
+    expect(panelCaption({ watching: true, phase: 'complaint' })).toMatch(/live from the call/i);
+    expect(panelCaption({ agentState: null, phase: 'guard' })).toMatch(/join/i);
+    expect(panelCaption({ agentState: 'speaking', phase: 'complaint' })).toMatch(/murf/i);
+    expect(panelCaption({})).toMatch(/latest step/i);
   });
 });
