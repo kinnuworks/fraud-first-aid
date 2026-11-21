@@ -16,7 +16,8 @@ describe('seedDemo1930', () => {
     expect(c.fields.payee?.value).toBe('ramesh@okaxis');
     expect(c.fields.victim_bank?.value).toBe('State Bank of India');
     expect(c.fields.when?.value).toBe('2026-11-21T09:30');
-    expect(c.phase).toBe('interpret');
+    // it starts as a finished complaint; the page then starts the interpreter through 'Speak to 1930 for me'
+    expect(c.phase).toBe('complaint');
   });
   it('says on screen that it is sample data', () => {
     const c = newComplaint('te', 'complaint');
