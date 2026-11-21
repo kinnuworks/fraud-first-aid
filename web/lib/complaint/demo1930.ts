@@ -34,3 +34,21 @@ export function seedDemo1930(c: Complaint, today: string) {
   );
   c.phase = 'interpret';
 }
+
+// "Watch it take a complaint": the labelled sample caller (Telugu) in a live complaint call. Each line
+// plays after the agent has answered the one before; 'screenshot' adds the sample payment screenshot
+// (public/demo/sample-payment-today.png: 21 Nov 2026, 9:30 am) through the card's own upload, so the
+// screenshot check and Agora's speak cut-in run for real. Extra "yes" lines follow until the pack shows.
+export const DEMO_COMPLAINT_STEPS = [
+  'victim-1-lost',
+  'victim-2-utr',
+  'screenshot',
+  'victim-3-screenshot-right',
+  'victim-4-yes',
+  'victim-5-payee',
+  'victim-4-yes',
+  'victim-6-when-shot',
+  'victim-4-yes',
+  'victim-7-bank',
+  'victim-4-yes',
+];

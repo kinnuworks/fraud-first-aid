@@ -47,7 +47,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
-import { DEMO_1930_CLIPS, operatorReply } from '@/lib/complaint/demo1930';
+import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, operatorReply } from '@/lib/complaint/demo1930';
 import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
@@ -116,6 +116,8 @@ export default function ConversationComponent({
   const [watch] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('watch') === '1');
   // ?mode=demo1930: "Watch it call 1930 for you" (the sample 1930 operator instead of the scam call)
   const [demo1930] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'demo1930');
+  // ?mode=democomplaint: "Watch it take a complaint" (the sample caller, in a live complaint call)
+  const [demoComplaint] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'democomplaint');
   const unmounted = useRef(false);
   useEffect(() => () => { unmounted.current = true; }, []);
   const watchPlayed = useRef(false);
@@ -428,13 +430,13 @@ export default function ConversationComponent({
 
   // Watch mode: play the sample scam call once the agent is in the call (after its greeting).
   useEffect(() => {
-    if (!watch || demo1930 || !isAgentConnected || watchPlayed.current) return;
+    if (!watch || demo1930 || demoComplaint || !isAgentConnected || watchPlayed.current) return;
     watchPlayed.current = true;
     const t = setTimeout(() => {
       playClipIntoCall(client, '/demo/sample-scam-call.wav').catch((e) => console.error('[watch]', e));
     }, 2500);
     return () => clearTimeout(t);
-  }, [watch, demo1930, isAgentConnected, client]);
+  }, [watch, demo1930, demoComplaint, isAgentConnected, client]);
 
   // "Watch it call 1930 for you": the labelled sample 1930 operator plays into the call one line at a
   // time, each after the interpreter has answered (it started speaking, then went quiet for 2 s), as
@@ -482,6 +484,53 @@ export default function ConversationComponent({
       }
     })().catch((e) => console.error('[watch 1930]', e));
   }, [watch, demo1930, isAgentConnected, client, agoraData.channel, agoraData.cap]);
+
+  // "Watch it take a complaint": the labelled sample caller's lines, each after the agent has answered,
+  // the sample payment screenshot added through the card's own upload, then "yes" until the pack shows.
+  useEffect(() => {
+    if (!watch || !demoComplaint || !isAgentConnected || watchPlayed.current) return;
+    watchPlayed.current = true;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const busy = () => stateRef.current === 'speaking' || stateRef.current === 'thinking';
+    const answered = async (max = 45000) => {
+      const t0 = Date.now();
+      while (Date.now() - t0 < 15000 && !busy() && !unmounted.current) await sleep(200);
+      let quiet = 0;
+      while (Date.now() - t0 < max && !unmounted.current) {
+        if (!busy()) {
+          if (!quiet) quiet = Date.now();
+          if (Date.now() - quiet > 2000) return;
+        } else quiet = 0;
+        await sleep(250);
+      }
+    };
+    const addShot = async () => {
+      const input = document.querySelector<HTMLInputElement>('input[type=file]');
+      if (!input) return;
+      const blob = await (await fetch('/demo/sample-payment-today.png')).blob();
+      const dt = new DataTransfer();
+      dt.items.add(new File([blob], 'payment-screenshot.png', { type: 'image/png' }));
+      input.files = dt.files;
+      input.dispatchEvent(new Event('change', { bubbles: true }));
+    };
+    const packShown = () => !!document.querySelector('[data-testid="pack"]');
+    (async () => {
+      await answered(30000); // the agent's greeting
+      await sleep(800);
+      for (const step of DEMO_COMPLAINT_STEPS) {
+        if (unmounted.current) return;
+        if (step === 'screenshot') {
+          await addShot();
+          await sleep(1500);
+        } else await playClipIntoCall(client, `/demo/${step}.wav`);
+        await answered();
+      }
+      for (let i = 0; i < 3 && !packShown() && !unmounted.current; i++) {
+        await playClipIntoCall(client, '/demo/victim-4-yes.wav');
+        await answered();
+      }
+    })().catch((e) => console.error('[watch complaint]', e));
+  }, [watch, demoComplaint, isAgentConnected, client]);
 
   // Sync isAgentConnected with remoteUsers (covers cases where user-joined/left are missed)
   useEffect(() => {

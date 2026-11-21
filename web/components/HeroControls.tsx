@@ -188,6 +188,30 @@ export function WatchButton({ isLoading, onStartConversation, className = 'up-bt
   );
 }
 
+// One click: the labelled sample caller (Telugu) reports a fraud in a live complaint call; the sample
+// payment screenshot is added by itself after the UTR. No microphone.
+export function WatchComplaintButton({ isLoading, onStartConversation, className }: Actions) {
+  return (
+    <button
+      type="button"
+      disabled={isLoading}
+      onClick={() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('mode', 'democomplaint');
+        url.searchParams.set('watch', '1');
+        url.searchParams.set('lang', 'te');
+        window.history.replaceState(null, '', url);
+        onStartConversation();
+      }}
+      className={className ?? 'up-link text-left text-[1.0625rem]'}
+      style={{ background: 'none', border: 0, cursor: 'pointer', whiteSpace: 'normal' }}
+      data-testid="watch-complaint"
+    >
+      Watch it take a complaint, with sample voices
+    </button>
+  );
+}
+
 // One click: a labelled sample complaint, already confirmed, and the 1930 interpreter calling a sample
 // 1930 operator for you (sample voices, no microphone). The pack and the 1930 call on one screen.
 export function Watch1930Button({ isLoading, onStartConversation, className }: Actions) {
