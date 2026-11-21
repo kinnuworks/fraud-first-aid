@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { newComplaint } from './session';
 import { canInterpret, interpretLine } from './interpret';
-import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor, seedDemo1930, DEMO_ACK } from './demo1930';
+import { DEMO_1930_CLIPS, DEMO_COMPLAINT_STEPS, DEMO_COMPLAINT_FAST, demo1930Clips, nextComplaintClip, operatorReply, scamClipFor, seedDemo1930, seedDemoStory, DEMO_ACK } from './demo1930';
 
 // "Watch it call 1930 for you": one click, no microphone, no complaint to finish first. A labelled
 // sample complaint is loaded already confirmed, the interpreter starts at once, and the sample 1930
@@ -40,8 +40,9 @@ describe('the interpreter gives 1930 nearly everything itself', () => {
 });
 
 describe('the sample 1930 operator', () => {
-  it('plays hello, asks for the UTR, the name (the sample caller answers), then gives the acknowledgement number', () => {
-    expect(DEMO_1930_CLIPS).toEqual(['operator-1-hello', 'operator-2-utr', 'operator-3-name', 'victim-8-name', 'operator-4-ack']);
+  it('plays hello, asks for the name (the sample caller answers), then gives the acknowledgement number', () => {
+    // no separate "tell me the UTR": the interpreter's opening summary already gives it (21 Nov: shorter demo)
+    expect(DEMO_1930_CLIPS).toEqual(['operator-1-hello', 'operator-3-name', 'victim-8-name', 'operator-4-ack']);
   });
   it('confirms a read-back that is exact and corrects one that is not, as a real operator would', () => {
     expect(operatorReply(DEMO_ACK)).toBe('operator-5-confirm');
@@ -67,7 +68,7 @@ describe('the sample complaint caller', () => {
 
 describe('the 1930 demo in Hindi', () => {
   it('the sample caller answers the name question in Hindi; the operator lines stay English', () => {
-    expect(demo1930Clips('hi')).toEqual(['operator-1-hello', 'operator-2-utr', 'operator-3-name', 'victim-8-name-hi', 'operator-4-ack']);
+    expect(demo1930Clips('hi')).toEqual(['operator-1-hello', 'operator-3-name', 'victim-8-name-hi', 'operator-4-ack']);
     expect(demo1930Clips('te')).toEqual(DEMO_1930_CLIPS);
   });
 });
@@ -99,5 +100,19 @@ describe('scamClipFor', () => {
     expect(scamClipFor('kn')).toBe('/demo/sample-scam-call-kn.wav');
     expect(scamClipFor('hi')).toBe('/demo/sample-scam-call.wav');
     expect(scamClipFor(null)).toBe('/demo/sample-scam-call.wav');
+  });
+});
+
+// The short complaint demo: what happened is already noted (labelled sample), so the caller's first
+// line is the UTR with one group wrong, then the screenshot goes in and Agora cuts in.
+describe('the short complaint demo', () => {
+  it('starts at the UTR, then the screenshot, then backs the screenshot', () => {
+    expect(DEMO_COMPLAINT_FAST).toEqual(['victim-2-utr', 'screenshot', 'victim-3-screenshot-right']);
+  });
+  it('notes what happened as sample data, so the pack still says how it happened', () => {
+    const c = newComplaint('te', 'complaint');
+    seedDemoStory(c);
+    expect(c.story?.en).toMatch(/KYC/);
+    expect((c.actions ?? []).some((a) => /sample/i.test(a.text) && /what happened/i.test(a.text))).toBe(true);
   });
 });
