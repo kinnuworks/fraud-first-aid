@@ -109,6 +109,47 @@ function Journey() {
   );
 }
 
+// What runs behind one call: the same diagram as the README (docs/architecture.png), with three plain lines.
+function BehindTheScenes() {
+  return (
+    <section id="inside" className="bts up-wrap" aria-labelledby="bts-title">
+      <h2 id="bts-title" className="up-label">
+        Behind the scenes
+      </h2>
+      <p className="bts-lead">
+        Your voice goes to an Agora AI agent made for your call. Sarvam hears it, our server decides what to do, and Murf Falcon answers in your
+        language.
+      </p>
+      <a className="bts-fig" href="/architecture.png" target="_blank" rel="noopener noreferrer" aria-label="Open the diagram at full size">
+        <Image
+          src="/architecture.png"
+          width={2400}
+          height={1350}
+          sizes="(max-width: 1180px) 100vw, 1120px"
+          alt="Behind the scenes on one call: you talk in your browser; Agora runs one AI agent per call (Sarvam hears, our server decides, Murf Falcon speaks), plus the speak API, a second agent for the 1930 call, and RTC and RTM; our server holds the scam guard, the number layer, an AI model with 12 tools, the screenshot check and the pack builder; it calls an AI model API, Razorpay IFSC, Resend and Upstash; the Twilio phone line is built but switched off"
+        />
+      </a>
+      <ul className="bts-points">
+        <li>
+          <b>Agora runs the live call.</b> One agent per call, the speak API that lets it interrupt itself, and a second agent that joins your 1930
+          call.
+        </li>
+        <li>
+          <b>Our server is the brain.</b> The scam guard, the number layer that turns speech into exact digits, an AI model with 12 tools, and the
+          screenshot check.
+        </li>
+        <li>
+          <b>Murf Falcon and Sarvam are its voice and ears.</b> Murf&apos;s recommended voice for each of ten languages, and Sarvam&apos;s
+          speech-to-text.
+        </li>
+      </ul>
+      <p className="bts-more">
+        Tap the diagram to open it full size. Every part, with its code and its tests: <a href="/proof">Check it yourself</a>.
+      </p>
+    </section>
+  );
+}
+
 // Reported outcomes after a fast 1930 report. No faces here.
 function Cases() {
   return (
@@ -212,6 +253,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
     <div className="up-page" style={{ overflowX: 'clip' }}>
       <Hero {...p} />
       <Journey />
+      <BehindTheScenes />
       <Cases />
       <section className="ck up-wrap" aria-label="Check it yourself">
         <div className="ck-card">

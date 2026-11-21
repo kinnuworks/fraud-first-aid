@@ -1715,3 +1715,71 @@ html[data-motion='reduce'] .gd-radar::before {
   font-weight: 800;
   letter-spacing: -0.03em;
 }
+
+/* Behind the scenes: the architecture diagram on the landing page */
+.bts {
+  padding-top: 84px;
+}
+.bts > .up-label {
+  font-family: var(--font-ui);
+  color: var(--ink);
+}
+.bts-lead {
+  margin: 10px 0 18px;
+  max-width: 62ch;
+  font-size: 1.125rem;
+  color: var(--ink-2);
+}
+.bts-fig {
+  display: block;
+  border: 1px solid var(--rule);
+  border-radius: 18px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 10px 30px rgb(13 59 41 / 0.08);
+}
+.bts-fig img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.bts-fig:focus-visible {
+  outline: 3px solid var(--ok);
+  outline-offset: 3px;
+}
+.bts-points {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+.bts-points li {
+  border: 1px solid var(--rule);
+  border-radius: 14px;
+  padding: 14px 16px;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+  line-height: 1.45;
+}
+.bts-points b {
+  display: block;
+  color: var(--ink);
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+.bts-more {
+  margin-top: 14px;
+  color: var(--ink-2);
+  font-size: 0.9375rem;
+}
+.bts-more a {
+  color: var(--ok);
+  font-weight: 600;
+}
+@media (max-width: 860px) {
+  .bts-points {
+    grid-template-columns: 1fr;
+  }
+}
