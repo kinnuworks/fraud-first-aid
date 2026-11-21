@@ -7,6 +7,7 @@ import { minutesSince } from '@/lib/complaint/pack';
 import { scamById } from '@/lib/complaint/scams';
 import { stageOf, stagesSeen, STAGE_NAMES } from '@/lib/complaint/stages';
 import { LANG_NAME as LANG_LABEL } from '@/lib/complaint/pack';
+import { LiveSystem } from './LiveSystem';
 
 type Field = { value: string | number; confirmed: boolean };
 type Pack =
@@ -261,11 +262,14 @@ export function ComplaintCardView({
   onScreenshot,
   onEmail,
   onInterpret,
+  agentState,
 }: {
   data: ComplaintView | null;
   onScreenshot?: (f: File) => void;
   onEmail?: (email: string) => Promise<string | null>;
   onInterpret?: () => Promise<string | null>;
+  // the live call's Agora agent state (RTM); absent on previews and shared views
+  agentState?: string | null;
 }) {
   if (!data)
     return (
@@ -276,25 +280,28 @@ export function ComplaintCardView({
   const flags = data.flags ?? [];
   if (data.phase === 'guard' && flags.length === 0) {
     return (
-      <section aria-label="Scam-call guard" className="cd-card gd-listen" data-testid="guard-listening">
-        <span className="gd-radar" aria-hidden="true">
-          <span />
-          <span />
-          <span />
-          <i />
-        </span>
-        <div>
-          <h2 className="text-[1.625rem] font-bold leading-tight">Listening for scam signs…</h2>
-          <p className="mt-1 text-[1.0625rem]" style={{ color: 'var(--ink-3)' }}>
-            Nothing suspicious yet.
-          </p>
-          <div className="gd-signs" aria-label="It speaks up when the caller asks for">
-            {SIGNS.map((x) => (
-              <span key={x}>{x}</span>
-            ))}
+      <>
+        <section aria-label="Scam-call guard" className="cd-card gd-listen" data-testid="guard-listening">
+          <span className="gd-radar" aria-hidden="true">
+            <span />
+            <span />
+            <span />
+            <i />
+          </span>
+          <div>
+            <h2 className="text-[1.625rem] font-bold leading-tight">Listening for scam signs…</h2>
+            <p className="mt-1 text-[1.0625rem]" style={{ color: 'var(--ink-3)' }}>
+              Nothing suspicious yet.
+            </p>
+            <div className="gd-signs" aria-label="It speaks up when the caller asks for">
+              {SIGNS.map((x) => (
+                <span key={x}>{x}</span>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+        <LiveSystem actions={data.actions} agentState={agentState} phase={data.phase} />
+      </>
     );
   }
   const mismatches = (['utr', 'amount', 'payee', 'when'] as const).filter((k) => data.check?.[k]?.status === 'mismatch' && data.fields[k]);
@@ -339,6 +346,7 @@ export function ComplaintCardView({
         </div>
       )}
       <AgentSteps actions={data.actions} />
+      <LiveSystem actions={data.actions} agentState={agentState} phase={data.phase} />
       {data.phase === 'guard' ? null : (
         <>
           <CalendarSlot data={data} />
@@ -747,7 +755,19 @@ function PackItem({ n, title, text, open = false, lang }: { n: number; title: st
   );
 }
 
-export function ComplaintCard({ session, cap, uid, onInterpreterStart }: { session: string; cap: string; uid?: string | number; onInterpreterStart?: () => void }) {
+export function ComplaintCard({
+  session,
+  cap,
+  uid,
+  onInterpreterStart,
+  agentState,
+}: {
+  session: string;
+  cap: string;
+  uid?: string | number;
+  onInterpreterStart?: () => void;
+  agentState?: string | null;
+}) {
   const [data, setData] = useState<ComplaintView | null>(null);
   useEffect(() => {
     // one request at a time, the next a second after the last reply: an older reply can never land
@@ -787,6 +807,7 @@ export function ComplaintCard({ session, cap, uid, onInterpreterStart }: { sessi
     <>
       <ComplaintCardView
         data={data}
+        agentState={agentState ?? null}
         onScreenshot={upload}
         onInterpret={async () => {
           const r = await fetch('/api/call/interpret', {

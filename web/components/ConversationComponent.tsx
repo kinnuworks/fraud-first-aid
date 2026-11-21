@@ -538,7 +538,7 @@ export default function ConversationComponent({
       }
       transcriptPanel={
         <>
-          <ComplaintCard session={agoraData.channel} cap={agoraData.cap} uid={agoraData.uid} onInterpreterStart={onInterpreterStart} />
+          <ComplaintCard session={agoraData.channel} cap={agoraData.cap} uid={agoraData.uid} onInterpreterStart={onInterpreterStart} agentState={agentState} />
           <SecondScreens session={agoraData.channel} viewKey={agoraData.viewCap} talkKey={agoraData.talkCap} />
         </>
       }
