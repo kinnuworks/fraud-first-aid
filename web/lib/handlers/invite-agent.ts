@@ -6,10 +6,13 @@ import {
 } from 'agora-agents';
 import { ClientStartRequest, AgentResponse } from '@/types/conversation';
 import { agentUidFor } from '@/lib/agora';
-import { presetFor } from '@/lib/agent-config';
+import { presetFor, PRESETS } from '@/lib/agent-config';
 import { buildAgent } from '@/lib/agent-builder';
 import { startComplaint, getComplaint, persist } from '@/lib/complaint/store';
 import { act } from '@/lib/complaint/session';
+import { seedDemo1930 } from '@/lib/complaint/demo1930';
+import { INTERPRET_GREETING } from '@/lib/complaint/interpret';
+import { istToday } from '@/lib/complaint/today';
 import { checkCap } from '@/lib/capability';
 import { allowStart, clientAddress } from '@/lib/ratelimit';
 import { claimChannel, setAgent, releaseChannel } from '@/lib/handlers/agents';
@@ -73,11 +76,15 @@ export async function POST(request: NextRequest) {
     if (!claimChannel(channel_name)) {
       return NextResponse.json({ error: 'an agent is already running for this call' }, { status: 409 });
     }
-    const mode = (body as unknown as { mode?: string }).mode === 'guard' ? 'guard' : 'complaint';
+    const rawMode = (body as unknown as { mode?: string }).mode;
+    // demo1930: "Watch it call 1930 for you" (a labelled sample complaint, then the 1930 interpreter)
+    const demo1930 = rawMode === 'demo1930';
+    const mode = rawMode === 'guard' ? 'guard' : 'complaint';
     startComplaint(channel_name, lang, mode);
     if (langArg === 'auto') getComplaint(channel_name).autoLang = true;
     // the first step on screen says what is listening, so the Agora part is visible from the start
-    act(getComplaint(channel_name), 'heard', mode === 'guard'
+    if (demo1930) seedDemo1930(getComplaint(channel_name), istToday());
+    else act(getComplaint(channel_name), 'heard', mode === 'guard'
       ? 'Listening through an Agora voice agent that stays silent until the caller asks for a code, a scan or money'
       : 'An Agora voice agent joined the call to take your report, in your language');
     await persist(channel_name);
@@ -92,7 +99,10 @@ export async function POST(request: NextRequest) {
       appCertificate,
     });
 
-    const agent = buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface: 'web', slow: (body as unknown as { slow?: boolean }).slow === true });
+    const agent = demo1930
+      ? // the 1930 interpreter, as "Speak to 1930 for me" starts it (lib/handlers/interpret.ts)
+        buildAgent({ client, preset: PRESETS.auto, lang, langArg: lang, mode: 'interpret', greeting: INTERPRET_GREETING[lang], channel: channel_name, llmUrl, surface: 'web' })
+      : buildAgent({ client, preset, lang, langArg, mode, channel: channel_name, llmUrl, surface: 'web', slow: (body as unknown as { slow?: boolean }).slow === true });
 
     // remoteUids restricts the agent to only process audio from this user
     const session = agent.createSession({
@@ -114,6 +124,7 @@ export async function POST(request: NextRequest) {
     setAgent(channel_name, agentId);
     // remembered in the shared store, so the interpreter can replace this agent from any instance
     getComplaint(channel_name).agentId = agentId;
+    if (demo1930) act(getComplaint(channel_name), 'tool', 'Started the 1930 interpreter: an Agora agent on this call, hearing English, Hindi and your language');
     await persist(channel_name);
 
     return NextResponse.json({

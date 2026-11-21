@@ -188,6 +188,31 @@ export function WatchButton({ isLoading, onStartConversation, className = 'up-bt
   );
 }
 
+// One click: a labelled sample complaint, already confirmed, and the 1930 interpreter calling a sample
+// 1930 operator for you (sample voices, no microphone). The pack and the 1930 call on one screen.
+export function Watch1930Button({ isLoading, onStartConversation, className }: Actions) {
+  return (
+    <button
+      type="button"
+      disabled={isLoading}
+      onClick={() => {
+        const url = new URL(window.location.href);
+        url.searchParams.set('mode', 'demo1930');
+        url.searchParams.set('watch', '1');
+        // the sample caller answers in Telugu
+        url.searchParams.set('lang', 'te');
+        window.history.replaceState(null, '', url);
+        onStartConversation();
+      }}
+      className={className ?? 'up-link text-left text-[1.0625rem]'}
+      style={{ background: 'none', border: 0, cursor: 'pointer', whiteSpace: 'normal' }}
+      data-testid="watch-1930"
+    >
+      Watch it call 1930 for you, with sample voices
+    </button>
+  );
+}
+
 export function ListenButton({ isLoading, onStartConversation, link = false, className }: Actions & { link?: boolean }) {
   return (
     <button

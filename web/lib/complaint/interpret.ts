@@ -113,7 +113,7 @@ export function interpretLine(c: Complaint, kind: 'intro' | 'utr'): string | nul
   const toCaller = (line: string) => (c.lang === 'en' ? '' : ` ${line}`);
   if (kind === 'intro') {
     c.interpIntro = true;
-    return `Hello, I'm Fraud First Aid, an AI assistant helping this caller report a UPI fraud. The caller speaks ${LANG_NAME[c.lang]}, and I'll interpret. Rs ${inr(c.fields.amount!.value)} was debited on ${k.when}, paid to ${k.payee}. ${k.utr}${toCaller(TO_CALLER[c.lang].told)}`;
+    return `Hello, I'm Fraud First Aid, an AI assistant helping this caller report a UPI fraud. The caller speaks ${LANG_NAME[c.lang]}, and I'll interpret. Rs ${inr(c.fields.amount!.value)} was debited from the caller's ${c.fields.victim_bank!.value} account on ${k.when}, paid to ${k.payee}. ${k.utr}${toCaller(TO_CALLER[c.lang].told)}`;
   }
   return `${k.utr} ${k.amount}${toCaller(TO_CALLER[c.lang].gaveUtr)}`;
 }

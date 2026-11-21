@@ -47,6 +47,7 @@ import {
 import { QuickstartTranscriptPanel } from './QuickstartTranscriptPanel';
 import { ComplaintCard } from './ComplaintCard';
 import { SampleScamCall, playClipIntoCall } from './SampleScamCall';
+import { DEMO_1930_CLIPS, operatorReply } from '@/lib/complaint/demo1930';
 import { SecondScreens } from './SecondScreens';
 import type { ConversationComponentProps } from '@/types/conversation';
 
@@ -113,6 +114,10 @@ export default function ConversationComponent({
   // ?watch=1: "Watch it catch a scam call" from the first screen. No microphone is opened; once the
   // agent is listening, the labelled sample scam call plays into the call by itself.
   const [watch] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('watch') === '1');
+  // ?mode=demo1930: "Watch it call 1930 for you" (the sample 1930 operator instead of the scam call)
+  const [demo1930] = useState(() => typeof window !== 'undefined' && new URLSearchParams(window.location.search).get('mode') === 'demo1930');
+  const unmounted = useRef(false);
+  useEffect(() => () => { unmounted.current = true; }, []);
   const watchPlayed = useRef(false);
   const remoteUsers = useRemoteUsers();
   // A browser that blocks sound until a tap (iOS Safari) gets a button instead of silence.
@@ -423,13 +428,60 @@ export default function ConversationComponent({
 
   // Watch mode: play the sample scam call once the agent is in the call (after its greeting).
   useEffect(() => {
-    if (!watch || !isAgentConnected || watchPlayed.current) return;
+    if (!watch || demo1930 || !isAgentConnected || watchPlayed.current) return;
     watchPlayed.current = true;
     const t = setTimeout(() => {
       playClipIntoCall(client, '/demo/sample-scam-call.wav').catch((e) => console.error('[watch]', e));
     }, 2500);
     return () => clearTimeout(t);
-  }, [watch, isAgentConnected, client]);
+  }, [watch, demo1930, isAgentConnected, client]);
+
+  // "Watch it call 1930 for you": the labelled sample 1930 operator plays into the call one line at a
+  // time, each after the interpreter has answered (it started speaking, then went quiet for 2 s), as
+  // scripts/interpret-check.ts does. Then the operator confirms or corrects the read-back number.
+  const stateRef = useRef<AgentState | null>(null);
+  useEffect(() => {
+    stateRef.current = agentState;
+  }, [agentState]);
+  useEffect(() => {
+    if (!watch || !demo1930 || !isAgentConnected || watchPlayed.current) return;
+    watchPlayed.current = true;
+    const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+    const busy = () => stateRef.current === 'speaking' || stateRef.current === 'thinking';
+    const answered = async (max = 45000) => {
+      const t0 = Date.now();
+      while (Date.now() - t0 < 15000 && !busy() && !unmounted.current) await sleep(200);
+      let quiet = 0;
+      while (Date.now() - t0 < max && !unmounted.current) {
+        if (!busy()) {
+          if (!quiet) quiet = Date.now();
+          if (Date.now() - quiet > 2000) return;
+        } else quiet = 0;
+        await sleep(250);
+      }
+    };
+    const ackNow = async () =>
+      String(((await (await fetch(`/api/call/complaint?session=${agoraData.channel}&cap=${agoraData.cap}`)).json().catch(() => ({}))) as { ack1930?: string }).ack1930 ?? '');
+    (async () => {
+      await answered(30000); // the interpreter's greeting
+      await sleep(1000);
+      for (const clip of DEMO_1930_CLIPS) {
+        if (unmounted.current) return;
+        await playClipIntoCall(client, `/demo/${clip}.wav`);
+        await answered();
+      }
+      let heard = '';
+      for (let i = 0; i < 45 && !heard && !unmounted.current; i++) {
+        heard = await ackNow().catch(() => '');
+        if (!heard) await sleep(2000);
+      }
+      const reply = operatorReply(heard);
+      if (reply && !unmounted.current) {
+        await answered(20000);
+        await playClipIntoCall(client, `/demo/${reply}.wav`);
+      }
+    })().catch((e) => console.error('[watch 1930]', e));
+  }, [watch, demo1930, isAgentConnected, client, agoraData.channel, agoraData.cap]);
 
   // Sync isAgentConnected with remoteUsers (covers cases where user-joined/left are missed)
   useEffect(() => {
