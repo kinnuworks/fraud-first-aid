@@ -84,7 +84,7 @@ export function stateCaption(state: string | null | undefined, phase?: string): 
   if (state === 'speaking') return 'Speaking: Murf Falcon answers in your language, over Agora';
   if (state === 'silent')
     return phase === 'guard'
-      ? 'Silent turn: our scam guard heard nothing risky, so the agent stays quiet and keeps listening'
+      ? 'Silent turn: nothing new to flag in that turn, so the agent stays quiet and keeps listening'
       : 'Silent turn: our server chose to say nothing, so the agent keeps listening';
   if (state) return 'On the call, waiting for someone to speak';
   return 'Waiting for the agent to join the call';
