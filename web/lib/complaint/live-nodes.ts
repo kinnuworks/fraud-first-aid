@@ -57,3 +57,18 @@ export function flowsFor(nodes: NodeId[], state: string | null | undefined): Flo
   if (state === 'speaking') out.push('ag-you');
   return out;
 }
+
+// The newest step lights its parts for FLASH_MS, then the panel goes back to Agora's agent state.
+// Time-based, so the call screen's polling, which returns the same step again and again, neither
+// restarts nor extends it.
+export type FlashRec = { key: string; until: number } | null;
+export const FLASH_MS = 5000;
+
+export function nextFlash(prev: FlashRec, key: string, now: number): FlashRec {
+  if (!key || key === prev?.key) return prev;
+  return { key, until: now + FLASH_MS };
+}
+
+export function isFlashing(rec: FlashRec, key: string, now: number): boolean {
+  return !!key && rec?.key === key && now < rec.until;
+}

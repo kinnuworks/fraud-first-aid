@@ -3,8 +3,18 @@
 // "Behind the scenes, live" on the call screen: the four parts of the system, lit as they act on this
 // call. Driven by two real signals: Agora's agent state over RTM (listening, thinking, speaking) and
 // each step our server logs (the same steps as "What it's doing"). See lib/complaint/live-nodes.ts.
-import { useEffect, useRef, useState } from 'react';
-import { flowsFor, nodesForAction, nodesForState, type Flow, type NodeId } from '@/lib/complaint/live-nodes';
+import { useEffect, useState } from 'react';
+import {
+  FLASH_MS,
+  flowsFor,
+  isFlashing,
+  nextFlash,
+  nodesForAction,
+  nodesForState,
+  type FlashRec,
+  type Flow,
+  type NodeId,
+} from '@/lib/complaint/live-nodes';
 import { STAGE_NAMES, stageOf } from '@/lib/complaint/stages';
 import type { ComplaintView } from './ComplaintCard';
 
@@ -69,20 +79,17 @@ export function LiveSystem({ actions, agentState, phase }: { actions?: Step[]; a
   const key = newest ? `${newest.at}|${newest.text}` : '';
   // a call screen passes agentState (null until the agent reports); previews and shared views don't
   const live = agentState !== undefined;
-  const [flash, setFlash] = useState<Step | undefined>(live ? undefined : newest);
-  const seen = useRef(key);
+  const [rec, setRec] = useState<FlashRec>(null);
+  const [now, setNow] = useState(0);
   useEffect(() => {
-    if (!newest) return;
-    if (!live) {
-      setFlash(newest);
-      return;
-    }
-    if (key === seen.current) return;
-    seen.current = key;
-    setFlash(newest);
-    const t = setTimeout(() => setFlash(undefined), 5000);
+    if (!live || !key) return;
+    const t0 = Date.now();
+    setRec((r) => nextFlash(r, key, t0));
+    setNow(t0);
+    const t = setTimeout(() => setNow(Date.now()), FLASH_MS + 100);
     return () => clearTimeout(t);
-  }, [key, live, newest]);
+  }, [key, live]);
+  const flash = !live ? newest : isFlashing(rec, key, now) ? newest : undefined;
 
   const lit = new Set<NodeId>([...nodesForState(agentState), ...(flash ? nodesForAction(flash.kind, flash.text) : [])]);
   const flows = new Set<Flow>(flowsFor([...lit], agentState));
