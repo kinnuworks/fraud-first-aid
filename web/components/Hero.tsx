@@ -15,7 +15,6 @@ import {
   GuardSample,
   LANGS,
   type StartProps,
-  Watch1930Button,
 } from './HeroControls';
 import { STATES } from './StatePreview';
 import { when } from './ComplaintCard';
@@ -109,7 +108,6 @@ export function Hero(p: StartProps) {
             <p className="ta-path__t">Tell it what happened and it gets every number right for your bank and for 1930, India&apos;s national cyber fraud helpline.</p>
             <div className="ta-path__do">
               <StartButton {...p} className="ta-btn ta-btn--line ta-btn--lg" />
-              <Watch1930Button {...p} className="ta-link" />
             </div>
           </div>
         </div>
