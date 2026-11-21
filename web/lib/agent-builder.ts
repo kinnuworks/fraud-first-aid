@@ -2,6 +2,7 @@
 // pipeline (Sarvam speech-to-text, our model route with complaint tools, Murf Falcon voice).
 import { Agent, SarvamSTT, MurfTTS, OpenAI, type AgoraClient } from 'agora-agents';
 import { fillerWords, SILENCE_PROMPT } from './filler';
+import { turnConfig } from './turn-config';
 import { prototypeInstructions, type LangPreset } from './agent-config';
 
 function requireEnv(name: string): string {
@@ -39,27 +40,7 @@ export function buildAgent({ client, preset, lang, langArg, mode, channel: chann
       // Complaint mode only: "one moment" in the caller's language while the model thinks (guard stays silent).
       ...(mode === 'complaint' ? { fillerWords: fillerWords(langArg === 'auto' ? 'auto' : lang) } : {}),
       // VAD controls how the agent detects the start and end of a user's turn.
-      turnDetection: {
-        config: {
-          speech_threshold: 0.5,
-          start_of_speech: {
-            mode: 'vad',
-            vad_config: {
-              interrupt_duration_ms: 160, // ms of speech before interruption triggers
-              prefix_padding_ms: 300, // audio captured before speech is detected
-            },
-          },
-          end_of_speech: {
-            mode: 'vad',
-            vad_config: {
-              // ms of silence before the turn ends; slow mode waits longer, for callers who pause
-              // mid-sentence, and so does the 1930 interpreter, for an operator reading out a number
-              // in groups (a live run split the acknowledgement number at a pause, 20 Nov)
-              silence_duration_ms: slow ? 900 : mode === 'interpret' ? 800 : 480,
-            },
-          },
-        },
-      },
+      turnDetection: { config: turnConfig(mode, slow) },
       // RTM is required for transcript events in the browser client.
       // enable_tools is required for MCP tool invocation.
       advancedFeatures: { enable_rtm: true, enable_tools: true },
