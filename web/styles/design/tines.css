@@ -1789,6 +1789,65 @@ html[data-motion='reduce'] .gd-radar::before {
   color: var(--ink);
   min-height: 2.8em;
 }
+.bts-stages {
+  list-style: none;
+  margin: 0 0 16px;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+.bts-stage button {
+  width: 100%;
+  height: 100%;
+  text-align: left;
+  font: inherit;
+  color: var(--ink);
+  background: #fff;
+  border: 2px solid var(--rule);
+  border-radius: 12px;
+  padding: 9px 11px;
+  cursor: pointer;
+  transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+}
+.bts-stage-n {
+  display: inline-grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: var(--ink);
+  color: #fff;
+  font: 700 0.75rem var(--font-ui);
+  margin-right: 6px;
+  vertical-align: 1px;
+}
+.bts-stage b {
+  font-size: 0.95rem;
+}
+.bts-stage-line {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.8125rem;
+  line-height: 1.3;
+  color: var(--ink-2);
+}
+.bts-stage.is-on button {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: #fff;
+}
+.bts-stage.is-on .bts-stage-n {
+  background: #fff;
+  color: var(--ink);
+}
+.bts-stage.is-on .bts-stage-line {
+  color: #e7efe9;
+}
+.bts-stage button:focus-visible {
+  outline: 3px solid var(--ag);
+  outline-offset: 2px;
+}
 .bts-lanes {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -1901,6 +1960,12 @@ html[data-motion='reduce'] .gd-radar::before {
   font-weight: 600;
 }
 @media (max-width: 980px) {
+  .bts-stages {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+  .bts-stage-line {
+    display: none;
+  }
   .bts-player {
     position: sticky;
     top: 8px;
@@ -1917,6 +1982,26 @@ html[data-motion='reduce'] .gd-radar::before {
 @media (max-width: 600px) {
   .bts-lanes {
     grid-template-columns: 1fr;
+  }
+  .bts-stages {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 4px;
+  }
+  .bts-stage button {
+    padding: 6px 4px;
+    text-align: center;
+  }
+  .bts-stage-n {
+    margin: 0 auto 2px;
+    display: grid;
+  }
+  .bts-stage b {
+    font-size: 0.6875rem;
+    line-height: 1.15;
+    display: block;
+  }
+  .bts-stage-line {
+    display: none;
   }
 }
 @media (prefers-reduced-motion: reduce) {

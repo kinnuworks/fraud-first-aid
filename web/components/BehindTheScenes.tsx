@@ -64,15 +64,24 @@ const LANES: Lane[] = [
   },
 ];
 
-const STEPS: Array<{ say: string; on: string[] }> = [
-  { say: 'The scam call plays on speaker. An Agora agent listens, and says nothing.', on: ['you-call', 'ag-agent', 'ag-turn', 'ag-rtc', 'ex-sarvam', 'sv-guard'] },
-  { say: 'The caller asks for your OTP. The guard spots it, and the agent warns you in your language.', on: ['sv-guard', 'ag-agent', 'ex-murf', 'you-see'] },
-  { say: '"I already paid." The same call starts taking your complaint by voice.', on: ['you-page', 'ag-agent', 'sv-model', 'ex-ai', 'ex-store'] },
-  { say: 'You say the 12-digit UTR. Code turns it into exact digits and reads it back in groups of four.', on: ['sv-numbers', 'sv-fast', 'ag-agent', 'ex-murf', 'you-see'] },
-  { say: 'Your payment screenshot disagrees. The agent interrupts itself and names the wrong group.', on: ['you-page', 'sv-shot', 'ex-ai', 'ag-speak'] },
-  { say: 'It finds your bank, its own fraud line, and your RBI zero-liability deadline.', on: ['sv-banks', 'ex-ifsc', 'sv-model'] },
-  { say: 'It builds your 1930 pack, and emails it only after you say yes.', on: ['sv-pack', 'ex-resend', 'ag-speak', 'you-pack'] },
-  { say: 'On your 1930 call, a second agent talks to the operator in English for you.', on: ['ag-second', 'you-call', 'you-second', 'sv-model', 'ex-murf'] },
+// The organisers' five stages (FAQ 44), which the judges score against.
+const STAGES: Array<{ name: string; line: string }> = [
+  { name: 'Initiate', line: 'you speak to the agent: Agora Conversational AI, with a Murf Falcon voice' },
+  { name: 'Understand and plan', line: 'it works out what you need and what to do next' },
+  { name: 'Execute', line: 'it calls tools and APIs to do the task' },
+  { name: 'Confirm', line: 'it shares the result, handles errors, and asks before critical actions' },
+  { name: 'Follow up', line: 'it updates records, sends the summary, and schedules the next steps' },
+];
+
+const STEPS: Array<{ say: string; on: string[]; stage: number }> = [
+  { say: 'The scam call plays on speaker. An Agora agent listens, and says nothing.', on: ['you-call', 'ag-agent', 'ag-turn', 'ag-rtc', 'ex-sarvam', 'sv-guard'], stage: 0 },
+  { say: 'The caller asks for your OTP. The guard spots it, and the agent warns you in your language.', on: ['sv-guard', 'ag-agent', 'ex-murf', 'you-see'], stage: 1 },
+  { say: '"I already paid." The same call starts taking your complaint by voice.', on: ['you-page', 'ag-agent', 'sv-model', 'ex-ai', 'ex-store'], stage: 1 },
+  { say: 'You say the 12-digit UTR. Code turns it into exact digits and reads it back in groups of four.', on: ['sv-numbers', 'sv-fast', 'ag-agent', 'ex-murf', 'you-see'], stage: 2 },
+  { say: 'Your payment screenshot disagrees. The agent interrupts itself and names the wrong group.', on: ['you-page', 'sv-shot', 'ex-ai', 'ag-speak'], stage: 3 },
+  { say: 'It finds your bank, its own fraud line, and your RBI zero-liability deadline.', on: ['sv-banks', 'ex-ifsc', 'sv-model'], stage: 2 },
+  { say: 'It builds your 1930 pack with three reminders, and emails it only after you say yes.', on: ['sv-pack', 'ex-resend', 'ag-speak', 'you-pack'], stage: 3 },
+  { say: 'On your 1930 call, a second agent talks to the operator in English, then saves the acknowledgement number.', on: ['ag-second', 'you-call', 'you-second', 'sv-model', 'ex-murf'], stage: 4 },
 ];
 
 export function BehindTheScenes() {
@@ -156,13 +165,32 @@ export function BehindTheScenes() {
         <p className="bts-say">
           {step > 0 ? (
             <>
-              <b>Step {step}.</b> {STEPS[step - 1].say}
+              <b>
+                Step {step} · {STAGES[STEPS[step - 1].stage].name}.
+              </b>{' '}
+              {STEPS[step - 1].say}
             </>
           ) : (
             'Press play, or pick a step.'
           )}
         </p>
       </div>
+
+      <ol className="bts-stages" aria-label="The five stages of the agent's work">
+        {STAGES.map((st, i) => {
+          const first = STEPS.findIndex((x) => x.stage === i) + 1;
+          const on = step > 0 && STEPS[step - 1].stage === i;
+          return (
+            <li key={st.name} className={`bts-stage${on ? ' is-on' : ''}`}>
+              <button type="button" onClick={() => go(first)} aria-current={on ? 'true' : undefined}>
+                <span className="bts-stage-n">{i + 1}</span>
+                <b>{st.name}</b>
+                <span className="bts-stage-line">{st.line}</span>
+              </button>
+            </li>
+          );
+        })}
+      </ol>
 
       <div className={`bts-lanes${active ? ' is-playing' : ''}`}>
         {LANES.map((lane, li) => (
