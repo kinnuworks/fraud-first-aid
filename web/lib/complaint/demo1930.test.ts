@@ -30,6 +30,7 @@ describe('the interpreter gives 1930 nearly everything itself', () => {
   it('its opening line names the amount, time, payee, UTR and the bank, all from code', () => {
     const c = newComplaint('te', 'complaint');
     seedDemo1930(c, '2026-11-21');
+    c.phase = 'interpret'; // as /api/call/interpret sets it when the interpreter takes over
     const line = interpretLine(c, 'intro') ?? '';
     expect(line).toMatch(/25,000/);
     expect(line).toMatch(/r a m e s h at o k a x i s/);
