@@ -1,5 +1,22 @@
 import { describe, expect, it } from 'vitest';
-import { indianMobile, CallLimiter } from './phone';
+import { indianMobile, CallLimiter, mayCall } from './phone';
+
+describe('mayCall', () => {
+  it('with no list set, any Indian mobile may be called', () => {
+    expect(mayCall('+919845012345', undefined)).toBe(true);
+    expect(mayCall('+919845012345', '')).toBe(true);
+    expect(mayCall('+919845012345', ' , ')).toBe(true);
+  });
+  it('with a list, only the numbers on it, written in any common form', () => {
+    const list = '98450 12345, +91-88005-56677';
+    expect(mayCall('+919845012345', list)).toBe(true);
+    expect(mayCall('+918800556677', list)).toBe(true);
+    expect(mayCall('+917019283746', list)).toBe(false);
+  });
+  it('a list of only junk refuses everyone rather than opening up', () => {
+    expect(mayCall('+919845012345', '1930, abc')).toBe(false);
+  });
+});
 
 describe('indianMobile', () => {
   it('accepts Indian mobiles in common forms and returns E.164', () => {
