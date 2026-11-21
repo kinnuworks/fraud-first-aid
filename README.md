@@ -44,6 +44,12 @@ It does not replace 1930 or file the complaint for you, and it can't recover mon
 
 To see every screen without talking: [`?state=complaint-done`](https://fraudfirstaid.vercel.app/?state=complaint-done), [`?state=complaint-mismatch`](https://fraudfirstaid.vercel.app/?state=complaint-mismatch) (sample data, labelled as such). A [4-minute screen recording](https://fraudfirstaid.vercel.app/demo/full-flow.mp4) shows one whole live call at double speed, from the scam warning to the 1930 interpreter keeping the acknowledgement number (21 Nov 2026; sample voices, no audio track).
 
+### The whole system
+
+![Behind the scenes on one call: you talk in your browser; Agora runs one AI agent per call (Sarvam hears, our server decides, Murf Falcon speaks), plus the speak API, a second agent for the 1930 call, and RTC and RTM; our server holds the guard, the number layer, an AI model with 12 tools, the screenshot check and the pack builder; services: an AI model API, Razorpay IFSC, Resend, Upstash, and a Twilio phone line that's built but off](docs/architecture.png)
+
+Every component in more detail: [docs/architecture-detailed.png](docs/architecture-detailed.png).
+
 ### How a call flows
 
 ```mermaid

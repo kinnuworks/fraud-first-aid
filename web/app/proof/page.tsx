@@ -1,4 +1,5 @@
 import type { Metadata } from 'next';
+import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from '@/components/design/Logo';
 import { GuardTry, NumberTry } from '@/components/proof/ProofTry';
@@ -62,6 +63,17 @@ export default function Proof() {
               </li>
             ))}
           </ul>
+        </section>
+        <section className="pf-more" aria-labelledby="pf-arch">
+          <h2 id="pf-arch" className="pf-h2">How it&apos;s built</h2>
+          <p className="pf-sub">
+            Everything behind one call: the browser, Agora (RTC, one agent per call with Sarvam and Murf Falcon, the speak API, the second agent for
+            1930, RTM), our server (the guard, the fast path, the model&apos;s 12 tools, the number layer, the screenshot check, the pack) and the
+            services it calls.
+          </p>
+          <a href="/architecture.png" target="_blank" rel="noopener noreferrer">
+            <Image src="/architecture.png" width={2400} height={1350} alt="Behind the scenes on one call: you, Agora's agent with Sarvam and Murf Falcon, our server's guard, number layer, AI model with 12 tools, screenshot check and pack builder, and the services it calls" style={{ width: '100%', height: 'auto', borderRadius: 12, border: '1px solid var(--line, #d6e3dc)' }} />
+          </a>
         </section>
         <section className="pf-more">
           <h2 className="pf-h2">See a whole call without talking</h2>
