@@ -1,4 +1,4 @@
-// Where the idea came from, in the builder's own words. Sits right under the hero.
+// Where the idea came from, in the builder's own words. Sits after the reported cases.
 export function OriginStory() {
   return (
     <section className="og up-wrap" aria-labelledby="og-q" data-testid="origin-story">
@@ -18,7 +18,7 @@ export function OriginStory() {
         </blockquote>
         <p className="og-by">
           <span className="og-rule" aria-hidden="true" />
-          The person who built Fraud First Aid
+          Dhiraj Kavuri, who built Fraud First Aid
         </p>
         <span className="og-mark og-mark--close" aria-hidden="true">
           &rdquo;

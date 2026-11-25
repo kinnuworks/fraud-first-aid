@@ -219,10 +219,10 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
   return (
     <div className="up-page" style={{ overflowX: 'clip' }}>
       <Hero {...p} />
-      <OriginStory />
       <Journey />
       <BehindTheScenes />
       <Cases />
+      <OriginStory />
       <section className="ck up-wrap" aria-label="Check it yourself">
         <div className="ck-card">
           <div>
