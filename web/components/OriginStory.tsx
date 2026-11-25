@@ -11,8 +11,9 @@ export function OriginStory() {
         </p>
         <blockquote className="og-quote">
           <p>
-            My aunt lives in Guntur. She keeps sending me videos about UPI scams, and every time we talk she has
-            another story about someone she knows who lost money. <em>She tells me all of it so I&apos;ll be careful.</em>
+            My aunt in Guntur sends me videos about UPI scams and tells me about people she knows who lost money, so
+            I&apos;ll be careful. Those stories made me wonder who helps them once the money is gone.{' '}
+            <em>Fraud First Aid is my answer.</em>
           </p>
         </blockquote>
         <p className="og-by">
