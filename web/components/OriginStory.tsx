@@ -11,7 +11,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     tab: 'English',
     q: 'Where did the idea come from?',
     body:
-      "My aunt in Guntur sends me videos about UPI scams and tells me about people she knows who lost money. She's looking out for me and wants me to be careful. Her stories made me wonder who helps those people once the money is gone.",
+      "My aunt in Guntur sends me videos about UPI scams and tells me about people she knows who lost money, so that I'd be more careful. Her stories made me wonder who helps those people once the money is gone.",
     em: 'Fraud First Aid is my answer.',
     by: 'Dhiraj Kavuri, who built Fraud First Aid',
   },
@@ -19,7 +19,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     tab: 'हिन्दी',
     q: 'यह आइडिया कहाँ से आया?',
     body:
-      'गुंटूर में रहने वाली मेरी आंटी मुझे UPI स्कैम के वीडियो भेजती हैं, और अपनी जान-पहचान के उन लोगों के बारे में बताती हैं जिनके पैसे चले गए। वो मेरा ख़याल रखती हैं और चाहती हैं कि मैं सावधान रहूँ। उनकी बातें सुनकर मेरे मन में सवाल आया: पैसा जाने के बाद उन लोगों की मदद कौन करता है?',
+      'गुंटूर में रहने वाली मेरी आंटी मुझे UPI स्कैम के वीडियो भेजती हैं, और अपनी जान-पहचान के उन लोगों के बारे में बताती हैं जिनके पैसे चले गए, ताकि मैं और सावधान रहूँ। उनकी बातें सुनकर मेरे मन में सवाल आया: पैसा जाने के बाद उन लोगों की मदद कौन करता है?',
     em: 'Fraud First Aid मेरा जवाब है।',
     by: 'धीरज कावुरी, जिन्होंने Fraud First Aid बनाया',
   },
@@ -27,7 +27,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     tab: 'తెలుగు',
     q: 'ఈ ఆలోచన ఎక్కడి నుంచి వచ్చింది?',
     body:
-      'గుంటూరులో ఉండే మా అత్తయ్య నాకు UPI మోసాల వీడియోలు పంపిస్తుంటారు, తనకు తెలిసినవాళ్లు డబ్బు ఎలా పోగొట్టుకున్నారో చెబుతుంటారు. నా మీద శ్రద్ధతో, నేను జాగ్రత్తగా ఉండాలని చెబుతుంటారు. ఆ కథలు విన్నాక నాకు ఒక ప్రశ్న వచ్చింది: డబ్బు పోయాక వాళ్లకు ఎవరు సాయం చేస్తారు?',
+      'గుంటూరులో ఉండే మా అత్తయ్య నాకు UPI మోసాల వీడియోలు పంపిస్తుంటారు, తనకు తెలిసినవాళ్లు డబ్బు ఎలా పోగొట్టుకున్నారో చెబుతుంటారు, నేను ఇంకా జాగ్రత్తగా ఉండాలని. ఆ కథలు విన్నాక నాకు ఒక ప్రశ్న వచ్చింది: డబ్బు పోయాక వాళ్లకు ఎవరు సాయం చేస్తారు?',
     em: 'Fraud First Aid నా సమాధానం.',
     by: 'ధీరజ్ కావూరి, Fraud First Aid తయారు చేసినవారు',
   },
@@ -35,7 +35,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     tab: 'தமிழ்',
     q: 'இந்த யோசனை எங்கிருந்து வந்தது?',
     body:
-      'குண்டூரில் இருக்கும் என் அத்தை UPI மோசடி வீடியோக்களை எனக்கு அனுப்புவார், பணத்தை இழந்த தனக்குத் தெரிந்தவர்களைப் பற்றியும் சொல்வார். என் மேல் அக்கறையோடு, நான் கவனமாக இருக்க வேண்டும் என்று சொல்வார். அந்தக் கதைகளைக் கேட்டதும் ஒரு கேள்வி எழுந்தது: பணம் போன பிறகு அவர்களுக்கு யார் உதவுவார்கள்?',
+      'குண்டூரில் இருக்கும் என் அத்தை UPI மோசடி வீடியோக்களை எனக்கு அனுப்புவார், பணத்தை இழந்த தனக்குத் தெரிந்தவர்களைப் பற்றியும் சொல்வார், நான் இன்னும் கவனமாக இருக்க வேண்டும் என்பதற்காக. அந்தக் கதைகளைக் கேட்டதும் ஒரு கேள்வி எழுந்தது: பணம் போன பிறகு அவர்களுக்கு யார் உதவுவார்கள்?',
     em: 'Fraud First Aid தான் என் பதில்.',
     by: 'தீரஜ் காவூரி, Fraud First Aid-ஐ உருவாக்கியவர்',
   },
