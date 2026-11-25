@@ -4,6 +4,7 @@
 // Fraud First Aid, and the sources.
 import { type StartProps } from './HeroControls';
 import { Hero } from './Hero';
+import { OriginStory } from './OriginStory';
 import { Logo } from './design/Logo';
 import { ImpactBand } from './ImpactBand';
 import Image from 'next/image';
@@ -218,6 +219,7 @@ export function QuickstartPreCallCard(p: QuickstartPreCallCardProps) {
   return (
     <div className="up-page" style={{ overflowX: 'clip' }}>
       <Hero {...p} />
+      <OriginStory />
       <Journey />
       <BehindTheScenes />
       <Cases />
