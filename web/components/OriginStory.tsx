@@ -12,7 +12,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     q: 'Where did the idea come from?',
     body:
       "My aunt in Guntur sends me videos about UPI scams and tells me about people she knows who lost money, so that I'd be more careful. Her stories made me wonder who helps those people once the money is gone.",
-    em: 'Fraud First Aid is my answer.',
+    em: "That's why I built Fraud First Aid.",
     by: 'Dhiraj Kavuri, who built Fraud First Aid',
   },
   hi: {
@@ -20,7 +20,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     q: 'यह आइडिया कहाँ से आया?',
     body:
       'गुंटूर में रहने वाली मेरी आंटी मुझे UPI स्कैम के वीडियो भेजती हैं, और अपनी जान-पहचान के उन लोगों के बारे में बताती हैं जिनके पैसे चले गए, ताकि मैं और सावधान रहूँ। उनकी बातें सुनकर मेरे मन में सवाल आया: पैसा जाने के बाद उन लोगों की मदद कौन करता है?',
-    em: 'फ्रॉड फ़र्स्ट एड मेरा जवाब है।',
+    em: 'इसीलिए मैंने फ्रॉड फ़र्स्ट एड बनाया।',
     by: 'धीरज कावुरी, जिन्होंने फ्रॉड फ़र्स्ट एड बनाया',
   },
   te: {
@@ -28,7 +28,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     q: 'ఈ ఆలోచన ఎక్కడి నుంచి వచ్చింది?',
     body:
       'గుంటూరులో ఉండే మా అత్తయ్య నాకు UPI మోసాల వీడియోలు పంపిస్తుంటారు, తనకు తెలిసినవాళ్లు డబ్బు ఎలా పోగొట్టుకున్నారో చెబుతుంటారు, నేను ఇంకా జాగ్రత్తగా ఉండాలని. ఆ కథలు విన్నాక నాకు ఒక ప్రశ్న వచ్చింది: డబ్బు పోయాక వాళ్లకు ఎవరు సాయం చేస్తారు?',
-    em: 'ఫ్రాడ్ ఫస్ట్ ఎయిడ్ నా సమాధానం.',
+    em: 'అందుకే నేను ఫ్రాడ్ ఫస్ట్ ఎయిడ్ తయారు చేశాను.',
     by: 'ధీరజ్ కావూరి, ఫ్రాడ్ ఫస్ట్ ఎయిడ్ తయారు చేసినవారు',
   },
   ta: {
@@ -36,7 +36,7 @@ const STORY: Record<Lang, { tab: string; q: string; body: string; em: string; by
     q: 'இந்த யோசனை எங்கிருந்து வந்தது?',
     body:
       'குண்டூரில் இருக்கும் என் அத்தை UPI மோசடி வீடியோக்களை எனக்கு அனுப்புவார், பணத்தை இழந்த தனக்குத் தெரிந்தவர்களைப் பற்றியும் சொல்வார், நான் இன்னும் கவனமாக இருக்க வேண்டும் என்பதற்காக. அந்தக் கதைகளைக் கேட்டதும் ஒரு கேள்வி எழுந்தது: பணம் போன பிறகு அவர்களுக்கு யார் உதவுவார்கள்?',
-    em: 'ஃப்ராட் ஃபர்ஸ்ட் எய்ட் தான் என் பதில்.',
+    em: 'அதனால்தான் நான் ஃப்ராட் ஃபர்ஸ்ட் எய்டை உருவாக்கினேன்.',
     by: 'தீரஜ் காவூரி, ஃப்ராட் ஃபர்ஸ்ட் எய்டை உருவாக்கியவர்',
   },
 };
