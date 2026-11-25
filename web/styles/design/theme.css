@@ -2366,7 +2366,51 @@ html[data-large] {
   color: var(--on-navy-2);
 }
 .og-rule { flex-shrink: 0; width: 32px; height: 2px; background: var(--ok-ui); border-radius: 2px; }
+/* language switcher: a quiet row of script names with a globe, top right of the card */
+.og-langs {
+  position: absolute;
+  top: clamp(18px, 2.4vw, 28px);
+  right: clamp(18px, 3vw, 36px);
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-family: var(--font-face-sans), var(--font-scripts), system-ui, sans-serif;
+}
+.og-langs__icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 6px;
+  fill: none;
+  stroke: var(--on-navy-2);
+  stroke-width: 1.6;
+  opacity: 0.8;
+}
+.og-lang {
+  padding: 4px 10px;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--on-navy-2);
+  font: inherit;
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.3;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.og-lang:hover { color: var(--on-navy); background: rgb(255 255 255 / 0.08); }
+.og-lang[aria-pressed='true'] { color: var(--navy); background: #9ff0c4; }
+.og-lang:focus-visible { outline: 2px solid #9ff0c4; outline-offset: 2px; }
+.og-body { animation: og-fade 0.25s ease; }
+.og-body .og-q, .og-body .og-quote, .og-body .og-by {
+  font-family: var(--font-face-sans), var(--font-scripts), system-ui, sans-serif;
+}
+.og-body:not(:lang(en)) .og-quote { font-size: clamp(1.25rem, 0.85rem + 1.3vw, 1.75rem); line-height: 1.45; letter-spacing: 0; }
+.og-body:not(:lang(en)) .og-q { font-size: clamp(0.875rem, 0.6rem + 0.9vw, 1.1875rem); }
+@keyframes og-fade { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .og-body { animation: none; } }
 @media (max-width: 640px) {
+  .og-langs { position: relative; top: auto; right: auto; flex-wrap: wrap; margin-top: 44px; margin-bottom: -28px; }
   .og { padding-top: 28px; }
   .og-card { border-radius: 20px; padding-bottom: 64px; }
   .og-quote { max-width: none; }
