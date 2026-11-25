@@ -2298,13 +2298,15 @@ html[data-large] {
   .ls-chip { transition: none; transform: none !important; }
 }
 
-/* Origin story under the hero: one big quote on a deep-green card, oversized quote marks */
-.og { padding-top: 56px; }
+/* Origin story under the hero: a compact deep-green card, the question at 2/3 the size of the quote */
+.og { padding-top: 40px; }
 .og-card {
   position: relative;
   overflow: hidden;
-  padding: clamp(40px, 6vw, 80px) clamp(24px, 7vw, 104px);
-  border-radius: 28px;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: clamp(28px, 4vw, 48px) clamp(24px, 5vw, 72px);
+  border-radius: 24px;
   background:
     radial-gradient(120% 90% at 100% 0%, var(--navy-2) 0%, transparent 60%),
     var(--navy);
@@ -2315,33 +2317,32 @@ html[data-large] {
   font-family: Georgia, 'Times New Roman', serif;
   font-weight: 700;
   line-height: 1;
-  font-size: clamp(10rem, 7rem + 12vw, 20rem);
+  font-size: clamp(6rem, 4rem + 6vw, 10rem);
   color: var(--ok-ui);
-  opacity: 0.9;
   pointer-events: none;
   user-select: none;
 }
-.og-mark--open { top: clamp(-24px, -2vw, -8px); left: clamp(8px, 2vw, 32px); }
-.og-mark--close { bottom: clamp(-150px, -10vw, -80px); right: clamp(8px, 2vw, 32px); opacity: 0.35; }
+.og-mark--open { top: -12px; left: clamp(6px, 1.5vw, 20px); opacity: 0.9; }
+.og-mark--close { bottom: clamp(-80px, -5vw, -48px); right: clamp(6px, 1.5vw, 20px); opacity: 0.35; }
 .og-q {
   position: relative;
-  margin-top: clamp(48px, 6vw, 72px);
-  font-family: var(--font-ui);
-  font-size: 0.875rem;
+  margin-top: clamp(40px, 4vw, 52px);
+  font-family: var(--font-display);
   font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-size: clamp(0.875rem, 0.55rem + 1vw, 1.25rem);
+  line-height: 1.25;
+  letter-spacing: -0.01em;
   color: var(--on-navy-2);
 }
 .og-quote {
   position: relative;
-  margin: 16px 0 0;
-  max-width: 30ch;
+  margin: 10px 0 0;
+  max-width: 40ch;
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: clamp(1.625rem, 1rem + 2.2vw, 2.875rem);
-  line-height: 1.2;
-  letter-spacing: -0.02em;
+  font-size: clamp(1.3125rem, 0.83rem + 1.5vw, 1.875rem);
+  line-height: 1.3;
+  letter-spacing: -0.015em;
   text-wrap: pretty;
 }
 .og-quote p { margin: 0; }
@@ -2354,16 +2355,14 @@ html[data-large] {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-top: 32px;
-  font-size: 1rem;
+  margin-top: 20px;
+  font-size: 0.9375rem;
   font-weight: 600;
   color: var(--on-navy-2);
 }
-.og-rule { flex-shrink: 0; width: 40px; height: 2px; background: var(--ok-ui); border-radius: 2px; }
+.og-rule { flex-shrink: 0; width: 32px; height: 2px; background: var(--ok-ui); border-radius: 2px; }
 @media (max-width: 640px) {
-  .og { padding-top: 32px; }
-  .og-card { border-radius: 20px; }
+  .og { padding-top: 28px; }
+  .og-card { border-radius: 20px; padding-bottom: 64px; }
   .og-quote { max-width: none; }
-  .og-card { padding-bottom: 96px; }
-  .og-mark--close { font-size: 9rem; bottom: -64px; }
 }
